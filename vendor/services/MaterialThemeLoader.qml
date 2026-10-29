@@ -3,6 +3,7 @@ import QtQuick
 import Quickshell
 import qs.Commons as Oc
 import "../modules/common" as LnCommon
+import "../modules/common/functions"
 
 // LUNANA SHIM (not vendored from inir) — THE COLOR SEAM.
 // inir's real MaterialThemeLoader reads colors.json and assigns each key into
@@ -25,6 +26,11 @@ Singleton {
         return c.hslLightness < 0.5 ? Qt.lighter(c, 2.2) : Qt.darker(c, 2.2)
     }
 
+    // Polarity-aware ladder rung: mix bg toward the dark pole (fg on light
+    // themes, black on dark themes) or toward the light pole (fg on dark
+    // themes, white on light themes). Linear mixes never clip the way
+    // Qt.darker/lighter do near white, so both poles keep distinct rungs.
+
     function applyPalette() {
         const m3 = LnCommon.Appearance?.m3colors
         if (!m3)
@@ -39,23 +45,25 @@ Singleton {
         m3.darkmode = dark
 
         // Base surfaces ladder off the background.
+        const lowPole = dark ? "#000000" : fg
+        const highPole = dark ? fg : "#ffffff"
         m3.m3background = bg
         m3.m3onBackground = fg
         m3.m3surface = bg
-        m3.m3surfaceDim = Qt.darker(bg, 1.3)
-        m3.m3surfaceBright = Qt.lighter(bg, 1.3)
-        m3.m3surfaceContainerLowest = Qt.darker(bg, 1.5)
-        m3.m3surfaceContainerLow = Qt.darker(bg, 1.15)
+        m3.m3surfaceDim = ColorUtils.mix(bg, lowPole, 0.8)
+        m3.m3surfaceBright = ColorUtils.mix(bg, highPole, 0.92)
+        m3.m3surfaceContainerLowest = ColorUtils.mix(bg, lowPole, 0.72)
+        m3.m3surfaceContainerLow = ColorUtils.mix(bg, lowPole, 0.88)
         m3.m3surfaceContainer = bg
-        m3.m3surfaceContainerHigh = Qt.lighter(bg, 1.12)
-        m3.m3surfaceContainerHighest = Qt.lighter(bg, 1.3)
+        m3.m3surfaceContainerHigh = ColorUtils.mix(bg, highPole, 0.85)
+        m3.m3surfaceContainerHighest = ColorUtils.mix(bg, highPole, 0.78)
         m3.m3onSurface = fg
-        m3.m3surfaceVariant = dark ? Qt.lighter(bg, 1.6) : Qt.darker(bg, 1.15)
+        m3.m3surfaceVariant = ColorUtils.mix(bg, fg, 0.75)
         m3.m3onSurfaceVariant = mu
         m3.m3inverseSurface = fg
         m3.m3inverseOnSurface = bg
         m3.m3outline = mu
-        m3.m3outlineVariant = Qt.darker(mu, 1.2)
+        m3.m3outlineVariant = ColorUtils.mix(mu, bg, 0.6)
         m3.m3shadow = "#000000"
         m3.m3scrim = "#000000"
         m3.m3surfaceTint = ac
