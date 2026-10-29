@@ -1,0 +1,138 @@
+#!/usr/bin/env bash
+# nested-hypr — nested Hyprland + fixture-home test harness for lunana.
+#
+# Proves each surface renders and behaves without touching the operator's live
+# Omarchy session. A nested Hyprland compositor opens as a window on the live
+# session (Wayland backend); a fixture HOME seeds a minimal Omarchy config
+# (shell.json + hypr/*.lua) with the lunana suite installed into it.
+#
+# Usage:
+#   nested-hypr up [--size WxH] [--scale S]  # start nested compositor + fixture home
+#   nested-hypr install                       # lunana-suite install into the fixture
+#   nested-hypr drive <ipc...>                # omarchy-shell ... inside the fixture
+#   nested-hypr shot <name>                   # grim the nested output -> /tmp/lunana-nested/<name>.png
+#   nested-hypr logs                          # tail the nested shell log (QML errors/warnings)
+#   nested-hypr down                          # exit the nested compositor, drop the fixture
+#
+# State: /tmp/lunana-nested/env (sig, socket, fixture paths). All hyprctl calls
+# go through `hyprctl -i <sig>` so they never hit the host compositor.
+
+set -euo pipefail
+
+STATE_DIR="/tmp/lunana-nested"
+ENV_FILE="$STATE_DIR/env"
+REPO_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
+
+need() { command -v "$1" >/dev/null 2>&1 || { echo "nested-hypr: missing $1" >&2; exit 1; }; }
+
+load_env() {
+    # shellcheck disable=SC1090
+    [ -f "$ENV_FILE" ] || { echo "nested-hypr: no session (run 'nested-hypr up')" >&2; exit 1; }
+    . "$ENV_FILE"
+}
+
+cmd_up() {
+    need Hyprland; need omarchy-shell
+    local size="1920x1080" scale="1"
+    while [ $# -gt 0 ]; do
+        case "$1" in
+            --size) size="$2"; shift 2 ;;
+            --scale) scale="$2"; shift 2 ;;
+            *) echo "nested-hypr up [--size WxH] [--scale S]" >&2; exit 2 ;;
+        esac
+    done
+    mkdir -p "$STATE_DIR/shots"
+    local fixture="$STATE_DIR/fixture-home"
+    rm -rf "$fixture"
+    mkdir -p "$fixture/.config/omarchy/plugins" "$fixture/.config/hypr"
+
+    # Minimal Omarchy config: stock bar, deterministic geometry/locale/fonts.
+    cat > "$fixture/.config/omarchy/shell.json" <<'EOF'
+{
+  "bar": {},
+  "theme": "lunana-test",
+  "locale": "en_US.UTF-8"
+}
+EOF
+    cat > "$fixture/.config/hypr/hyprland.conf" <<EOF
+monitor=,${size}@60,auto,${scale}
+exec-once=HOME=$fixture XDG_CONFIG_HOME=$fixture/.config omarchy-shell
+EOF
+    touch "$fixture/.config/hypr/bindings.lua"
+
+    local rt="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"
+    local sig
+    sig=$(ls -t "$rt/hypr" 2>/dev/null | head -n 1 || true)
+    HOME="$fixture" XDG_CONFIG_HOME="$fixture/.config" \
+        Hyprland --config "$fixture/.config/hypr/hyprland.conf" >/tmp/lunana-nested/hypr.log 2>&1 &
+    echo $! > "$STATE_DIR/hypr.pid"
+    # Wait for the nested instance signature to appear.
+    for _ in $(seq 1 100); do
+        local cur
+        cur=$(ls -t "$rt/hypr" 2>/dev/null | head -n 1 || true)
+        if [ -n "$cur" ] && [ "$cur" != "$sig" ]; then sig="$cur"; break; fi
+        sleep 0.2
+    done
+    [ -n "${sig:-}" ] || { echo "nested-hypr: nested instance never registered" >&2; exit 1; }
+    cat > "$ENV_FILE" <<EOF
+NESTED_SIG=$sig
+NESTED_FIXTURE=$fixture
+NESTED_SIZE=$size
+EOF
+    echo "nested-hypr: up (sig=$sig size=$size fixture=$fixture)"
+}
+
+cmd_install() {
+    load_env
+    HOME="$NESTED_FIXTURE" XDG_CONFIG_HOME="$NESTED_FIXTURE/.config" \
+        python3 "$REPO_ROOT/scripts/lunana-suite" install --yes
+    HOME="$NESTED_FIXTURE" XDG_CONFIG_HOME="$NESTED_FIXTURE/.config" \
+        omarchy restart shell || true
+    echo "nested-hypr: installed; waiting for shell IPC..."
+    for _ in $(seq 1 50); do
+        if HOME="$NESTED_FIXTURE" XDG_CONFIG_HOME="$NESTED_FIXTURE/.config" \
+            omarchy-shell ipc 2>/dev/null | grep -q .; then break; fi
+        sleep 0.2
+    done
+    echo "nested-hypr: shell IPC ready"
+}
+
+cmd_drive() {
+    load_env
+    HOME="$NESTED_FIXTURE" XDG_CONFIG_HOME="$NESTED_FIXTURE/.config" \
+        hyprctl -i "$NESTED_SIG" dispatch "$@"
+}
+
+cmd_shot() {
+    need grim
+    load_env
+    local name="${1:-shot-$(date +%s)}"
+    grim -o "HEADLESS-1" "$STATE_DIR/shots/$name.png" 2>/dev/null \
+        || grim "$STATE_DIR/shots/$name.png"
+    echo "nested-hypr: shot -> $STATE_DIR/shots/$name.png"
+}
+
+cmd_logs() {
+    load_env
+    grep -iE "qml|error|warning|\\.qml" /tmp/lunana-nested/hypr.log 2>/dev/null \
+        | grep -viE "0 errors|0 warnings" | tail -n 50 || true
+    echo "--- (new QML errors/warnings above; empty means clean) ---"
+}
+
+cmd_down() {
+    load_env
+    hyprctl -i "$NESTED_SIG" dispatch exit 2>/dev/null || true
+    kill "$(cat "$STATE_DIR/hypr.pid")" 2>/dev/null || true
+    rm -rf "$NESTED_FIXTURE" "$ENV_FILE"
+    echo "nested-hypr: down"
+}
+
+case "${1:-}" in
+    up) shift; cmd_up "$@" ;;
+    install) cmd_install ;;
+    drive) shift; cmd_drive "$@" ;;
+    shot) shift; cmd_shot "$@" ;;
+    logs) cmd_logs ;;
+    down) cmd_down ;;
+    *) echo "usage: nested-hypr {up|install|drive|shot|logs|down}" >&2; exit 2 ;;
+esac

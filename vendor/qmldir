@@ -1,1 +1,3 @@
 singleton GlobalStates 1.0 GlobalStates.qml
+settings 1.0 settings.qml
+waffleSettings 1.0 waffleSettings.qml

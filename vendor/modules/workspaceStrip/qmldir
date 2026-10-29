@@ -1,0 +1,6 @@
+WorkspaceStrip 1.0 WorkspaceStrip.qml
+WorkspaceStripCard 1.0 WorkspaceStripCard.qml
+WorkspaceStripDetail 1.0 WorkspaceStripDetail.qml
+WorkspaceStripDragProxy 1.0 WorkspaceStripDragProxy.qml
+WorkspaceStripMedia 1.0 WorkspaceStripMedia.qml
+WorkspaceStripMediaCard 1.0 WorkspaceStripMediaCard.qml

@@ -1,0 +1,10 @@
+ControlPanel 1.0 ControlPanel.qml
+ControlPanelContent 1.0 ControlPanelContent.qml
+DateTimeHeader 1.0 DateTimeHeader.qml
+MediaSection 1.0 MediaSection.qml
+ProfileHeader 1.0 ProfileHeader.qml
+QuickActionsSection 1.0 QuickActionsSection.qml
+SlidersSection 1.0 SlidersSection.qml
+SystemSection 1.0 SystemSection.qml
+WallpaperSection 1.0 WallpaperSection.qml
+WeatherSection 1.0 WeatherSection.qml
