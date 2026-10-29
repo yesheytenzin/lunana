@@ -6,6 +6,8 @@ singleton MaterialThemeLoader 1.0 MaterialThemeLoader.qml
 singleton NiriService 1.0 NiriService.qml
 singleton Notifications 1.0 Notifications.qml
 singleton ShellEditSession 1.0 ShellEditSession.qml
+singleton SystemInfo 1.0 SystemInfo.qml
+singleton ThemeService 1.0 ThemeService.qml
 singleton WallpaperListener 1.0 WallpaperListener.qml
 singleton Wallpapers 1.0 Wallpapers.qml
 singleton WindowPreviewService 1.0 WindowPreviewService.qml

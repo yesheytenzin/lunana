@@ -14,6 +14,8 @@ Singleton {
     property bool coverflowSelectorOpen: false
     property bool screenLocked: false
     property bool shellEntryReady: true
+    // Wave-C: iRiS token family reads the focused screen for place output.
+    property var focusedScreen: null
     property bool wallpaperLauncherOpen: false
     property bool widgetEditMode: false
 
