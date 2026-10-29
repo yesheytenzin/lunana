@@ -1,6 +1,7 @@
 import QtQuick
 import Quickshell
 import Quickshell.Io
+import qs.Commons
 import "../../lunana-vendor/" as Inir
 import "../../lunana-vendor/modules/common" as LnCommon
 
@@ -11,9 +12,14 @@ import "../../lunana-vendor/modules/common" as LnCommon
 //   "lunana": { "family": "ii", "themeSource": "omarchy-tokens" }
 //
 // `themeSource` selects the token pipeline feeding the vendored Appearance /
-// Looks / IrisStyle modules: `omarchy-tokens` (default, Omarchy's hue owns
-// the palette) or `material-you` (wallpaper-derived via the vendored
-// scripts/colors pipeline + MaterialThemeLoader — Wave 5 opt-in).
+// Looks / IrisStyle modules:
+// - `omarchy-tokens` (default): Omarchy's hue owns the palette. This service
+//   never touches inir Config — today's behavior preserved exactly.
+// - `material-you` (opt-in): arms the vendored pipeline by ensuring inir
+//   Config `appearance.theme` is "auto", then `generateMaterialYou(path)`
+//   runs the vendored switchwall.sh color pipeline for that wallpaper;
+//   MaterialThemeLoader applies the generated colors.json live. Side effects
+//   (GTK/terminal themes) stay inside $HOME like the rest of the suite.
 //
 // It also performs the shell-entry handshake the vendored tree expects from
 // inir's shell.qml boot sequence: panels start gated on
@@ -35,6 +41,9 @@ Scope {
     readonly property string themeSource: lunanaConfig.themeSource ?? "omarchy-tokens"
     readonly property bool materialYou: root.themeSource === "material-you"
 
+    readonly property string switchwallPath: Quickshell.env("HOME")
+        + "/.config/omarchy/lunana-vendor/scripts/colors/switchwall.sh"
+
     FileView {
         id: shellFile
         path: Quickshell.env("HOME") + "/.config/omarchy/shell.json"
@@ -43,6 +52,47 @@ Scope {
         printErrors: false
         onFileChanged: reload()
     }
+
+    function armMaterialYou(): void {
+        if (!root.materialYou || !LnCommon.Config.ready)
+            return
+        try {
+            LnCommon.Config.setNestedValue(["appearance", "theme"], "auto")
+            console.log("[lunana.state] material-you armed (inir theme=auto)")
+        } catch (err) {
+            console.warn("[lunana.state] material-you arm failed: " + err)
+        }
+    }
+
+    function generateMaterialYou(wallpaperPath): void {
+        const img = String(wallpaperPath ?? "")
+        if (!root.materialYou) {
+            console.log("[lunana.state] generateMaterialYou refused (themeSource is not material-you)")
+            return
+        }
+        if (!img) {
+            console.warn("[lunana.state] generateMaterialYou needs a wallpaper path")
+            return
+        }
+        matugenProcess.command = ["/usr/bin/bash", root.switchwallPath, img]
+        matugenProcess.running = true
+    }
+
+    Process {
+        id: matugenProcess
+        onExited: (code, status) => console.log("[lunana.state] switchwall exited", code, status)
+    }
+
+    ShellIpc {
+        target: "lunana.state"
+        function generateMaterialYou(wallpaperPath: string): void { root.generateMaterialYou(wallpaperPath) }
+    }
+
+    Connections {
+        target: LnCommon.Config
+        function onReadyChanged() { root.armMaterialYou() }
+    }
+    onMaterialYouChanged: root.armMaterialYou()
 
     // Mirror of shell.qml's boot timers (entry animation delay, then
     // deferred tier). Run once per session; hot-reload reuses the flags.
@@ -63,6 +113,8 @@ Scope {
         onTriggered: Inir.GlobalStates.deferredPanelsReady = true
     }
 
-    Component.onCompleted: console.log("[lunana.state] family=" + root.family
-        + " themeSource=" + root.themeSource)
+    Component.onCompleted: {
+        console.log("[lunana.state] family=" + root.family + " themeSource=" + root.themeSource)
+        root.armMaterialYou()
+    }
 }
