@@ -1,0 +1,7 @@
+IrisEditBar 1.0 IrisEditBar.qml
+singleton IrisEditHistory 1.0 IrisEditHistory.qml
+IrisEditRows 1.0 IrisEditRows.qml
+IrisPieceLibrary 1.0 IrisPieceLibrary.qml
+IrisPresetTile 1.0 IrisPresetTile.qml
+IrisThemeCard 1.0 IrisThemeCard.qml
+IrisWidgetBar 1.0 IrisWidgetBar.qml

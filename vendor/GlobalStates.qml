@@ -94,6 +94,8 @@ Singleton {
     property var irisAbsorbed: ({})
     property bool irisIslandExpanded: false
     property bool irisOrbitOpen: false
+    property var irisOrbitQuery: null
+    property var irisOrbitCorners: []
     property bool irisControlsWarm: false
     property bool irisSettingsWarm: false
     property string irisIslandShape: ""

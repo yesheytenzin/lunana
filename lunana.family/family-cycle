@@ -33,7 +33,7 @@ FAMILIES = [
     ("ii", "lunana.bar",
      ["lunana.sidebar-left", "lunana.sidebar-right"]),
     # ("waffle", "lunana.bar-waffle", ["lunana.waffle-overlay"]),
-    # ("iris", "lunana.bar-iris", ["lunana.iris-overlay"]),
+    ("iris", "lunana.bar", ["lunana.iris"]),
     ("stock", "", []),
 ]
 

@@ -19,6 +19,10 @@ Singleton {
     function ensureInitialized() {}
     function countForApp(appIds) { return 0 }
     function markReadForApp(appIds) {}
+    // inir helper (services/Notifications.qml): compare on alphanumerics only.
+    function _normalizeAppKey(name) {
+        return String(name ?? "").toLowerCase().replace(/[^a-z0-9]/g, "")
+    }
     function appNamesMatching(appIds) { return [] }
     function discardNotification(id) {}
     function discardAllNotifications() {}

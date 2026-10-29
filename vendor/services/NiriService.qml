@@ -13,6 +13,7 @@ Singleton {
     id: root
     property var windows: []
     property var activeWindow: null
+    property var currentOutput: null
 
     Process {
         id: hyprDispatch

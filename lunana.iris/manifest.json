@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "lunana.iris",
+  "name": "Lunana iRiS Island",
+  "version": "0.4.0",
+  "author": "lunana",
+  "license": "GPL-3.0",
+  "description": "Lunana iRiS island panel (exact inir tree). Always-on morphing island: clock, apps, tray, media.",
+  "kinds": [
+    "service"
+  ],
+  "entryPoints": {
+    "service": "Iris.qml"
+  },
+  "x-lunana": {
+    "suiteId": "lunana",
+    "role": "iris-panel",
+    "milestone": "iris-1",
+    "requires": [],
+    "recommends": []
+  }
+}

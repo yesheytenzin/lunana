@@ -43,6 +43,7 @@ MANAGED_PLUGINS = [
     "lunana.sidebar-left",
     "lunana.sidebar-right",
     "lunana.family",
+    "lunana.iris",
 ]
 
 # Overlay + bar-host plugins mount inir's exact content trees, which live in
@@ -56,6 +57,7 @@ VENDOR_ROOTS = {
     "lunana.dock": "modules/dock/Dock.qml",
     "lunana.sidebar-left": "modules/sidebarLeft/SidebarLeftContent.qml",
     "lunana.sidebar-right": "modules/sidebarRight/SidebarRightContent.qml",
+    "lunana.iris": "modules/iris/bar/IrisBar.qml",
 }
 VENDOR_SEED_DIRS = [
     "modules/bar",
@@ -64,6 +66,9 @@ VENDOR_SEED_DIRS = [
     "modules/sidebarRight",
     "modules/sidebar",
     "modules/ii",
+    "modules/iris/bar",
+    "modules/iris/components",
+    "modules/iris/frame",
 ]
 
 REPO_ROOT = Path(__file__).resolve().parent.parent

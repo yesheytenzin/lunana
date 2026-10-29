@@ -5,6 +5,7 @@ CavaProcess 1.0 CavaProcess.qml
 CavaSpectrum 1.0 CavaSpectrum.qml
 Circle 1.0 Circle.qml
 CircularProgress 1.0 CircularProgress.qml
+CliphistImage 1.0 CliphistImage.qml
 ClippedFilledCircularProgress 1.0 ClippedFilledCircularProgress.qml
 ClippedProgressBar 1.0 ClippedProgressBar.qml
 CollapsibleSection 1.0 CollapsibleSection.qml
