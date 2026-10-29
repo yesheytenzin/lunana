@@ -52,7 +52,9 @@
     "hyprctl",
     "jq",
     "omarchy",
+    "qt6-5compat",
     "slurp",
+    "syntax-highlighting",
     "tesseract",
     "wf-recorder",
     "wireplumber"
