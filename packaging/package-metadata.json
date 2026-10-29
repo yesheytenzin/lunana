@@ -3,7 +3,7 @@
   "version": "0.4.0",
   "description": "Lunana — an inir-inspired native plugin suite for the Omarchy Quattro shell",
   "license": "GPL-3.0",
-  "url": "https://github.com/HANCORE-linux/lunana",
+  "url": "https://github.com/yesheytenzin/lunana",
   "suiteId": "lunana",
   "plugins": [
     "lunana.altswitcher",
