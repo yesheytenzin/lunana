@@ -121,6 +121,21 @@ EOF
     echo "nested-hypr: up (sig=$sig display=$wayland size=$size fixture=$fixture)"
 }
 
+# Block until the nested shell answers IPC. NOTE: `omarchy-shell -q`
+# is quiet best-effort — it exits 0 even when nothing answers — so probes
+# must use the loud form and match the reply.
+wait_nested_ipc() {
+    for _ in $(seq 1 150); do
+        out=$(omarchy-shell shell ping 2>&1 || true)
+        case "$out" in
+            *"not responding"|*"not running"|"") sleep 2 ;;
+            *) return 0 ;;
+        esac
+    done
+    echo "nested-hypr: nested shell never answered" >&2
+    return 1
+}
+
 cmd_install() {
     need omarchy-shell
     load_env
@@ -130,12 +145,7 @@ cmd_install() {
     # The nested Hyprland config exec-once's a fresh quickshell that reads
     # the fixture directly.
     echo "nested-hypr: installed; waiting for nested shell IPC..."
-    for _ in $(seq 1 150); do
-        if omarchy-shell -q shell ping 2>/dev/null; then break; fi
-        sleep 0.4
-    done
-    omarchy-shell shell ping >/dev/null \
-        || { echo "nested-hypr: nested shell never answered" >&2; exit 1; }
+    wait_nested_ipc
     echo "nested-hypr: nested shell IPC ready"
 }
 
@@ -195,12 +205,7 @@ cmd_restart() {
     sleep 2
     nohup quickshell -n -p "$NESTED_OMARCHY/shell" >>"$STATE_DIR/shell.log" 2>&1 &
     echo "nested-hypr: shell restarted; waiting for IPC..."
-    for _ in $(seq 1 150); do
-        if omarchy-shell -q shell ping 2>/dev/null; then break; fi
-        sleep 0.4
-    done
-    omarchy-shell shell ping >/dev/null \
-        || { echo "nested-hypr: nested shell never answered" >&2; exit 1; }
+    wait_nested_ipc
     echo "nested-hypr: nested shell IPC ready"
 }
 
