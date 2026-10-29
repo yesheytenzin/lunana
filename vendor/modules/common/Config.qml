@@ -37,6 +37,11 @@ Singleton {
             zzz: { shape: "chamfer", glass: false }
         },
         bar: { borderless: true, cornerStyle: 1, height: 40, verbose: false },
+        // R1: pinned desktop IDs so the exact ii dock renders chrome with
+        // zero windows open. All three ship .desktop files + theme icons on
+        // this system (firefox/Alacritty/org.gnome.Nautilus). Every other
+        // dock.* read in the vendored tree has a `?? default` fallback.
+        dock: { pinnedApps: ["firefox", "Alacritty", "org.gnome.Nautilus"] },
         performance: { reduceAnimations: false, lowPower: false, compositorBlur: false }
     })
 
