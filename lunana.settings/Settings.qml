@@ -29,10 +29,9 @@ Item {
 
   Loader {
     active: root.opened
-    sourceComponent: Component {
-      Inir.Settings {
-      }
-    }
+    // File-URL, not the Inir.Settings type: the root qmldir registers the
+    // lowercase stem and the host must not depend on that spelling.
+    source: "../../lunana-vendor/settings.qml"
   }
 
     // Shell-entry handshake in this plugin's singleton universe (each

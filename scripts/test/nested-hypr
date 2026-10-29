@@ -39,6 +39,12 @@ load_env() {
 nested_env() {
     export HOME="$NESTED_FIXTURE"
     export XDG_CONFIG_HOME="$NESTED_FIXTURE/.config"
+    # Scope every other XDG dir into the fixture too: the vendored pipeline
+    # scripts (switchwall, weather cache, gamemode state) resolve them, and
+    # inherited live values would leak nest writes into the live session.
+    export XDG_CACHE_HOME="$NESTED_FIXTURE/.cache"
+    export XDG_STATE_HOME="$NESTED_FIXTURE/.local/state"
+    export XDG_DATA_HOME="$NESTED_FIXTURE/.local/share"
     export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"
     export WAYLAND_DISPLAY="$NESTED_WAYLAND"
     export HYPRLAND_INSTANCE_SIGNATURE="$NESTED_SIG"
@@ -81,9 +87,10 @@ cmd_up() {
 }
 EOF
     # Same for inir's own swayidle path (vendored Idle service): zero the
-    # timeouts so no lock/DPMS command ever fires in the nest.
-    mkdir -p "$fixture/.config/inir"
-    cat > "$fixture/.config/inir/config.json" <<'EOF'
+    # timeouts so no lock/DPMS command ever fires in the nest. inir's Config
+    # lives at ~/.config/illogical-impulse/config.json (not ~/.config/inir/).
+    mkdir -p "$fixture/.config/illogical-impulse"
+    cat > "$fixture/.config/illogical-impulse/config.json" <<'EOF'
 {
   "idle": {
     "screenOffTimeout": 0,

@@ -34,6 +34,19 @@ iris family is active.
 The suite runs as your user, never calls pacman/sudo, never touches
 `/usr/share/omarchy`, backs up `shell.json`, and writes it atomically.
 
+## Requirements
+
+System packages (see `packaging/package-metadata.json`): `omarchy`, `jq`,
+`grim`, `slurp`, `wf-recorder`, `tesseract`, `hyprctl`, `wireplumber`,
+`brightnessctl`, `qt6-5compat`, and **`syntax-highlighting`** — the last is
+non-optional: the vendored AI chat hard-requires the
+`org.kde.syntaxhighlighting` QML module (inir declares the same dependency).
+Without it the left sidebar cannot load:
+
+```bash
+sudo pacman -S syntax-highlighting
+```
+
 ## Try the swap
 
 ```bash
