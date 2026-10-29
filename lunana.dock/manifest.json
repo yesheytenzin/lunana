@@ -5,7 +5,7 @@
   "version": "0.4.0",
   "author": "lunana",
   "license": "GPL-3.0",
-  "description": "Lunana running-apps dock. A bottom dock of live Hyprland windows, click to focus.",
+  "description": "Lunana exact ii dock (inir tree, live Hyprland backing).",
   "kinds": [
     "service"
   ],

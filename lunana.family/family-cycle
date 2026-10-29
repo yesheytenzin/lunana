@@ -31,8 +31,7 @@ from pathlib import Path
 # (family name, bar plugin id ["" = stock omarchy.bar], overlay plugin ids)
 FAMILIES = [
     ("ii", "lunana.bar",
-     ["lunana.overview", "lunana.control-center",
-      "lunana.sidebar-left", "lunana.sidebar-right"]),
+     ["lunana.sidebar-left", "lunana.sidebar-right"]),
     # ("waffle", "lunana.bar-waffle", ["lunana.waffle-overlay"]),
     # ("iris", "lunana.bar-iris", ["lunana.iris-overlay"]),
     ("stock", "", []),

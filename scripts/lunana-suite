@@ -40,24 +40,26 @@ MANAGED_PLUGINS = [
     "lunana.bar",
     "lunana.state",
     "lunana.dock",
-    "lunana.overview",
-    "lunana.control-center",
     "lunana.sidebar-left",
     "lunana.sidebar-right",
     "lunana.family",
 ]
 
-# Sidebar overlay plugins host inir's exact content trees, which live in the
-# repo vendor/ tree. The installed plugin dirs are self-contained (relative
+# Overlay + bar-host plugins mount inir's exact content trees, which live in
+# the repo vendor/ tree. Installed plugin dirs are self-contained (relative
 # `import "vendor/..."` only resolves inside the plugin dir), so install/
-# sync materialize each sidebar's import-closure subset under the installed
+# sync materialize each host's import-closure subset under the installed
 # plugin's vendor/. Computed from the source tree — never hand-maintained,
 # and never the whole vendor/ tree.
-SIDEBAR_VENDOR_ROOTS = {
+VENDOR_ROOTS = {
+    "lunana.bar": "modules/bar/Bar.qml",
+    "lunana.dock": "modules/dock/Dock.qml",
     "lunana.sidebar-left": "modules/sidebarLeft/SidebarLeftContent.qml",
     "lunana.sidebar-right": "modules/sidebarRight/SidebarRightContent.qml",
 }
-SIDEBAR_VENDOR_SEED_DIRS = [
+VENDOR_SEED_DIRS = [
+    "modules/bar",
+    "modules/dock",
     "modules/sidebarLeft",
     "modules/sidebarRight",
     "modules/sidebar",
@@ -182,7 +184,7 @@ def copy_plugins() -> None:
             shutil.rmtree(dst)
         shutil.copytree(REPO_ROOT / pid, dst)
         info(f"synced {pid}")
-    for pid in SIDEBAR_VENDOR_ROOTS:
+    for pid in VENDOR_ROOTS:
         materialize_sidebar_vendor(pid)
 
 
@@ -200,10 +202,10 @@ def materialize_sidebar_vendor(pid: str) -> None:
     siblings), then follows quoted relative imports — including `.import` in
     .js files — to a fixpoint."""
     vendor = REPO_ROOT / "vendor"
-    root_rel = SIDEBAR_VENDOR_ROOTS[pid]
+    root_rel = VENDOR_ROOTS[pid]
     seen: set = set()
     stack = [vendor / root_rel]
-    for seed in SIDEBAR_VENDOR_SEED_DIRS:
+    for seed in VENDOR_SEED_DIRS:
         seed_dir = vendor / seed
         if seed_dir.is_dir():
             stack.extend(seed_dir.rglob("*.qml"))

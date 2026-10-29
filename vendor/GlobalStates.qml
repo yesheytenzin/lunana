@@ -54,14 +54,15 @@ Singleton {
     // inir's defaults. Orbit needs Hyprland rewrite: irisOrbitOpen exists so
     // the Island loads, but nothing Niri-backed opens it on Omarchy.
 
-    function openEqualizer(outputName) { root._summon("lunana.control-center"); }
-    function openOverview(outputName) { root._summon("lunana.overview"); }
+    // Full cutover: overview/equalizer/settings have no exact surface mounted
+    // (their approximation plugins are deleted), so these stay no-ops until
+    // the exact trees land. openSidebarRight summons the exact host.
+    function openEqualizer(outputName) {}
+    function openOverview(outputName) {}
     function openRegionScreenshot() {}
-    function openSidebarRight(outputName) { root._summon("lunana.control-center"); }
-    function toggleOverview(outputName) { root._summon("lunana.overview"); }
-    // No lunana settings surface exists; Control Center hosts the Settings
-    // quick action, so it is the summon target here too.
-    function toggleSettings() { root._summon("lunana.control-center"); }
+    function openSidebarRight(outputName) { root._summon("lunana.sidebar-right"); }
+    function toggleOverview(outputName) {}
+    function toggleSettings() {}
     // Wave-C R5 members: sidebar helpers + iRiS island state. No-ops until
     // the sidebar waves / Orbit rewrite wire them (R6 owns sidebars).
     function openSidebarLeft(outputName) {}

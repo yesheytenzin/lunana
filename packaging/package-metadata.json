@@ -9,9 +9,9 @@
     "lunana.bar",
     "lunana.state",
     "lunana.dock",
-    "lunana.overview",
-    "lunana.control-center",
-    "lunana.sidebar-left"
+    "lunana.sidebar-left",
+    "lunana.sidebar-right",
+    "lunana.family"
   ],
   "runtimeDependencies": [
     "omarchy",
