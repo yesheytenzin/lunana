@@ -445,6 +445,10 @@ def cmd_uninstall(args: argparse.Namespace) -> int:
     ensure_safe_target()
     state = read_json(state_path())
     previous_bar_id = state.get("previousBarId", "")
+    # Re-installs over an active install record the managed id as "previous";
+    # restoring that would be a no-op loop, so fall back to stock instead.
+    if previous_bar_id == BAR_PLUGIN_ID:
+        previous_bar_id = ""
     shell_path = shell_json_path()
 
     plan = [
@@ -474,8 +478,9 @@ def cmd_uninstall(args: argparse.Namespace) -> int:
             write_json_atomic(shell_path, shell)
             info("restored bar selection")
 
-    # 2. remove managed plugin copies
-    for pid in state.get("installedPlugins", MANAGED_PLUGINS):
+    # 2. remove managed plugin copies. Union state-listed + current managed:
+    # the state file may predate plugins added since that install.
+    for pid in dict.fromkeys(list(state.get("installedPlugins", [])) + MANAGED_PLUGINS):
         dst = plugin_dir() / pid
         if dst.exists():
             shutil.rmtree(dst)
