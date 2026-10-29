@@ -1,0 +1,6 @@
+Lock 1.0 Lock.qml
+LockContext 1.0 LockContext.qml
+LockKeyboard 1.0 LockKeyboard.qml
+LockMediaWidget 1.0 LockMediaWidget.qml
+LockSurface 1.0 LockSurface.qml
+PasswordChars 1.0 PasswordChars.qml

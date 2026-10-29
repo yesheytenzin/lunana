@@ -9,6 +9,10 @@ Singleton {
     id: root
 
     property real level: 1.0
+    // inir parity: per-monitor changes surface here so the island's
+    // onBrightnessChanged attaches to a real notifier.
+    signal brightnessChanged()
+    onLevelChanged: root.brightnessChanged()
 
     function setLevel(v) {
         v = Math.max(0.01, Math.min(1, v));

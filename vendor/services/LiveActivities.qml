@@ -8,4 +8,7 @@ import Quickshell
 Singleton {
     property var list: []
     readonly property var latest: null
+    // inir parity: fired when a live activity ends. The shim tracks
+    // nothing yet, so it never fires — but the island's Connections needs it.
+    signal finished(activity: var)
 }

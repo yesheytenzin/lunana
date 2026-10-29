@@ -35,6 +35,14 @@ Singleton {
     readonly property bool isPlaying: !!(root.activePlayer && root.activePlayer.isPlaying)
     readonly property bool isYtMusicActive: false
 
+    // inir parity: emitted when the audible track identity changes. The
+    // shim has no per-player update callback, so the key below derives it
+    // from the active player's metadata (position ticks don't touch the key).
+    signal trackChanged(reverse: bool)
+    readonly property string trackIdentityKey: String(root.activePlayer?.trackTitle ?? "") + "\n"
+        + String(root.activePlayer?.trackArtUrl ?? "") + "\n" + String(root.activePlayer?.trackArtist ?? "")
+    onTrackIdentityKeyChanged: root.trackChanged(false)
+
     // --- metadata ---
     function titleOf(player): string { return String(player?.trackTitle ?? ""); }
     function artistOf(player): string { return String(player?.trackArtist ?? ""); }

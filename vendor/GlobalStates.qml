@@ -42,6 +42,14 @@ Singleton {
     property string sidebarRightPresentationOutput: ""
     property string sidebarRightRequestedWidget: ""
     property bool superDown: false
+    // inir parity: set false while a super-tap release is being swallowed.
+    property bool superReleaseMightTrigger: true
+    // inir parity: media keys raise the island OSD through here.
+    signal osdMediaActionTriggered(action: string)
+    function showMediaAction(action) {
+        root.osdMediaOpen = true
+        root.osdMediaActionTriggered(String(action ?? ""))
+    }
     property bool wallpaperLauncherOpen: false
     property bool waffleActionCenterOpen: false
     property bool waffleAltSwitcherOpen: false

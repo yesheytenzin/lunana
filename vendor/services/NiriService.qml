@@ -14,6 +14,11 @@ Singleton {
     property var windows: []
     property var activeWindow: null
     property var currentOutput: null
+    // inir parity: workspace sets backing the bar. Empty on Hyprland (the
+    // exact bar only reads them behind `CompositorService.isNiri`), but the
+    // properties — and their change signals — must exist for Connections.
+    property var allWorkspaces: []
+    property var currentOutputWorkspaces: []
 
     Process {
         id: hyprDispatch
