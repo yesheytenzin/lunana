@@ -1966,7 +1966,7 @@ Scope {
                         action: () => { widgetManagerPanel.shown = false; GlobalStates.setWidgetEditMode(false) } }
                 ] : [
                     { text: Translation.tr("Settings"), iconName: "settings", monochromeIcon: true,
-                        action: () => { Quickshell.execDetached([Quickshell.shellPath("scripts/inir"), "settings"]) } },
+                        action: () => { Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")), "settings"]) } },
                     { type: "separator" },
                     { text: Translation.tr("Change wallpaper"), iconName: "image", monochromeIcon: true,
                         action: () => { GlobalActions.runLauncher(["wallpaperSelector", "toggle"]) } },
@@ -1976,7 +1976,7 @@ Scope {
                         action: () => { ShellEditSession.toggle() } },
                     { type: "separator" },
                     { text: Translation.tr("Reload shell"), iconName: "refresh", monochromeIcon: true,
-                        action: () => { Quickshell.execDetached(["/usr/bin/bash", Quickshell.shellPath("scripts/restart-shell.sh")]) } }
+                        action: () => { Quickshell.execDetached(["/usr/bin/bash", ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/restart-shell.sh"))]) } }
                 ]
             }
 
@@ -3327,7 +3327,7 @@ Scope {
                         }
                         function _load(): void {
                             active = true;
-                            setSource(Quickshell.shellPath("modules/background/widgets/mascot/MascotWidget.qml"), {
+                            setSource(((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("modules/background/widgets/mascot/MascotWidget.qml")), {
                                 configEntryName: "mascotInstances." + modelData,
                                 widgetIndex: 23 + index,
                                 outputName: bgRoot.screen?.name ?? "",

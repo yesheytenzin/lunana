@@ -43,7 +43,7 @@ Singleton {
         ])
         // Small delay so notification shows
         Qt.callLater(() => {
-            Quickshell.execDetached([Quickshell.shellPath("scripts/inir"), "service", "restart"])
+            Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")), "service", "restart"])
         })
     }
 

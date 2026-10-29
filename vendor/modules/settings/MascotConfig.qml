@@ -369,25 +369,25 @@ ContentPage {
                     materialIcon: "cyclone"
                     mainText: Translation.tr("Unleash chaos")
                     enabled: Config.options?.mascot?.chaos?.enable ?? false
-                    onClicked: Quickshell.execDetached([Quickshell.shellPath("scripts/inir"), "mascot", "romp"])
+                    onClicked: Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")), "mascot", "romp"])
                 }
                 RippleButtonWithIcon {
                     materialIcon: "cleaning_services"
                     mainText: Translation.tr("Tidy up")
-                    onClicked: Quickshell.execDetached([Quickshell.shellPath("scripts/inir"), "mascot", "tidy"])
+                    onClicked: Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")), "mascot", "tidy"])
                 }
                 RippleButtonWithIcon {
                     materialIcon: "sports_esports"
                     mainText: Translation.tr("Play chase")
                     enabled: Config.options?.mascot?.chaos?.enable ?? false
-                    onClicked: Quickshell.execDetached([Quickshell.shellPath("scripts/inir"), "mascot", "chase"])
+                    onClicked: Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")), "mascot", "chase"])
                     StyledToolTip { text: Translation.tr("Explicitly start the mouse chase game; it never starts on its own") }
                 }
                 RippleButtonWithIcon {
                     materialIcon: "search"
                     mainText: Translation.tr("Hide and seek")
                     enabled: Config.options?.mascot?.chaos?.enable ?? false
-                    onClicked: Quickshell.execDetached([Quickshell.shellPath("scripts/inir"), "mascot", "hideSeek"])
+                    onClicked: Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")), "mascot", "hideSeek"])
                     StyledToolTip { text: Translation.tr("Explicitly start hide-and-seek; find Kira before the timer expires") }
                 }
             }
@@ -402,19 +402,19 @@ ContentPage {
                 RippleButtonWithIcon {
                     materialIcon: "waving_hand"
                     mainText: Translation.tr("Peek now")
-                    onClicked: Quickshell.execDetached([Quickshell.shellPath("scripts/inir"), "mascot", "poke"])
+                    onClicked: Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")), "mascot", "poke"])
                 }
 
                 RippleButtonWithIcon {
                     materialIcon: "sentiment_very_satisfied"
                     mainText: Translation.tr("Say hi")
-                    onClicked: Quickshell.execDetached([Quickshell.shellPath("scripts/inir"), "mascot", "appear", "wave-loop", "bottom"])
+                    onClicked: Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")), "mascot", "appear", "wave-loop", "bottom"])
                 }
 
                 RippleButtonWithIcon {
                     materialIcon: "visibility_off"
                     mainText: Translation.tr("Send her away")
-                    onClicked: Quickshell.execDetached([Quickshell.shellPath("scripts/inir"), "mascot", "hide"])
+                    onClicked: Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")), "mascot", "hide"])
                 }
             }
 
@@ -482,7 +482,7 @@ ContentPage {
 
             FileView {
                 id: mascotManifestFile
-                path: Quickshell.shellPath("assets/images/mascot/manifest.json")
+                path: ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("assets/images/mascot/manifest.json"))
                 watchChanges: true
                 onLoadedChanged: {
                     if (!loaded) return
@@ -499,7 +499,7 @@ ContentPage {
                             .concat(ordered.map(p => ({
                                 displayName: p,
                                 value: p,
-                                image: Quickshell.shellPath(`assets/images/mascot/inir-mascot-${p}.${anim.includes(p) ? "gif" : "png"}`)
+                                image: ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + (`assets/images/mascot/inir-mascot-${p}.${anim.includes(p) ? "gif" : "png"}`))
                             })))
                     } catch (e) {
                         console.warn("[QuickConfig] mascot manifest load failed:", e)

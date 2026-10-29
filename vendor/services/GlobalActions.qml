@@ -33,7 +33,7 @@ Singleton {
     readonly property var allActions: _rebuildActions()
 
     function runLauncher(args): void {
-        Quickshell.execDetached([Quickshell.shellPath("scripts/inir")].concat(args ?? []))
+        Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir"))].concat(args ?? []))
     }
 
     function applyGlobalStyle(styleId: string): void {
@@ -329,7 +329,7 @@ Singleton {
             category: "appearance",
             keywords: ["wallpaper", "random", "konachan"],
             execute: () => {
-                Quickshell.execDetached([Quickshell.shellPath("scripts/colors/random/random_konachan_wall.sh")])
+                Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/colors/random/random_konachan_wall.sh"))])
             }
         },
         {

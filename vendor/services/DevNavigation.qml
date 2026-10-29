@@ -203,7 +203,7 @@ Singleton {
 
     Process {
         running: Quickshell.watchFiles
-        command: ["python3", Quickshell.shellPath("scripts/daemon/dev_hot_reload.py"), Quickshell.shellDir,
+        command: ["python3", ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/daemon/dev_hot_reload.py")), Quickshell.shellDir,
             String(Quickshell.processId)]
     }
 

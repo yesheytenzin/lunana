@@ -18,7 +18,7 @@ import "."
 Singleton {
     id: root
 
-    readonly property string script: Quickshell.shellPath("scripts/niri-config.py")
+    readonly property string script: ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/niri-config.py"))
     readonly property string animationsFile: FileUtils.trimFileProtocol(`${Directories.config}/niri/config.d/60-animations.kdl`)
     readonly property string userPresetsFile: FileUtils.trimFileProtocol(`${Directories.shellConfig}/niri-animation-presets.json`)
 

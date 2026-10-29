@@ -527,7 +527,7 @@ PanelWindow {
             # Clipboard ownership lives outside inir.service so editing/copying
             # never leaves a wl-copy process behind when the shell restarts.
             _clip_msg="";
-            _clip_helper='${StringUtils.shellSingleQuoteEscape(Quickshell.shellPath("scripts/clipboard-copy.sh"))}';
+            _clip_helper='${StringUtils.shellSingleQuoteEscape(((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/clipboard-copy.sh")))}';
             if "$_clip_helper" < "$_ss" 2>/dev/null && printf '%s' "$_ss" | "$_clip_helper" --primary 2>/dev/null; then
                 _clip_msg=" — copied to clipboard";
             else

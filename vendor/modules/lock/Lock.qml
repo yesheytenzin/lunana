@@ -94,7 +94,7 @@ Scope {
             environment: ({
                 "UNLOCK_PASSWORD": lockContext.currentText
             }),
-            command: ["/usr/bin/bash", Quickshell.shellPath("scripts/keyring/unlock.sh")]
+            command: ["/usr/bin/bash", ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/keyring/unlock.sh"))]
         })
     }
 

@@ -24,7 +24,7 @@ Singleton {
 
     Process {
         id: reader
-        command: ["python3", Quickshell.shellPath("scripts/niri-config.py"), "get-blur"]
+        command: ["python3", ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/niri-config.py")), "get-blur"]
         stdout: StdioCollector {
             onStreamFinished: {
                 try {

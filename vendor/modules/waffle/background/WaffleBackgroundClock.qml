@@ -235,7 +235,7 @@ AbstractWidget {
         property int contentHeight: Math.max(180, Math.round(root.height))
         property int horizontalPadding: Math.max(90, Math.round(root.screenWidth * 0.08))
         property int verticalPadding: Math.max(90, Math.round(root.screenHeight * 0.08))
-        command: [Quickshell.shellPath("scripts/images/least-busy-region-venv.sh"),
+        command: [((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/images/least-busy-region-venv.sh")),
             "--screen-width", Math.round(root.scaledScreenWidth),
             "--screen-height", Math.round(root.scaledScreenHeight),
             "--width", contentWidth,

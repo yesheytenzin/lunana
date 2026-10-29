@@ -34,8 +34,8 @@ Singleton {
     readonly property string videosPath: FileUtils.trimFileProtocol(videos)
 
     // Other dirs used by the shell, without "file://"
-    property string assetsPath: Quickshell.shellPath("assets")
-    property string scriptPath: Quickshell.shellPath("scripts")
+    property string assetsPath: ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("assets"))
+    property string scriptPath: ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts"))
     property string scriptsPath: FileUtils.trimFileProtocol(scriptPath)
     property string stateUserPath: `${Directories.statePath}/user`
     property string wallpapersPath: Config.options?.wallpapers?.directory || `${Directories.picturesPath}/Wallpapers`
@@ -116,7 +116,7 @@ Singleton {
     property string cliphistDecode: FileUtils.trimFileProtocol(`/tmp/quickshell/media/cliphist`)
     property string screenshotTemp: "/tmp/quickshell/media/screenshot"
     property string wallpaperSwitchScriptPath: `${Directories.scriptsPath}/colors/switchwall.sh`
-    property string defaultAiPrompts: Quickshell.shellPath("defaults/ai/prompts")
+    property string defaultAiPrompts: ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("defaults/ai/prompts"))
     property string userAiPrompts: FileUtils.trimFileProtocol(`${Directories.shellConfig}/ai/prompts`)
     property string userActions: FileUtils.trimFileProtocol(`${Directories.shellConfig}/actions`)
     property string aiChats: `${Directories.stateUserPath}/ai/chats`

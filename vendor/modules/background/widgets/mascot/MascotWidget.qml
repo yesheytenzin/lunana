@@ -663,7 +663,7 @@ AbstractBackgroundWidget {
         enabled: !GlobalStates.widgetEditMode && sprite.visible
         onTapped: {
             if (root.customPath.length > 0) {
-                Quickshell.execDetached([Quickshell.shellPath("scripts/inir"), "mascot", "poke"])
+                Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")), "mascot", "poke"])
             } else {
                 root._reactToClick()
             }

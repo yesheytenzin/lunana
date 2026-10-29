@@ -51,7 +51,7 @@ WSettingsPage {
 
         FileView {
             id: mascotManifestFile
-            path: Quickshell.shellPath("assets/images/mascot/manifest.json")
+            path: ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("assets/images/mascot/manifest.json"))
             watchChanges: true
             onLoadedChanged: {
                 if (!loaded) return
@@ -68,7 +68,7 @@ WSettingsPage {
                         .concat(ordered.map(p => ({
                             displayName: p,
                             value: p,
-                            image: Quickshell.shellPath(`assets/images/mascot/inir-mascot-${p}.${anim.includes(p) ? "gif" : "png"}`)
+                            image: ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + (`assets/images/mascot/inir-mascot-${p}.${anim.includes(p) ? "gif" : "png"}`))
                         })))
                 } catch (e) {
                     console.warn("[WQuickPage] mascot manifest load failed:", e)
@@ -329,14 +329,14 @@ WSettingsPage {
             label: Translation.tr("Unleash chaos")
             icon: "flash-on"
             enabled: Config.options?.mascot?.chaos?.enable ?? false
-            onClicked: Quickshell.execDetached([Quickshell.shellPath("scripts/inir"), "mascot", "romp"])
+            onClicked: Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")), "mascot", "romp"])
         }
 
         WSettingsButton {
             label: Translation.tr("Tidy up")
             description: Translation.tr("Every displaced widget returns home")
             icon: "delete"
-            onClicked: Quickshell.execDetached([Quickshell.shellPath("scripts/inir"), "mascot", "tidy"])
+            onClicked: Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")), "mascot", "tidy"])
         }
 
         WSettingsButton {
@@ -344,7 +344,7 @@ WSettingsPage {
             description: Translation.tr("Explicitly start the mouse chase game; it never starts on its own")
             icon: "gamepad"
             enabled: Config.options?.mascot?.chaos?.enable ?? false
-            onClicked: Quickshell.execDetached([Quickshell.shellPath("scripts/inir"), "mascot", "chase"])
+            onClicked: Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")), "mascot", "chase"])
         }
 
         WSettingsButton {
@@ -352,7 +352,7 @@ WSettingsPage {
             description: Translation.tr("Explicitly start hide-and-seek; find Kira before the timer expires")
             icon: "search"
             enabled: Config.options?.mascot?.chaos?.enable ?? false
-            onClicked: Quickshell.execDetached([Quickshell.shellPath("scripts/inir"), "mascot", "hideSeek"])
+            onClicked: Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")), "mascot", "hideSeek"])
         }
 
         WSettingsSwitch {
@@ -413,13 +413,13 @@ WSettingsPage {
             label: Translation.tr("Peek now")
             description: Translation.tr("Try her right now instead of waiting for the interval")
             icon: "wand"
-            onClicked: Quickshell.execDetached([Quickshell.shellPath("scripts/inir"), "mascot", "poke"])
+            onClicked: Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")), "mascot", "poke"])
         }
 
         WSettingsButton {
             label: Translation.tr("Send her away")
             icon: "eye-off"
-            onClicked: Quickshell.execDetached([Quickshell.shellPath("scripts/inir"), "mascot", "hide"])
+            onClicked: Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")), "mascot", "hide"])
         }
 
         WSettingsSwitch {
@@ -620,13 +620,13 @@ WSettingsPage {
                     onClicked: {
                         switch (actionBtn.modelData.action) {
                         case "reload":
-                            Quickshell.execDetached(["/usr/bin/bash", Quickshell.shellPath("scripts/restart-shell.sh")])
+                            Quickshell.execDetached(["/usr/bin/bash", ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/restart-shell.sh"))])
                             break
                         case "config":
                             Qt.openUrlExternally(Directories.shellConfigPath)
                             break
                         case "shortcuts":
-                            Quickshell.execDetached([Quickshell.shellPath("scripts/inir"), "cheatsheet", "toggle"])
+                            Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")), "cheatsheet", "toggle"])
                             break
                         }
                     }

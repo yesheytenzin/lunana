@@ -19,7 +19,7 @@ Item {
     // Easter egg: long-press the clock → bedtime lecture, whatever the hour
     TapHandler {
         enabled: Config.options?.mascot?.enable ?? false
-        onLongPressed: Quickshell.execDetached([Quickshell.shellPath("scripts/inir"), "mascot", "appear", "late-night", "top"])
+        onLongPressed: Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")), "mascot", "appear", "late-night", "top"])
     }
 
     RowLayout {

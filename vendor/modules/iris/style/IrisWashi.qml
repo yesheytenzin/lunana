@@ -83,7 +83,7 @@ Singleton {
     function run(): void {
         if (root.data?.request === root.requestJson && root.data?.version === root.version) return
         if (solver.running) { root.again = true; return }
-        solver.command = ["/usr/bin/bash", Quickshell.shellPath("scripts/colors/washi.sh"), "--request", root.requestJson, "--out", root.cachePath]
+        solver.command = ["/usr/bin/bash", ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/colors/washi.sh")), "--request", root.requestJson, "--out", root.cachePath]
         solver.running = true
     }
     // A slider's steps settle into one solve.
@@ -92,7 +92,7 @@ Singleton {
     Component.onCompleted: root.settle.restart()
 
     readonly property FileView cache: FileView { path: root.cachePath; blockLoading: true; printErrors: false }
-    readonly property FileView fallback: FileView { path: Quickshell.shellPath("defaults/iris-washi.json"); blockLoading: true }
+    readonly property FileView fallback: FileView { path: ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("defaults/iris-washi.json")); blockLoading: true }
     readonly property Process solver: Process {
         stdout: StdioCollector {
             onStreamFinished: {

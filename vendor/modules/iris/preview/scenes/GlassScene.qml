@@ -85,7 +85,7 @@ PreviewScene {
             anchors.fill: parent
             visible: glassRoot.niriBlur && IrisCompositorBlur.noise > 0
             opacity: Math.min(1, IrisCompositorBlur.noise * 5)
-            source: visible ? Quickshell.shellPath("assets/textures/grain.png") : ""
+            source: visible ? ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("assets/textures/grain.png")) : ""
             fillMode: Image.Tile
             smooth: false
         }

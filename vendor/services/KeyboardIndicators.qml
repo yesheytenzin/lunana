@@ -20,7 +20,7 @@ Singleton {
     property bool _destroying: false
     property bool _numLockReliable: false
     property var _lastRawNumLockState: null
-    property string lockStateDaemonPath: Quickshell.shellPath("scripts/daemon/keyboard_lock_state_daemon.py")
+    property string lockStateDaemonPath: ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/daemon/keyboard_lock_state_daemon.py"))
 
     property bool capsLock: false
     property bool numLock: false

@@ -48,7 +48,7 @@ ContentPage {
 
     Process {
         id: setProfileAvatarProcess
-        command: [Quickshell.shellPath("scripts/accounts/set-avatar.sh"), root.pendingProfileAvatarPath]
+        command: [((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/accounts/set-avatar.sh")), root.pendingProfileAvatarPath]
         onExited: exitCode => {
             if (exitCode === 0)
                 Directories.userAvatarRevision++

@@ -178,7 +178,7 @@ ContentPage {
     property var setRequestQueue: []
     readonly property bool displayControlsLocked: confirmationPending || applyOutputProcess.running || persistOutputProcess.running
 
-    readonly property string scriptPath: Quickshell.shellPath("scripts/niri-config.py")
+    readonly property string scriptPath: ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/niri-config.py"))
     readonly property var keyboardLayoutOptions: [
         { displayName: "US English", value: "us" },
         { displayName: "Spanish", value: "es" },

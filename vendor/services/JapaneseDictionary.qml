@@ -9,8 +9,8 @@ import "../modules/common"
 Singleton {
     id: root
 
-    readonly property string backend: Quickshell.shellPath("scripts/japanese-dictionary.py")
-    readonly property string installer: Quickshell.shellPath("scripts/install-japanese-dictionary.sh")
+    readonly property string backend: ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/japanese-dictionary.py"))
+    readonly property string installer: ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/install-japanese-dictionary.sh"))
     property int dictionaryCount: 0
     property var dictionaries: []
     readonly property bool jitendexInstalled: dictionaries.some(d => String(d.title ?? "").toLowerCase().includes("jitendex"))
@@ -92,7 +92,7 @@ Singleton {
         if (!text.length) return
         root.translationText = ""
         root.translationError = ""
-        translateProc.command = [Quickshell.shellPath("scripts/translate-ocr.sh"), root.resolvedTranslationTarget(), "ja", text]
+        translateProc.command = [((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/translate-ocr.sh")), root.resolvedTranslationTarget(), "ja", text]
         translateProc.running = true
     }
 
@@ -105,7 +105,7 @@ Singleton {
     function downloadStudyDeck(deckId: string): void {
         if (deckProc.running) return
         root.studyDeckStatus = Translation.tr("Downloading study deck…")
-        deckProc.command = ["python3", Quickshell.shellPath("scripts/study-decks.py"), "download", deckId]
+        deckProc.command = ["python3", ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/study-decks.py")), "download", deckId]
         deckProc.running = true
     }
 

@@ -65,6 +65,65 @@ def rewrite_imports(text: str, file_dir: Path) -> str:
     return "\n".join(out) + trailing
 
 
+# inir resolves its own assets/scripts with `Quickshell.shellPath("x")`, which
+# returns a path relative to the *shell root*. Re-hosted inside Omarchy's shell
+# that root is omarchy-shell's own dir, not the vendored tree, so every such
+# call (fonts, mascot assets, translations, the scripts/inir runtime + color/
+# capture scripts — ~186 sites) resolves into Omarchy's tree where the file is
+# absent. Rewrite each call to resolve against the installed shared vendored
+# tree instead: <XDG_CONFIG_HOME|~/.config>/omarchy/lunana-vendor/<x>. The arg
+# is preserved verbatim (string, template literal, or template with ${…}).
+SHELLPATH_MARKER = "Quickshell.shellPath("
+_SHELLPATH_PRE = ('((Quickshell.env("XDG_CONFIG_HOME") || '
+                  '(Quickshell.env("HOME") + "/.config")) + '
+                  '"/omarchy/lunana-vendor/" + (')
+_SHELLPATH_POST = "))"
+
+
+def rewrite_shellpath(text: str) -> str:
+    """Replace each `Quickshell.shellPath(ARG)` with a concat that resolves ARG
+    against the installed lunana-vendor tree. ARG is captured by scanning for
+    the matching close paren while respecting nested brackets and string/
+    template literals, so template literals with `${…}` survive intact.
+    Idempotent: the replacement contains no `Quickshell.shellPath(`."""
+    out = []
+    i = 0
+    n = len(text)
+    while True:
+        j = text.find(SHELLPATH_MARKER, i)
+        if j < 0:
+            out.append(text[i:])
+            break
+        out.append(text[i:j])
+        k = j + len(SHELLPATH_MARKER)
+        depth = 1
+        arg_start = k
+        quote = None
+        while k < n and depth > 0:
+            c = text[k]
+            if quote:
+                if c == "\\":
+                    k += 2
+                    continue
+                if c == quote:
+                    quote = None
+                k += 1
+                continue
+            if c in ('"', "'", "`"):
+                quote = c
+            elif c in "([{":
+                depth += 1
+            elif c in ")]}":
+                depth -= 1
+                if depth == 0:
+                    break
+            k += 1
+        arg = text[arg_start:k]  # k is at the matching ')'
+        out.append(_SHELLPATH_PRE + arg + _SHELLPATH_POST)
+        i = k + 1
+    return "".join(out)
+
+
 def strip_module_line(qmldir_text: str) -> str:
     """Relative-path imports read a qmldir's type set but must not re-register a
     `qs.*` module URI, so drop the `module …` declaration from vendored qmldirs."""
@@ -85,7 +144,7 @@ def vendor_path(rel_path: str) -> int:
         if f.name == "qmldir":
             dst.write_text(strip_module_line(f.read_text(encoding="utf-8")), encoding="utf-8")
         elif f.suffix in (".qml", ".js"):
-            dst.write_text(rewrite_imports(f.read_text(encoding="utf-8"), dst.parent), encoding="utf-8")
+            dst.write_text(rewrite_shellpath(rewrite_imports(f.read_text(encoding="utf-8"), dst.parent)), encoding="utf-8")
         else:
             shutil.copy2(f, dst)  # shaders, images, json
         count += 1
@@ -141,6 +200,18 @@ def main(argv: list[str]) -> int:
     if argv[0] == "--qmldir":
         regenerate_qmldirs()
         print("vendor: regenerated qmldirs")
+        return 0
+    if argv[0] == "--shellpath":
+        # Apply the shellPath rewrite to the already-vendored tree in place,
+        # without re-pulling from inir (no drift risk). Idempotent.
+        changed = 0
+        for f in sorted(list(VENDOR.rglob("*.qml")) + list(VENDOR.rglob("*.js"))):
+            before = f.read_text(encoding="utf-8")
+            after = rewrite_shellpath(before)
+            if after != before:
+                f.write_text(after, encoding="utf-8")
+                changed += 1
+        print(f"vendor: shellPath rewrite applied to {changed} file(s) in {VENDOR}")
         return 0
     if not INIR.is_dir():
         print(f"vendor: inir checkout not found at {INIR} (set INIR_SRC)", file=sys.stderr)

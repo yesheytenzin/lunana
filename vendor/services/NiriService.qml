@@ -126,7 +126,7 @@ Singleton {
         id: overviewHotCornersProcess
         command: [
             "/usr/bin/python3",
-            Quickshell.shellPath("scripts/niri-config.py"),
+            ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/niri-config.py")),
             "get-hot-corners"
         ]
 

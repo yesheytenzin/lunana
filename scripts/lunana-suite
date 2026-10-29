@@ -69,6 +69,11 @@ MANAGED_PLUGINS = [
     "lunana.iris-lock",
     "lunana.iris-notifications",
     "lunana.iris-settings",
+    "lunana.iris-osd",
+    "lunana.iris-session",
+    "lunana.iris-wallpaper",
+    "lunana.iris-sidebar-left",
+    "lunana.iris-sidebar-right",
     "lunana.bar-waffle",
     "lunana.waffle-start",
     "lunana.waffle-action",
@@ -507,6 +512,7 @@ def cmd_install(args: argparse.Namespace) -> int:
         f"copy {len(MANAGED_PLUGINS)} plugin(s) -> {plugin_dir()}/ + shared {SHARED_VENDOR_DIRNAME}/",
         f"back up {shell_path.name} (if present)",
         f'set shell.json bar.id = "{BAR_PLUGIN_ID}" (was "{previous_bar_id or "<stock>"}")',
+        "stand down stock omarchy.dock + omarchy.background (restored on uninstall)",
         "enable the default (ii) family plugin set (family-exclusive plugins join via family-cycle)",
         f"merge lunana keybinds into {hypr_bindings_file()} (backed up)",
         f"install lunana.conf layerrules -> {hypr_lunana_conf()} (sourced, backed up)",
@@ -535,12 +541,18 @@ def cmd_install(args: argparse.Namespace) -> int:
     # 3. select the lunana bar
     shell.setdefault("bar", {})
     shell["bar"]["id"] = BAR_PLUGIN_ID
-    # 3b. stand down the stock dock while lunana's exact dock owns the edge.
-    # Record whether it was enabled so uninstall restores exactly that.
+    # 3b. stand down the stock dock + background while lunana's exact dock and
+    # background own those layers. Every lunana family ships its own background
+    # (ii/iris/waffle), so the stock one would otherwise render a second
+    # wallpaper layer underneath. Record whether each was enabled so uninstall
+    # restores exactly that.
     disabled = shell.setdefault("disabledPlugins", [])
     dock_was_enabled = "omarchy.dock" not in disabled
     if dock_was_enabled:
         disabled.append("omarchy.dock")
+    background_was_enabled = "omarchy.background" not in disabled
+    if background_was_enabled:
+        disabled.append("omarchy.background")
     write_json_atomic(shell_path, shell)
 
     # 4. record managed state for an exact uninstall
@@ -549,6 +561,7 @@ def cmd_install(args: argparse.Namespace) -> int:
         "installedPlugins": MANAGED_PLUGINS,
         "previousBarId": previous_bar_id,
         "dockWasEnabled": dock_was_enabled,
+        "backgroundWasEnabled": background_was_enabled,
         "shellBackup": backup.name if backup else "",
         "installedAt": int(time.time()),
     })
@@ -621,7 +634,7 @@ def cmd_uninstall(args: argparse.Namespace) -> int:
         f"remove {len(MANAGED_PLUGINS)} managed plugin(s) from {plugin_dir()}/ + shared {SHARED_VENDOR_DIRNAME}/",
         "remove lunana keybinds from bindings.lua",
         "remove lunana.conf layerrules + its source line",
-        "restore omarchy.dock if this suite stood it down",
+        "restore omarchy.dock + omarchy.background if this suite stood them down",
     ]
     info("planned actions:")
     for step in plan:
@@ -645,14 +658,16 @@ def cmd_uninstall(args: argparse.Namespace) -> int:
             write_json_atomic(shell_path, shell)
             info("restored bar selection")
 
-    # 1b. restore the stock dock if the install stood it down.
-    if state.get("dockWasEnabled"):
-        shell = read_json(shell_path)
-        disabled = shell.get("disabledPlugins", [])
-        if "omarchy.dock" in disabled:
-            shell["disabledPlugins"] = [p for p in disabled if p != "omarchy.dock"]
-            write_json_atomic(shell_path, shell)
-            info("restored omarchy.dock")
+    # 1b. restore the stock dock + background if the install stood them down.
+    for stock_id, flag in (("omarchy.dock", "dockWasEnabled"),
+                           ("omarchy.background", "backgroundWasEnabled")):
+        if state.get(flag):
+            shell = read_json(shell_path)
+            disabled = shell.get("disabledPlugins", [])
+            if stock_id in disabled:
+                shell["disabledPlugins"] = [p for p in disabled if p != stock_id]
+                write_json_atomic(shell_path, shell)
+                info(f"restored {stock_id}")
 
     # 2. remove managed plugin copies. Union state-listed + current managed:
     # the state file may predate plugins added since that install.

@@ -193,7 +193,7 @@ Singleton {
             }
             backdropShadowSyncProcess.command = [
                 "/usr/bin/python3",
-                Quickshell.shellPath("scripts/niri-config.py"),
+                ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/niri-config.py")),
                 "sync-backdrop-overview-shadow",
                 root.backdropOnlyShadowOverrideWanted ? "on" : "off"
             ]

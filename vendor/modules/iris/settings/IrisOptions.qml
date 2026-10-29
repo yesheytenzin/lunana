@@ -43,7 +43,7 @@ QtObject {
     }
     function commit(spec: var, next: var): void {
         // A family switch goes through the shell's transition, never a bare config write.
-        if (spec.path === "panelFamily") Quickshell.execDetached([Quickshell.shellPath("scripts/inir"), "panelFamily", "set", String(next)])
+        if (spec.path === "panelFamily") Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")), "panelFamily", "set", String(next)])
         else if (spec.widgetDesign) DesktopWidgetDesign.apply(String(next))
         else if (spec.niri) IrisNiri.set(spec, next)
         else if (spec.kind === "icon") IrisPieces.setGlyph(String(spec.piece ?? ""), String(next ?? ""))

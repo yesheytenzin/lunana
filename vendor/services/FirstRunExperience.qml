@@ -32,7 +32,7 @@ Singleton {
     function handleFirstRun(): void {
         if (root.defaultWallpaperPath.length > 0)
             Quickshell.execDetached([Directories.wallpaperSwitchScriptPath, root.defaultWallpaperPath])
-        Quickshell.execDetached([Quickshell.shellPath("scripts/inir"), "welcome"])
+        Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")), "welcome"])
     }
 
     Process {

@@ -476,7 +476,7 @@ Item {
                         buttonRadius: root.angelStyle ? Appearance.angel.roundingSmall : 16
                         colBackground: "transparent"
                         colBackgroundHover: Appearance.editorialEverywhere ? ColorUtils.applyAlpha(Appearance.editorial.paperOnInk, 0.12) : root.colCardHover
-                        onClicked: Quickshell.execDetached([Quickshell.shellPath("scripts/inir"), "settings"])
+                        onClicked: Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")), "settings"])
                         contentItem: MaterialSymbol {
                             anchors.centerIn: parent
                             text: "settings"

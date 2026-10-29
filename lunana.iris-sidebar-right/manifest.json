@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "lunana.iris-sidebar-right",
+  "name": "Lunana iRiS Today",
+  "version": "0.4.0",
+  "author": "lunana",
+  "license": "GPL-3.0",
+  "description": "Lunana iRiS right sidebar (today) host.",
+  "kinds": [
+    "overlay"
+  ],
+  "entryPoints": {
+    "overlay": "IrisSidebarRight.qml"
+  },
+  "x-lunana": {
+    "suiteId": "lunana",
+    "role": "iris-sidebar-right",
+    "milestone": "parity",
+    "requires": [],
+    "recommends": []
+  }
+}

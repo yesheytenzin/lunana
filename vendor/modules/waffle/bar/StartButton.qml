@@ -54,7 +54,7 @@ AppButton {
             {
                 text: Translation.tr("Settings"),
                 action: () => {
-                    ShellExec.execDetachedArgs([Quickshell.shellPath("scripts/inir"), "settings"], "Open iNiR settings");
+                    ShellExec.execDetachedArgs([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")), "settings"], "Open iNiR settings");
                 }
             },
             {
@@ -66,7 +66,7 @@ AppButton {
             {
                 text: Translation.tr("Search"),
                 action: () => {
-                    Quickshell.execDetached([Quickshell.shellPath("scripts/inir"), "overview", "toggle"]);
+                    Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")), "overview", "toggle"]);
                 }
             },
         ]

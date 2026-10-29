@@ -2630,7 +2630,7 @@ AbstractWidget {
         id: leastBusyRegionProc
         property int contentWidth: Math.max(1, Math.round(root.width / Math.max(root.wallpaperScale, 0.001)))
         property int contentHeight: Math.max(1, Math.round(root.height / Math.max(root.wallpaperScale, 0.001)))
-        command: [Quickshell.shellPath("scripts/images/least-busy-region-venv.sh")
+        command: [((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/images/least-busy-region-venv.sh"))
             , "--screen-width", Math.round(root.scaledScreenWidth)
             , "--screen-height", Math.round(root.scaledScreenHeight)
             , "--width", contentWidth

@@ -380,7 +380,7 @@ PanelWindow {
             return `url=$(${primary} 2>/dev/null); if [[ -z "$url" || "$url" != http* ]]; then url=$(${fallback1}); fi; if [[ -z "$url" || "$url" != http* ]]; then url=$(${fallback2}); fi; echo "$url"`
         }
         const annotationCommand = `${(Config.options?.regionSelector?.annotation?.useSatty ?? false) ? "satty" : "swappy"} -f -`;
-        const clipboardCopy = StringUtils.shellSingleQuoteEscape(Quickshell.shellPath("scripts/clipboard-copy.sh"));
+        const clipboardCopy = StringUtils.shellSingleQuoteEscape(((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/clipboard-copy.sh")));
         switch (root.action) {
             case RegionSelection.SnipAction.Copy:
                 snipProc.command = ["/usr/bin/bash", "-c", `_dir='${screenshotSaveDir}' && mkdir -p "$_dir" && _ss="$_dir/$(date +'${StringUtils.shellSingleQuoteEscape(root.screenshotNameFormat)}').png" && ${cropToStdout} | tee "$_ss" | '${clipboardCopy}' && printf '%s' "$_ss" | '${clipboardCopy}' --primary && ${cleanup} && /usr/bin/notify-send "Screenshot copied" "${rw}x${rh} saved to $_ss" -a "Screenshot" -i camera-photo -t 3000`]
@@ -400,7 +400,7 @@ PanelWindow {
                 break;
             case RegionSelection.SnipAction.CharRecognition: {
                 const ocrLanguage = String(Config.options?.regionSelector?.ocrLanguage ?? "auto");
-                const ocrRunner = StringUtils.shellSingleQuoteEscape(Quickshell.shellPath("scripts/ocr-runner.sh"));
+                const ocrRunner = StringUtils.shellSingleQuoteEscape(((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/ocr-runner.sh")));
                 const japaneseLookup = Config.options?.regionSelector?.japaneseLookup?.enabled ?? true;
                 if (japaneseLookup && (ocrLanguage === "jpn" || ocrLanguage === "jpn_vert" || ocrLanguage.startsWith("jpn+"))) {
                     japaneseOcrProc.lookupX = root.regionX;
@@ -460,7 +460,7 @@ PanelWindow {
                 const recognized = (japaneseOcrOut.text ?? "").trim();
                 japaneseOcrProc.recognizedText = recognized;
                 if (recognized.length > 0) {
-                    const clipboardCopy = Quickshell.shellPath("scripts/clipboard-copy.sh");
+                    const clipboardCopy = ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/clipboard-copy.sh"));
                     Quickshell.execDetached([clipboardCopy, recognized]);
                     Quickshell.execDetached([clipboardCopy, "--primary", recognized]);
                     JapaneseDictionary.lookupText(recognized, root.screen.name, japaneseOcrProc.lookupX, japaneseOcrProc.lookupY, japaneseOcrProc.lookupWidth, japaneseOcrProc.lookupHeight);

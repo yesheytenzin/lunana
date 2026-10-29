@@ -34,7 +34,7 @@ ContentPage {
                         anchors.fill: parent
                         sourceSize.width: 64
                         sourceSize.height: 64
-                        source: Quickshell.shellPath(`assets/icons/${SystemInfo.distroIcon}.svg`)
+                        source: ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + (`assets/icons/${SystemInfo.distroIcon}.svg`))
                         fillMode: Image.PreserveAspectFit
                         visible: false
                     }
@@ -144,7 +144,7 @@ ContentPage {
                         height: 60
                         sourceSize.width: 60
                         sourceSize.height: 60
-                        source: Quickshell.shellPath("assets/icons/sf.jpg")
+                        source: ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("assets/icons/sf.jpg"))
                         fillMode: Image.PreserveAspectFit
                         layer.enabled: Appearance.effectsEnabled
 
@@ -308,7 +308,7 @@ ContentPage {
                         anchors.fill: parent
                         sourceSize.width: 64
                         sourceSize.height: 64
-                        source: Quickshell.shellPath("assets/icons/illogical-impulse.svg")
+                        source: ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("assets/icons/illogical-impulse.svg"))
                         fillMode: Image.PreserveAspectFit
                         visible: status === Image.Ready
                     }

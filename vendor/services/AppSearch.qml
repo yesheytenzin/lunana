@@ -366,7 +366,7 @@ Singleton {
                 ? [command[0], "--qt5", ...command.slice(1)]
                 : command
             const launchCommand = (executable === "gparted" || isVentoyGui)
-                ? [Quickshell.shellPath("scripts/launch-privileged-gui.sh"), ...graphicalCommand]
+                ? [((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/launch-privileged-gui.sh")), ...graphicalCommand]
                 : graphicalCommand
             ShellExec.execDetachedArgs(launchCommand,
                 displayName.length > 0 ? `Launch ${displayName}` : "",

@@ -1035,7 +1035,7 @@ Scope {
     // Load pose data / dialogue from manifest.json at runtime
     FileView {
         id: manifestFile
-        path: Quickshell.shellPath("assets/images/mascot/manifest.json")
+        path: ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("assets/images/mascot/manifest.json"))
         watchChanges: true
         onLoadedChanged: {
             if (!manifestFile.loaded) return
@@ -1148,7 +1148,7 @@ Scope {
                 AnimatedImage {
                     id: companionSprite
                     anchors.fill: parent
-                    source: Quickshell.shellPath(`assets/images/mascot/inir-mascot-${root.displayPose}.${root.animatedPoses.includes(root.displayPose) ? "gif" : "png"}`)
+                    source: ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + (`assets/images/mascot/inir-mascot-${root.displayPose}.${root.animatedPoses.includes(root.displayPose) ? "gif" : "png"}`))
                     playing: root.showing
                     fillMode: Image.PreserveAspectFit
                     asynchronous: true

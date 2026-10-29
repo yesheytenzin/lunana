@@ -29,7 +29,7 @@ Singleton {
     property bool _pendingTranslationsReady: false
     property bool _pendingGeneratedReady: false
     property string translationKeepSuffix: "/*keep*/"
-    property string translationsDir: Quickshell.shellPath("translations")
+    property string translationsDir: ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("translations"))
     property string generatedTranslationsDir: Directories.shellConfig + "/translations"
 
     property string languageCode: {

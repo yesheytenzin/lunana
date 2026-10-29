@@ -513,7 +513,7 @@ Singleton {
 
     Process {
         id: detectTempSensors
-        command: ["python3", Quickshell.shellPath("scripts/detect_sensors.py")]
+        command: ["python3", ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/detect_sensors.py"))]
         stdout: SplitParser {
             onRead: line => {
                 const split = line.indexOf(":");

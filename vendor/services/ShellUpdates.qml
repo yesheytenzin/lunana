@@ -151,7 +151,7 @@ Singleton {
         && !(root.remindDays > 0 && root.dismissedAt > 0 && root._clock - root.dismissedAt >= root.remindDays * 86400000)
 
     // Repo path - try to get from version.json, fallback to config dir
-    readonly property string configDir: FileUtils.trimFileProtocol(Quickshell.shellPath("."))
+    readonly property string configDir: FileUtils.trimFileProtocol(((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + (".")))
     property string repoPath: configDir  // Will be updated after reading version.json
     property string pendingRepoPath: ""
     property bool repoPathLoaded: false

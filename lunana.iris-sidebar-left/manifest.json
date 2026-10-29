@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "lunana.iris-sidebar-left",
+  "name": "Lunana iRiS Focus",
+  "version": "0.4.0",
+  "author": "lunana",
+  "license": "GPL-3.0",
+  "description": "Lunana iRiS left sidebar (focus) host.",
+  "kinds": [
+    "overlay"
+  ],
+  "entryPoints": {
+    "overlay": "IrisSidebarLeft.qml"
+  },
+  "x-lunana": {
+    "suiteId": "lunana",
+    "role": "iris-sidebar-left",
+    "milestone": "parity",
+    "requires": [],
+    "recommends": []
+  }
+}

@@ -13,7 +13,7 @@ QtObject {
     readonly property bool official: hostFile.text().includes("ShellIrisPanels.qml")
 
     property FileView hostFile: FileView {
-        path: Quickshell.shellPath("shell.qml")
+        path: ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("shell.qml"))
         blockLoading: true
         printErrors: false
     }

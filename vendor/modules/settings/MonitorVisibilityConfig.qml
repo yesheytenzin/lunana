@@ -13,7 +13,7 @@ ContentPage {
 
     property string activeSection: "outputs"
 
-    readonly property string niriConfigScript: Quickshell.shellPath("scripts/niri-config.py")
+    readonly property string niriConfigScript: ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/niri-config.py"))
     property bool monitorLayoutBusy: false
     property string monitorLayoutError: ""
     property string monitorLayoutInfo: ""

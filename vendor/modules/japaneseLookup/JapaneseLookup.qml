@@ -445,7 +445,7 @@ Scope {
                         RippleButton {
                             implicitWidth: 32
                             implicitHeight: 32
-                            onClicked: Quickshell.execDetached([Quickshell.shellPath("scripts/clipboard-copy.sh"), win.result.surface || win.result.matched || ""])
+                            onClicked: Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/clipboard-copy.sh")), win.result.surface || win.result.matched || ""])
                             contentItem: MaterialSymbol {
                                 anchors.centerIn: parent
                                 text: "content_copy"

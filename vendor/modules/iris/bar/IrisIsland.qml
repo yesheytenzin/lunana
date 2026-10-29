@@ -311,7 +311,7 @@ Item {
         fileMode: FileDialog.OpenFile
         nameFilters: [Translation.tr("Images") + " (*.png *.jpg *.jpeg *.webp *.bmp *.avif)"]
         onAccepted: {
-            setAvatar.command = [Quickshell.shellPath("scripts/accounts/set-avatar.sh"), FileUtils.trimFileProtocol(String(selectedFile))]
+            setAvatar.command = [((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/accounts/set-avatar.sh")), FileUtils.trimFileProtocol(String(selectedFile))]
             setAvatar.running = true
         }
     }

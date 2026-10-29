@@ -53,7 +53,9 @@ FAMILIES = [
       "lunana.iris-background", "lunana.iris-palette",
       "lunana.iris-control", "lunana.iris-orbit", "lunana.iris-stage",
       "lunana.iris-dock", "lunana.iris-edit", "lunana.iris-lock",
-      "lunana.iris-notifications", "lunana.iris-settings"]),
+      "lunana.iris-notifications", "lunana.iris-settings",
+      "lunana.iris-osd", "lunana.iris-session", "lunana.iris-wallpaper",
+      "lunana.iris-sidebar-left", "lunana.iris-sidebar-right"]),
     ("stock", "", []),
 ]
 

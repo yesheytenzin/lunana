@@ -63,7 +63,7 @@ PanelWindow {
     readonly property var _contextualOcclusionPoses: _manifest.contextualOcclusionPoses ?? []
     FileView {
         id: manifestFile
-        path: Quickshell.shellPath("assets/images/mascot/manifest.json")
+        path: ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("assets/images/mascot/manifest.json"))
         onLoadedChanged: {
             if (!manifestFile.loaded) return
             try {
@@ -246,7 +246,7 @@ PanelWindow {
         const lines = romp._chaosCfg.notify ?? ["Nothing happened. Don't check your widgets."]
         const body = Translation.tr(lines[Math.floor(Math.random() * lines.length)])
         Quickshell.execDetached(["notify-send", "-a", "Kira", "-i",
-            Quickshell.shellPath("assets/images/mascot/inir-mascot-peace-wink.png").toString().replace("file://", ""),
+            ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("assets/images/mascot/inir-mascot-peace-wink.png")).toString().replace("file://", ""),
             Translation.tr("Kira was here"), body])
     }
 
@@ -853,7 +853,7 @@ PanelWindow {
 
             readonly property string source: romp.phase === "idle"
                 ? ""
-                : Quickshell.shellPath(`assets/images/mascot/inir-mascot-${romp.displayPose}.${(romp._manifest.animatedPoses ?? []).includes(romp.displayPose) ? "gif" : "png"}`)
+                : ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + (`assets/images/mascot/inir-mascot-${romp.displayPose}.${(romp._manifest.animatedPoses ?? []).includes(romp.displayPose) ? "gif" : "png"}`))
             readonly property bool mirrored: romp.running
                 && (romp.movingRight !== (romp._manifest.facesRight ?? []).includes(romp.displayPose))
             readonly property int fadeDuration: Appearance.calcEffectiveDuration(130)

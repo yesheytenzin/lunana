@@ -121,7 +121,7 @@ ContentPage {
                             colBackground: Appearance.colors.colPrimaryContainer
                             colBackgroundHover: Appearance.colors.colPrimaryContainerHover
                             colRipple: Appearance.colors.colPrimaryContainerActive
-                            onClicked: Quickshell.execDetached([Quickshell.shellPath("scripts/inir"), "panelFamily", "set", "iris"])
+                            onClicked: Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")), "panelFamily", "set", "iris"])
                             StyledText {
                                 anchors.centerIn: parent
                                 text: Translation.tr("Activate")

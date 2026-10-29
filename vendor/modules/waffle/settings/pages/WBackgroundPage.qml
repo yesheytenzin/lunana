@@ -792,7 +792,7 @@ WSettingsPage {
                                     if (mon) {
                                         Config.setNestedValue("wallpaperSelector.selectionTarget", "main")
                                         Config.setNestedValue("wallpaperSelector.targetMonitor", mon)
-                                        Quickshell.execDetached([Quickshell.shellPath("scripts/inir"), "wallpaperSelector", "toggle"])
+                                        Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")), "wallpaperSelector", "toggle"])
                                     }
                                 }
                             }
@@ -828,7 +828,7 @@ WSettingsPage {
                                 colForeground: Looks.colors.accentFg
                                 onClicked: {
                                     Config.setNestedValue("wallpaperSelector.selectionTarget", "waffle-backdrop")
-                                    Quickshell.execDetached([Quickshell.shellPath("scripts/inir"), "wallpaperSelector", "toggle"])
+                                    Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")), "wallpaperSelector", "toggle"])
                                 }
                             }
                             WButton {
@@ -1318,7 +1318,7 @@ WSettingsPage {
                     buttonText: Translation.tr("Change")
                     onButtonClicked: {
                         Config.setNestedValue("wallpaperSelector.selectionTarget", "waffle-backdrop")
-                        Quickshell.execDetached([Quickshell.shellPath("scripts/inir"), "wallpaperSelector", "toggle"])
+                        Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")), "wallpaperSelector", "toggle"])
                     }
                 }
 

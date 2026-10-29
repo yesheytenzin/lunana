@@ -10,7 +10,7 @@ import Quickshell.Io
 Singleton {
     id: root
 
-    property string killDialogQmlPath: FileUtils.trimFileProtocol(Quickshell.shellPath("killDialog.qml"))
+    property string killDialogQmlPath: FileUtils.trimFileProtocol(((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("killDialog.qml")))
 
     function load() {
         // dummy to force init

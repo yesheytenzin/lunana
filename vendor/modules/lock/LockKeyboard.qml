@@ -88,7 +88,7 @@ Rectangle {
         if (kbd.xkbLayout.length === 0)
             return
         labelProc.running = false
-        labelProc.command = ["/usr/bin/env", "python3", Quickshell.shellPath("scripts/osk-layout-labels.py"), kbd.xkbLayout]
+        labelProc.command = ["/usr/bin/env", "python3", ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/osk-layout-labels.py")), kbd.xkbLayout]
         labelProc.running = true
     }
 

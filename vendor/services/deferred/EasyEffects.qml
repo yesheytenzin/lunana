@@ -35,7 +35,7 @@ Singleton {
         && root.equalizerSupported
         && root.equalizerBandCount === 10
         && root.equalizerBands.length === 10
-    readonly property string equalizerScript: Quickshell.shellPath("scripts/audio/easyeffects-eq.sh")
+    readonly property string equalizerScript: ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/audio/easyeffects-eq.sh"))
 
     readonly property var equalizerPresets: ({
         "Flat": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],

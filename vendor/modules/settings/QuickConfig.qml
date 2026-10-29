@@ -557,7 +557,7 @@ ContentPage {
                                 if (Config.options?.background?.multiMonitor?.enable && multiMonitorPanel.selectedMonitor) {
                                     Config.setNestedValue("wallpaperSelector.targetMonitor", multiMonitorPanel.selectedMonitor)
                                 }
-                                Quickshell.execDetached([Quickshell.shellPath("scripts/inir"), "wallpaperSelector", "toggle"]);
+                                Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")), "wallpaperSelector", "toggle"]);
                             }
                             StyledToolTip {
                                 text: Translation.tr("Open the full wallpaper selector overlay")
@@ -1573,7 +1573,7 @@ ContentPage {
                                         if (mon) {
                                             Config.setNestedValue("wallpaperSelector.selectionTarget", "main")
                                             Config.setNestedValue("wallpaperSelector.targetMonitor", mon)
-                                            Quickshell.execDetached([Quickshell.shellPath("scripts/inir"), "wallpaperSelector", "toggle"])
+                                            Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")), "wallpaperSelector", "toggle"])
                                         }
                                     }
                                 }
@@ -1643,7 +1643,7 @@ ContentPage {
                                     visible: multiMonitorPanel.backdropEnabled
                                     onClicked: {
                                         Config.setNestedValue("wallpaperSelector.selectionTarget", "backdrop")
-                                        Quickshell.execDetached([Quickshell.shellPath("scripts/inir"), "wallpaperSelector", "toggle"])
+                                        Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")), "wallpaperSelector", "toggle"])
                                     }
                                     StyledToolTip {
                                         text: Translation.tr("Change the backdrop wallpaper (used for overview/blur)")
@@ -2511,7 +2511,7 @@ ContentPage {
                     buttonRadius: Appearance.zzzEverywhere ? Appearance.zzz.controlRadius : Appearance.rounding.small
                     materialIcon: "refresh"
                     mainText: Translation.tr("Reload shell")
-                    onClicked: Quickshell.execDetached(["/usr/bin/bash", Quickshell.shellPath("scripts/restart-shell.sh")])
+                    onClicked: Quickshell.execDetached(["/usr/bin/bash", ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/restart-shell.sh"))])
                 }
 
                 RippleButtonWithIcon {
@@ -2527,7 +2527,7 @@ ContentPage {
                     buttonRadius: Appearance.zzzEverywhere ? Appearance.zzz.controlRadius : Appearance.rounding.small
                     materialIcon: "keyboard"
                     mainText: Translation.tr("Shortcuts")
-                    onClicked: Quickshell.execDetached([Quickshell.shellPath("scripts/inir"), "cheatsheet", "toggle"])
+                    onClicked: Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")), "cheatsheet", "toggle"])
                 }
             }
 

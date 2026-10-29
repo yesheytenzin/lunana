@@ -144,7 +144,7 @@ Singleton {
         onTriggered: {
             root._restartQueued = false
             _log("[IconThemeService] Restarting shell now...")
-            Quickshell.execDetached(["/usr/bin/bash", Quickshell.shellPath("scripts/restart-shell.sh")])
+            Quickshell.execDetached(["/usr/bin/bash", ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/restart-shell.sh"))])
         }
     }
 
@@ -169,7 +169,7 @@ Singleton {
         property string themeName: ""
         property bool skipRestart: false
         property string resolved: ""
-        command: ["/usr/bin/bash", Quickshell.shellPath("scripts/colors/icon-theme-for-mode.sh"),
+        command: ["/usr/bin/bash", ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/colors/icon-theme-for-mode.sh")),
             variantProc.themeName, Appearance.m3colors.darkmode ? "dark" : "light"]
         onStarted: variantProc.resolved = ""
         stdout: SplitParser {

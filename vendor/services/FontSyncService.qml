@@ -85,7 +85,7 @@ Singleton {
         id: fontSyncProc
         running: false
         command: [
-            Quickshell.shellPath("scripts/colors/sync-system-fonts.sh"),
+            ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/colors/sync-system-fonts.sh")),
             root.mainFont,
             root.monoFont,
             String(root.fontSize)

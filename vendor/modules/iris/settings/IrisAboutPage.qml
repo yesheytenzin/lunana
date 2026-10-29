@@ -24,11 +24,11 @@ Flickable {
 
     FileView {
         id: versionFile
-        path: Quickshell.shellPath("VERSION")
+        path: ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("VERSION"))
     }
     FileView {
         id: irisVersionFile
-        path: Quickshell.shellPath("modules/iris/VERSION")
+        path: ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("modules/iris/VERSION"))
     }
 
     ColumnLayout {

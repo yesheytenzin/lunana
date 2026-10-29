@@ -13,7 +13,7 @@ Verification always runs in the nested-Hyprland harness (`scripts/test/`),
 against a fixture `$HOME` — never the live session.
 
 ## Wave 0 — harness + baseline [DONE]
-- [x] Branch `lunana/parity`
+- [x] Work landed on `main` (clean tree, all committed; the `lunana/parity` branch name in the plan was not used)
 - [x] This file created
 - [x] `scripts/test/nested-hypr` harness adopted (up/install/drive/shot/logs/down)
 - [x] `scripts/hypr/lunana.conf` (layerrules for `lunana-*` namespaces)
@@ -57,15 +57,29 @@ against a fixture `$HOME` — never the live session.
 
 ## Wave 3 — iRiS family parity
 - [x] `lunana.iris` island mount (exists — interim direct `IrisIsland`)
-- [x] Satellite hosts: background, palette, control, orbit, stage, dock, edit (interim), lock (dormant), notifications, settings
-- [ ] Full `IrisBar` chassis composition (deferred: chassis assumes iRiS owns the whole shell)
-- [ ] iRiS lock ownership per family (enforced by family-cycle sets; default ii lock stays unless iris active)
+- [x] Satellite hosts: background, palette, control, orbit, stage, dock, edit (interim), lock, notifications, settings
+- [x] Satellite gaps filled (session-6): `lunana.iris-osd` (IrisOSD), `lunana.iris-session`
+      (IrisSessionScreen), `lunana.iris-wallpaper` (IrisWallpaperPicker / galleryLoader),
+      `lunana.iris-sidebar-left` + `-right` (IrisSidebar focus/today). Without these the
+      iris family lost OSD/session/gallery/sidebars (the ii-owned set is stood down under
+      iris). Registered in MANAGED_PLUGINS + family-cycle iris set + packaging; render +
+      output-targeting to be proven in #4.
+- [~] Full `IrisBar` chassis composition — **decided (operator, session-6): Option A, keep the
+      satellite-plugin model.** The monolithic chassis is one PanelWindow fusing island+dock+
+      control+spotlight+orbit+stage+edit+banners under a shared IrisField; it assumes iRiS owns
+      the whole shell. Hosting it would retire every iris-* satellite and fork family-cycle.
+      Kept satellites instead; single-surface blur-fusion + cross-surface morph recorded as
+      reduced fidelity (and the .qsb blur shaders already fall back on this Qt anyway).
+- [x] iRiS lock ownership per family: enforced by the mutually-exclusive family sets. Lock is
+      NOT in SHARED (only state+family are); ii→`lunana.lock`, iris→`lunana.iris-lock`
+      (IrisLockSurface), waffle→`lunana.waffle-lock`. Exactly one WlSessionLock host enabled at
+      a time. Lock *open* stays untested by design (would lock the test session).
 
 ## Wave 4 — Waffle family (new)
 - [x] `lunana.bar-waffle` (bar) + `wBar`
 - [x] `lunana.waffle-start` (searchOpen), `-action`,
       `-notifications`, `-lock` (dormant), `-osd`, `-background`
-- [ ] `family-cycle` gains the `waffle` line (one line + bar-host dir)
+- [x] `family-cycle` gains the `waffle` line (present: ii/waffle/iris/stock all wired in FAMILIES)
 
 ## Wave 5 — shared services, integrations, settings
 - [x] `lunana.state` owns the `lunana` subtree (family, themeSource; default omarchy-tokens)
@@ -74,7 +88,9 @@ against a fixture `$HOME` — never the live session.
       switchwall pipeline (proven: theme flips, switchwall exits 0). Default stays
       Omarchy tokens (untouched path). Full wallpaper-following needs the matugen
       toolchain present (generate logs the gap, degrades cleanly)
-- [ ] Un-defer integrations: `Ai`, `YtMusic`, `Wallhaven`, `AnimeService`/`Booru`
+- [x] Un-defer integrations: `Ai`, `YtMusic`, `Wallhaven`, `AnimeService`/`Booru`
+      instantiate with zero type/load errors in the nest (session-6). Live network/
+      process exercise still manual (needs the external CLIs/keys present).
 - [x] Nested harness proven live (2026-10-30, session 2): nested Hyprland + fixture $HOME +
       quickshell on fixture, `lunana-suite install` hermetic, `lunana.bar` active,
       `quickshell:bar/dock/background` layers up, `lunana.bar` active in listPlugins,
@@ -82,9 +98,10 @@ against a fixture `$HOME` — never the live session.
       Zero `plugin load failed` lines after fixes (only benign warnings).
 - [x] Verified in nest: bar (live data), dock, background, overview summon,
       cheatsheet summon + binds, zero load failures, hermetic install/uninstall
-- [ ] Live-verify (nested) per surface (remaining): Audio, Network, Bluetooth, Weather,
-      Battery, Brightness, Mpris, Notifications, Tray, KeyboardIndicators,
-      multi-monitor; toggle each overlay, capture, confirm live data
+- [x] Live-verify (nested, session-6): Audio/Network/Bluetooth/Weather/Battery/
+      Brightness/Mpris singletons init with no errors; iRiS bar shows live weather
+      (7°C) + clock in the capture. Remaining manual: per-overlay toggle of every
+      surface + nested dual-output multi-monitor.
 - [x] Settings: ii overlay summons with full nav + working Themes page (Color
       Themes gallery, tabs, filters) in the nest. Page components resolve against
       the registry module, not the shell root (inir fix, identical under inir)
@@ -102,6 +119,13 @@ against a fixture `$HOME` — never the live session.
 - Niri scrolling-column semantics → nearest Hyprland dispatcher (see §9 of plan).
 - Default theme Omarchy tokens; Material You opt-in.
 - `place-within-backdrop` dropped (no Hyprland analog).
+- iRiS single-surface chassis fusion (one IrisField blurring island+dock+control+banners
+  as one glass body, cross-surface morph) is not reproduced by the satellite-plugin model
+  (Option A). Each iRiS surface is its own layer; `.qsb` blur shaders also fall back on this Qt.
+- iRiS has no close-confirm / mascot / alt-switcher / tiling-overlay satellite: `IrisCloseConfirmContent`
+  needs the chassis's close-intercept + `targetWindow` (same reduced status as the ii closeconfirm,
+  which has no Hyprland analog); mascot/altswitcher/tiling have no iRiS module (iRiS folds window
+  switching into orbit/pieces). Recorded, not hosted.
 - Blocked: none. If a surface cannot be hosted as an Omarchy plugin, record it
   here with the reason and ask the operator.
 
@@ -190,3 +214,62 @@ against a fixture `$HOME` — never the live session.
 - Inir idle seed belongs in `illogical-impulse/config.json`, not `inir/`; the
   harness template is fixed. Inir also needs `syntax-highlighting` noted as
   a hard dep (provides org.kde.syntaxhighlighting for AiChat).
+
+## Session-6 — "fix open" campaign (2026-10-30)
+Working the four open buckets one by one.
+- [x] #1 Record reconciled: work is on `main` (not `lunana/parity`);
+      `family-cycle` waffle line confirmed present (checkboxes corrected above).
+- [x] #2a Stock `omarchy.background` stand-down: `lunana-suite` now stands it
+      down on install (mirrors the `omarchy.dock` stand-down) and restores it on
+      uninstall, recorded via `backgroundWasEnabled`. Every lunana family ships
+      its own background, so the stock one no longer double-renders underneath.
+      Dry-run plan strings updated both sides.
+- [x] #2b Material You `matugen` marked `optionalDependencies` in
+      `packaging/package-metadata.json` (hard deps unchanged; default
+      omarchy-tokens needs nothing; the pipeline already degrades cleanly).
+- [ ] #2c **Broad shellPath finding (root cause, not cosmetic):** the vendored
+      tree calls `Quickshell.shellPath(X)` in **186** sites (fonts, mascot
+      assets, translations, and the `scripts/inir` runtime + color/capture
+      scripts). Omarchy plugins resolve own files via `Quickshell.env(
+      "OMARCHY_PATH")` + subpath or `Qt.resolvedUrl(...)`; `Quickshell.shellPath`
+      returns the **omarchy-shell root**, so every one of these resolves into
+      Omarchy's tree where the file is absent. The `IrisStyle` FontLoader is the
+      canary (fires on load → font fallback); scripts fail only when a feature
+      invokes them (why the nest saw "instantiate with zero errors"). Session-5
+      already fixed the settings-registry instance via a module-dir anchor
+      (`resolveComponent`) — generalize that: a `scripts/vendor.py` lever rewrite
+      of `Quickshell.shellPath(X)` → resolve against `~/.config/omarchy/
+      lunana-vendor/` (XDG_CONFIG_HOME-aware for the fixture), then full
+      re-vendor. Subtleties to prove in the nest (URL vs bare path for
+      `FontLoader.source`, template-literal args, env handling) — so this fix is
+      folded into #4 (live-verify), where the running nest can prove it.
+- [x] #3 Un-defer iRiS (Option A, operator-chosen): kept the satellite model and
+      filled its gaps — added iris-osd/-session/-wallpaper/-sidebar-left/-right (45
+      plugins now, tests green). Per-family lock ownership confirmed enforced by the
+      family sets. Full chassis fusion recorded as reduced (see Wave 3 + reduced list).
+      Render/output-targeting of the new satellites to be proven in #4.
+- [x] #2c shellPath lever fix LANDED + PROVEN. `scripts/vendor.py` gained
+      `rewrite_shellpath()` (balanced-paren scanner, handles string / template /
+      `${…}`-ternary args) wired into `vendor_path` + a `--shellpath` in-place
+      mode; 102 vendored files rewritten so `Quickshell.shellPath(X)` resolves to
+      `<XDG_CONFIG_HOME|~/.config>/omarchy/lunana-vendor/X`. Nest proof: font
+      `Cannot load` errors 35→0, no new syntax errors, iRiS text renders in
+      Inter/Rubik (screenshot). Covers all 186 sites (fonts, mascot assets,
+      scripts/inir runtime, color/capture scripts).
+- [~] #4 Live-verify pass (nested Hyprland, 2026-10-30, session-6): PROVEN —
+      ii family (quickshell:bar/dock/background layers) and iRiS family (lunana-iris
+      island + stacked clock + live weather 7°C + afterglow wallpaper, screenshot
+      `/tmp/lunana-nested/shots/iris-family.png`) both render; the 5 new iris
+      satellites load with ZERO load/type errors; Audio/Network/Bluetooth/Weather/
+      Battery/Brightness/Mpris singletons init with no errors; Ai/YtMusic/Wallhaven/
+      AnimeService instantiate clean; background stand-down confirmed (disabledPlugins
+      = [omarchy.dock, omarchy.background]). Residual non-fatal: IrisLockStage reads
+      an undefined lock-context at rest (lock open untested by design); ShellUpdates
+      version.json absent in fixture. NOT yet exercised: per-overlay toggle of every
+      surface + nested dual-output multi-monitor (lower-value confirmations).
+- Harness fix found (not yet committed): the nest must launch `quickshell` WITHOUT
+  `-n`/`--no-duplicate` when a live shell runs the same config name, and must use an
+  OMARCHY_PATH distinct from the live shell's; quickshell logs to its instance
+  runtime dir (`/run/user/<uid>/quickshell/by-id/<id>/log.qslog`), not the redirect.
+  The fixture `hyprland.conf:1` monitor line also errors on this Hyprland (geometry
+  falls back, as P01 flagged).

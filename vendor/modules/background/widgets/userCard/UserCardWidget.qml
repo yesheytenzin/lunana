@@ -99,7 +99,7 @@ AbstractBackgroundWidget {
     }
 
     function lockScreen(): void {
-        Quickshell.execDetached([Quickshell.shellPath("scripts/inir"), "lock", "activate"]);
+        Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")), "lock", "activate"]);
     }
 
     editPopoverContent: Component {

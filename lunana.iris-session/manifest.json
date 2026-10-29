@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "lunana.iris-session",
+  "name": "Lunana iRiS Session",
+  "version": "0.4.0",
+  "author": "lunana",
+  "license": "GPL-3.0",
+  "description": "Lunana iRiS session screen host (logout/power).",
+  "kinds": [
+    "overlay"
+  ],
+  "entryPoints": {
+    "overlay": "IrisSession.qml"
+  },
+  "x-lunana": {
+    "suiteId": "lunana",
+    "role": "iris-session",
+    "milestone": "parity",
+    "requires": [],
+    "recommends": []
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "lunana.iris-osd",
+  "name": "Lunana iRiS OSD",
+  "version": "0.4.0",
+  "author": "lunana",
+  "license": "GPL-3.0",
+  "description": "Lunana iRiS on-screen-display host (volume/brightness/layout).",
+  "kinds": [
+    "service"
+  ],
+  "entryPoints": {
+    "service": "IrisOsd.qml"
+  },
+  "x-lunana": {
+    "suiteId": "lunana",
+    "role": "iris-osd",
+    "milestone": "parity",
+    "requires": [],
+    "recommends": []
+  }
+}

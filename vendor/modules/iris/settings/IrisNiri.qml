@@ -11,7 +11,7 @@ import "../style"
 Singleton {
     id: root
 
-    readonly property string script: Quickshell.shellPath("scripts/niri-config.py")
+    readonly property string script: ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/niri-config.py"))
     readonly property bool available: CompositorService.isNiri
     property int revision: 0
     property var data: ({ input: {}, layout: {}, animations: {}, "window-rules": {} })

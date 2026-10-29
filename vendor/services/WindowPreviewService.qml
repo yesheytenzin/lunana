@@ -369,8 +369,8 @@ Singleton {
         
         // Build command with IDs
         const cmd = ShellExec.supportsFish()
-            ? ["/usr/bin/fish", Quickshell.shellPath("scripts/capture-windows.fish")]
-            : ["/usr/bin/bash", Quickshell.shellPath("scripts/capture-windows.sh")]
+            ? ["/usr/bin/fish", ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/capture-windows.fish"))]
+            : ["/usr/bin/bash", ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/capture-windows.sh"))]
         for (const id of idsToCapture) {
             cmd.push(id.toString())
         }
@@ -397,8 +397,8 @@ Singleton {
         const ids = windows.map(w => w.id)
         captureProcess.idsToCapture = ids
         captureProcess.command = ShellExec.supportsFish()
-            ? ["/usr/bin/fish", Quickshell.shellPath("scripts/capture-windows.fish"), "--all"]
-            : ["/usr/bin/bash", Quickshell.shellPath("scripts/capture-windows.sh"), "--all"]
+            ? ["/usr/bin/fish", ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/capture-windows.fish")), "--all"]
+            : ["/usr/bin/bash", ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/capture-windows.sh")), "--all"]
         captureProcess.running = true
     }
     
@@ -522,7 +522,7 @@ Singleton {
         GlobalStates.windowPreviewCaptureActive = true
         hyprCaptureProcess.addressesToCapture = idsToCapture
         hyprCaptureProcess.command = ["/usr/bin/bash",
-            Quickshell.shellPath("scripts/capture-windows-hyprland.sh"),
+            ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/capture-windows-hyprland.sh")),
             root.previewDir].concat(idsToCapture)
         hyprCaptureProcess.running = true
     }

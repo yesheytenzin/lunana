@@ -185,7 +185,7 @@ QtObject {
             .concat(["Light", "Regular", "Medium", "SemiBold", "Bold"].map(weight => `montserrat/Montserrat-${weight}`))
         delegate: FontLoader {
             required property string modelData
-            source: Quickshell.shellPath(`assets/fonts/${modelData}.ttf`)
+            source: ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + (`assets/fonts/${modelData}.ttf`))
         }
     }
     readonly property string faceText: "Inter"

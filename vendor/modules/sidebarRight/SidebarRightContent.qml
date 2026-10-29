@@ -35,7 +35,7 @@ Item {
 
     property int sidebarWidth: Appearance.sizes.sidebarWidth
     property int sidebarPadding: 10
-    property string settingsQmlPath: Quickshell.shellPath("settings.qml")
+    property string settingsQmlPath: ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("settings.qml"))
     property int screenWidth: 1920
     property int screenHeight: 1080
     property var panelScreen: null
@@ -119,7 +119,7 @@ Item {
         } else if (CompositorService.isNiri) {
             Quickshell.execDetached(["/usr/bin/niri", "msg", "action", "load-config-file"]);
         }
-        Quickshell.execDetached(["/usr/bin/bash", Quickshell.shellPath("scripts/restart-shell.sh")]);
+        Quickshell.execDetached(["/usr/bin/bash", ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/restart-shell.sh"))]);
     }
 
     function openSettings(): void {
@@ -152,7 +152,7 @@ Item {
         _log("[SidebarRight] Opening new settings window via IPC");
         GlobalStates.sidebarRightOpen = false;
         Qt.callLater(() => {
-            Quickshell.execDetached([Quickshell.shellPath("scripts/inir"), "settings"]);
+            Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")), "settings"]);
         })
     }
 

@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "lunana.iris-wallpaper",
+  "name": "Lunana iRiS Wallpaper",
+  "version": "0.4.0",
+  "author": "lunana",
+  "license": "GPL-3.0",
+  "description": "Lunana iRiS wallpaper gallery host (IrisWallpaperPicker).",
+  "kinds": [
+    "overlay"
+  ],
+  "entryPoints": {
+    "overlay": "IrisWallpaper.qml"
+  },
+  "x-lunana": {
+    "suiteId": "lunana",
+    "role": "iris-wallpaper",
+    "milestone": "parity",
+    "requires": [],
+    "recommends": []
+  }
+}

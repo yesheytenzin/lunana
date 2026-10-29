@@ -36,7 +36,7 @@ Singleton {
     }
 
     function pathForName(iconName) {
-        return Quickshell.shellPath(`assets/icons/fluent/${iconName}.svg`);
+        return ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + (`assets/icons/fluent/${iconName}.svg`));
     }
 
     function wifiIconForStrength(strength) {

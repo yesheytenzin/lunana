@@ -81,19 +81,19 @@ Singleton {
     // Optional art profiles are valid only when their published assets are installed.
     FileView {
         id: presenceProbe
-        path: Quickshell.shellPath("assets/images/mascot/inir-mascot-presence-idle-loop.gif")
+        path: ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("assets/images/mascot/inir-mascot-presence-idle-loop.gif"))
         watchChanges: true
         printErrors: false
     }
     FileView {
         id: jrpgProbe
-        path: Quickshell.shellPath("assets/images/mascot/inir-mascot-jrpg-idle-loop.gif")
+        path: ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("assets/images/mascot/inir-mascot-jrpg-idle-loop.gif"))
         watchChanges: true
         printErrors: false
     }
     FileView {
         id: codexProbe
-        path: Quickshell.shellPath("assets/images/mascot/inir-mascot-codex-idle-loop.gif")
+        path: ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("assets/images/mascot/inir-mascot-codex-idle-loop.gif"))
         watchChanges: true
         printErrors: false
     }
@@ -156,7 +156,7 @@ Singleton {
         if (!pose || pose.length === 0)
             return ""
         const ext = root.isAnimated(pose) ? "gif" : "png"
-        return Quickshell.shellPath(`assets/images/mascot/inir-mascot-${pose}.${ext}`)
+        return ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + (`assets/images/mascot/inir-mascot-${pose}.${ext}`))
     }
 
     function displayName(pose) {
@@ -215,7 +215,7 @@ Singleton {
     }
 
     FileView {
-        path: Quickshell.shellPath("assets/images/mascot/manifest.json")
+        path: ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("assets/images/mascot/manifest.json"))
         watchChanges: true
         onLoadedChanged: {
             if (!loaded) return

@@ -98,7 +98,7 @@ WSettingsPage {
             ]
             onSelected: newValue => {
                 if (newValue !== Config.options?.panelFamily) {
-                    Quickshell.execDetached([Quickshell.shellPath("scripts/inir"), "panelFamily", "set", newValue])
+                    Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")), "panelFamily", "set", newValue])
                 }
             }
         }

@@ -43,7 +43,7 @@ FooterRectangle {
 
         onClicked: {
             GlobalStates.waffleActionCenterOpen = false;
-            Quickshell.execDetached([Quickshell.shellPath("scripts/inir"), "settings"]);
+            Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")), "settings"]);
         }
 
         contentItem: FluentIcon {

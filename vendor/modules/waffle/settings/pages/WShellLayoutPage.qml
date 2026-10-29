@@ -21,7 +21,7 @@ WSettingsPage {
 
     function openLiveEditor(): void {
         Quickshell.execDetached([
-            Quickshell.shellPath("scripts/inir"),
+            ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")),
             "shellLayout",
             "open"
         ])

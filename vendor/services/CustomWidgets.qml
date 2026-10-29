@@ -407,7 +407,7 @@ IRIS_QML
     }
 
     // Path to shipped example widget
-    readonly property string _exampleWidgetPath: FileUtils.trimFileProtocol(Quickshell.shellPath("defaults/widgets/example-widget"))
+    readonly property string _exampleWidgetPath: FileUtils.trimFileProtocol(((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("defaults/widgets/example-widget")))
 
     // Copy example widget from defaults
     Process {
