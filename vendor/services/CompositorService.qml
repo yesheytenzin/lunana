@@ -13,4 +13,5 @@ Singleton {
     property var sortedToplevels: []
     function acquireSortingConsumer() {}
     function releaseSortingConsumer() {}
+    function setSortingConsumer(name, active) {}
 }

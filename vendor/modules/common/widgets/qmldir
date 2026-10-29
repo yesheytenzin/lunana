@@ -18,6 +18,7 @@ FadeLoader 1.0 FadeLoader.qml
 FocusedScrollMouseArea 1.0 FocusedScrollMouseArea.qml
 GlassBackground 1.0 GlassBackground.qml
 LiveLayer 1.0 LiveLayer.qml
+MascotImage 1.0 MascotImage.qml
 MaterialShape 1.0 MaterialShape.qml
 MaterialSymbol 1.0 MaterialSymbol.qml
 MediaArtworkResolver 1.0 MediaArtworkResolver.qml

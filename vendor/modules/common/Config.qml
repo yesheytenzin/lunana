@@ -14,8 +14,9 @@ Singleton {
     id: root
 
     property int revision: 0
-    readonly property bool ready: true
-
+    // Mirrors inir: false until the config is loaded, then true. The flip is
+    // what kicks deferred starts (Translation catalogue scan, panel loaders).
+    property bool ready: false
     property var options: ({
         appearance: {
             globalStyle: "material",
@@ -37,7 +38,8 @@ Singleton {
             zzz: { shape: "chamfer", glass: false }
         },
         bar: { borderless: true, cornerStyle: 1, height: 40, verbose: false },
-        performance: { reduceAnimations: false, lowPower: false, compositorBlur: false }
+        performance: { reduceAnimations: false, lowPower: false, compositorBlur: false },
+        time: { format: "hh:mm", shortDateFormat: "dd/MM", dateFormat: "ddd, dd/MM", secondPrecision: false }
     })
 
     // inir mutates config through this; the shim is read-mostly for now.
@@ -57,5 +59,13 @@ Singleton {
     // palette bridge here guarantees Omarchy's colors reach
     // Appearance.m3colors (singletons are lazy — nothing else instantiates the
     // loader, which is why the probe first rendered inir defaults).
-    Component.onCompleted: LnServices.MaterialThemeLoader.applyPalette()
+    // Async flip like inir's JsonAdapter: deferred so every singleton's
+    // onReadyChanged (Translation scans, panel loaders) is attached first.
+    // A same-tick onCompleted flip fires before late listeners attach.
+    Timer {
+        interval: 100
+        running: true
+        repeat: false
+        onTriggered: { root.ready = true; LnServices.MaterialThemeLoader.applyPalette() }
+    }
 }
