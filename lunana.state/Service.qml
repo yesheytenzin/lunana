@@ -1,3 +1,4 @@
+import QtQuick
 import Quickshell
 
 // lunana.state — M0 placeholder service.

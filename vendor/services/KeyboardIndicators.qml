@@ -2,9 +2,13 @@ pragma Singleton
 import QtQuick
 import Quickshell
 
-// LUNANA SHIM (not vendored from inir) — Wave-A load stub.
-// The exact ii bar shows caps/num/layout indicators here; hidden until the
-// live-keyboard unit backs this with Hyprland/XKB state.
+// LUNANA STUB, KEPT (R3 decision) — best-effort, empty-safe.
+// No stable local API exists without inir's HyprlandXkb poller
+// (hyprctl devices -j), its evdev lock-state daemon, and Config-gated
+// panel options — all out of scope (no new vendoring, no Audio-style
+// service growth). The exact ii bar only reads the eight members below
+// and hides the indicator when hasPanelIndicators is false, so the
+// empty stub is the correct backing until a keyboard unit lands.
 Singleton {
     property bool capsLockVisible: false
     property string capsMaterialIcon: ""
