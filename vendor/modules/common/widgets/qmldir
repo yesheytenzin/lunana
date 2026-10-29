@@ -1,0 +1,27 @@
+AngelPartialBorder 1.0 AngelPartialBorder.qml
+Circle 1.0 Circle.qml
+CollapsibleSection 1.0 CollapsibleSection.qml
+CookieFace 1.0 CookieFace.qml
+CookiePlate 1.0 CookiePlate.qml
+EditorialPaperStack 1.0 EditorialPaperStack.qml
+EditorialRule 1.0 EditorialRule.qml
+EscalonadoShadow 1.0 EscalonadoShadow.qml
+GlassBackground 1.0 GlassBackground.qml
+MaterialShape 1.0 MaterialShape.qml
+MaterialSymbol 1.0 MaterialSymbol.qml
+OptionalMaterialSymbol 1.0 OptionalMaterialSymbol.qml
+PanelSurface 1.0 PanelSurface.qml
+RegaliaControlFace 1.0 RegaliaControlFace.qml
+RegaliaPlate 1.0 RegaliaPlate.qml
+RicelinSurface 1.0 RicelinSurface.qml
+RippleButton 1.0 RippleButton.qml
+SettingsCardSection 1.0 SettingsCardSection.qml
+SettingsGroup 1.0 SettingsGroup.qml
+singleton SettingsMaterialPreset 1.0 SettingsMaterialPreset.qml
+singleton SettingsSearchRegistry 1.0 SettingsSearchRegistry.qml
+StyledRectangularShadow 1.0 StyledRectangularShadow.qml
+StyledText 1.0 StyledText.qml
+ZzzDiagonalPattern 1.0 ZzzDiagonalPattern.qml
+ZzzGlyphBadge 1.0 ZzzGlyphBadge.qml
+ZzzPlate 1.0 ZzzPlate.qml
+ZzzTechFrame 1.0 ZzzTechFrame.qml

@@ -1,0 +1,22 @@
+# Maintainer: lunana
+pkgname=lunana-shell
+pkgver=0.4.0
+pkgrel=1
+pkgdesc="Lunana — an inir-inspired native plugin suite for the Omarchy Quattro shell"
+arch=('any')
+url="https://github.com/HANCORE-linux/lunana"
+license=('GPL3')
+depends=('omarchy' 'jq' 'wireplumber' 'brightnessctl')
+optdepends=('hyprland: compositor (provided by omarchy)')
+source=("git+$url.git#tag=v$pkgver")
+sha256sums=('SKIP')
+
+package() {
+  cd "$srcdir/lunana"
+  # Lunana installs as user-scoped Omarchy plugins at runtime via lunana-suite;
+  # the package ships the suite and plugin sources under /usr/share.
+  local dest="$pkgdir/usr/share/lunana"
+  install -d "$dest"
+  cp -r lunana.* scripts contracts "$dest/"
+  install -Dm755 scripts/lunana-suite "$pkgdir/usr/bin/lunana-suite"
+}

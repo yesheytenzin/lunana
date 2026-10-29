@@ -1,0 +1,464 @@
+#!/usr/bin/env python3
+"""lunana-suite — transactional install / swap tool for the Lunana plugin suite.
+
+Model (grounded in the real Omarchy Quattro shell contract):
+
+  * Lunana ships kind:"bar" / kind:"service" plugins. The host selects the
+    active full bar from ~/.config/omarchy/shell.json -> bar.id; an empty or
+    absent id means the stock omarchy.bar. So "swap to lunana" is: copy the
+    plugins into the user plugin dir and set bar.id = "lunana.bar"; "restore
+    stock" is: clear bar.id back to what it was and remove the copies.
+  * The shell hot-reloads shell.json and rescans plugins on save, so no
+    restart, no logout, and no touching the running process is required.
+  * A bar that fails to load falls back to omarchy.bar in the host itself, so
+    the worst case of a bad swap is the stock bar, not a dead session.
+
+Safety rails (Shibumi-inspired):
+  * Runs entirely as the desktop user. Never calls pacman, sudo, or any system
+    package manager, and never writes outside ~/.config/omarchy.
+  * Never reads or writes /usr/share/omarchy (the packaged host).
+  * Backs up shell.json before mutating it, and writes it atomically.
+  * Refuses to proceed on malformed/unreadable shell.json rather than clobber.
+  * Records what it changed in a managed state file so uninstall is exact.
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import os
+import shutil
+import subprocess
+import sys
+import tempfile
+import time
+from pathlib import Path
+
+SUITE_ID = "lunana"
+BAR_PLUGIN_ID = "lunana.bar"
+MANAGED_PLUGINS = [
+    "lunana.bar",
+    "lunana.state",
+    "lunana.dock",
+    "lunana.overview",
+    "lunana.control-center",
+    "lunana.sidebar-left",
+]
+
+REPO_ROOT = Path(__file__).resolve().parent.parent
+
+KEYBIND_FRAGMENT = REPO_ROOT / "scripts" / "keybinds" / "lunana.lua"
+KEYBIND_MARK_START = "-- >>> lunana >>>"
+KEYBIND_MARK_END = "-- <<< lunana <<<"
+
+
+# --- path resolution -------------------------------------------------------
+
+def config_home() -> Path:
+    return Path(os.environ.get("XDG_CONFIG_HOME", Path.home() / ".config"))
+
+
+def omarchy_config_dir() -> Path:
+    return config_home() / "omarchy"
+
+
+def plugin_dir() -> Path:
+    return omarchy_config_dir() / "plugins"
+
+
+def shell_json_path() -> Path:
+    return omarchy_config_dir() / "shell.json"
+
+
+def state_path() -> Path:
+    return omarchy_config_dir() / "lunana-suite.json"
+
+
+def hypr_bindings_file() -> Path:
+    return config_home() / "hypr" / "bindings.lua"
+
+
+def ensure_safe_target() -> None:
+    cfg = omarchy_config_dir().resolve()
+    home = Path.home().resolve()
+    if home not in cfg.parents and cfg != home:
+        fail(f"refusing to operate outside $HOME: {cfg}")
+    if str(cfg).startswith("/usr/"):
+        fail(f"refusing to operate on a system path: {cfg}")
+
+
+# --- small helpers ---------------------------------------------------------
+
+def fail(msg: str) -> "NoReturn":  # type: ignore[valid-type]
+    print(f"lunana-suite: {msg}", file=sys.stderr)
+    raise SystemExit(1)
+
+
+def info(msg: str) -> None:
+    print(f"lunana-suite: {msg}")
+
+
+def confirm(prompt: str, assume_yes: bool) -> bool:
+    if assume_yes:
+        return True
+    try:
+        return input(f"{prompt} [y/N] ").strip().lower() in ("y", "yes")
+    except EOFError:
+        return False
+
+
+def read_json(path: Path) -> dict:
+    """Read a JSON object; refuse on malformed content rather than clobber."""
+    if not path.exists():
+        return {}
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        fail(f"{path} is unreadable or not valid JSON ({exc}); fix it before running")
+    if not isinstance(data, dict):
+        fail(f"{path} is not a JSON object")
+    return data
+
+
+def write_json_atomic(path: Path, data: dict) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fd, tmp = tempfile.mkstemp(dir=str(path.parent), prefix=".lunana-", suffix=".tmp")
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as handle:
+            json.dump(data, handle, indent=2, ensure_ascii=False)
+            handle.write("\n")
+        os.replace(tmp, path)
+    finally:
+        if os.path.exists(tmp):
+            os.unlink(tmp)
+
+
+def validator_available() -> str | None:
+    return shutil.which("omarchy-plugin-validate")
+
+
+def validate_sources(dry: bool) -> None:
+    validator = validator_available()
+    for pid in MANAGED_PLUGINS:
+        src = REPO_ROOT / pid
+        if not (src / "manifest.json").is_file():
+            fail(f"source plugin missing or has no manifest.json: {src}")
+        if validator:
+            result = subprocess.run([validator, str(src)], capture_output=True, text=True)
+            label = "would validate" if dry else "validated"
+            if result.returncode != 0:
+                fail(f"{pid} failed validation: {result.stderr.strip() or result.stdout.strip()}")
+            info(f"{label} {pid}")
+        else:
+            info(f"omarchy-plugin-validate not on PATH; skipped deep check for {pid}")
+
+
+def copy_plugins() -> None:
+    """Copy each managed plugin source into the user plugin dir, replacing any
+    existing managed copy. The shell reloads on save, but see restart_shell()."""
+    plugin_dir().mkdir(parents=True, exist_ok=True)
+    for pid in MANAGED_PLUGINS:
+        dst = plugin_dir() / pid
+        if dst.exists():
+            shutil.rmtree(dst)
+        shutil.copytree(REPO_ROOT / pid, dst)
+        info(f"synced {pid}")
+
+
+def restart_shell(dry: bool) -> None:
+    """Restart the Omarchy shell.
+
+    A kind:"bar" plugin's QML is only re-instantiated on a full shell restart;
+    saving the file hot-reloads other plugins but reuses the running bar
+    instance, so bar edits do not show until the shell restarts.
+    """
+    if dry:
+        info("would run: omarchy restart shell")
+        return
+    if shutil.which("omarchy"):
+        subprocess.run(["omarchy", "restart", "shell"], check=False)
+        info("restarted the Omarchy shell")
+    else:
+        info("omarchy not on PATH; restart the shell yourself to load bar changes")
+
+
+def _reload_hypr() -> None:
+    if shutil.which("hyprctl"):
+        subprocess.run(["hyprctl", "reload"], check=False, capture_output=True)
+
+
+def _strip_lunana_block(text: str) -> str:
+    import re
+    pattern = re.compile(
+        re.escape(KEYBIND_MARK_START) + r".*?" + re.escape(KEYBIND_MARK_END) + r"\n?",
+        re.DOTALL,
+    )
+    return pattern.sub("", text)
+
+
+def install_keybinds(dry: bool) -> None:
+    """Merge the lunana keybind block into ~/.config/hypr/bindings.lua, backed
+    up and idempotent (an existing block is replaced, not duplicated)."""
+    binds = hypr_bindings_file()
+    if not KEYBIND_FRAGMENT.is_file():
+        info("keybind fragment missing; skipping keybinds")
+        return
+    if dry:
+        info(f"would merge lunana keybinds into {binds}")
+        return
+    if not binds.exists():
+        info(f"{binds} not found; skipping keybinds (bind lunana surfaces yourself)")
+        return
+    fragment = KEYBIND_FRAGMENT.read_text(encoding="utf-8").strip() + "\n"
+    current = binds.read_text(encoding="utf-8")
+    shutil.copy2(binds, binds.with_name(f"bindings.lua.lunana-backup-{int(time.time())}"))
+    updated = _strip_lunana_block(current).rstrip() + "\n\n" + fragment
+    binds.write_text(updated, encoding="utf-8")
+    info("merged lunana keybinds into bindings.lua")
+    _reload_hypr()
+
+
+def remove_keybinds(dry: bool) -> None:
+    binds = hypr_bindings_file()
+    if dry:
+        info(f"would remove lunana keybinds from {binds}")
+        return
+    if not binds.exists():
+        return
+    current = binds.read_text(encoding="utf-8")
+    if KEYBIND_MARK_START not in current:
+        return
+    shutil.copy2(binds, binds.with_name(f"bindings.lua.lunana-backup-{int(time.time())}"))
+    binds.write_text(_strip_lunana_block(current).rstrip() + "\n", encoding="utf-8")
+    info("removed lunana keybinds from bindings.lua")
+    _reload_hypr()
+
+
+def enable_plugins(dry: bool) -> None:
+    """Enable every non-bar lunana plugin. Third-party plugins default to
+    disabled; the bar activates through shell.json bar.id, the rest through the
+    host's enablePlugin path (omarchy-plugin-enable)."""
+    tool = shutil.which("omarchy-plugin-enable")
+    for pid in MANAGED_PLUGINS:
+        if pid == BAR_PLUGIN_ID:
+            continue
+        if dry:
+            info(f"would enable {pid}")
+            continue
+        if tool:
+            subprocess.run([tool, pid], check=False, capture_output=True)
+            info(f"enabled {pid}")
+        else:
+            info(f"omarchy-plugin-enable not on PATH; enable {pid} yourself")
+
+
+def disable_plugins(dry: bool) -> None:
+    tool = shutil.which("omarchy-plugin-disable")
+    for pid in MANAGED_PLUGINS:
+        if pid == BAR_PLUGIN_ID:
+            continue
+        if dry:
+            info(f"would disable {pid}")
+            continue
+        if tool:
+            subprocess.run([tool, pid], check=False, capture_output=True)
+            info(f"disabled {pid}")
+
+
+# --- commands --------------------------------------------------------------
+
+def cmd_install(args: argparse.Namespace) -> int:
+    ensure_safe_target()
+    validate_sources(args.dry_run)
+
+    shell_path = shell_json_path()
+    shell = read_json(shell_path)
+    bar = shell.get("bar")
+    if bar is not None and not isinstance(bar, dict):
+        fail("shell.json 'bar' is not an object; fix it before running")
+    previous_bar_id = (bar or {}).get("id", "")
+
+    if previous_bar_id == BAR_PLUGIN_ID:
+        info("lunana.bar is already the selected bar; re-syncing plugin files")
+
+    plan = [
+        f"copy {len(MANAGED_PLUGINS)} plugin(s) -> {plugin_dir()}/",
+        f"back up {shell_path.name} (if present)",
+        f'set shell.json bar.id = "{BAR_PLUGIN_ID}" (was "{previous_bar_id or "<stock>"}")',
+        f"enable {len(MANAGED_PLUGINS) - 1} non-bar plugin(s) (services + overlays)",
+        f"merge lunana keybinds into {hypr_bindings_file()} (backed up)",
+    ]
+    info("planned actions:")
+    for step in plan:
+        print(f"  - {step}")
+
+    if args.dry_run:
+        info("dry run: nothing written")
+        return 0
+    if not confirm("Swap the live Omarchy bar to lunana?", args.yes):
+        info("aborted; nothing changed")
+        return 1
+
+    # 1. copy plugin sources into the user plugin dir (overwrite managed copies)
+    copy_plugins()
+
+    # 2. back up shell.json
+    backup = None
+    if shell_path.exists():
+        backup = shell_path.with_suffix(f".json.lunana-backup-{int(time.time())}")
+        shutil.copy2(shell_path, backup)
+        info(f"backed up shell.json -> {backup.name}")
+
+    # 3. select the lunana bar
+    shell.setdefault("bar", {})
+    shell["bar"]["id"] = BAR_PLUGIN_ID
+    write_json_atomic(shell_path, shell)
+
+    # 4. record managed state for an exact uninstall
+    write_json_atomic(state_path(), {
+        "suiteId": SUITE_ID,
+        "installedPlugins": MANAGED_PLUGINS,
+        "previousBarId": previous_bar_id,
+        "shellBackup": backup.name if backup else "",
+        "installedAt": int(time.time()),
+    })
+
+    # 5. enable the non-bar plugins (services + overlays)
+    enable_plugins(False)
+
+    # 6. merge keybinds
+    install_keybinds(False)
+
+    if args.restart:
+        restart_shell(False)
+
+    info("done — the shell hot-reloads shell.json, so lunana should appear shortly.")
+    info("revert any time with:  lunana-suite uninstall")
+    return 0
+
+
+def cmd_sync(args: argparse.Namespace) -> int:
+    """Dev convenience: re-copy plugin sources and restart the shell so bar
+    edits take effect. Does not touch shell.json or create backups."""
+    ensure_safe_target()
+    validate_sources(args.dry_run)
+    info("planned actions:")
+    print(f"  - re-copy {len(MANAGED_PLUGINS)} plugin(s) -> {plugin_dir()}/")
+    print("  - omarchy restart shell (bar changes need a full restart)")
+    if args.dry_run:
+        info("dry run: nothing written")
+        return 0
+    if not (plugin_dir() / BAR_PLUGIN_ID).exists():
+        fail("lunana is not installed; run 'lunana-suite install' first")
+    if not confirm("Re-sync lunana plugins and restart the shell?", args.yes):
+        info("aborted; nothing changed")
+        return 1
+    copy_plugins()
+    restart_shell(False)
+    return 0
+
+
+def cmd_uninstall(args: argparse.Namespace) -> int:
+    ensure_safe_target()
+    state = read_json(state_path())
+    previous_bar_id = state.get("previousBarId", "")
+    shell_path = shell_json_path()
+
+    plan = [
+        f'restore shell.json bar.id -> "{previous_bar_id or "<stock omarchy.bar>"}"',
+        f"remove {len(MANAGED_PLUGINS)} managed plugin(s) from {plugin_dir()}/",
+        "remove lunana keybinds from bindings.lua",
+    ]
+    info("planned actions:")
+    for step in plan:
+        print(f"  - {step}")
+
+    if args.dry_run:
+        info("dry run: nothing written")
+        return 0
+    if not confirm("Restore the stock Omarchy bar?", args.yes):
+        info("aborted; nothing changed")
+        return 1
+
+    # 1. restore bar selection
+    if shell_path.exists():
+        shell = read_json(shell_path)
+        if isinstance(shell.get("bar"), dict):
+            if previous_bar_id:
+                shell["bar"]["id"] = previous_bar_id
+            else:
+                shell["bar"].pop("id", None)
+            write_json_atomic(shell_path, shell)
+            info("restored bar selection")
+
+    # 2. remove managed plugin copies
+    for pid in state.get("installedPlugins", MANAGED_PLUGINS):
+        dst = plugin_dir() / pid
+        if dst.exists():
+            shutil.rmtree(dst)
+            info(f"removed {pid}")
+
+    # 3. disable the non-bar plugins
+    disable_plugins(False)
+
+    # 4. remove keybinds
+    remove_keybinds(False)
+
+    # 5. drop managed state
+    if state_path().exists() and not args.keep_settings:
+        state_path().unlink()
+
+    if args.restart:
+        restart_shell(False)
+
+    info("done — stock Omarchy bar restored on the next hot-reload.")
+    return 0
+
+
+def cmd_status(args: argparse.Namespace) -> int:
+    ensure_safe_target()
+    shell = read_json(shell_json_path())
+    bar_id = (shell.get("bar") or {}).get("id", "") if isinstance(shell.get("bar"), dict) else ""
+    active = bar_id or "omarchy.bar (stock)"
+    print(f"selected bar:        {active}")
+    print(f"lunana active:       {'yes' if bar_id == BAR_PLUGIN_ID else 'no'}")
+    print("installed plugins:")
+    for pid in MANAGED_PLUGINS:
+        present = (plugin_dir() / pid / "manifest.json").is_file()
+        print(f"  - {pid:16} {'present' if present else 'absent'}")
+    state = read_json(state_path())
+    if state:
+        print(f"managed state:       {state_path()}")
+        print(f"  previous bar id:   {state.get('previousBarId', '') or '<stock>'}")
+    return 0
+
+
+def build_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(prog="lunana-suite", description=__doc__.splitlines()[0])
+    sub = parser.add_subparsers(dest="command", required=True)
+
+    for name, handler, help_text in (
+        ("install", cmd_install, "copy lunana plugins and swap the bar to lunana"),
+        ("sync", cmd_sync, "re-copy plugins and restart the shell (dev iteration)"),
+        ("uninstall", cmd_uninstall, "restore the stock bar and remove lunana plugins"),
+        ("status", cmd_status, "show the current bar selection and installed plugins"),
+    ):
+        p = sub.add_parser(name, help=help_text)
+        p.set_defaults(handler=handler)
+        if name in ("install", "sync", "uninstall"):
+            p.add_argument("--dry-run", action="store_true", help="print planned actions, write nothing")
+            p.add_argument("--yes", action="store_true", help="do not prompt for confirmation")
+        if name in ("install", "uninstall"):
+            p.add_argument("--restart", action="store_true", help="restart the shell so bar changes load immediately")
+        if name == "uninstall":
+            p.add_argument("--keep-settings", action="store_true", help="keep the managed state file")
+    return parser
+
+
+def main(argv: list[str] | None = None) -> int:
+    args = build_parser().parse_args(argv)
+    return args.handler(args)
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

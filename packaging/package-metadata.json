@@ -1,0 +1,22 @@
+{
+  "name": "lunana-shell",
+  "version": "0.4.0",
+  "description": "Lunana — an inir-inspired native plugin suite for the Omarchy Quattro shell",
+  "license": "GPL-3.0",
+  "url": "https://github.com/HANCORE-linux/lunana",
+  "suiteId": "lunana",
+  "plugins": [
+    "lunana.bar",
+    "lunana.state",
+    "lunana.dock",
+    "lunana.overview",
+    "lunana.control-center",
+    "lunana.sidebar-left"
+  ],
+  "runtimeDependencies": [
+    "omarchy",
+    "jq",
+    "wireplumber",
+    "brightnessctl"
+  ]
+}

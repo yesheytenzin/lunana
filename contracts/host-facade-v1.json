@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "id": "lunana.host-facade",
+  "contractVersion": 1,
+  "description": "What the Omarchy Quattro shell host injects into lunana plugins, and the host surfaces lunana depends on. Pinned so a host change that breaks these is caught, not discovered at runtime (Shibumi-inspired).",
+  "pinnedHost": {
+    "product": "Omarchy Quattro",
+    "version": "4.0.0.alpha",
+    "quickshellModules": ["Quickshell", "Quickshell.Wayland", "Quickshell.Hyprland", "Quickshell.Io"],
+    "note": "Validated live on this version. Re-pin and re-verify before claiming support for another."
+  },
+  "barHostInjectedProperties": [
+    "omarchyPath",
+    "barWidgetRegistry",
+    "pluginRegistry",
+    "barConfig",
+    "shell",
+    "manifest"
+  ],
+  "overlayInjectedProperties": [
+    "omarchyPath",
+    "shell",
+    "manifest"
+  ],
+  "overlayLifecycle": {
+    "entryKind": "overlay",
+    "required": ["open(payloadJson)", "close()", "toggle()", "opened"],
+    "summonedBy": "omarchy-shell shell toggle <id>"
+  },
+  "ipc": {
+    "mechanism": "ShellIpc (qs.Commons) registered with IpcRegistry",
+    "calledBy": "omarchy-shell <target> <method> [args]",
+    "note": "Functions must declare a return type, e.g. function toggle(): void."
+  },
+  "hostSurfacesUsed": {
+    "theme": "qs.Commons Color (bar.background, bar.text, bar.active, background, foreground) and Style (font.family, duration).",
+    "compositor": "Quickshell.Hyprland (monitorFor, focusedMonitor, workspaces, toplevels) and Quickshell.Wayland (ToplevelManager.activeToplevel).",
+    "selection": "shell.json bar.id selects the active kind:bar plugin; empty/absent falls back to omarchy.bar.",
+    "enablement": "Non-bar third-party plugins default to disabled; enabled via omarchy-plugin-enable."
+  }
+}

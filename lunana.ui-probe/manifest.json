@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "lunana.ui-probe",
+  "name": "Lunana UI Probe",
+  "version": "0.4.0",
+  "author": "lunana",
+  "license": "GPL-3.0",
+  "description": "Wave-0 foundation probe: renders a vendored inir PanelSurface to prove the token system + widget library load inside Omarchy. Dev-only.",
+  "kinds": [
+    "service"
+  ],
+  "entryPoints": {
+    "service": "Probe.qml"
+  },
+  "x-lunana": {
+    "suiteId": "lunana",
+    "role": "ui-probe",
+    "milestone": "Wave0",
+    "requires": [],
+    "recommends": []
+  }
+}

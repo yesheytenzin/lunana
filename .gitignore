@@ -1,0 +1,7 @@
+# runtime / local state — never commit
+*.lunana-backup-*
+lunana-suite.json
+
+# editor / OS cruft
+*.swp
+.DS_Store

@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "id": "lunana.bar",
+  "name": "Lunana Bar",
+  "version": "0.4.0",
+  "author": "lunana",
+  "license": "GPL-3.0",
+  "description": "Lunana full-bar host for the Omarchy shell. Selectable kind:bar plugin that swaps in for the stock omarchy.bar.",
+  "kinds": [
+    "bar"
+  ],
+  "entryPoints": {
+    "bar": "Bar.qml"
+  },
+  "x-lunana": {
+    "suiteId": "lunana",
+    "role": "bar-host",
+    "milestone": "M0",
+    "requires": [],
+    "recommends": [
+      "lunana.state"
+    ]
+  }
+}

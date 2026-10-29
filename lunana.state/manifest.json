@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "lunana.state",
+  "name": "Lunana State",
+  "version": "0.4.0",
+  "author": "lunana",
+  "license": "GPL-3.0",
+  "description": "Shared Lunana runtime state and validated configuration owner. M0 placeholder; grows to own the lunana.* settings subtree.",
+  "kinds": [
+    "service"
+  ],
+  "entryPoints": {
+    "service": "Service.qml"
+  },
+  "x-lunana": {
+    "suiteId": "lunana",
+    "role": "state",
+    "milestone": "M0",
+    "requires": [],
+    "recommends": []
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "id": "lunana.overview",
+  "name": "Lunana Overview",
+  "version": "0.4.0",
+  "author": "lunana",
+  "license": "GPL-3.0",
+  "description": "Lunana workspace overview. A dim overlay of workspaces and their windows; click a window to focus it.",
+  "kinds": [
+    "overlay"
+  ],
+  "activation": "on-demand",
+  "entryPoints": {
+    "overlay": "Overview.qml"
+  },
+  "x-lunana": {
+    "suiteId": "lunana",
+    "role": "overview",
+    "milestone": "M2",
+    "requires": [],
+    "recommends": []
+  }
+}

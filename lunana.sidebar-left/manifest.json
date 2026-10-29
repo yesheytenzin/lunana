@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "id": "lunana.sidebar-left",
+  "name": "Lunana Left Sidebar",
+  "version": "0.4.0",
+  "author": "lunana",
+  "license": "GPL-3.0",
+  "description": "Lunana left sidebar. A left-side panel with a clock, live system stats, and quick launchers.",
+  "kinds": [
+    "overlay"
+  ],
+  "activation": "on-demand",
+  "entryPoints": {
+    "overlay": "SidebarLeft.qml"
+  },
+  "x-lunana": {
+    "suiteId": "lunana",
+    "role": "sidebar-left",
+    "milestone": "M3",
+    "requires": [],
+    "recommends": []
+  }
+}

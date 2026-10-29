@@ -1,0 +1,5 @@
+singleton CompositorService 1.0 CompositorService.qml
+singleton GameMode 1.0 GameMode.qml
+singleton MaterialThemeLoader 1.0 MaterialThemeLoader.qml
+singleton WallpaperListener 1.0 WallpaperListener.qml
+singleton Wallpapers 1.0 Wallpapers.qml
