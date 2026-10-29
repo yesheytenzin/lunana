@@ -1,6 +1,8 @@
 pragma Singleton
 
 import QtQuick
+import "../modules/common"
+import "../modules/common/functions"
 import Quickshell
 import "../modules/common"
 import "../modules/common/functions"
