@@ -23,6 +23,7 @@ singleton MinimizedWindows 1.0 MinimizedWindows.qml
 singleton MprisController 1.0 MprisController.qml
 singleton Network 1.0 Network.qml
 singleton NiriService 1.0 NiriService.qml
+singleton Notepad 1.0 Notepad.qml
 singleton Notifications 1.0 Notifications.qml
 singleton Privacy 1.0 Privacy.qml
 singleton RecorderStatus 1.0 RecorderStatus.qml

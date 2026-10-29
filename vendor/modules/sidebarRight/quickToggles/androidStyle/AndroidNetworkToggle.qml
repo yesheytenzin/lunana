@@ -1,0 +1,21 @@
+import "../../../../services"
+import "../../../common"
+import "../../../common/functions"
+import "../../../common/widgets"
+import QtQuick
+
+AndroidQuickToggleButton {
+    id: root
+    
+    name: Translation.tr("Internet")
+    statusText: Network.networkName
+
+    toggled: Network.wifiStatus !== "disabled"
+    buttonIcon: Network.materialSymbol
+    mainAction: () => Network.toggleWifi()
+    altAction: () => root.openMenu()
+    StyledToolTip {
+        text: Translation.tr("%1 | Right-click to configure").arg(Network.connectionTooltip())
+    }
+}
+

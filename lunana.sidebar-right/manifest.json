@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "id": "lunana.sidebar-right",
+  "name": "Lunana Right Sidebar",
+  "version": "0.4.0",
+  "author": "lunana",
+  "license": "GPL-3.0",
+  "description": "Lunana right sidebar: inir's exact ii quick-settings panel (sliders, toggles, calendar, notifications) as a native Omarchy overlay.",
+  "kinds": [
+    "overlay"
+  ],
+  "activation": "on-demand",
+  "entryPoints": {
+    "overlay": "SidebarRight.qml"
+  },
+  "x-lunana": {
+    "suiteId": "lunana",
+    "role": "sidebar-right",
+    "milestone": "R6",
+    "requires": [],
+    "recommends": []
+  }
+}

@@ -43,6 +43,25 @@ MANAGED_PLUGINS = [
     "lunana.overview",
     "lunana.control-center",
     "lunana.sidebar-left",
+    "lunana.sidebar-right",
+    "lunana.family",
+]
+
+# Sidebar overlay plugins host inir's exact content trees, which live in the
+# repo vendor/ tree. The installed plugin dirs are self-contained (relative
+# `import "vendor/..."` only resolves inside the plugin dir), so install/
+# sync materialize each sidebar's import-closure subset under the installed
+# plugin's vendor/. Computed from the source tree — never hand-maintained,
+# and never the whole vendor/ tree.
+SIDEBAR_VENDOR_ROOTS = {
+    "lunana.sidebar-left": "modules/sidebarLeft/SidebarLeftContent.qml",
+    "lunana.sidebar-right": "modules/sidebarRight/SidebarRightContent.qml",
+}
+SIDEBAR_VENDOR_SEED_DIRS = [
+    "modules/sidebarLeft",
+    "modules/sidebarRight",
+    "modules/sidebar",
+    "modules/ii",
 ]
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -163,6 +182,70 @@ def copy_plugins() -> None:
             shutil.rmtree(dst)
         shutil.copytree(REPO_ROOT / pid, dst)
         info(f"synced {pid}")
+    for pid in SIDEBAR_VENDOR_ROOTS:
+        materialize_sidebar_vendor(pid)
+
+
+import re as _re
+
+
+def _sidebar_import_is_relative(target: str) -> bool:
+    return not target.startswith("/") and ":" not in target and not target.startswith("Qt")
+
+
+def materialize_sidebar_vendor(pid: str) -> None:
+    """Copy the import-closure subset of repo vendor/ needed by a sidebar's
+    exact content tree into the installed plugin's vendor/. Starts from the
+    content root plus every QML/JS under the sidebar trees (covers same-dir
+    siblings), then follows quoted relative imports — including `.import` in
+    .js files — to a fixpoint."""
+    vendor = REPO_ROOT / "vendor"
+    root_rel = SIDEBAR_VENDOR_ROOTS[pid]
+    seen: set = set()
+    stack = [vendor / root_rel]
+    for seed in SIDEBAR_VENDOR_SEED_DIRS:
+        seed_dir = vendor / seed
+        if seed_dir.is_dir():
+            stack.extend(seed_dir.rglob("*.qml"))
+            stack.extend(seed_dir.rglob("*.js"))
+    while stack:
+        current = stack.pop()
+        if current in seen or not current.is_file():
+            continue
+        current = current.resolve()
+        if current in seen or current.suffix not in (".qml", ".js", ""):
+            continue
+        seen.add(current)
+        try:
+            text = current.read_text(encoding="utf-8", errors="ignore")
+        except OSError:
+            continue
+        for line in text.splitlines():
+            match = _re.match(r'\s*(?:\.import|import)\s+"([^"]+)"', line)
+            if match and _sidebar_import_is_relative(match.group(1)):
+                target = (current.parent / match.group(1)).resolve()
+                if target.is_dir():
+                    stack.extend(target.glob("*.qml"))
+                    stack.extend(target.glob("*.js"))
+                    qmldir = target / "qmldir"
+                    if qmldir.is_file():
+                        stack.append(qmldir)
+                elif target.is_file():
+                    stack.append(target)
+    dst_vendor = plugin_dir() / pid / "vendor"
+    if dst_vendor.exists():
+        shutil.rmtree(dst_vendor)
+    count = 0
+    for src_file in seen:
+        try:
+            rel = src_file.relative_to(vendor.resolve())
+        except ValueError:
+            continue
+        dst = dst_vendor / rel
+        dst.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(src_file, dst)
+        count += 1
+    info(f"materialized {pid}/vendor ({count} files)")
 
 
 def restart_shell(dry: bool) -> None:
@@ -422,6 +505,8 @@ def cmd_status(args: argparse.Namespace) -> int:
     active = bar_id or "omarchy.bar (stock)"
     print(f"selected bar:        {active}")
     print(f"lunana active:       {'yes' if bar_id == BAR_PLUGIN_ID else 'no'}")
+    family = {"lunana.bar": "ii", "": "stock"}.get(bar_id, "custom")
+    print(f"bar family:          {family}")
     print("installed plugins:")
     for pid in MANAGED_PLUGINS:
         present = (plugin_dir() / pid / "manifest.json").is_file()

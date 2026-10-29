@@ -44,7 +44,8 @@ Singleton {
         // dock.* read in the vendored tree has a `?? default` fallback.
         dock: { pinnedApps: ["firefox", "Alacritty", "org.gnome.Nautilus"] },
         performance: { reduceAnimations: false, lowPower: false, compositorBlur: false },
-        time: { format: "hh:mm", shortDateFormat: "dd/MM", dateFormat: "ddd, dd/MM", secondPrecision: false }
+        time: { format: "hh:mm", shortDateFormat: "dd/MM", dateFormat: "ddd, dd/MM", secondPrecision: false },
+        networking: { userAgent: "" }
     })
 
     // inir mutates config through this; the shim is read-mostly for now.
