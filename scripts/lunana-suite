@@ -332,6 +332,11 @@ def enable_plugins(dry: bool) -> None:
     for pid in MANAGED_PLUGINS:
         if pid == BAR_PLUGIN_ID:
             continue
+        if pid == "lunana.iris":
+            # The island stacks over the ii bar, so it joins only through the
+            # family switcher (iris family), never on a fresh install.
+            info("skipping lunana.iris (join it with: omarchy-shell lunana.family cycle)")
+            continue
         if dry:
             info(f"would enable {pid}")
             continue
@@ -422,6 +427,12 @@ def cmd_install(args: argparse.Namespace) -> int:
 
     # 5. enable the non-bar plugins (services + overlays)
     enable_plugins(False)
+
+    # 5b. a re-install over a mixed state could leave a previously-enabled
+    # island stacked over the ii bar; the ii family owns fresh installs.
+    if shutil.which("omarchy-plugin-disable"):
+        subprocess.run(["omarchy-plugin-disable", "lunana.iris"], check=False, capture_output=True)
+        info("stood down lunana.iris (ii family owns fresh installs)")
 
     # 6. merge keybinds
     install_keybinds(False)
