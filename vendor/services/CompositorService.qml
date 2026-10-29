@@ -6,12 +6,6 @@ import Quickshell
 import Quickshell.Wayland
 import Quickshell.Hyprland
 
-// LUNANA live backing (ported from inir services/CompositorService.qml, R1).
-// Hyprland-only: lunana targets Omarchy/Hyprland, so the Niri branches are
-// dropped while isNiri stays false (every dock Niri path is guarded by it).
-// sortedToplevels carries the Hyprland windows as Wayland toplevel handles —
-// the exact shape DockApps reads (appId/title/activated, plus .wayland and
-// .address where present) — ordered by monitor/workspace/layout position.
 Singleton {
     id: root
 
@@ -19,6 +13,7 @@ Singleton {
     property bool isNiri: false
 
     readonly property string hyprlandSignature: Quickshell.env("HYPRLAND_INSTANCE_SIGNATURE")
+    readonly property string niriSocket: Quickshell.env("NIRI_SOCKET")
 
     property var sortedToplevels: []
 
@@ -32,6 +27,90 @@ Singleton {
     property bool _refreshScheduled: false
 
     property var _coordCache: ({})
+
+    // MRU window order, compositor-agnostic. Niri publishes `mruWindowIds`;
+    // Hyprland has no MRU feed, so maintain one here from focus events.
+    // Entries are opaque window keys: Niri int ids, Hyprland hex addresses.
+    // Consumed by iRiS orbit, altSwitcher, dock, GamePerformance.
+    property var mruWindowKeys: []
+
+    function _mruTouch(key): void {
+        if (key === null || key === undefined || key === "")
+            return
+        const next = [key]
+        for (let i = 0; i < mruWindowKeys.length && next.length < 64; i++) {
+            if (mruWindowKeys[i] !== key)
+                next.push(mruWindowKeys[i])
+        }
+        mruWindowKeys = next
+    }
+
+    Connections {
+        target: root.isHyprland ? Hyprland : null
+        enabled: root.isHyprland
+        function onActiveToplevelChanged() {
+            try {
+                root._mruTouch(Hyprland.activeToplevel?.address ?? "")
+            } catch (e) {}
+        }
+    }
+
+    Connections {
+        target: root.isNiri ? NiriService : null
+        enabled: root.isNiri
+        function onActiveWindowChanged() {
+            try {
+                root._mruTouch(NiriService.activeWindow?.id ?? null)
+            } catch (e) {}
+        }
+    }
+
+    // Hyprland window ops — nearest equivalents of the NiriService column
+    // actions. No exact analog for consume/expel or tabbed columns; those map
+    // to movefocus/movewindow (see PORTING.md §9 in the lunana repo).
+    function hyprFocusWindow(address: string): void {
+        if (!isHyprland || !address)
+            return
+        Hyprland.dispatch("focuswindow address:" + address)
+    }
+
+    function hyprCloseWindow(address: string): void {
+        if (!isHyprland || !address)
+            return
+        Hyprland.dispatch("closewindow address:" + address)
+    }
+
+    function hyprMoveWindowToWorkspace(address: string, workspaceId): void {
+        if (!isHyprland || !address)
+            return
+        Hyprland.dispatch("movetoworkspace " + workspaceId + ",address:" + address)
+    }
+
+    function hyprToggleFullscreen(address: string): void {
+        if (!isHyprland)
+            return
+        if (address)
+            hyprFocusWindow(address)
+        Hyprland.dispatch("fullscreen 0")
+    }
+
+    function hyprSwitchToWorkspace(workspaceId): void {
+        if (!isHyprland)
+            return
+        Hyprland.dispatch("workspace " + workspaceId)
+    }
+
+    function hyprMoveFocus(direction: string): void {
+        if (!isHyprland || !direction)
+            return
+        Hyprland.dispatch("movefocus " + direction)
+    }
+
+    function hyprMoveWindow(direction: string): void {
+        if (!isHyprland || !direction)
+            return
+        Hyprland.dispatch("movewindow " + direction)
+    }
 
     Timer {
         id: refreshTimer
@@ -134,6 +213,12 @@ Singleton {
         enabled: root.isHyprland && root.sortingActive
         function onFocusedWorkspaceChanged() { root.scheduleSort() }
     }
+    Connections {
+        target: NiriService
+        enabled: root.isNiri && root.sortingActive
+        function onWindowOrderChanged() { root.scheduleSort() }
+        function onActiveWindowChanged() { root.scheduleSort() }
+    }
     Component.onCompleted: {
         detectCompositor()
     }
@@ -141,6 +226,9 @@ Singleton {
     function computeSortedToplevels() {
         if (!ToplevelManager.toplevels || !ToplevelManager.toplevels.values)
             return []
+
+        if (isNiri)
+            return NiriService.sortToplevels(ToplevelManager.toplevels.values)
 
         if (isHyprland)
             return sortHyprlandToplevelsSafe()
@@ -311,6 +399,8 @@ Singleton {
     }
 
     function filterCurrentWorkspace(toplevels, screen) {
+        if (isNiri)
+            return NiriService.filterCurrentWorkspace(toplevels, screen)
         if (isHyprland)
             return filterHyprlandCurrentWorkspaceSafe(toplevels, screen)
         return toplevels
@@ -385,17 +475,28 @@ Singleton {
             return
         }
 
+        if (niriSocket && niriSocket.length > 0) {
+            isNiri = true
+            isHyprland = false
+            console.info("CompositorService: Detected Niri with socket:", niriSocket)
+            return
+        }
+
         isHyprland = false
         isNiri = false
     }
 
     function powerOffMonitors() {
+        if (isNiri)
+            return NiriService.powerOffMonitors()
         if (isHyprland)
             return Hyprland.dispatch("dpms off")
         console.warn("CompositorService: Cannot power off monitors, unknown compositor")
     }
 
     function powerOnMonitors() {
+        if (isNiri)
+            return NiriService.powerOnMonitors()
         if (isHyprland)
             return Hyprland.dispatch("dpms on")
         console.warn("CompositorService: Cannot power on monitors, unknown compositor")

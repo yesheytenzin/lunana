@@ -1411,7 +1411,7 @@ Scope {
                     sourceComponent: root.orbitMode
                         ? (CompositorService.isNiri
                             ? (root.orbitStageMode === "orbital" ? orbitalComponent : niriComponent)
-                            : null)
+                            : hyprComponent)
                         : (CompositorService.isNiri ? niriComponent : hyprComponent)
                     onStatusChanged: {
                         if (status === Loader.Ready && root.orbitMode && root.shouldShow) {

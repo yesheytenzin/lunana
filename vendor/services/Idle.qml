@@ -73,6 +73,11 @@ Singleton {
             cmd.push("timeout", screenOffTimeout.toString(), IdlePolicy.niriOffCommand(inir), "resume", IdlePolicy.niriResumeCommand(inir))
         }
 
+        if (screenOffTimeout > 0 && CompositorService.isHyprland) {
+            const inir = StringUtils.shellSingleQuoteEscape(root.launcherPath);
+            cmd.push("timeout", screenOffTimeout.toString(), IdlePolicy.hyprOffCommand(inir), "resume", IdlePolicy.hyprResumeCommand(inir))
+        }
+
         // Determine effective lock timeout
         // If suspend is configured and lockBeforeSleep is enabled, ensure lock happens before suspend
         let effectiveLockTimeout = lockTimeout
