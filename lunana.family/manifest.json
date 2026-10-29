@@ -5,7 +5,7 @@
   "version": "0.4.0",
   "author": "lunana",
   "license": "GPL-3.0",
-  "description": "Cycles the live bar-family set (bar host + overlay set). Today: ii, iRiS island, and stock. ii and iRiS share the lunana.bar host; the bar yields while the island is active. Waffle plugs in as a one-line addition to family-cycle's FAMILIES table.",
+  "description": "Cycles the live bar-family set (bar host + owned plugin set): ii, waffle, iris, stock. Exactly one family is active; shared lunana.state is never toggled. ii and iris share the lunana.bar host (the bar yields while the island is active); the ii dock yields to the iris dock.",
   "kinds": [
     "service"
   ],

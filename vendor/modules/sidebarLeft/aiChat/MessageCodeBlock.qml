@@ -1,12 +1,5 @@
 pragma ComponentBehavior: Bound
 
-// LUNANA SHIM (not vendored from inir) — R6 load stub.
-// Exact copy of inir's MessageCodeBlock.qml minus the KSyntaxHighlighting
-// highlighter: `import org.kde.syntaxhighlighting` is not installed in the
-// Omarchy shell env, so code renders plain (same layout, lang label, copy/
-// save, line numbers, editing). Restore the exact file once the
-// ksyntaxhighlighting QML module is available.
-
 import "../../../services"
 import "../../common"
 import "../../common/widgets"
@@ -15,6 +8,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import Quickshell
+import org.kde.syntaxhighlighting
 
 ColumnLayout {
     id: root
@@ -70,7 +64,7 @@ ColumnLayout {
                 font.weight: Font.DemiBold
                 font.letterSpacing: Appearance.editorialEverywhere ? 0.5 : 0
                 color: Appearance.editorialEverywhere ? Appearance.editorial.fieldInk : Appearance.colors.colOnLayer2
-                text: root.displayLang ? root.displayLang : "plain"
+                text: root.displayLang ? Repository.definitionForName(root.displayLang).name : "plain"
                 elide: Text.ElideRight
                 wrapMode: Text.NoWrap
             }
@@ -257,7 +251,13 @@ ColumnLayout {
                             }
                         }
 
-
+                        SyntaxHighlighter {
+                            id: highlighter
+                            textEdit: codeTextArea
+                            repository: Repository
+                            definition: Repository.definitionForName(root.displayLang || "plaintext")
+                            theme: Appearance.syntaxHighlightingTheme
+                        }
                     }
                 }
                 Loader {

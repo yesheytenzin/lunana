@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """family-cycle — switch the live bar-family set for the Lunana suite.
 
-One step of the ii -> waffle -> iRiS family UX: select the family's bar host
+One step of the ii -> waffle -> iris family UX: select the family's bar host
 (shell.json -> bar.id; absent id means the stock omarchy.bar) and ensure
-exactly that family's overlay set is enabled. Bar/dock data services
-(lunana.state, lunana.dock) are deliberately untouched — they are shared.
+exactly that family's owned set is enabled. The state service
+(lunana.state) is deliberately untouched — it is shared. Every family owns
+its own dock/lock/background/osd, so exactly one of each is active.
 
 Usage:  family-cycle cycle   # advance to the next installed family, print it
         family-cycle status  # print the current family, change nothing
@@ -31,18 +32,35 @@ from pathlib import Path
 # Coherence rule: exactly one family is fully active at a time. ii and iris
 # share the lunana.bar host (it stays installed throughout); while iris is
 # active the bar stands itself down (lunana.bar yields whenever lunana.iris
-# is enabled — see lunana.bar/Bar.qml) so the island alone owns the top edge.
-# (family name, bar plugin id ["" = stock omarchy.bar], overlay plugin ids)
+# is enabled — see lunana.bar/Bar.qml) so the island alone owns the top edge;
+# the ii dock likewise yields to lunana.iris-dock (see lunana.dock/Dock.qml).
+# (family name, bar plugin id ["" = stock omarchy.bar], owned plugin ids)
 FAMILIES = [
     ("ii", "lunana.bar",
-     ["lunana.sidebar-left", "lunana.sidebar-right"]),
-    # ("waffle", "lunana.bar-waffle", ["lunana.waffle-overlay"]),
-    ("iris", "lunana.bar", ["lunana.iris"]),
+     ["lunana.dock",
+      "lunana.sidebar-left", "lunana.sidebar-right",
+      "lunana.overview", "lunana.control-center", "lunana.background",
+      "lunana.lock", "lunana.osd", "lunana.cheatsheet",
+      "lunana.notifications", "lunana.wallpaper", "lunana.region",
+      "lunana.session", "lunana.mascot", "lunana.altswitcher",
+      "lunana.tiling", "lunana.closeconfirm", "lunana.settings"]),
+    ("waffle", "lunana.bar-waffle",
+     ["lunana.waffle-start", "lunana.waffle-action",
+      "lunana.waffle-notifications", "lunana.waffle-lock",
+      "lunana.waffle-osd", "lunana.waffle-background"]),
+    ("iris", "lunana.bar",
+     ["lunana.iris",
+      "lunana.iris-background", "lunana.iris-palette",
+      "lunana.iris-control", "lunana.iris-orbit", "lunana.iris-stage",
+      "lunana.iris-dock", "lunana.iris-edit", "lunana.iris-lock",
+      "lunana.iris-notifications", "lunana.iris-settings"]),
     ("stock", "", []),
 ]
 
-# Plugins shared across families — never enabled/disabled here.
-SHARED = {"lunana.state", "lunana.dock"}
+# Plugins shared across families — never enabled/disabled here. Only the state
+# service qualifies: every family has its own dock/lock/background/osd, so
+# exactly one of each is active at a time.
+SHARED = {"lunana.state"}
 
 
 def fail(msg: str) -> "NoReturn":  # type: ignore[valid-type]
@@ -118,7 +136,7 @@ def current_family(shell: dict) -> tuple:
     if not cands:
         return ("stock", "", [])
     # The bar host alone cannot tell ii from iris (shared host): prefer the
-    # family whose overlay set is fully enabled; fall back to the first bar
+    # family whose full owned set is enabled; fall back to the first bar
     # match for mixed states so the next cycle still converges to coherence.
     for fam in cands:
         if set(fam[2]) <= have:
@@ -127,23 +145,24 @@ def current_family(shell: dict) -> tuple:
 
 
 def apply_family(shell: dict, fam: tuple) -> None:
-    name, bar_id, overlays = fam
+    name, bar_id, owned = fam
     bar = shell.setdefault("bar", {})
     if bar_id:
         bar["id"] = bar_id
     else:
         bar.pop("id", None)
-    # Enable exactly this family's overlays; disable the other families'.
-    # Shared data services are never touched.
-    all_overlays = {o for f in FAMILIES for o in f[2]} - SHARED
+    # Enable exactly this family's owned set; disable the other families'.
+    # Shared services are never touched. Bar hosts are selected via bar.id,
+    # so the enabled set only carries the non-bar members.
+    all_owned = {o for f in FAMILIES for o in f[2]} - SHARED
     plugins = shell.setdefault("plugins", [])
     if not isinstance(plugins, list):
         fail("shell.json 'plugins' is not an array; fix it before switching")
     have = [e.get("id") for e in plugins if isinstance(e, dict)]
-    for oid in sorted(all_overlays):
-        if oid in overlays and oid not in have:
+    for oid in sorted(all_owned):
+        if oid in owned and oid not in have:
             plugins.append({"id": oid})
-        elif oid not in overlays and oid in have:
+        elif oid not in owned and oid in have:
             plugins[:] = [e for e in plugins
                           if not (isinstance(e, dict) and e.get("id") == oid)]
     write_shell(shell)

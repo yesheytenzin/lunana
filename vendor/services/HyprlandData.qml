@@ -1,79 +1,188 @@
 pragma Singleton
+pragma ComponentBehavior: Bound
+
 import QtQuick
 import Quickshell
+import Quickshell.Io
 import Quickshell.Hyprland
+import "."
 
-// LUNANA LIVE (R3) — backed by Quickshell.Hyprland.
-//
-// Replaces the Wave-A load stub. The exact ii bar reads the active workspace
-// and per-workspace windows here (ActiveWindow.qml, Workspaces.qml:546);
-// shapes mirror `hyprctl monitors -j` / `clients -j` entries the way inir's
-// HyprlandData exposes them, but sourced from live Quickshell objects — the
-// same ones lunana.bar/Bar.qml already uses live (monitorFor, focusedMonitor,
-// toplevels, ToplevelManager).
-//
-// `_rev` is poked on every compositor rawEvent so these bindings re-evaluate
-// on workspace/focus changes. Pure in-process reads — no hyprctl re-poll.
+/**
+ * Provides access to some Hyprland data not available in Quickshell.Hyprland.
+ */
 Singleton {
     id: root
+    property var windowList: []
+    property var addresses: []
+    property var windowByAddress: ({})
+    property var workspaces: []
+    property var workspaceIds: []
+    property var workspaceById: ({})
+    property var activeWorkspace: null
+    property var monitors: []
+    property var layers: ({})
+    property bool _windowListRefreshQueued: false
 
-    property int _rev: 0
+    function updateWindowList() {
+        if (!CompositorService.isHyprland)
+            return;
+        if (getClients.running) {
+            root._windowListRefreshQueued = true;
+            return;
+        }
+        getClients.running = true;
+    }
+
+    function updateLayers() {
+        if (!CompositorService.isHyprland)
+            return;
+        getLayers.running = true;
+    }
+
+    function updateMonitors() {
+        if (!CompositorService.isHyprland)
+            return;
+        getMonitors.running = true;
+    }
+
+    function updateWorkspaces() {
+        if (!CompositorService.isHyprland)
+            return;
+        getWorkspaces.running = true;
+        getActiveWorkspace.running = true;
+    }
+
+    function updateAll() {
+        if (!CompositorService.isHyprland)
+            return;
+        updateWindowList();
+        updateMonitors();
+        updateLayers();
+        updateWorkspaces();
+    }
+
+    function biggestWindowForWorkspace(workspaceId) {
+        const windowsInThisWorkspace = HyprlandData.windowList.filter(w => w.workspace.id == workspaceId);
+        return windowsInThisWorkspace.reduce((maxWin, win) => {
+            const maxArea = (maxWin?.size?.[0] ?? 0) * (maxWin?.size?.[1] ?? 0);
+            const winArea = (win?.size?.[0] ?? 0) * (win?.size?.[1] ?? 0);
+            return winArea > maxArea ? win : maxWin;
+        }, null);
+    }
+
+    Component.onCompleted: {
+        if (!CompositorService.isHyprland)
+            return;
+        updateAll();
+    }
+
     Connections {
-        target: Hyprland
-        function onRawEvent(): void { root._rev++; }
-    }
+        target: CompositorService.isHyprland ? Hyprland : null
+        enabled: CompositorService.isHyprland
 
-    // Keyed by Hyprland monitor id: { id, name, activeWorkspace: { id } }.
-    // ActiveWindow.qml indexes it as monitors[monitor.id].activeWorkspace.id.
-    readonly property var monitors: {
-        const _poke = root._rev;
-        const out = ({});
-        const screens = Quickshell.screens ?? [];
-        for (let i = 0; i < screens.length; ++i) {
-            const m = Hyprland.monitorFor(screens[i]);
-            if (!m) continue;
-            out[m.id] = {
-                id: m.id,
-                name: m.name,
-                activeWorkspace: { id: m.activeWorkspace ? m.activeWorkspace.id : 1 }
-            };
+        function onRawEvent(event) {
+            // console.log("Hyprland raw event:", event.name);
+            updateAll()
         }
-        return out;
     }
 
-    // { id, monitor: <monitor name> }; compared against monitor.name by
-    // ActiveWindow.qml (focusingThisMonitor).
-    readonly property var activeWorkspace: {
-        const _poke = root._rev;
-        const m = Hyprland.focusedMonitor;
-        return {
-            id: m && m.activeWorkspace ? m.activeWorkspace.id : 1,
-            monitor: m ? String(m.name ?? "") : ""
-        };
-    }
-
-    // Quickshell exposes no window geometry, so "biggest" prefers the
-    // activated window, else the first on the workspace. Wrapped in the
-    // { class, title } shape inir's hyprctl objects carry for the fallbacks.
-    function biggestWindowForWorkspace(workspaceId): var {
-        const _poke = root._rev;
-        const wsNum = Number(workspaceId);
-        if (!isFinite(wsNum)) return null;
-        const tls = Hyprland.toplevels ? (Hyprland.toplevels.values ?? []) : [];
-        let best = null;
-        for (let i = 0; i < tls.length; ++i) {
-            const tl = tls[i];
-            if (!tl || !tl.workspace || Number(tl.workspace.id) !== wsNum) continue;
-            if (tl.activated) { best = tl; break; }
-            if (!best) best = tl;
+    Process {
+        id: getClients
+        command: ["/usr/bin/hyprctl", "clients", "-j"]
+        onExited: {
+            if (root._windowListRefreshQueued) {
+                root._windowListRefreshQueued = false;
+                root.updateWindowList();
+            }
         }
-        if (!best) return null;
-        const w = best.wayland;
-        return {
-            address: best.address,
-            class: String(w ? (w.appId ?? "") : ""),
-            title: String(w ? (w.title ?? "") : ""),
-            workspace: { id: wsNum }
-        };
+        stdout: StdioCollector {
+            id: clientsCollector
+            onStreamFinished: {
+                try {
+                    root.windowList = JSON.parse(clientsCollector.text)
+                } catch (e) {
+                    console.log("[HyprlandData] Failed to parse clients JSON:", e);
+                    root.windowList = [];
+                }
+                let tempWinByAddress = {};
+                for (var i = 0; i < root.windowList.length; ++i) {
+                    var win = root.windowList[i];
+                    tempWinByAddress[win.address] = win;
+                }
+                root.windowByAddress = tempWinByAddress;
+                root.addresses = root.windowList.map(win => win.address);
+            }
+        }
+    }
+
+    Process {
+        id: getMonitors
+        command: ["/usr/bin/hyprctl", "monitors", "-j"]
+        stdout: StdioCollector {
+            id: monitorsCollector
+            onStreamFinished: {
+                try {
+                    root.monitors = JSON.parse(monitorsCollector.text);
+                } catch (e) {
+                    console.log("[HyprlandData] Failed to parse monitors JSON:", e);
+                    root.monitors = [];
+                }
+            }
+        }
+    }
+
+    Process {
+        id: getLayers
+        command: ["/usr/bin/hyprctl", "layers", "-j"]
+        stdout: StdioCollector {
+            id: layersCollector
+            onStreamFinished: {
+                try {
+                    root.layers = JSON.parse(layersCollector.text);
+                } catch (e) {
+                    console.log("[HyprlandData] Failed to parse layers JSON:", e);
+                    root.layers = {};
+                }
+            }
+        }
+    }
+
+    Process {
+        id: getWorkspaces
+        command: ["/usr/bin/hyprctl", "workspaces", "-j"]
+        stdout: StdioCollector {
+            id: workspacesCollector
+            onStreamFinished: {
+                try {
+                    root.workspaces = JSON.parse(workspacesCollector.text);
+                } catch (e) {
+                    console.log("[HyprlandData] Failed to parse workspaces JSON:", e);
+                    root.workspaces = [];
+                }
+                let tempWorkspaceById = {};
+                for (var i = 0; i < root.workspaces.length; ++i) {
+                    var ws = root.workspaces[i];
+                    tempWorkspaceById[ws.id] = ws;
+                }
+                root.workspaceById = tempWorkspaceById;
+                root.workspaceIds = root.workspaces.map(ws => ws.id);
+            }
+        }
+    }
+
+    Process {
+        id: getActiveWorkspace
+        command: ["/usr/bin/hyprctl", "activeworkspace", "-j"]
+        stdout: StdioCollector {
+            id: activeWorkspaceCollector
+            onStreamFinished: {
+                try {
+                    root.activeWorkspace = JSON.parse(activeWorkspaceCollector.text);
+                } catch (e) {
+                    console.log("[HyprlandData] Failed to parse active workspace JSON:", e);
+                    root.activeWorkspace = null;
+                }
+            }
+        }
     }
 }

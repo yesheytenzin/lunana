@@ -82,28 +82,17 @@ Singleton {
     property bool warned: false
     function run(): void {
         if (root.data?.request === root.requestJson && root.data?.version === root.version) return
-        if (!root.solverAvailable) return
         if (solver.running) { root.again = true; return }
-        solver.command = ["/usr/bin/bash", root.solverScript, "--request", root.requestJson, "--out", root.cachePath]
+        solver.command = ["/usr/bin/bash", Quickshell.shellPath("scripts/colors/washi.sh"), "--request", root.requestJson, "--out", root.cachePath]
         solver.running = true
     }
     // A slider's steps settle into one solve.
     readonly property Timer settle: Timer { interval: 60; onTriggered: root.run() }
-    // LUNANA PORT (Omarchy): the solver script is not ported (no scripts/
-    // dir in the host shell root), so there is no solver to run. Probe the
-    // script instead of execing blindly: a missing script used to print a
-    // bash "No such file" warning on every start; the bundled fallback
-    // palette below covers the wait.
-    readonly property string solverScript: Quickshell.shellPath("scripts/colors/washi.sh")
-    readonly property FileView solverProbe: FileView { path: root.solverScript; blockLoading: true; printErrors: false }
-    readonly property bool solverAvailable: root.solverProbe.text().length > 0
     onRequestJsonChanged: root.settle.restart()
     Component.onCompleted: root.settle.restart()
 
     readonly property FileView cache: FileView { path: root.cachePath; blockLoading: true; printErrors: false }
-    // LUNANA PORT (Omarchy): the host shell root ships no defaults/ dir,
-    // so the fallback resolves to the plugin's own vendored copy.
-    readonly property FileView fallback: FileView { path: Qt.resolvedUrl("../../../defaults/iris-washi.json"); blockLoading: true }
+    readonly property FileView fallback: FileView { path: Quickshell.shellPath("defaults/iris-washi.json"); blockLoading: true }
     readonly property Process solver: Process {
         stdout: StdioCollector {
             onStreamFinished: {

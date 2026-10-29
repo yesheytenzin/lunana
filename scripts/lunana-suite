@@ -44,6 +44,38 @@ MANAGED_PLUGINS = [
     "lunana.sidebar-right",
     "lunana.family",
     "lunana.iris",
+    "lunana.overview",
+    "lunana.control-center",
+    "lunana.background",
+    "lunana.lock",
+    "lunana.osd",
+    "lunana.cheatsheet",
+    "lunana.notifications",
+    "lunana.wallpaper",
+    "lunana.region",
+    "lunana.session",
+    "lunana.mascot",
+    "lunana.altswitcher",
+    "lunana.tiling",
+    "lunana.closeconfirm",
+    "lunana.settings",
+    "lunana.iris-background",
+    "lunana.iris-palette",
+    "lunana.iris-control",
+    "lunana.iris-orbit",
+    "lunana.iris-stage",
+    "lunana.iris-dock",
+    "lunana.iris-edit",
+    "lunana.iris-lock",
+    "lunana.iris-notifications",
+    "lunana.iris-settings",
+    "lunana.bar-waffle",
+    "lunana.waffle-start",
+    "lunana.waffle-action",
+    "lunana.waffle-notifications",
+    "lunana.waffle-lock",
+    "lunana.waffle-osd",
+    "lunana.waffle-background",
 ]
 
 # Overlay + bar-host plugins mount inir's exact content trees, which live in
@@ -58,9 +90,42 @@ VENDOR_ROOTS = {
     "lunana.sidebar-left": "modules/sidebarLeft/SidebarLeftContent.qml",
     "lunana.sidebar-right": "modules/sidebarRight/SidebarRightContent.qml",
     "lunana.iris": "modules/iris/bar/IrisBar.qml",
+    "lunana.overview": "modules/overview/Overview.qml",
+    "lunana.control-center": "modules/controlPanel/ControlPanel.qml",
+    "lunana.background": "modules/background/Background.qml",
+    "lunana.lock": "modules/lock/Lock.qml",
+    "lunana.osd": "modules/onScreenDisplay/OnScreenDisplay.qml",
+    "lunana.cheatsheet": "modules/cheatsheet/Cheatsheet.qml",
+    "lunana.notifications": "modules/notificationPopup/NotificationPopup.qml",
+    "lunana.wallpaper": "modules/wallpaperSelector/WallpaperSelector.qml",
+    "lunana.region": "modules/regionSelector/RegionSelector.qml",
+    "lunana.session": "modules/sessionScreen/SessionScreen.qml",
+    "lunana.mascot": "modules/mascot/MascotCompanion.qml",
+    "lunana.altswitcher": "modules/altSwitcher/AltSwitcher.qml",
+    "lunana.tiling": "modules/tilingOverlay/TilingOverlay.qml",
+    "lunana.closeconfirm": "modules/closeConfirm/CloseConfirm.qml",
+    "lunana.settings": "settings.qml",
+    "lunana.iris-background": "modules/iris/background/IrisBackground.qml",
+    "lunana.iris-palette": "modules/iris/palette/IrisPalette.qml",
+    "lunana.iris-control": "modules/iris/control/IrisControlCenter.qml",
+    "lunana.iris-orbit": "modules/iris/orbit/IrisOrbit.qml",
+    "lunana.iris-stage": "modules/iris/stage/IrisStage.qml",
+    "lunana.iris-dock": "modules/iris/dock/IrisDock.qml",
+    "lunana.iris-edit": "modules/iris/edit/IrisEditBar.qml",
+    "lunana.iris-lock": "modules/iris/lock/IrisLockSurface.qml",
+    "lunana.iris-notifications": "modules/iris/notificationPopup/IrisNotificationPopup.qml",
+    "lunana.iris-settings": "modules/iris/settings/IrisSettingsOverlay.qml",
+    "lunana.bar-waffle": "modules/waffle/bar/WaffleBar.qml",
+    "lunana.waffle-start": "modules/waffle/startMenu/WaffleStartMenu.qml",
+    "lunana.waffle-action": "modules/waffle/actionCenter/WaffleActionCenter.qml",
+    "lunana.waffle-notifications": "modules/waffle/notificationCenter/WaffleNotificationCenter.qml",
+    "lunana.waffle-lock": "modules/waffle/lock/WaffleLockSurface.qml",
+    "lunana.waffle-osd": "modules/waffle/onScreenDisplay/WaffleOSD.qml",
+    "lunana.waffle-background": "modules/waffle/background/WaffleBackground.qml",
 }
 VENDOR_SEED_DIRS = [
     "modules/bar",
+    "modules/barM3",
     "modules/dock",
     "modules/sidebarLeft",
     "modules/sidebarRight",
@@ -69,6 +134,58 @@ VENDOR_SEED_DIRS = [
     "modules/iris/bar",
     "modules/iris/components",
     "modules/iris/frame",
+    "modules/iris/background",
+    "modules/iris/palette",
+    "modules/iris/control",
+    "modules/iris/orbit",
+    "modules/iris/stage",
+    "modules/iris/dock",
+    "modules/iris/edit",
+    "modules/iris/field",
+    "modules/iris/lock",
+    "modules/iris/notificationPopup",
+    "modules/iris/settings",
+    "modules/overview",
+    "modules/controlPanel",
+    "modules/background",
+    "modules/lock",
+    "modules/onScreenDisplay",
+    "modules/cheatsheet",
+    "modules/notificationPopup",
+    "modules/wallpaperLauncher",
+    "modules/wallpaperSelector",
+    "modules/regionSelector",
+    "modules/sessionScreen",
+    "modules/mascot",
+    "modules/altSwitcher",
+    "modules/tilingOverlay",
+    "modules/closeConfirm",
+    "modules/waffle/bar",
+    "modules/waffle/startMenu",
+    "modules/waffle/actionCenter",
+    "modules/waffle/notificationCenter",
+    "modules/waffle/lock",
+    "modules/waffle/onScreenDisplay",
+    "modules/waffle/background",
+    "modules/waffle/backdrop",
+    "modules/waffle/looks",
+    "modules/waffle/settings",
+    "modules/common",
+    "services",
+    "services/deferred",
+    "scripts/colors",
+    "scripts/hyprland",
+    "scripts/videos",
+]
+
+# Files at the vendor/ root hosts import directly (`import "vendor/"` for
+# GlobalStates/Settings). The closure follower never ascends to the root, so
+# these are seeded explicitly into every installed plugin's vendor/.
+VENDOR_ROOT_FILES = [
+    "qmldir",
+    "GlobalStates.qml",
+    "settings.qml",
+    "waffleSettings.qml",
 ]
 
 # Runtime assets the QML references by relative path (FontLoader sources,
@@ -84,12 +201,51 @@ VENDOR_ASSET_SEEDS = {
         "modules/iris/components/IrisLightWash.frag.qsb",
         "modules/iris/background/IrisAfterglowWallpaper.frag.qsb",
     ],
+    "lunana.iris-background": [
+        "assets/fonts",
+        "defaults/iris-washi.json",
+        "modules/iris/background/IrisAfterglowWallpaper.frag.qsb",
+        "modules/iris/field/IrisField.frag.qsb",
+    ],
+    "lunana.iris-orbit": [
+        "modules/iris/field/IrisField.frag.qsb",
+    ],
+    "lunana.iris-stage": [
+        "modules/iris/field/IrisField.frag.qsb",
+    ],
+    "lunana.iris-dock": [
+        "modules/iris/field/IrisField.frag.qsb",
+    ],
+    "lunana.iris-palette": ["assets/fonts"],
+    "lunana.iris-control": ["assets/fonts"],
+    "lunana.iris-edit": ["assets/fonts"],
+    "lunana.iris-lock": ["assets/fonts"],
+    "lunana.iris-notifications": ["assets/fonts"],
+    "lunana.iris-settings": ["assets/fonts"],
+    "lunana.bar-waffle": ["assets/fonts"],
+    "lunana.waffle-start": ["assets/fonts"],
+    "lunana.waffle-action": ["assets/fonts"],
+    "lunana.waffle-notifications": ["assets/fonts"],
+    "lunana.waffle-lock": ["assets/fonts"],
+    "lunana.waffle-osd": ["assets/fonts"],
+    "lunana.waffle-background": ["assets/fonts"],
+    "lunana.background": ["assets/fonts", "defaults"],
+    "lunana.wallpaper": ["assets/fonts", "defaults"],
+    "lunana.lock": ["assets/fonts"],
+    "lunana.mascot": ["assets/fonts"],
+    "lunana.settings": ["assets/fonts"],
+    "lunana.cheatsheet": ["assets/fonts"],
+    "lunana.overview": ["assets/fonts"],
+    "lunana.region": ["assets/fonts"],
 }
 
 # Suffixes copied into the installed vendor/. QML/JS/qmldir form the code
-# closure; the rest are runtime assets pulled in via VENDOR_ASSET_SEEDS.
+# closure; scripts (.sh/.py/.fish) are runtime tools the QML shells out to
+# (record/ocr/capture/color pipeline/keybind parser); the rest are runtime
+# assets pulled in via VENDOR_ASSET_SEEDS.
 VENDOR_COPY_SUFFIXES = frozenset((
     ".qml", ".js", ".qsb", ".ttf", ".otf", ".woff", ".woff2", ".json", "",
+    ".sh", ".py", ".fish",
 ))
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -97,6 +253,31 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 KEYBIND_FRAGMENT = REPO_ROOT / "scripts" / "keybinds" / "lunana.lua"
 KEYBIND_MARK_START = "-- >>> lunana >>>"
 KEYBIND_MARK_END = "-- <<< lunana <<<"
+
+HYPR_CONF_FRAGMENT = REPO_ROOT / "scripts" / "hypr" / "lunana.conf"
+HYPR_CONF_SOURCE_LINE = "source = ~/.config/hypr/lunana.conf"
+
+
+def _load_family_table() -> tuple:
+    """Import FAMILIES/SHARED from lunana.family/family-cycle (authoritative).
+
+    Falls back to the ii-family set so install still converges if the
+    family script is ever missing.
+    """
+    cycle = REPO_ROOT / "lunana.family" / "family-cycle"
+    try:
+        import importlib.util as _ilu
+        spec = _ilu.spec_from_loader("lunana_family_cycle", loader=None)
+        mod = _ilu.module_from_spec(spec)
+        with open(cycle, encoding="utf-8") as handle:
+            code = compile(handle.read(), str(cycle), "exec")
+        exec(code, mod.__dict__)
+        return (mod.FAMILIES, mod.SHARED)
+    except Exception as exc:  # noqa: BLE001
+        info(f"family-cycle unreadable ({exc}); using fallback ii set")
+        fams = [("ii", BAR_PLUGIN_ID, [p for p in MANAGED_PLUGINS
+                                       if p not in ("lunana.state", "lunana.family")])]
+        return (fams, {"lunana.state"})
 
 
 # --- path resolution -------------------------------------------------------
@@ -132,6 +313,43 @@ def ensure_safe_target() -> None:
         fail(f"refusing to operate outside $HOME: {cfg}")
     if str(cfg).startswith("/usr/"):
         fail(f"refusing to operate on a system path: {cfg}")
+
+
+def using_fixture() -> bool:
+    """True when operating on a fixture config (nested harness / tests).
+
+    Set LUNANA_FIXTURE=1 in the fixture environment. The
+    omarchy-plugin-{enable,disable} tools drive the LIVE shell over IPC and
+    ignore XDG_CONFIG_HOME, so fixture work must edit shell.json's plugins[]
+    directly instead. (XDG_CONFIG_HOME alone cannot signal a fixture: the
+    harness redirects HOME alongside it, keeping the pair self-consistent.)
+    """
+    if os.environ.get("LUNANA_FIXTURE") == "1":
+        return True
+    return config_home() != Path.home() / ".config"
+
+
+def set_plugin_enabled(pid: str, enabled: bool, dry: bool) -> None:
+    """Hermetic enable/disable for fixture work: edits shell.json directly."""
+    if dry:
+        info(f"would {'enable' if enabled else 'disable'} {pid} (fixture shell.json)")
+        return
+    shell = read_json(shell_json_path())
+    plugins = shell.setdefault("plugins", [])
+    if not isinstance(plugins, list):
+        fail("shell.json 'plugins' is not an array; fix it before running")
+    have = [e.get("id") for e in plugins if isinstance(e, dict)]
+    if enabled and pid not in have:
+        plugins.append({"id": pid})
+        write_json_atomic(shell_json_path(), shell)
+        info(f"enabled {pid} (fixture shell.json)")
+    elif not enabled and pid in have:
+        plugins[:] = [e for e in plugins
+                       if not (isinstance(e, dict) and e.get("id") == pid)]
+        write_json_atomic(shell_json_path(), shell)
+        info(f"disabled {pid} (fixture shell.json)")
+    else:
+        info(f"{pid} already {'enabled' if enabled else 'disabled'} (fixture shell.json)")
 
 
 # --- small helpers ---------------------------------------------------------
@@ -236,6 +454,10 @@ def materialize_sidebar_vendor(pid: str) -> None:
         if seed_dir.is_dir():
             stack.extend(seed_dir.rglob("*.qml"))
             stack.extend(seed_dir.rglob("*.js"))
+    for root_file in VENDOR_ROOT_FILES:
+        candidate = vendor / root_file
+        if candidate.is_file():
+            stack.append(candidate)
     for asset in VENDOR_ASSET_SEEDS.get(pid, []):
         asset_path = vendor / asset
         if asset_path.is_dir():
@@ -356,23 +578,89 @@ def remove_keybinds(dry: bool) -> None:
     _reload_hypr()
 
 
+def hypr_conf_file() -> Path:
+    return config_home() / "hypr" / "hyprland.conf"
+
+
+def hypr_lunana_conf() -> Path:
+    return config_home() / "hypr" / "lunana.conf"
+
+
+def install_hypr_conf(dry: bool) -> None:
+    """Install the iNiR-owned layerrule conf and source it from hyprland.conf.
+
+    Backed up and idempotent (an existing source line is not duplicated);
+    removed by uninstall. Coexists with Omarchy's config — this file only
+    adds blur/shadow layerrules for lunana-* namespaces.
+    """
+    if not HYPR_CONF_FRAGMENT.is_file():
+        info("hypr fragment missing; skipping surface styling")
+        return
+    if dry:
+        info(f"would install lunana.conf -> {hypr_lunana_conf()} (sourced)")
+        return
+    if not hypr_conf_file().exists():
+        info(f"{hypr_conf_file()} not found; skipping surface styling")
+        return
+    shutil.copy2(HYPR_CONF_FRAGMENT, hypr_lunana_conf())
+    current = hypr_conf_file().read_text(encoding="utf-8")
+    if HYPR_CONF_SOURCE_LINE not in current:
+        backup = hypr_conf_file().with_name(f"hyprland.conf.lunana-backup-{int(time.time())}")
+        shutil.copy2(hypr_conf_file(), backup)
+        hypr_conf_file().write_text(current.rstrip() + "\n\n" + HYPR_CONF_SOURCE_LINE + "\n",
+                                    encoding="utf-8")
+        info("sourced lunana.conf from hyprland.conf")
+    else:
+        info("lunana.conf already sourced")
+    _reload_hypr()
+
+
+def remove_hypr_conf(dry: bool) -> None:
+    if dry:
+        info(f"would remove {hypr_lunana_conf()} and its source line")
+        return
+    if hypr_lunana_conf().exists():
+        hypr_lunana_conf().unlink()
+        info("removed lunana.conf")
+    if hypr_conf_file().exists():
+        current = hypr_conf_file().read_text(encoding="utf-8")
+        if HYPR_CONF_SOURCE_LINE in current:
+            backup = hypr_conf_file().with_name(f"hyprland.conf.lunana-backup-{int(time.time())}")
+            shutil.copy2(hypr_conf_file(), backup)
+            updated = "\n".join(l for l in current.splitlines()
+                                if l.strip() != HYPR_CONF_SOURCE_LINE).rstrip() + "\n"
+            hypr_conf_file().write_text(updated, encoding="utf-8")
+            info("removed lunana.conf source line")
+    _reload_hypr()
+
+
 def enable_plugins(dry: bool) -> None:
-    """Enable every non-bar lunana plugin. Third-party plugins default to
-    disabled; the bar activates through shell.json bar.id, the rest through the
-    host's enablePlugin path (omarchy-plugin-enable)."""
+    """Enable the default (ii) family's plugin set. Family-exclusive plugins
+    (iris satellites, waffle set) join only through family-cycle, so a fresh
+    install never enables two locks/docks/backgrounds at once."""
+    families, shared = _load_family_table()
+    default = families[0][2] if families else []
+    wanted = [p for p in MANAGED_PLUGINS
+              if p == BAR_PLUGIN_ID or p in shared or p in default]
     tool = shutil.which("omarchy-plugin-enable")
+    fixture = using_fixture()
+    if fixture:
+        info("fixture config detected; editing shell.json directly (never touching the live shell)")
     for pid in MANAGED_PLUGINS:
         if pid == BAR_PLUGIN_ID:
             continue
-        if pid == "lunana.iris":
-            # The island stacks over the ii bar, so it joins only through the
-            # family switcher (iris family), never on a fresh install.
-            info("skipping lunana.iris (join it with: omarchy-shell lunana.family cycle)")
+        if pid not in wanted:
+            if not dry:
+                info(f"skipping {pid} (joins with: family-cycle)")
+            else:
+                info(f"would skip {pid} (non-default family)")
             continue
         if dry:
             info(f"would enable {pid}")
             continue
-        if tool:
+        if fixture:
+            set_plugin_enabled(pid, True, False)
+        elif tool:
             subprocess.run([tool, pid], check=False, capture_output=True)
             info(f"enabled {pid}")
         else:
@@ -381,13 +669,16 @@ def enable_plugins(dry: bool) -> None:
 
 def disable_plugins(dry: bool) -> None:
     tool = shutil.which("omarchy-plugin-disable")
+    fixture = using_fixture()
     for pid in MANAGED_PLUGINS:
         if pid == BAR_PLUGIN_ID:
             continue
         if dry:
             info(f"would disable {pid}")
             continue
-        if tool:
+        if fixture:
+            set_plugin_enabled(pid, False, False)
+        elif tool:
             subprocess.run([tool, pid], check=False, capture_output=True)
             info(f"disabled {pid}")
 
@@ -412,8 +703,9 @@ def cmd_install(args: argparse.Namespace) -> int:
         f"copy {len(MANAGED_PLUGINS)} plugin(s) -> {plugin_dir()}/",
         f"back up {shell_path.name} (if present)",
         f'set shell.json bar.id = "{BAR_PLUGIN_ID}" (was "{previous_bar_id or "<stock>"}")',
-        f"enable {len(MANAGED_PLUGINS) - 1} non-bar plugin(s) (services + overlays)",
+        "enable the default (ii) family plugin set (family-exclusive plugins join via family-cycle)",
         f"merge lunana keybinds into {hypr_bindings_file()} (backed up)",
+        f"install lunana.conf layerrules -> {hypr_lunana_conf()} (sourced, backed up)",
     ]
     info("planned actions:")
     for step in plan:
@@ -457,17 +749,29 @@ def cmd_install(args: argparse.Namespace) -> int:
         "installedAt": int(time.time()),
     })
 
-    # 5. enable the non-bar plugins (services + overlays)
+    # 5. enable the default (ii) family plugin set; family-exclusive plugins
+    # (iris satellites, waffle set) join only through family-cycle so a fresh
+    # install never enables two locks/docks/backgrounds at once.
     enable_plugins(False)
 
-    # 5b. a re-install over a mixed state could leave a previously-enabled
-    # island stacked over the ii bar; the ii family owns fresh installs.
-    if shutil.which("omarchy-plugin-disable"):
-        subprocess.run(["omarchy-plugin-disable", "lunana.iris"], check=False, capture_output=True)
-        info("stood down lunana.iris (ii family owns fresh installs)")
+    # 5b. a re-install over a mixed state could leave previously-enabled
+    # family-exclusive plugins stacked over the ii family; stand them down.
+    families, _shared = _load_family_table()
+    default_ids = set(families[0][2]) if families else set()
+    if using_fixture():
+        for pid in MANAGED_PLUGINS:
+            if pid != BAR_PLUGIN_ID and pid not in default_ids and pid != "lunana.state":
+                set_plugin_enabled(pid, False, False)
+        info("stood down non-ii family plugins (ii family owns fresh installs)")
+    elif shutil.which("omarchy-plugin-disable"):
+        for pid in MANAGED_PLUGINS:
+            if pid != BAR_PLUGIN_ID and pid not in default_ids and pid != "lunana.state":
+                subprocess.run(["omarchy-plugin-disable", pid], check=False, capture_output=True)
+        info("stood down non-ii family plugins (ii family owns fresh installs)")
 
-    # 6. merge keybinds
+    # 6. merge keybinds + install surface styling
     install_keybinds(False)
+    install_hypr_conf(False)
 
     if args.restart:
         restart_shell(False)
@@ -512,6 +816,7 @@ def cmd_uninstall(args: argparse.Namespace) -> int:
         f'restore shell.json bar.id -> "{previous_bar_id or "<stock omarchy.bar>"}"',
         f"remove {len(MANAGED_PLUGINS)} managed plugin(s) from {plugin_dir()}/",
         "remove lunana keybinds from bindings.lua",
+        "remove lunana.conf layerrules + its source line",
         "restore omarchy.dock if this suite stood it down",
     ]
     info("planned actions:")
@@ -562,8 +867,9 @@ def cmd_uninstall(args: argparse.Namespace) -> int:
     # 3. disable the non-bar plugins
     disable_plugins(False)
 
-    # 4. remove keybinds
+    # 4. remove keybinds + surface styling
     remove_keybinds(False)
+    remove_hypr_conf(False)
 
     # 5. drop managed state
     if state_path().exists() and not args.keep_settings:
@@ -583,7 +889,7 @@ def cmd_status(args: argparse.Namespace) -> int:
     active = bar_id or "omarchy.bar (stock)"
     print(f"selected bar:        {active}")
     print(f"lunana active:       {'yes' if bar_id == BAR_PLUGIN_ID else 'no'}")
-    family = {"lunana.bar": "ii", "": "stock"}.get(bar_id, "custom")
+    family = {"lunana.bar": "ii", "lunana.bar-waffle": "waffle", "": "stock"}.get(bar_id, "custom")
     print(f"bar family:          {family}")
     print("installed plugins:")
     for pid in MANAGED_PLUGINS:

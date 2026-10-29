@@ -4,14 +4,7 @@ import QtQuick
 import "../modules/common"
 import "../modules/common/functions"
 import Quickshell
-import "../modules/common"
-import "../modules/common/functions"
 
-// LUNANA live backing (ported from inir services/AppSearch.qml, R1).
-// Imports adapted: qs.modules.* -> relative vendor tree. DesktopEntries is
-// part of the Quickshell module itself in Quickshell 0.3.x (singleton
-// Quickshell/DesktopEntries: applications/byId/heuristicLookup), so plain
-// `import Quickshell` resolves it — no Services.DesktopEntries module exists.
 /**
  * - Eases fuzzy searching for applications by name
  * - Guesses icon name for window class name

@@ -1,0 +1,5 @@
+import "."
+
+SettingsOverlay {
+    editorialChrome: true
+}

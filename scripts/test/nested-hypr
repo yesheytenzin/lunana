@@ -84,10 +84,13 @@ EOF
 
 cmd_install() {
     load_env
-    HOME="$NESTED_FIXTURE" XDG_CONFIG_HOME="$NESTED_FIXTURE/.config" \
+    # LUNANA_FIXTURE=1 keeps enable/disable hermetic: the omarchy-plugin-*
+    # tools drive the LIVE shell over IPC and ignore XDG_CONFIG_HOME.
+    HOME="$NESTED_FIXTURE" XDG_CONFIG_HOME="$NESTED_FIXTURE/.config" LUNANA_FIXTURE=1 \
         python3 "$REPO_ROOT/scripts/lunana-suite" install --yes
-    HOME="$NESTED_FIXTURE" XDG_CONFIG_HOME="$NESTED_FIXTURE/.config" \
-        omarchy restart shell || true
+    # No `omarchy restart shell` here: that would restart the LIVE shell.
+    # The nested Hyprland config exec-once's a fresh omarchy-shell that reads
+    # the fixture directly.
     echo "nested-hypr: installed; waiting for shell IPC..."
     for _ in $(seq 1 50); do
         if HOME="$NESTED_FIXTURE" XDG_CONFIG_HOME="$NESTED_FIXTURE/.config" \

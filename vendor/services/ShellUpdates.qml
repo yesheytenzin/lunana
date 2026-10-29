@@ -18,11 +18,18 @@ import Quickshell.Services.Notifications
  * The actual repo location is stored in version.json during installation.
  */
 Singleton {
-    // LUNANA PORT (Omarchy): no IpcHandler here. Each lunana plugin mounts
-    // its own copy of this service, so every copy registering the same
-    // "shellUpdate" target only warns ("will not be used") and splits the
-    // edit state. Nothing in the suite or the host invokes this target, so
-    // the duplicate registration is removed instead of kept half-dead.
+    IpcHandler {
+        target: "shellUpdate"
+        function toggle(): void { root.overlayOpen ? root.closeOverlay() : root.openOverlay() }
+        function open(): void { root.openOverlay() }
+        function close(): void { root.closeOverlay() }
+        function check(): void { root.check() }
+        function performUpdate(): void { root.performUpdate() }
+        function dismiss(): void { root.dismiss() }
+        function undismiss(): void { root.undismiss() }
+        function diagnose(): string { return root.getDiagnostics() }
+        function simulate(state: string): string { return root.simulate(state) }
+    }
     id: root
 
     // A fake pending update for checking every surface that shows one; git, config and setup stay untouched.
