@@ -70,9 +70,11 @@ against a fixture `$HOME` — never the live session.
 - [x] `lunana.state` owns the `lunana` subtree (family, themeSource; default omarchy-tokens)
 - [ ] Material You opt-in wiring (vendored `scripts/colors/*` + `MaterialThemeLoader`; default stays Omarchy tokens)
 - [ ] Un-defer integrations: `Ai`, `YtMusic`, `Wallhaven`, `AnimeService`/`Booru`
-- [x] Nested harness proven live (2026-10-30): nested Hyprland + fixture $HOME +
+- [x] Nested harness proven live (2026-10-30, session 2): nested Hyprland + fixture $HOME +
       quickshell on fixture, `lunana-suite install` hermetic, `lunana.bar` active,
-      `quickshell:bar/dock/background` layers up, zero lunana QML errors
+      `quickshell:bar/dock/background` layers up, `lunana.bar` active in listPlugins,
+      overview summoned on demand (`shell toggle` → `quickshell:overview` layer).
+      Zero `plugin load failed` lines after fixes (only benign warnings).
 - [ ] Live-verify (nested) per surface: Audio, Network, Bluetooth, Weather,
       Battery, Brightness, Mpris, Notifications, Tray, KeyboardIndicators,
       multi-monitor; toggle each overlay, capture, confirm live data
@@ -122,3 +124,16 @@ against a fixture `$HOME` — never the live session.
   universes diverge for cross-plugin GlobalStates reads (degrades to
   defaults; single shared vendor tree is future work).
 - `lunana-suite sync --restart` in fixture mode skips the live shell restart.
+
+## Session-2 corrections (2026-10-30)
+- Hosts using ShellIpc MUST `import qs.Commons` (18 generated hosts fixed;
+  static test added). `lunana.lock` service failure was the live signal.
+- `lunana.family` (the switcher) was in no family set, so never enabled;
+  SHARED is now `{lunana.state, lunana.family}`.
+- Per-plugin singleton universes: each installed plugin carries its own
+  vendor/ copy. The shell-entry handshake therefore runs in EVERY
+  vendor-mounting host (36 hosts + bar + state), not just lunana.state.
+- Open: bar first-paint still unverified (grim wedges while the fullscreen
+  overview layer is up; repeated toggles can stack duplicate overview
+  layers). Prime suspect remains entry gating; per-host handshake is now in
+  the tree awaiting a calm-session re-shot.
