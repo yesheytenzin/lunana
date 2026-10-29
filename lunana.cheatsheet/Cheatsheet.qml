@@ -1,8 +1,8 @@
 import QtQuick
 import Quickshell
 import qs.Commons
-import "vendor/" as Inir
-import "vendor/modules/cheatsheet" as LnMod
+import "../lunana-vendor/" as Inir
+import "../lunana-vendor/modules/cheatsheet" as LnMod
 
 // lunana.cheatsheet — Lunana exact ii cheatsheet host (reads Omarchy bindings.lua). (kind: overlay).
 //

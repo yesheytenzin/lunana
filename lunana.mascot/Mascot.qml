@@ -1,7 +1,7 @@
 import QtQuick
 import Quickshell
-import "vendor/" as Inir
-import "vendor/modules/mascot" as LnMod
+import "../lunana-vendor/" as Inir
+import "../lunana-vendor/modules/mascot" as LnMod
 
 // lunana.mascot — Lunana exact ii mascot host. (kind: service).
 //

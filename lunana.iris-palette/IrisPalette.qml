@@ -1,9 +1,9 @@
 import QtQuick
 import Quickshell
-import "vendor/" as Inir
+import "../lunana-vendor/" as Inir
 import qs.Commons
 import Quickshell.Wayland
-import "vendor/modules/iris/palette" as LnMod
+import "../lunana-vendor/modules/iris/palette" as LnMod
 
 // lunana.iris-palette — Lunana IrisPalette launcher host. (kind: overlay).
 //

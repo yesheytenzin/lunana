@@ -1,7 +1,7 @@
 import QtQuick
 import Quickshell
-import "vendor/" as Inir
-import "vendor/modules/waffle/background" as LnMod
+import "../lunana-vendor/" as Inir
+import "../lunana-vendor/modules/waffle/background" as LnMod
 
 // lunana.waffle-background — Lunana Waffle backdrop/background host. (kind: service).
 //

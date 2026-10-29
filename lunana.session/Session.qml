@@ -1,8 +1,8 @@
 import QtQuick
 import Quickshell
 import qs.Commons
-import "vendor/" as Inir
-import "vendor/modules/sessionScreen" as LnMod
+import "../lunana-vendor/" as Inir
+import "../lunana-vendor/modules/sessionScreen" as LnMod
 
 // lunana.session — Lunana exact ii session-screen host. (kind: overlay).
 //

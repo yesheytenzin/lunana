@@ -18,7 +18,7 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parent.parent
 ID_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]*$")
 KIND_ENTRY = {"bar": "bar", "overlay": "overlay", "menu": "menu", "panel": "panel"}
-VENDOR_IMPORT_RE = re.compile(r'import\s+"(vendor/[^"]+)"')
+VENDOR_IMPORT_RE = re.compile(r'import\s+"(\.\./lunana-vendor/[^"]+)"')
 
 failures = []
 
@@ -68,20 +68,22 @@ def test_suite_matches_plugins():
 
 
 def test_vendor_closure():
-    """Every `import "vendor/..."` in a plugin entry resolves in repo vendor/."""
+    """Every `import "../lunana-vendor/..."` in a plugin entry resolves in
+    repo vendor/ (installed once as <config>/omarchy/lunana-vendor/)."""
     vendor = REPO / "vendor"
     for d in plugin_dirs():
         m = json.loads((d / "manifest.json").read_text())
         for rel in m.get("entryPoints", {}).values():
             text = (d / rel).read_text()
             for target in VENDOR_IMPORT_RE.findall(text):
-                if target == "vendor/":
+                if target == "../lunana-vendor/":
                     # Root import: needs the root qmldir + at least GlobalStates.
                     check((vendor / "qmldir").is_file(), f"{d.name}: vendor/qmldir missing")
                     check((vendor / "GlobalStates.qml").is_file(),
                           f"{d.name}: vendor/GlobalStates.qml missing")
                     continue
-                sub = target[len("vendor/"):]
+                sub = target[len("../lunana-vendor/"):]
+                check(not sub.startswith(".."), f"{d.name}: {rel} escapes the shared tree: {target}")
                 candidate = vendor / sub
                 check(candidate.exists(), f"{d.name}: {rel} imports {target} (missing in vendor/)")
                 if candidate.is_dir():

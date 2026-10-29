@@ -1,7 +1,7 @@
 import QtQuick
 import Quickshell
-import "vendor/" as Inir
-import "vendor/modules/iris/lock" as LnMod
+import "../lunana-vendor/" as Inir
+import "../lunana-vendor/modules/iris/lock" as LnMod
 
 // lunana.iris-lock — Lunana iRiS lock host (dormant unless the iris family owns locking). (kind: service).
 //

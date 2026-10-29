@@ -1,7 +1,7 @@
 import QtQuick
 import Quickshell
-import "vendor/" as Inir
-import "vendor/modules/iris/dock" as LnMod
+import "../lunana-vendor/" as Inir
+import "../lunana-vendor/modules/iris/dock" as LnMod
 
 // lunana.iris-dock — Lunana iRiS dock host (iris family only; ii dock yields while enabled). (kind: service).
 //

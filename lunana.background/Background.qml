@@ -1,7 +1,7 @@
 import QtQuick
 import Quickshell
-import "vendor/" as Inir
-import "vendor/modules/background" as LnMod
+import "../lunana-vendor/" as Inir
+import "../lunana-vendor/modules/background" as LnMod
 
 // lunana.background — Lunana exact ii background host (wallpaper + desktop widgets + items). (kind: service).
 //

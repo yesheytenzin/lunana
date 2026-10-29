@@ -1,13 +1,12 @@
 import QtQuick
 import Quickshell
-import "vendor/" as Inir
+import "../lunana-vendor/" as Inir
 import Quickshell.Io
-import "vendor/modules/waffle/bar" as LnBar
+import "../lunana-vendor/modules/waffle/bar" as LnBar
 
 // lunana.bar-waffle — exact Waffle wBar host (kind: bar).
 //
-// Mounts inir's exact WaffleBar Scope (vendored) directly; the suite
-// materializes its import-closure subset under the installed plugin's vendor/.
+// Mounts inir's exact WaffleBar Scope from the shared lunana-vendor/ tree.
 // Selected via shell.json -> bar.id = "lunana.bar-waffle" by family-cycle's
 // waffle entry. Fail-visible: an unreadable shell.json keeps today's bar.
 Scope {

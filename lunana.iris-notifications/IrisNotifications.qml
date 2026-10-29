@@ -1,7 +1,7 @@
 import QtQuick
 import Quickshell
-import "vendor/" as Inir
-import "vendor/modules/iris/notificationPopup" as LnMod
+import "../lunana-vendor/" as Inir
+import "../lunana-vendor/modules/iris/notificationPopup" as LnMod
 
 // lunana.iris-notifications — Lunana iRiS banners host. (kind: service).
 //

@@ -1,8 +1,8 @@
 import QtQuick
 import Quickshell
 import qs.Commons
-import "vendor/" as Inir
-import "vendor/modules/waffle/startMenu" as LnMod
+import "../lunana-vendor/" as Inir
+import "../lunana-vendor/modules/waffle/startMenu" as LnMod
 
 // lunana.waffle-start — Lunana Waffle start-menu host (search). (kind: overlay).
 //

@@ -1,9 +1,9 @@
 import QtQuick
 import Quickshell
-import "vendor/" as Inir
+import "../lunana-vendor/" as Inir
 import qs.Commons
 import Quickshell.Wayland
-import "vendor/modules/iris/edit" as LnMod
+import "../lunana-vendor/modules/iris/edit" as LnMod
 
 // lunana.iris-edit — Lunana iRiS edit-mode host (interim: IrisEditBar gated panel). (kind: overlay).
 //

@@ -1,10 +1,10 @@
 import QtQuick
 import Quickshell
-import "vendor/" as Inir
+import "../lunana-vendor/" as Inir
 import Quickshell.Wayland
 import qs.Commons
 import qs.Commons as Commons
-import "vendor/modules/iris/bar" as LnIris
+import "../lunana-vendor/modules/iris/bar" as LnIris
 
 // lunana.iris — exact iRiS island panel (kind: service, on by default).
 //

@@ -1,8 +1,8 @@
 import QtQuick
 import Quickshell
 import qs.Commons
-import "vendor/" as Inir
-import "vendor/modules/controlPanel" as LnMod
+import "../lunana-vendor/" as Inir
+import "../lunana-vendor/modules/controlPanel" as LnMod
 
 // lunana.control-center — Lunana exact ii control-center host (quick settings). (kind: overlay).
 //

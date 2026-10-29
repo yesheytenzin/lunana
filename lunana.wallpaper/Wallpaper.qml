@@ -1,9 +1,9 @@
 import QtQuick
 import Quickshell
 import qs.Commons
-import "vendor/" as Inir
-import "vendor/modules/wallpaperSelector" as LnSel
-import "vendor/modules/wallpaperLauncher" as LnLaunch
+import "../lunana-vendor/" as Inir
+import "../lunana-vendor/modules/wallpaperSelector" as LnSel
+import "../lunana-vendor/modules/wallpaperLauncher" as LnLaunch
 
 // lunana.wallpaper — Lunana wallpaper host (kind: overlay).
 //

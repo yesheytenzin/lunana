@@ -1,15 +1,13 @@
 import QtQuick
 import Quickshell
 import Quickshell.Io
-import "vendor/" as Inir
-import "vendor/modules/bar" as LnBar
+import "../lunana-vendor/" as Inir
+import "../lunana-vendor/modules/bar" as LnBar
 
 // lunana.bar — exact ii bar host (kind: bar).
 //
-// Full cutover: the M0-M4 approximation is gone. This entry point mounts inir's
-// exact bar Scope (vendored) directly; the suite materializes its
-// import-closure subset under the installed plugin's vendor/ (see
-// lunana-suite VENDOR_ROOTS). Selected via shell.json -> bar.id = "lunana.bar".
+// Mounts inir's exact bar Scope from the shared lunana-vendor/ tree (installed
+// once by lunana-suite). Selected via shell.json -> bar.id = "lunana.bar".
 //
 // Family coherence: ii and iRiS share this host. While the iRiS family is
 // active the island alone owns the top edge, so the exact tree stands down

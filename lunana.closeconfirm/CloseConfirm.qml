@@ -1,8 +1,8 @@
 import QtQuick
 import Quickshell
-import "vendor/" as Inir
+import "../lunana-vendor/" as Inir
 import qs.Commons
-import "vendor/modules/closeConfirm" as LnMod
+import "../lunana-vendor/modules/closeConfirm" as LnMod
 
 // lunana.closeconfirm — Lunana exact close-confirm host (kind: overlay).
 //

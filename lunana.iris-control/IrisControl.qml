@@ -1,9 +1,9 @@
 import QtQuick
 import Quickshell
-import "vendor/" as Inir
+import "../lunana-vendor/" as Inir
 import qs.Commons
 import Quickshell.Wayland
-import "vendor/modules/iris/control" as LnMod
+import "../lunana-vendor/modules/iris/control" as LnMod
 
 // lunana.iris-control — Lunana IrisControlCenter grid host. (kind: overlay).
 //

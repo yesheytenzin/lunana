@@ -1,19 +1,17 @@
 import QtQuick
 import Quickshell
-import "vendor/" as Inir
+import "../lunana-vendor/" as Inir
 import Quickshell.Wayland
 import qs.Commons
 import qs.Commons as Commons
-import "vendor/modules/common" as LnCommon
-import "vendor/modules/sidebarRight" as LSRight
+import "../lunana-vendor/modules/common" as LnCommon
+import "../lunana-vendor/modules/sidebarRight" as LSRight
 
 // lunana.sidebar-right — exact ii right sidebar (kind: overlay).
 //
-// A fullscreen transparent layer hosting inir's exact SidebarRightContent
-// (vendored under vendor/, materialized into this plugin dir at install by
-// scripts/lunana-suite). The panel UI — sliders, quick toggles, calendar,
-// notifications, system widgets — IS the ii tree; this file is only the
-// Omarchy overlay shell (summon, layer, close) around it.
+// A fullscreen transparent layer hosting inir's exact SidebarRightContent from
+// the shared lunana-vendor/ tree. This file is only the Omarchy overlay shell
+// (summon, layer, close) around it.
 //
 // Toggled via `omarchy-shell lunana.sidebar-right toggle`.
 Item {

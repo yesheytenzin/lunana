@@ -1,7 +1,7 @@
 import QtQuick
 import Quickshell
-import "vendor/" as Inir
-import "vendor/modules/iris/background" as LnMod
+import "../lunana-vendor/" as Inir
+import "../lunana-vendor/modules/iris/background" as LnMod
 
 // lunana.iris-background — Lunana iRiS background/afterglow host. (kind: service).
 //

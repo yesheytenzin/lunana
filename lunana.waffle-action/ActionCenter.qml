@@ -1,8 +1,8 @@
 import QtQuick
 import Quickshell
 import qs.Commons
-import "vendor/" as Inir
-import "vendor/modules/waffle/actionCenter" as LnMod
+import "../lunana-vendor/" as Inir
+import "../lunana-vendor/modules/waffle/actionCenter" as LnMod
 
 // lunana.waffle-action — Lunana Waffle action-center host. (kind: overlay).
 //

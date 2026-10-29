@@ -1,13 +1,12 @@
 import QtQuick
 import Quickshell
-import "vendor/" as Inir
+import "../lunana-vendor/" as Inir
 import Quickshell.Io
-import "vendor/modules/dock" as LnDock
+import "../lunana-vendor/modules/dock" as LnDock
 
 // lunana.dock — exact ii dock host (kind: service).
 //
-// Mounts inir's exact dock Scope (vendored) directly; the suite materializes
-// its import-closure subset under the installed plugin's vendor/.
+// Mounts inir's exact dock Scope from the shared lunana-vendor/ tree.
 //
 // Family coherence: the iRiS family owns its own dock (lunana.iris-dock), so
 // this host stands down whenever the switcher has lunana.iris-dock enabled

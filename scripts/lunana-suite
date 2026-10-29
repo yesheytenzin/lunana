@@ -78,176 +78,18 @@ MANAGED_PLUGINS = [
     "lunana.waffle-background",
 ]
 
-# Overlay + bar-host plugins mount inir's exact content trees, which live in
-# the repo vendor/ tree. Installed plugin dirs are self-contained (relative
-# `import "vendor/..."` only resolves inside the plugin dir), so install/
-# sync materialize each host's import-closure subset under the installed
-# plugin's vendor/. Computed from the source tree — never hand-maintained,
-# and never the whole vendor/ tree.
-VENDOR_ROOTS = {
-    "lunana.state": "GlobalStates.qml",
-    "lunana.bar": "modules/bar/Bar.qml",
-    "lunana.dock": "modules/dock/Dock.qml",
-    "lunana.sidebar-left": "modules/sidebarLeft/SidebarLeftContent.qml",
-    "lunana.sidebar-right": "modules/sidebarRight/SidebarRightContent.qml",
-    "lunana.iris": "modules/iris/bar/IrisBar.qml",
-    "lunana.overview": "modules/overview/Overview.qml",
-    "lunana.control-center": "modules/controlPanel/ControlPanel.qml",
-    "lunana.background": "modules/background/Background.qml",
-    "lunana.lock": "modules/lock/Lock.qml",
-    "lunana.osd": "modules/onScreenDisplay/OnScreenDisplay.qml",
-    "lunana.cheatsheet": "modules/cheatsheet/Cheatsheet.qml",
-    "lunana.notifications": "modules/notificationPopup/NotificationPopup.qml",
-    "lunana.wallpaper": "modules/wallpaperSelector/WallpaperSelector.qml",
-    "lunana.region": "modules/regionSelector/RegionSelector.qml",
-    "lunana.session": "modules/sessionScreen/SessionScreen.qml",
-    "lunana.mascot": "modules/mascot/MascotCompanion.qml",
-    "lunana.altswitcher": "modules/altSwitcher/AltSwitcher.qml",
-    "lunana.tiling": "modules/tilingOverlay/TilingOverlay.qml",
-    "lunana.closeconfirm": "modules/closeConfirm/CloseConfirm.qml",
-    "lunana.settings": "settings.qml",
-    "lunana.iris-background": "modules/iris/background/IrisBackground.qml",
-    "lunana.iris-palette": "modules/iris/palette/IrisPalette.qml",
-    "lunana.iris-control": "modules/iris/control/IrisControlCenter.qml",
-    "lunana.iris-orbit": "modules/iris/orbit/IrisOrbit.qml",
-    "lunana.iris-stage": "modules/iris/stage/IrisStage.qml",
-    "lunana.iris-dock": "modules/iris/dock/IrisDock.qml",
-    "lunana.iris-edit": "modules/iris/edit/IrisEditBar.qml",
-    "lunana.iris-lock": "modules/iris/lock/IrisLockSurface.qml",
-    "lunana.iris-notifications": "modules/iris/notificationPopup/IrisNotificationPopup.qml",
-    "lunana.iris-settings": "modules/iris/settings/IrisSettingsOverlay.qml",
-    "lunana.bar-waffle": "modules/waffle/bar/WaffleBar.qml",
-    "lunana.waffle-start": "modules/waffle/startMenu/WaffleStartMenu.qml",
-    "lunana.waffle-action": "modules/waffle/actionCenter/WaffleActionCenter.qml",
-    "lunana.waffle-notifications": "modules/waffle/notificationCenter/WaffleNotificationCenter.qml",
-    "lunana.waffle-lock": "modules/waffle/lock/WaffleLockSurface.qml",
-    "lunana.waffle-osd": "modules/waffle/onScreenDisplay/WaffleOSD.qml",
-    "lunana.waffle-background": "modules/waffle/background/WaffleBackground.qml",
-}
-VENDOR_SEED_DIRS = [
-    "modules/bar",
-    "modules/barM3",
-    "modules/dock",
-    "modules/sidebarLeft",
-    "modules/sidebarRight",
-    "modules/sidebar",
-    "modules/ii",
-    "modules/iris/bar",
-    "modules/iris/components",
-    "modules/iris/frame",
-    "modules/iris/background",
-    "modules/iris/palette",
-    "modules/iris/control",
-    "modules/iris/orbit",
-    "modules/iris/stage",
-    "modules/iris/dock",
-    "modules/iris/edit",
-    "modules/iris/field",
-    "modules/iris/lock",
-    "modules/iris/notificationPopup",
-    "modules/iris/settings",
-    "modules/overview",
-    "modules/controlPanel",
-    "modules/background",
-    "modules/lock",
-    "modules/onScreenDisplay",
-    "modules/cheatsheet",
-    "modules/notificationPopup",
-    "modules/wallpaperLauncher",
-    "modules/wallpaperSelector",
-    "modules/regionSelector",
-    "modules/sessionScreen",
-    "modules/mascot",
-    "modules/altSwitcher",
-    "modules/tilingOverlay",
-    "modules/closeConfirm",
-    "modules/waffle/bar",
-    "modules/waffle/startMenu",
-    "modules/waffle/actionCenter",
-    "modules/waffle/notificationCenter",
-    "modules/waffle/lock",
-    "modules/waffle/onScreenDisplay",
-    "modules/waffle/background",
-    "modules/waffle/backdrop",
-    "modules/waffle/looks",
-    "modules/waffle/settings",
-    "modules/common",
-    "services",
-    "services/deferred",
-    "scripts/colors",
-    "scripts/hyprland",
-    "scripts/videos",
-]
+# One shared vendored tree for all hosts: <config>/omarchy/lunana-vendor/.
+# Every host imports it via `../lunana-vendor/...` (relative to its own
+# plugin dir), so all plugins share ONE GlobalStates/Config/services universe
+# — the single-engine semantics inir's tree assumes. Per-plugin vendor/ copies
+# diverge singletons, duplicate every polling service, and cost ~1GB to
+# install; the shared tree is one mechanical copy of repo vendor/.
+SHARED_VENDOR_DIRNAME = "lunana-vendor"
 
-# Files at the vendor/ root hosts import directly (`import "vendor/"` for
-# GlobalStates/Settings). The closure follower never ascends to the root, so
-# these are seeded explicitly into every installed plugin's vendor/.
-VENDOR_ROOT_FILES = [
-    "qmldir",
-    "GlobalStates.qml",
-    "settings.qml",
-    "waffleSettings.qml",
-]
 
-# Runtime assets the QML references by relative path (FontLoader sources,
-# FileView fallbacks, ShaderEffect .qsb binaries), which the import-following
-# closure above cannot see. Per plugin, since each installed vendor/ is
-# self-contained. Dirs are copied recursively, files singly.
-VENDOR_ASSET_SEEDS = {
-    "lunana.bar": ["modules/common/widgets/OrganicAudioBlob.frag.qsb"],
-    "lunana.iris": [
-        "assets/fonts",
-        "defaults/iris-washi.json",
-        "modules/iris/field/IrisField.frag.qsb",
-        "modules/iris/components/IrisLightWash.frag.qsb",
-        "modules/iris/background/IrisAfterglowWallpaper.frag.qsb",
-    ],
-    "lunana.iris-background": [
-        "assets/fonts",
-        "defaults/iris-washi.json",
-        "modules/iris/background/IrisAfterglowWallpaper.frag.qsb",
-        "modules/iris/field/IrisField.frag.qsb",
-    ],
-    "lunana.iris-orbit": [
-        "modules/iris/field/IrisField.frag.qsb",
-    ],
-    "lunana.iris-stage": [
-        "modules/iris/field/IrisField.frag.qsb",
-    ],
-    "lunana.iris-dock": [
-        "modules/iris/field/IrisField.frag.qsb",
-    ],
-    "lunana.iris-palette": ["assets/fonts"],
-    "lunana.iris-control": ["assets/fonts"],
-    "lunana.iris-edit": ["assets/fonts"],
-    "lunana.iris-lock": ["assets/fonts"],
-    "lunana.iris-notifications": ["assets/fonts"],
-    "lunana.iris-settings": ["assets/fonts"],
-    "lunana.bar-waffle": ["assets/fonts"],
-    "lunana.waffle-start": ["assets/fonts"],
-    "lunana.waffle-action": ["assets/fonts"],
-    "lunana.waffle-notifications": ["assets/fonts"],
-    "lunana.waffle-lock": ["assets/fonts"],
-    "lunana.waffle-osd": ["assets/fonts"],
-    "lunana.waffle-background": ["assets/fonts"],
-    "lunana.background": ["assets/fonts", "defaults"],
-    "lunana.wallpaper": ["assets/fonts", "defaults"],
-    "lunana.lock": ["assets/fonts"],
-    "lunana.mascot": ["assets/fonts"],
-    "lunana.settings": ["assets/fonts"],
-    "lunana.cheatsheet": ["assets/fonts"],
-    "lunana.overview": ["assets/fonts"],
-    "lunana.region": ["assets/fonts"],
-}
+def shared_vendor_dir() -> Path:
+    return omarchy_config_dir() / SHARED_VENDOR_DIRNAME
 
-# Suffixes copied into the installed vendor/. QML/JS/qmldir form the code
-# closure; scripts (.sh/.py/.fish) are runtime tools the QML shells out to
-# (record/ocr/capture/color pipeline/keybind parser); the rest are runtime
-# assets pulled in via VENDOR_ASSET_SEEDS.
-VENDOR_COPY_SUFFIXES = frozenset((
-    ".qml", ".js", ".qsb", ".ttf", ".otf", ".woff", ".woff2", ".json", "",
-    ".sh", ".py", ".fish",
-))
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 
@@ -426,12 +268,14 @@ def validate_sources(dry: bool) -> None:
 
 def copy_plugins() -> None:
     """Copy each managed plugin source into the user plugin dir, replacing any
-    existing managed copy. The shell reloads on save, but see restart_shell().
+    existing managed copy, plus the one shared lunana-vendor/ tree every host
+    imports via `../lunana-vendor/...`. The shell reloads on save, but see
+    restart_shell().
 
-    Built in a staging dir and swapped into place per plugin: the host's file
-    watcher fires mid-copy otherwise, and a load attempt against the
-    half-written tree sticks the bar fallback on ("no such directory")
-    until the next manual touch.
+    Built in a staging dir and swapped into place: the host's file watcher
+    fires mid-copy otherwise, and a load attempt against the half-written
+    tree sticks the bar fallback on ("no such directory") until the next
+    manual touch.
     """
     plugin_dir().mkdir(parents=True, exist_ok=True)
     staging = plugin_dir() / ".lunana-staging"
@@ -441,94 +285,22 @@ def copy_plugins() -> None:
     try:
         for pid in MANAGED_PLUGINS:
             shutil.copytree(REPO_ROOT / pid, staging / pid)
-        for pid in VENDOR_ROOTS:
-            materialize_sidebar_vendor(pid, staging / pid)
+        shutil.copytree(REPO_ROOT / "vendor", staging / SHARED_VENDOR_DIRNAME,
+                        ignore=shutil.ignore_patterns(".git"))
         for pid in MANAGED_PLUGINS:
             dst = plugin_dir() / pid
             if dst.exists():
                 shutil.rmtree(dst)
             shutil.move(str(staging / pid), str(dst))
             info(f"synced {pid}")
+        dst_vendor = shared_vendor_dir()
+        if dst_vendor.exists():
+            shutil.rmtree(dst_vendor)
+        shutil.move(str(staging / SHARED_VENDOR_DIRNAME), str(dst_vendor))
+        info(f"synced {SHARED_VENDOR_DIRNAME}/ (shared vendored tree)")
     finally:
         if staging.exists():
             shutil.rmtree(staging)
-
-
-import re as _re
-
-
-def _sidebar_import_is_relative(target: str) -> bool:
-    return not target.startswith("/") and ":" not in target and not target.startswith("Qt")
-
-
-def materialize_sidebar_vendor(pid: str, plugin_dest: Path | None = None) -> None:
-    """Copy the import-closure subset of repo vendor/ needed by a sidebar's
-    exact content tree into the installed plugin's vendor/. Starts from the
-    content root plus every QML/JS under the sidebar trees (covers same-dir
-    siblings), then follows quoted relative imports — including `.import` in
-    .js files — to a fixpoint."""
-    vendor = REPO_ROOT / "vendor"
-    root_rel = VENDOR_ROOTS[pid]
-    seen: set = set()
-    stack = [vendor / root_rel]
-    for seed in VENDOR_SEED_DIRS:
-        seed_dir = vendor / seed
-        if seed_dir.is_dir():
-            stack.extend(seed_dir.rglob("*.qml"))
-            stack.extend(seed_dir.rglob("*.js"))
-    for root_file in VENDOR_ROOT_FILES:
-        candidate = vendor / root_file
-        if candidate.is_file():
-            stack.append(candidate)
-    for asset in VENDOR_ASSET_SEEDS.get(pid, []):
-        asset_path = vendor / asset
-        if asset_path.is_dir():
-            stack.extend(p for p in asset_path.rglob("*") if p.is_file())
-        elif asset_path.is_file():
-            stack.append(asset_path)
-    while stack:
-        current = stack.pop()
-        if current in seen or not current.is_file():
-            continue
-        current = current.resolve()
-        if current in seen or current.suffix not in VENDOR_COPY_SUFFIXES:
-            continue
-        seen.add(current)
-        # Only QML/JS participate in import-following; assets have no
-        # imports and may be binary (a .qsb read as text is harmless but
-        # pointless, so skip the parse).
-        if current.suffix not in (".qml", ".js"):
-            continue
-        try:
-            text = current.read_text(encoding="utf-8", errors="ignore")
-        except OSError:
-            continue
-        for line in text.splitlines():
-            match = _re.match(r'\s*(?:\.import|import)\s+"([^"]+)"', line)
-            if match and _sidebar_import_is_relative(match.group(1)):
-                target = (current.parent / match.group(1)).resolve()
-                if target.is_dir():
-                    stack.extend(target.glob("*.qml"))
-                    stack.extend(target.glob("*.js"))
-                    qmldir = target / "qmldir"
-                    if qmldir.is_file():
-                        stack.append(qmldir)
-                elif target.is_file():
-                    stack.append(target)
-    dst_vendor = (plugin_dest if plugin_dest is not None else plugin_dir() / pid) / "vendor"
-    if dst_vendor.exists():
-        shutil.rmtree(dst_vendor)
-    count = 0
-    for src_file in seen:
-        try:
-            rel = src_file.relative_to(vendor.resolve())
-        except ValueError:
-            continue
-        dst = dst_vendor / rel
-        dst.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(src_file, dst)
-        count += 1
-    info(f"materialized {pid}/vendor ({count} files)")
 
 
 def restart_shell(dry: bool) -> None:
@@ -732,7 +504,7 @@ def cmd_install(args: argparse.Namespace) -> int:
         info("lunana.bar is already the selected bar; re-syncing plugin files")
 
     plan = [
-        f"copy {len(MANAGED_PLUGINS)} plugin(s) -> {plugin_dir()}/",
+        f"copy {len(MANAGED_PLUGINS)} plugin(s) -> {plugin_dir()}/ + shared {SHARED_VENDOR_DIRNAME}/",
         f"back up {shell_path.name} (if present)",
         f'set shell.json bar.id = "{BAR_PLUGIN_ID}" (was "{previous_bar_id or "<stock>"}")',
         "enable the default (ii) family plugin set (family-exclusive plugins join via family-cycle)",
@@ -846,7 +618,7 @@ def cmd_uninstall(args: argparse.Namespace) -> int:
 
     plan = [
         f'restore shell.json bar.id -> "{previous_bar_id or "<stock omarchy.bar>"}"',
-        f"remove {len(MANAGED_PLUGINS)} managed plugin(s) from {plugin_dir()}/",
+        f"remove {len(MANAGED_PLUGINS)} managed plugin(s) from {plugin_dir()}/ + shared {SHARED_VENDOR_DIRNAME}/",
         "remove lunana keybinds from bindings.lua",
         "remove lunana.conf layerrules + its source line",
         "restore omarchy.dock if this suite stood it down",
@@ -895,6 +667,10 @@ def cmd_uninstall(args: argparse.Namespace) -> int:
         if dst.is_dir() and dst.name not in MANAGED_PLUGINS:
             shutil.rmtree(dst)
             info(f"removed orphan {dst.name}")
+    # 2c. remove the shared vendored tree (installed by every install/sync).
+    if shared_vendor_dir().exists():
+        shutil.rmtree(shared_vendor_dir())
+        info(f"removed shared {SHARED_VENDOR_DIRNAME}/")
 
     # 3. disable the non-bar plugins
     disable_plugins(False)
@@ -927,6 +703,8 @@ def cmd_status(args: argparse.Namespace) -> int:
     for pid in MANAGED_PLUGINS:
         present = (plugin_dir() / pid / "manifest.json").is_file()
         print(f"  - {pid:16} {'present' if present else 'absent'}")
+    shared = (shared_vendor_dir() / "GlobalStates.qml").is_file()
+    print(f"  shared {SHARED_VENDOR_DIRNAME}/: {'present' if shared else 'absent'}")
     state = read_json(state_path())
     if state:
         print(f"managed state:       {state_path()}")

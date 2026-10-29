@@ -1,7 +1,7 @@
 import QtQuick
 import Quickshell
-import "vendor/" as Inir
-import "vendor/modules/tilingOverlay" as LnMod
+import "../lunana-vendor/" as Inir
+import "../lunana-vendor/modules/tilingOverlay" as LnMod
 
 // lunana.tiling — Lunana exact tiling-overlay host. (kind: service).
 //

@@ -1,7 +1,7 @@
 import QtQuick
 import Quickshell
-import "vendor/" as Inir
-import "vendor/modules/waffle/onScreenDisplay" as LnMod
+import "../lunana-vendor/" as Inir
+import "../lunana-vendor/modules/waffle/onScreenDisplay" as LnMod
 
 // lunana.waffle-osd — Lunana Waffle OSD host. (kind: service).
 //
