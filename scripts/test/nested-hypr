@@ -200,7 +200,8 @@ cmd_down() {
     load_env
     hyprctl -i "$NESTED_SIG" dispatch exit 2>/dev/null || true
     kill "$(cat "$STATE_DIR/hypr.pid")" 2>/dev/null || true
-    rm -rf "$NESTED_FIXTURE" "$ENV_FILE"
+    rm -rf "$NESTED_FIXTURE" "$ENV_FILE" "$STATE_DIR/hypr.pid"
+    # Shots and shell.log stay under /tmp/lunana-nested as evidence.
     echo "nested-hypr: down"
 }
 
