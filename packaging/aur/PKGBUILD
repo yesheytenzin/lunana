@@ -17,6 +17,6 @@ package() {
   # the package ships the suite and plugin sources under /usr/share.
   local dest="$pkgdir/usr/share/lunana"
   install -d "$dest"
-  cp -r lunana.* scripts contracts "$dest/"
+  cp -r plugins scripts contracts vendor "$dest/"
   install -Dm755 scripts/lunana-suite "$pkgdir/usr/bin/lunana-suite"
 }

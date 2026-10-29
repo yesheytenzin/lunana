@@ -25,9 +25,9 @@ Omarchy hosts plugins by `manifest.json` (`kinds`: `bar`, `overlay`,
 - **Services** (`kind: service`) are resident mounts (background, dock, lock,
   OSD, notifications, mascot, …) that show on the vendored tree's own state.
 
-`lunana.family/family-cycle` switches the live set — `ii ↔ waffle ↔ iris ↔
+`plugins/shared/lunana.family/family-cycle` switches the live set — `ii ↔ waffle ↔ iris ↔
 stock` — enabling exactly one family's plugins (each family owns its
-dock/lock/background/OSD; only `lunana.state` is shared). Coherence guards in
+dock/lock/background/OSD; only `lunana.state` and `lunana.family` are shared). Coherence guards in
 the bar and dock hosts yield the top edge to the iRiS island/dock while the
 iris family is active.
 
@@ -57,7 +57,7 @@ sudo pacman -S syntax-highlighting
 ./scripts/lunana-suite install
 
 # cycle families: ii -> waffle -> iris -> stock
-./lunana.family/family-cycle cycle
+./plugins/shared/lunana.family/family-cycle cycle
 
 # after editing QML: re-copy + restart the shell (bar changes need a restart)
 ./scripts/lunana-suite sync
@@ -116,12 +116,14 @@ vendor closures, family cycling, and the suite green.
 
 ## Layout
 
-- `lunana.*/` — plugin hosts (one dir per surface; entry QML + manifest).
+- `plugins/` — plugin hosts grouped by `ii`, `iris`, `waffle`, `shared`, and
+  `dev`; each leaf directory is still named by its installed plugin ID.
 - `vendor/` — mechanical copy of the inir tree (`scripts/vendor.py` output).
 - Installed as one shared `~/.config/omarchy/lunana-vendor/` tree: every host imports it via
   `../../lunana-vendor/...`, so all plugins share one GlobalStates universe (and installs stay ~90MB).
 - `scripts/lunana-suite` — transactional install/swap tool.
-- `lunana.family/family-cycle` — family switcher.
+- `plugins/` — plugin hosts grouped by `ii`, `iris`, `waffle`, `shared`, and `dev`.
+- `plugins/shared/lunana.family/family-cycle` — family switcher.
 - `scripts/test/nested-hypr` — nested-Hyprland test harness.
 - `scripts/hypr/lunana.conf` — iNiR-owned layerrules (installed/removed by suite).
 - `contracts/host-facade-v1.json` — pinned host contract (Omarchy Quattro 4.0.0.alpha).

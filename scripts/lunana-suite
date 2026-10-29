@@ -97,6 +97,17 @@ def shared_vendor_dir() -> Path:
 
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
+PLUGINS_ROOT = REPO_ROOT / "plugins"
+
+
+def plugin_src(pid: str) -> Path:
+    matches = sorted(PLUGINS_ROOT.glob(f"*/{pid}"))
+    if not matches:
+        fail(f"plugin source not found for '{pid}' under {PLUGINS_ROOT}/")
+    if len(matches) > 1:
+        fail(f"ambiguous plugin source for '{pid}': {[str(m) for m in matches]}")
+    return matches[0]
+
 
 KEYBIND_FRAGMENT = REPO_ROOT / "scripts" / "keybinds" / "lunana.lua"
 KEYBIND_MARK_START = "-- >>> lunana >>>"
@@ -112,12 +123,12 @@ def hypr_source_line() -> str:
 
 
 def _load_family_table() -> tuple:
-    """Import FAMILIES/SHARED from lunana.family/family-cycle (authoritative).
+    """Import FAMILIES and SHARED from the family-cycle script.
 
     Falls back to the ii-family set so install still converges if the
     family script is ever missing.
     """
-    cycle = REPO_ROOT / "lunana.family" / "family-cycle"
+    cycle = plugin_src("lunana.family") / "family-cycle"
     try:
         import importlib.util as _ilu
         spec = _ilu.spec_from_loader("lunana_family_cycle", loader=None)
@@ -258,7 +269,7 @@ def validator_available() -> str | None:
 def validate_sources(dry: bool) -> None:
     validator = validator_available()
     for pid in MANAGED_PLUGINS:
-        src = REPO_ROOT / pid
+        src = plugin_src(pid)
         if not (src / "manifest.json").is_file():
             fail(f"source plugin missing or has no manifest.json: {src}")
         if validator:
@@ -289,7 +300,7 @@ def copy_plugins() -> None:
     staging.mkdir(parents=True)
     try:
         for pid in MANAGED_PLUGINS:
-            shutil.copytree(REPO_ROOT / pid, staging / pid)
+            shutil.copytree(plugin_src(pid), staging / pid)
         shutil.copytree(REPO_ROOT / "vendor", staging / SHARED_VENDOR_DIRNAME,
                         ignore=shutil.ignore_patterns(".git"))
         for pid in MANAGED_PLUGINS:

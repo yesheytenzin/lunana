@@ -16,6 +16,7 @@ import tempfile
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
+PLUGINS = REPO / "plugins"
 ID_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]*$")
 KIND_ENTRY = {"bar": "bar", "overlay": "overlay", "menu": "menu", "panel": "panel"}
 VENDOR_IMPORT_RE = re.compile(r'import\s+"(\.\./\.\./lunana-vendor/[^"]+)"')
@@ -29,7 +30,13 @@ def check(cond, msg):
 
 
 def plugin_dirs():
-    return sorted(p for p in REPO.glob("lunana.*") if (p / "manifest.json").is_file())
+    return sorted(p for p in PLUGINS.glob("*/*") if (p / "manifest.json").is_file())
+
+
+def plugin_dir(pid):
+    matches = [p for p in plugin_dirs() if p.name == pid]
+    check(len(matches) == 1, f"expected one source for {pid}, found {len(matches)}")
+    return matches[0] if len(matches) == 1 else PLUGINS / "missing" / pid
 
 
 def test_manifests():
@@ -58,7 +65,7 @@ def test_manifests():
 
 def test_suite_matches_plugins():
     suite = (REPO / "scripts" / "lunana-suite").read_text()
-    family = (REPO / "lunana.family" / "family-cycle").read_text()
+    family = (plugin_dir("lunana.family") / "family-cycle").read_text()
     for d in plugin_dirs():
         m = json.loads((d / "manifest.json").read_text())
         if m.get("x-lunana", {}).get("role") == "ui-probe":
@@ -105,7 +112,7 @@ def test_host_imports():
 
 def _load_family_table():
     import importlib.util as ilu
-    cycle = REPO / "lunana.family" / "family-cycle"
+    cycle = plugin_dir("lunana.family") / "family-cycle"
     spec = ilu.spec_from_loader("family_cycle_test", loader=None)
     mod = ilu.module_from_spec(spec)
     with open(cycle, encoding="utf-8") as handle:
@@ -129,7 +136,7 @@ def test_family_cycle():
         env = dict(os.environ, XDG_CONFIG_HOME=str(Path(tmp) / ".config"))
 
         def run(*args):
-            return subprocess.run([sys.executable, str(REPO / "lunana.family" / "family-cycle"),
+            return subprocess.run([sys.executable, str(plugin_dir("lunana.family") / "family-cycle"),
                                    *args], capture_output=True, text=True, env=env)
 
         r = run("status")
