@@ -11,6 +11,12 @@ Singleton {
     property var sink: sinkObj
     property bool micMuted: false
     property bool micBeingAccessed: false
+    // inir parity: live mic level (poll) + sink-guard signal. The wpctl shim
+    // never caps the sink, so sinkProtectionTriggered never fires — but the
+    // island's Connections needs the signal, and the slider needs the value.
+    property real micVolume: 0
+    readonly property real value: audioObj.volume
+    signal sinkProtectionTriggered(reason: string)
 
     QtObject {
         id: sinkObj
@@ -69,6 +75,8 @@ Singleton {
             onStreamFinished: {
                 const m = /Volume:\s*([0-9.]+)/.exec(text);
                 if (!m) return;
+                const v = parseFloat(m[1]);
+                if (!isNaN(v)) root.micVolume = v;
                 root.micMuted = text.indexOf("[MUTED]") >= 0;
             }
         }

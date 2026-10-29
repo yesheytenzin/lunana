@@ -71,6 +71,27 @@ VENDOR_SEED_DIRS = [
     "modules/iris/frame",
 ]
 
+# Runtime assets the QML references by relative path (FontLoader sources,
+# FileView fallbacks, ShaderEffect .qsb binaries), which the import-following
+# closure above cannot see. Per plugin, since each installed vendor/ is
+# self-contained. Dirs are copied recursively, files singly.
+VENDOR_ASSET_SEEDS = {
+    "lunana.bar": ["modules/common/widgets/OrganicAudioBlob.frag.qsb"],
+    "lunana.iris": [
+        "assets/fonts",
+        "defaults/iris-washi.json",
+        "modules/iris/field/IrisField.frag.qsb",
+        "modules/iris/components/IrisLightWash.frag.qsb",
+        "modules/iris/background/IrisAfterglowWallpaper.frag.qsb",
+    ],
+}
+
+# Suffixes copied into the installed vendor/. QML/JS/qmldir form the code
+# closure; the rest are runtime assets pulled in via VENDOR_ASSET_SEEDS.
+VENDOR_COPY_SUFFIXES = frozenset((
+    ".qml", ".js", ".qsb", ".ttf", ".otf", ".woff", ".woff2", ".json", "",
+))
+
 REPO_ROOT = Path(__file__).resolve().parent.parent
 
 KEYBIND_FRAGMENT = REPO_ROOT / "scripts" / "keybinds" / "lunana.lua"
@@ -215,14 +236,25 @@ def materialize_sidebar_vendor(pid: str) -> None:
         if seed_dir.is_dir():
             stack.extend(seed_dir.rglob("*.qml"))
             stack.extend(seed_dir.rglob("*.js"))
+    for asset in VENDOR_ASSET_SEEDS.get(pid, []):
+        asset_path = vendor / asset
+        if asset_path.is_dir():
+            stack.extend(p for p in asset_path.rglob("*") if p.is_file())
+        elif asset_path.is_file():
+            stack.append(asset_path)
     while stack:
         current = stack.pop()
         if current in seen or not current.is_file():
             continue
         current = current.resolve()
-        if current in seen or current.suffix not in (".qml", ".js", ""):
+        if current in seen or current.suffix not in VENDOR_COPY_SUFFIXES:
             continue
         seen.add(current)
+        # Only QML/JS participate in import-following; assets have no
+        # imports and may be binary (a .qsb read as text is harmless but
+        # pointless, so skip the parse).
+        if current.suffix not in (".qml", ".js"):
+            continue
         try:
             text = current.read_text(encoding="utf-8", errors="ignore")
         except OSError:

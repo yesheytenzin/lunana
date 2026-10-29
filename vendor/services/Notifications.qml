@@ -17,6 +17,8 @@ Singleton {
     property var popupAppNameList: []
 
     function ensureInitialized() {}
+    // inir parity: the sidebar tools toggle do-not-disturb through here.
+    function toggleSilent() { silent = !silent }
     function countForApp(appIds) { return 0 }
     function markReadForApp(appIds) {}
     // inir helper (services/Notifications.qml): compare on alphanumerics only.

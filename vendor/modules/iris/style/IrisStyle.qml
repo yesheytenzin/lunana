@@ -185,7 +185,9 @@ QtObject {
             .concat(["Light", "Regular", "Medium", "SemiBold", "Bold"].map(weight => `montserrat/Montserrat-${weight}`))
         delegate: FontLoader {
             required property string modelData
-            source: Quickshell.shellPath(`assets/fonts/${modelData}.ttf`)
+            // LUNANA PORT (Omarchy): the host shell root ships no assets/
+            // dir, so faces resolve to the plugin's own vendored fonts.
+            source: Qt.resolvedUrl(`../../../assets/fonts/${modelData}.ttf`)
         }
     }
     readonly property string faceText: "Inter"
