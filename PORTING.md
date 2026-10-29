@@ -31,7 +31,8 @@ against a fixture `$HOME` — never the live session.
 - [x] Window previews: address-keyed Hyprland path (`grim -g` via capture-windows-hyprland.sh); Niri int path untouched
 - [x] MinimizedWindows: Hyprland special-workspace minimize/restore (address-keyed side map)
 - [x] Idle: Hyprland screen-off via `hyprctl dpms off/on` + brightness save/restore
-- [x] Cheatsheet: `HyprlandKeybinds` also parses Omarchy bindings.lua `o.bind` lines (lunana block included)
+- [x] Cheatsheet: `HyprlandKeybinds` parses Omarchy bindings.lua (proven: Keybinds (8)
+      with the full Omarchy section in the nest; binds nested under children[0])
 
 ## Wave 2 — ii family parity (lunana hosts)
 - [x] `lunana.bar` (bar, exists) — all styles: classic/islands/scenic/frame/pill/m3
@@ -75,7 +76,9 @@ against a fixture `$HOME` — never the live session.
       `quickshell:bar/dock/background` layers up, `lunana.bar` active in listPlugins,
       overview summoned on demand (`shell toggle` → `quickshell:overview` layer).
       Zero `plugin load failed` lines after fixes (only benign warnings).
-- [ ] Live-verify (nested) per surface: Audio, Network, Bluetooth, Weather,
+- [x] Verified in nest: bar (live data), dock, background, overview summon,
+      cheatsheet summon + binds, zero load failures, hermetic install/uninstall
+- [ ] Live-verify (nested) per surface (remaining): Audio, Network, Bluetooth, Weather,
       Battery, Brightness, Mpris, Notifications, Tray, KeyboardIndicators,
       multi-monitor; toggle each overlay, capture, confirm live data
 - [ ] Settings: every page in all three families loads; Compositor page shows
@@ -137,3 +140,19 @@ against a fixture `$HOME` — never the live session.
   overview layer is up; repeated toggles can stack duplicate overview
   layers). Prime suspect remains entry gating; per-host handshake is now in
   the tree awaiting a calm-session re-shot.
+
+## Session-3 corrections (2026-10-30)
+- Cheatsheet sections must nest keybinds under `children[0]` (fixed + proven).
+- Toggle calls execute but the client reply times out under load; layers are
+  the source of truth for summon verification, not the client rc.
+- Missing system dep: `org.kde.syntaxhighlighting` QML module (KF6) breaks
+  vendored AiChat → sidebar-left content. Packaging + README list it.
+- `lunana.lock` / service-direct IPC (`omarchy-shell <target>`) reports
+  "Target not found" — the overlay summon path (`shell toggle <id>`) is the
+  contract path and works; service-direct needs host-semantics check.
+- Repeated toggles can stack duplicate overview layers (needs close-path look).
+- Full 40-plugin suite holds ~35% of one core in the nest (per-plugin
+  singleton/polling duplication); slim sets idle at 0.3%. Single shared
+  vendor tree is the fix direction (correctness + performance).
+- grim wedges while fullscreen ScreencopyView content is up; host-side
+  `grim -g <nested window>` is the fallback capture path.
