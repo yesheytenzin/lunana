@@ -56,7 +56,9 @@ The suite runs as your user, never calls pacman/sudo, never touches
 | `lunana.dock/` | `kind: service` — bottom dock of live Hyprland windows |
 | `lunana.overview/` | `kind: overlay` — workspace + window overview |
 | `lunana.control-center/` | `kind: overlay` — volume/brightness sliders + actions |
-| `lunana.sidebar-left/` | `kind: overlay` — clock, live system stats, launchers |
+| `lunana.sidebar-left/` | `kind: overlay` — inir's exact left sidebar (tabs, widgets, AI chat) |
+| `lunana.sidebar-right/` | `kind: overlay` — inir's exact right sidebar (sliders, toggles, calendar) |
+| `lunana.family/` | `kind: service` — bar-family switcher (ii ↔ stock; waffle/iRiS plug in as one line) |
 | `scripts/lunana-suite` | transactional install / sync / uninstall / status |
 | `scripts/keybinds/lunana.lua` | Lua bind fragment merged into `bindings.lua` |
 | `contracts/` | pinned host facade (`host-facade-v1.json`) |
@@ -72,6 +74,8 @@ Merged into `~/.config/hypr/bindings.lua` on install (removed on uninstall):
 | `Super+Shift+O` | Overview |
 | `Super+Shift+C` | Control Center |
 | `Super+Shift+L` | Left Sidebar |
+| `Super+Shift+R` | Right Sidebar |
+| `Super+Shift+W` | Family Switch (ii ↔ stock) |
 
 ## Milestones — all verified live
 

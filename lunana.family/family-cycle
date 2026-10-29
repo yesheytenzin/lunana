@@ -1,0 +1,154 @@
+#!/usr/bin/env python3
+"""family-cycle — switch the live bar-family set for the Lunana suite.
+
+One step of the ii -> waffle -> iRiS family UX: select the family's bar host
+(shell.json -> bar.id; absent id means the stock omarchy.bar) and ensure
+exactly that family's overlay set is enabled. Bar/dock data services
+(lunana.state, lunana.dock) are deliberately untouched — they are shared.
+
+Usage:  family-cycle cycle   # advance to the next installed family, print it
+        family-cycle status  # print the current family, change nothing
+
+Safety rails (same as scripts/lunana-suite): desktop user only, never
+pacman/sudo, never touches /usr/share/omarchy, backs up shell.json, writes it
+atomically, refuses on malformed shell.json.
+
+Family table: a new bar family plugs in as ONE line here (plus its bar host
+plugin dir). Entries whose bar plugin is not installed are skipped, so a
+half-added family can never strand the session on a missing bar.
+"""
+
+from __future__ import annotations
+
+import json
+import os
+import shutil
+import sys
+import tempfile
+import time
+from pathlib import Path
+
+# (family name, bar plugin id ["" = stock omarchy.bar], overlay plugin ids)
+FAMILIES = [
+    ("ii", "lunana.bar",
+     ["lunana.overview", "lunana.control-center",
+      "lunana.sidebar-left", "lunana.sidebar-right"]),
+    # ("waffle", "lunana.bar-waffle", ["lunana.waffle-overlay"]),
+    # ("iris", "lunana.bar-iris", ["lunana.iris-overlay"]),
+    ("stock", "", []),
+]
+
+# Plugins shared across families — never enabled/disabled here.
+SHARED = {"lunana.state", "lunana.dock"}
+
+
+def fail(msg: str) -> "NoReturn":  # type: ignore[valid-type]
+    print(f"family-cycle: {msg}", file=sys.stderr)
+    raise SystemExit(1)
+
+
+def info(msg: str) -> None:
+    print(f"family-cycle: {msg}")
+
+
+def config_home() -> Path:
+    return Path(os.environ.get("XDG_CONFIG_HOME", Path.home() / ".config"))
+
+
+def shell_json_path() -> Path:
+    return config_home() / "omarchy" / "shell.json"
+
+
+def plugin_dir() -> Path:
+    return config_home() / "omarchy" / "plugins"
+
+
+def read_shell() -> dict:
+    path = shell_json_path()
+    if not path.exists():
+        fail(f"{path} not found; is Omarchy installed?")
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        fail(f"{path} is unreadable ({exc}); fix it before switching")
+    if not isinstance(data, dict):
+        fail(f"{path} is not a JSON object")
+    return data
+
+
+def write_shell(data: dict) -> None:
+    path = shell_json_path()
+    backup = path.with_name(f"shell.json.lunana-family-backup-{int(time.time())}")
+    shutil.copy2(path, backup)
+    fd, tmp = tempfile.mkstemp(dir=str(path.parent), prefix=".lunana-family-", suffix=".tmp")
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as handle:
+            json.dump(data, handle, indent=2, ensure_ascii=False)
+            handle.write("\n")
+        os.replace(tmp, path)
+    finally:
+        if os.path.exists(tmp):
+            os.unlink(tmp)
+    info(f"backed up shell.json -> {backup.name}")
+
+
+def installed_families() -> list:
+    """Families whose bar host is available (stock is always available)."""
+    have = {p.name for p in plugin_dir().iterdir() if p.is_dir()} if plugin_dir().is_dir() else set()
+    return [f for f in FAMILIES if f[1] == "" or f[1] in have]
+
+
+def current_family(shell: dict) -> tuple:
+    bar = shell.get("bar")
+    if not isinstance(bar, dict):
+        fail("shell.json 'bar' is not an object; fix it before switching")
+    bar_id = bar.get("id", "")
+    for fam in installed_families():
+        if fam[1] == bar_id:
+            return fam
+    return ("stock", "", [])
+
+
+def apply_family(shell: dict, fam: tuple) -> None:
+    name, bar_id, overlays = fam
+    bar = shell.setdefault("bar", {})
+    if bar_id:
+        bar["id"] = bar_id
+    else:
+        bar.pop("id", None)
+    # Enable exactly this family's overlays; disable the other families'.
+    # Shared data services are never touched.
+    all_overlays = {o for f in FAMILIES for o in f[2]} - SHARED
+    plugins = shell.setdefault("plugins", [])
+    if not isinstance(plugins, list):
+        fail("shell.json 'plugins' is not an array; fix it before switching")
+    have = [e.get("id") for e in plugins if isinstance(e, dict)]
+    for oid in sorted(all_overlays):
+        if oid in overlays and oid not in have:
+            plugins.append({"id": oid})
+        elif oid not in overlays and oid in have:
+            plugins[:] = [e for e in plugins
+                          if not (isinstance(e, dict) and e.get("id") == oid)]
+    write_shell(shell)
+    info(f"family -> {name} (bar: {bar_id or 'omarchy.bar (stock)'})")
+
+
+def main(argv: list) -> int:
+    if len(argv) != 2 or argv[1] not in ("cycle", "status"):
+        print(__doc__.strip().splitlines()[0])
+        print("usage: family-cycle [cycle|status]")
+        return 2
+    shell = read_shell()
+    fams = installed_families()
+    cur = current_family(shell)
+    if argv[1] == "status":
+        print(f"family: {cur[0]} (bar: {cur[1] or 'omarchy.bar (stock)'})")
+        return 0
+    nxt = fams[(fams.index(cur) + 1) % len(fams)] if cur in fams else fams[0]
+    apply_family(shell, nxt)
+    print(f"family: {nxt[0]}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main(sys.argv))

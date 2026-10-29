@@ -1,0 +1,21 @@
+ITAccountScreen 1.0 ITAccountScreen.qml
+ITAlbumScreen 1.0 ITAlbumScreen.qml
+ITArtistScreen 1.0 ITArtistScreen.qml
+ITButton 1.0 ITButton.qml
+singleton ITDimens 1.0 ITDimens.qml
+ITGridItem 1.0 ITGridItem.qml
+ITIconButton 1.0 ITIconButton.qml
+ITLibraryScreen 1.0 ITLibraryScreen.qml
+ITListItem 1.0 ITListItem.qml
+ITLyrics 1.0 ITLyrics.qml
+ITMarqueeText 1.0 ITMarqueeText.qml
+ITMiniPlayer 1.0 ITMiniPlayer.qml
+ITNavigationBar 1.0 ITNavigationBar.qml
+ITNavigationTitle 1.0 ITNavigationTitle.qml
+ITPlayer 1.0 ITPlayer.qml
+ITQueue 1.0 ITQueue.qml
+ITSongListItem 1.0 ITSongListItem.qml
+ITThumbnail 1.0 ITThumbnail.qml
+InnerTuneHome 1.0 InnerTuneHome.qml
+InnerTuneSearch 1.0 InnerTuneSearch.qml
+InnerTuneView 1.0 InnerTuneView.qml

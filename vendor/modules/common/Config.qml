@@ -37,7 +37,8 @@ Singleton {
             zzz: { shape: "chamfer", glass: false }
         },
         bar: { borderless: true, cornerStyle: 1, height: 40, verbose: false },
-        performance: { reduceAnimations: false, lowPower: false, compositorBlur: false }
+        performance: { reduceAnimations: false, lowPower: false, compositorBlur: false },
+        networking: { userAgent: "" }
     })
 
     // inir mutates config through this; the shim is read-mostly for now.
