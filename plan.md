@@ -68,6 +68,9 @@ Scope {
 
 **B. Overlay / panel** (`kind: overlay` on-demand, or `kind: service` resident):
 ```qml
+import QtQuick
+import Quickshell
+import qs.Commons  // required: ShellIpc lives here
 Item {
   property var shell: null; property var manifest: null
   property bool opened: false

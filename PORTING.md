@@ -70,8 +70,12 @@ against a fixture `$HOME` — never the live session.
 - [x] `lunana.state` owns the `lunana` subtree (family, themeSource; default omarchy-tokens)
 - [ ] Material You opt-in wiring (vendored `scripts/colors/*` + `MaterialThemeLoader`; default stays Omarchy tokens)
 - [ ] Un-defer integrations: `Ai`, `YtMusic`, `Wallhaven`, `AnimeService`/`Booru`
-- [ ] Live-verify (nested): Audio, Network, Bluetooth, Weather, Battery,
-      Brightness, Mpris, Notifications, Tray, KeyboardIndicators, multi-monitor
+- [x] Nested harness proven live (2026-10-30): nested Hyprland + fixture $HOME +
+      quickshell on fixture, `lunana-suite install` hermetic, `lunana.bar` active,
+      `quickshell:bar/dock/background` layers up, zero lunana QML errors
+- [ ] Live-verify (nested) per surface: Audio, Network, Bluetooth, Weather,
+      Battery, Brightness, Mpris, Notifications, Tray, KeyboardIndicators,
+      multi-monitor; toggle each overlay, capture, confirm live data
 - [ ] Settings: every page in all three families loads; Compositor page shows
       Hyprland-relevant options or hides what Omarchy owns
 
@@ -90,3 +94,31 @@ against a fixture `$HOME` — never the live session.
 - `place-within-backdrop` dropped (no Hyprland analog).
 - Blocked: none. If a surface cannot be hosted as an Omarchy plugin, record it
   here with the reason and ask the operator.
+
+## Nested-session findings (2026-10-30, folded back into the tree)
+- Install race: copying plugins straight into the plugin dir lets the host's
+  watcher load half-written trees (bar fallback sticks). `copy_plugins` now
+  builds in `.lunana-staging` and swaps per plugin. Proven: reinstall shows
+  `lunana.bar active` with no fallback.
+- Shell-entry handshake: vendored surfaces gate on
+  `GlobalStates.shellEntryReady` (set only by inir's shell.qml). `lunana.state`
+  now mirrors the minimal boot (200ms entry, 500ms deferred); theme/icon
+  boots stay Omarchy's.
+- `omarchy-plugin-enable/disable` drive the LIVE shell over IPC and ignore
+  `XDG_CONFIG_HOME`. Fixture work sets `LUNANA_FIXTURE=1` and edits
+  shell.json directly; `omarchy restart shell` is skipped in fixture mode.
+- Layerrules need Hyprland >=0.53 syntax
+  (`layerrule = <effects>, match:namespace <re>`); old `layerrule = blur, ns`
+  and `shadows` are hard config errors (0.56.2 live). Vendored surfaces keep
+  `quickshell:*` namespaces — one regex covers them.
+- Hyprland `source = ~/.config/hypr/lunana.conf` glob-misses when the
+  compositor's HOME differs; the suite writes the absolute path.
+- Fixture shell.json needs `version: 1` or the host ignores bar.id/plugins.
+- Benign/known: duplicate IpcHandler targets (per-plugin singleton copies —
+  first wins); `.qsb` shaders fail to deserialize on this Qt (fallback
+  rendering); `IrisStyle` FontLoader points at a host font dir that does not
+  exist; mascot reads a host manifest path; stock `omarchy-background` stays
+  up alongside lunana's (stand-down not implemented); per-plugin singleton
+  universes diverge for cross-plugin GlobalStates reads (degrades to
+  defaults; single shared vendor tree is future work).
+- `lunana-suite sync --restart` in fixture mode skips the live shell restart.

@@ -1,5 +1,6 @@
 import QtQuick
 import Quickshell
+import qs.Commons
 import "vendor/" as Inir
 import "vendor/modules/wallpaperSelector" as LnSel
 import "vendor/modules/wallpaperLauncher" as LnLaunch

@@ -1,5 +1,6 @@
 import QtQuick
 import Quickshell
+import qs.Commons
 import Quickshell.Wayland
 import "vendor/modules/iris/control" as LnMod
 

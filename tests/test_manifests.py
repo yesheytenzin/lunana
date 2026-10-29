@@ -89,6 +89,18 @@ def test_vendor_closure():
                           f"{d.name}: {target} has no qmldir (vendor.py regen needed)")
 
 
+def test_host_imports():
+    """Hosts using ShellIpc must import qs.Commons (caught live: service
+    plugin load failed with 'ShellIpc is not a type')."""
+    for d in plugin_dirs():
+        m = json.loads((d / "manifest.json").read_text())
+        for rel in m.get("entryPoints", {}).values():
+            text = (d / rel).read_text()
+            if "ShellIpc" in text:
+                check("qs.Commons" in text,
+                      f"{d.name}: {rel} uses ShellIpc without importing qs.Commons")
+
+
 def _load_family_table():
     import importlib.util as ilu
     cycle = REPO / "lunana.family" / "family-cycle"
@@ -158,7 +170,7 @@ def test_suite_runs():
 
 def main():
     for fn in (test_manifests, test_suite_matches_plugins, test_vendor_closure,
-               test_family_cycle, test_suite_runs):
+               test_host_imports, test_family_cycle, test_suite_runs):
         try:
             fn()
         except Exception as exc:  # noqa: BLE001

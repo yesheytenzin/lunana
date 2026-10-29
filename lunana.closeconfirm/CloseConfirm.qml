@@ -1,5 +1,6 @@
 import QtQuick
 import Quickshell
+import qs.Commons
 import "vendor/modules/closeConfirm" as LnMod
 
 // lunana.closeconfirm — Lunana exact close-confirm host (kind: overlay).

@@ -1,5 +1,6 @@
 import QtQuick
 import Quickshell
+import qs.Commons
 import "vendor/" as Inir
 import "vendor/modules/waffle/notificationCenter" as LnMod
 
