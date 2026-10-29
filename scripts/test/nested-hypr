@@ -65,13 +65,31 @@ cmd_up() {
 
     # Minimal Omarchy config: stock bar, deterministic geometry/locale/fonts.
     # `version: 1` is required — the host treats a versionless shell.json as
-    # unreadable and ignores bar.id/plugins changes.
+    # unreadable and ignores bar.id/plugins. Host idle/lock/screensaver are
+    # off: there is no unlock path in the nest (no logind/PAM), and an idle
+    # lock would wedge verification behind the crashed-lockscreen screen.
     cat > "$fixture/.config/omarchy/shell.json" <<'EOF'
 {
   "version": 1,
   "bar": {},
   "theme": "lunana-test",
-  "locale": "en_US.UTF-8"
+  "locale": "en_US.UTF-8",
+  "idle": {
+    "screensaver": 0,
+    "lock": 0
+  }
+}
+EOF
+    # Same for inir's own swayidle path (vendored Idle service): zero the
+    # timeouts so no lock/DPMS command ever fires in the nest.
+    mkdir -p "$fixture/.config/inir"
+    cat > "$fixture/.config/inir/config.json" <<'EOF'
+{
+  "idle": {
+    "screenOffTimeout": 0,
+    "lockTimeout": 0,
+    "suspendTimeout": 0
+  }
 }
 EOF
     # exec-once children inherit the nested WAYLAND_DISPLAY from the
