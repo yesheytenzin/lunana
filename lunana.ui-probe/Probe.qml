@@ -3,6 +3,7 @@ import Quickshell
 import Quickshell.Wayland
 import "vendor/modules/common" as LnCommon
 import "vendor/modules/common/widgets" as LnWidgets
+import "vendor/modules/dock" as LnDock
 
 // Wave-0 foundation probe (kind: service, dev-only).
 //
@@ -14,6 +15,11 @@ Item {
     id: root
     property var shell: null
     property var manifest: null
+
+    // Wave-A 2a: the exact vendored ii dock. Window-dependent parts render
+    // empty (service stubs) — this unit proves the tree loads and paints.
+    LnDock.Dock {
+    }
 
     Variants {
         model: Quickshell.screens

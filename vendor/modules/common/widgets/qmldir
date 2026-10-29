@@ -1,6 +1,8 @@
 AngelPartialBorder 1.0 AngelPartialBorder.qml
 Circle 1.0 Circle.qml
 CollapsibleSection 1.0 CollapsibleSection.qml
+CompositorFocusGrab 1.0 CompositorFocusGrab.qml
+ContextMenu 1.0 ContextMenu.qml
 CookieFace 1.0 CookieFace.qml
 CookiePlate 1.0 CookiePlate.qml
 EditorialPaperStack 1.0 EditorialPaperStack.qml
@@ -19,9 +21,20 @@ SettingsCardSection 1.0 SettingsCardSection.qml
 SettingsGroup 1.0 SettingsGroup.qml
 singleton SettingsMaterialPreset 1.0 SettingsMaterialPreset.qml
 singleton SettingsSearchRegistry 1.0 SettingsSearchRegistry.qml
+ShellDesaturationEffect 1.0 ShellDesaturationEffect.qml
+ShellEditChromePreview 1.0 ShellEditChromePreview.qml
+ShellEditDropTarget 1.0 ShellEditDropTarget.qml
+ShellEditEdgeTargets 1.0 ShellEditEdgeTargets.qml
+ShellEditHudContext 1.0 ShellEditHudContext.qml
+ShellEditResizeHandle 1.0 ShellEditResizeHandle.qml
+ShellEditSizeBadge 1.0 ShellEditSizeBadge.qml
+ShellEditSurfaceFrame 1.0 ShellEditSurfaceFrame.qml
+StyledListView 1.0 StyledListView.qml
 StyledRectangularShadow 1.0 StyledRectangularShadow.qml
+StyledScrollBar 1.0 StyledScrollBar.qml
 StyledText 1.0 StyledText.qml
 ZzzDiagonalPattern 1.0 ZzzDiagonalPattern.qml
+ZzzGlassWash 1.0 ZzzGlassWash.qml
 ZzzGlyphBadge 1.0 ZzzGlyphBadge.qml
 ZzzPlate 1.0 ZzzPlate.qml
 ZzzTechFrame 1.0 ZzzTechFrame.qml

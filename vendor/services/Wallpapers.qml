@@ -6,5 +6,6 @@ import Quickshell
 // Omarchy. Empty values are safe (Appearance falls back to m3colors).
 Singleton {
     property string effectiveWallpaperPath: ""
+    property string effectiveWallpaperUrl: ""
     function stillUrlFor(path) { return "" }
 }
