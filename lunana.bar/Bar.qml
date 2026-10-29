@@ -1,6 +1,7 @@
 import QtQuick
 import Quickshell
 import Quickshell.Io
+import "vendor/" as Inir
 import "vendor/modules/bar" as LnBar
 
 // lunana.bar — exact ii bar host (kind: bar).
@@ -41,5 +42,18 @@ Scope {
     Loader {
         active: !root.yieldToIris
         sourceComponent: LnBar.Bar {}
+    }
+
+    // Shell-entry handshake in this plugin's singleton universe (each
+    // installed plugin carries its own vendor/ copy, hence its own
+    // GlobalStates): the vendored tree gates first paint on
+    // shellEntryReady/deferredPanelsReady, which only inir's shell.qml boot
+    // sets. Mirror the minimal sequence here.
+    Timer {
+        interval: 200; repeat: false; running: true
+        onTriggered: {
+            Inir.GlobalStates.shellEntryReady = true;
+            Inir.GlobalStates.deferredPanelsReady = true;
+        }
     }
 }

@@ -57,10 +57,10 @@ FAMILIES = [
     ("stock", "", []),
 ]
 
-# Plugins shared across families — never enabled/disabled here. Only the state
-# service qualifies: every family has its own dock/lock/background/osd, so
-# exactly one of each is active at a time.
-SHARED = {"lunana.state"}
+# Plugins shared across families — never enabled/disabled here. The state
+# service and the family switcher itself are always on; every family owns its
+# own dock/lock/background/osd, so exactly one of each is active at a time.
+SHARED = {"lunana.state", "lunana.family"}
 
 
 def fail(msg: str) -> "NoReturn":  # type: ignore[valid-type]
