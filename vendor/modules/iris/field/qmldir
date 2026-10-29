@@ -1,0 +1,5 @@
+IrisBlurRegion 1.0 IrisBlurRegion.qml
+IrisField 1.0 IrisField.qml
+singleton IrisGlassBackdrops 1.0 IrisGlassBackdrops.qml
+IrisGlassSource 1.0 IrisGlassSource.qml
+IrisWaveBlur 1.0 IrisWaveBlur.qml

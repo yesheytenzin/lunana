@@ -20,6 +20,8 @@ GlassBackground 1.0 GlassBackground.qml
 LiveLayer 1.0 LiveLayer.qml
 MaterialShape 1.0 MaterialShape.qml
 MaterialSymbol 1.0 MaterialSymbol.qml
+MaterialTextField 1.0 MaterialTextField.qml
+singleton MediaArtwork 1.0 MediaArtwork.qml
 MediaArtworkResolver 1.0 MediaArtworkResolver.qml
 MediaCrossSlideImage 1.0 MediaCrossSlideImage.qml
 OptionalMaterialSymbol 1.0 OptionalMaterialSymbol.qml
@@ -47,6 +49,7 @@ ShellEditHudContext 1.0 ShellEditHudContext.qml
 ShellEditResizeHandle 1.0 ShellEditResizeHandle.qml
 ShellEditSizeBadge 1.0 ShellEditSizeBadge.qml
 ShellEditSurfaceFrame 1.0 ShellEditSurfaceFrame.qml
+SmartAppIcon 1.0 SmartAppIcon.qml
 StyledListView 1.0 StyledListView.qml
 StyledRadioButton 1.0 StyledRadioButton.qml
 StyledRectangularShadow 1.0 StyledRectangularShadow.qml
@@ -55,6 +58,8 @@ StyledSlider 1.0 StyledSlider.qml
 StyledText 1.0 StyledText.qml
 StyledToolTip 1.0 StyledToolTip.qml
 StyledToolTipContent 1.0 StyledToolTipContent.qml
+TextInputContextMenu 1.0 TextInputContextMenu.qml
+VideoCrossfader 1.0 VideoCrossfader.qml
 WaveVisualizer 1.0 WaveVisualizer.qml
 WavyLine 1.0 WavyLine.qml
 ZzzDiagonalPattern 1.0 ZzzDiagonalPattern.qml

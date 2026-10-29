@@ -1,0 +1,3 @@
+singleton IrisFrame 1.0 IrisFrame.qml
+IrisFramePulse 1.0 IrisFramePulse.qml
+IrisReservations 1.0 IrisReservations.qml

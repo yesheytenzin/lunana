@@ -1,0 +1,5 @@
+IrisControlCenter 1.0 IrisControlCenter.qml
+IrisControlGrid 1.0 IrisControlGrid.qml
+IrisControlMark 1.0 IrisControlMark.qml
+singleton IrisControlOptions 1.0 IrisControlOptions.qml
+IrisQuickPanel 1.0 IrisQuickPanel.qml

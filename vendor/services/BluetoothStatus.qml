@@ -9,4 +9,7 @@ Singleton {
     property string activeIcon: ""
     property bool available: false
     property string connectionTooltip: ""
+    // Wave-C R5: iRiS bubble face reads these; live BlueZ lands later.
+    property bool enabled: false
+    property int activeDeviceCount: 0
 }
