@@ -552,6 +552,12 @@ def cmd_uninstall(args: argparse.Namespace) -> int:
         if dst.exists():
             shutil.rmtree(dst)
             info(f"removed {pid}")
+    # 2b. remove orphaned lunana.* copies (e.g. approximations deleted from
+    # the repo after they were installed). The lunana.* namespace is ours.
+    for dst in sorted(plugin_dir().glob("lunana.*")):
+        if dst.is_dir() and dst.name not in MANAGED_PLUGINS:
+            shutil.rmtree(dst)
+            info(f"removed orphan {dst.name}")
 
     # 3. disable the non-bar plugins
     disable_plugins(False)
