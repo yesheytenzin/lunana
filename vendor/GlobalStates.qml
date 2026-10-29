@@ -5,15 +5,15 @@ import Quickshell
 // LUNANA SHIM (not vendored from inir).
 // inir's real GlobalStates is a 161-prop open/close bus for every panel. lunana
 // grows this shim wave by wave: each family surface declares the members it
-// reads, and only those exist. Wave-A ii dock members plus Wave-A step 3 ii
-// bar members; everything else lands with its surface. toggleOverview is a
-// no-op until Wave-A wires it to lunana.overview's ShellIpc toggle.
+// reads, and only those exist. Wave-A ii dock/bar + Wave-B Waffle members;
+// everything else lands with its surface. Toggles are no-ops until wired to
+// lunana's ShellIpc.
 Singleton {
     id: root
 
     property int activeContextMenuCount: 0
-    // Wave-A step 3 load stub: defaults mirror inir (barOpen true so the exact
-    // bar loader activates; screens stay null until live backing lands).
+    // Defaults mirror inir (barOpen true so the exact bar loader activates;
+    // screens stay null until live backing lands).
     property bool barOpen: true
     property bool controlPanelOpen: false
     property bool coverflowSelectorOpen: false
@@ -25,6 +25,8 @@ Singleton {
     property bool overviewOpen: false
     property var primaryScreen: null
     property bool screenLocked: false
+    property bool searchOpen: false
+    property bool sessionOpen: false
     property bool shellEntryReady: true
     property bool shellLayoutEditMode: false
     property bool sidebarLeftOpen: false
@@ -34,9 +36,17 @@ Singleton {
     property string sidebarRightRequestedWidget: ""
     property bool superDown: false
     property bool wallpaperLauncherOpen: false
+    property bool waffleActionCenterOpen: false
+    property bool waffleAltSwitcherOpen: false
+    property bool waffleClipboardOpen: false
+    property bool waffleNotificationCenterOpen: false
+    property bool waffleTaskViewOpen: false
+    property bool waffleWidgetsOpen: false
     property bool widgetEditMode: false
 
     function openEqualizer(outputName) {}
+    function openOverview(outputName) {}
+    function openRegionScreenshot() {}
     function openSidebarRight(outputName) {}
     function toggleOverview(outputName) {}
     function toggleSettings() {}

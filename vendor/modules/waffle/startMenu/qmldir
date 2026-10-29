@@ -1,0 +1,11 @@
+AllAppsContent 1.0 AllAppsContent.qml
+SearchBar 1.0 SearchBar.qml
+SearchEntryIcon 1.0 SearchEntryIcon.qml
+SearchPageContent 1.0 SearchPageContent.qml
+SearchResults 1.0 SearchResults.qml
+StartMenuContent 1.0 StartMenuContent.qml
+StartMenuContext 1.0 StartMenuContext.qml
+StartPageContent 1.0 StartPageContent.qml
+TagStrip 1.0 TagStrip.qml
+WSearchResultButton 1.0 WSearchResultButton.qml
+WaffleStartMenu 1.0 WaffleStartMenu.qml

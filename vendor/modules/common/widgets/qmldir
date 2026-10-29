@@ -14,6 +14,7 @@ CustomIcon 1.0 CustomIcon.qml
 EditorialPaperStack 1.0 EditorialPaperStack.qml
 EditorialRule 1.0 EditorialRule.qml
 EscalonadoShadow 1.0 EscalonadoShadow.qml
+FadeLoader 1.0 FadeLoader.qml
 FocusedScrollMouseArea 1.0 FocusedScrollMouseArea.qml
 GlassBackground 1.0 GlassBackground.qml
 LiveLayer 1.0 LiveLayer.qml

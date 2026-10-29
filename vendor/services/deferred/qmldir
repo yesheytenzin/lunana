@@ -1,1 +1,3 @@
 singleton CavaService 1.0 CavaService.qml
+singleton LauncherSearch 1.0 LauncherSearch.qml
+singleton PackageSearch 1.0 PackageSearch.qml

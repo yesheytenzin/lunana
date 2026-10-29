@@ -1,0 +1,4 @@
+WNotificationGroup 1.0 WNotificationGroup.qml
+WNotificationItem 1.0 WNotificationItem.qml
+WNotificationListView 1.0 WNotificationListView.qml
+WaffleNotificationPopup 1.0 WaffleNotificationPopup.qml
