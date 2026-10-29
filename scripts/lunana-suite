@@ -788,18 +788,18 @@ def cmd_install(args: argparse.Namespace) -> int:
 
     # 5b. a re-install over a mixed state could leave previously-enabled
     # family-exclusive plugins stacked over the ii family; stand them down.
-    families, _shared = _load_family_table()
-    default_ids = set(families[0][2]) if families else set()
+    families, shared = _load_family_table()
+    default_ids = (set(families[0][2]) if families else set()) | set(shared)
     if using_fixture():
         for pid in MANAGED_PLUGINS:
-            if pid != BAR_PLUGIN_ID and pid not in default_ids and pid != "lunana.state":
+            if pid != BAR_PLUGIN_ID and pid not in default_ids:
                 set_plugin_enabled(pid, False, False)
-        info("stood down non-ii family plugins (ii family owns fresh installs)")
+        info("stood down non-default-family plugins (default family owns fresh installs)")
     elif shutil.which("omarchy-plugin-disable"):
         for pid in MANAGED_PLUGINS:
-            if pid != BAR_PLUGIN_ID and pid not in default_ids and pid != "lunana.state":
+            if pid != BAR_PLUGIN_ID and pid not in default_ids:
                 subprocess.run(["omarchy-plugin-disable", pid], check=False, capture_output=True)
-        info("stood down non-ii family plugins (ii family owns fresh installs)")
+        info("stood down non-default-family plugins (default family owns fresh installs)")
 
     # 6. merge keybinds + install surface styling
     install_keybinds(False)

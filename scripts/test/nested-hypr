@@ -176,12 +176,41 @@ cmd_down() {
     echo "nested-hypr: down"
 }
 
+cmd_restart() {
+    # kind:bar and kind:service plugins only (re)load on a full shell
+    # restart — the host hot-reloads other plugins on save but reuses the
+    # running bar/service instances, so edits (and first-load failures)
+    # stick until restart. Never touches the live shell: this kills and
+    # relaunches only the nested quickshell.
+    need omarchy-shell
+    load_env
+    nested_env
+    # Kill ONLY the nested shell: same binary/cmdline as the live one, so
+    # match by environment (fixture HOME in /proc/<pid>/environ).
+    for pid in $(pgrep -f "quickshell -n -p $NESTED_OMARCHY/shell" 2>/dev/null || true); do
+        if tr '\0' '\n' < "/proc/$pid/environ" 2>/dev/null | grep -q "HOME=$NESTED_FIXTURE"; then
+            kill "$pid" 2>/dev/null && echo "nested-hypr: stopped nested shell ($pid)"
+        fi
+    done
+    sleep 2
+    nohup quickshell -n -p "$NESTED_OMARCHY/shell" >>"$STATE_DIR/shell.log" 2>&1 &
+    echo "nested-hypr: shell restarted; waiting for IPC..."
+    for _ in $(seq 1 150); do
+        if omarchy-shell -q shell ping 2>/dev/null; then break; fi
+        sleep 0.4
+    done
+    omarchy-shell shell ping >/dev/null \
+        || { echo "nested-hypr: nested shell never answered" >&2; exit 1; }
+    echo "nested-hypr: nested shell IPC ready"
+}
+
 case "${1:-}" in
     up) shift; cmd_up "$@" ;;
     install) cmd_install ;;
+    restart) cmd_restart ;;
     drive) shift; cmd_drive "$@" ;;
     shot) shift; cmd_shot "$@" ;;
     logs) cmd_logs ;;
     down) cmd_down ;;
-    *) echo "usage: nested-hypr {up|install|drive|shot|logs|down}" >&2; exit 2 ;;
+    *) echo "usage: nested-hypr {up|install|restart|drive|shot|logs|down}" >&2; exit 2 ;;
 esac
