@@ -36,7 +36,7 @@ Singleton {
             regalia: {},
             zzz: { shape: "chamfer", glass: false }
         },
-        bar: { cornerStyle: 1, height: 40, verbose: false },
+        bar: { borderless: true, cornerStyle: 1, height: 40, verbose: false },
         performance: { reduceAnimations: false, lowPower: false, compositorBlur: false }
     })
 

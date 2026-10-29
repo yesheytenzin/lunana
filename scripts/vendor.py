@@ -33,6 +33,8 @@ VENDOR = LUNANA / "vendor"
 
 # `import qs[.a.b][ as Alias]` on its own line.
 IMPORT_RE = re.compile(r'^(?P<indent>\s*)import\s+qs(?P<sub>(?:\.[A-Za-z0-9_]+)*)(?P<alias>\s+as\s+[A-Za-z0-9_]+)?\s*$')
+# inir's Quickshell `import "root:[sub/path]"` (config-root-relative) on its own line.
+ROOT_RE = re.compile(r'^(?P<indent>\s*)import\s+"root:(?P<sub>[^"]*)"(?P<alias>\s+as\s+[A-Za-z0-9_]+)?\s*$')
 
 
 def qs_target_dir(sub: str) -> Path:
@@ -45,10 +47,15 @@ def rewrite_imports(text: str, file_dir: Path) -> str:
     out = []
     for line in text.splitlines():
         m = IMPORT_RE.match(line)
-        if not m:
-            out.append(line)
-            continue
-        target = qs_target_dir(m.group("sub"))
+        if m:
+            target = qs_target_dir(m.group("sub"))
+        else:
+            m = ROOT_RE.match(line)
+            if not m:
+                out.append(line)
+                continue
+            # `root:` is inir's config root == our vendor/ root.
+            target = VENDOR / m.group("sub") if m.group("sub") else VENDOR
         rel = os.path.relpath(target, file_dir)
         if rel == ".":
             rel = "."

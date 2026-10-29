@@ -8,6 +8,7 @@ import Quickshell
 // Quickshell.Services.DesktopEntries in the live-windows unit.
 Singleton {
     function guessIcon(appId) { return "" }
+    function getIconSource(appId, fallback) { return "" }
     function lookupDesktopEntry(appId) { return null }
     function resolveWindowIdentity(toplevel) { return null }
     function launchEntry(entry) {}
