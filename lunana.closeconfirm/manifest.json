@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "lunana.closeconfirm",
+  "name": "Lunana Close Confirm",
+  "version": "0.4.0",
+  "author": "lunana",
+  "license": "GPL-3.0",
+  "description": "Lunana exact close-confirm host (IpcHandler trigger/close; Hyprland trigger lookup pending).",
+  "kinds": [
+    "overlay"
+  ],
+  "entryPoints": {
+    "overlay": "CloseConfirm.qml"
+  },
+  "x-lunana": {
+    "suiteId": "lunana",
+    "role": "closeconfirm",
+    "milestone": "parity",
+    "requires": [],
+    "recommends": []
+  }
+}

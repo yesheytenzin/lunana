@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "lunana.region",
+  "name": "Lunana Region Snip",
+  "version": "0.4.0",
+  "author": "lunana",
+  "license": "GPL-3.0",
+  "description": "Lunana exact region-selector host (screenshot/OCR/record via grim/slurp).",
+  "kinds": [
+    "overlay"
+  ],
+  "entryPoints": {
+    "overlay": "Region.qml"
+  },
+  "x-lunana": {
+    "suiteId": "lunana",
+    "role": "region",
+    "milestone": "parity",
+    "requires": [],
+    "recommends": []
+  }
+}

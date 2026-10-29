@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "lunana.iris-palette",
+  "name": "Lunana iRiS Palette",
+  "version": "0.4.0",
+  "author": "lunana",
+  "license": "GPL-3.0",
+  "description": "Lunana IrisPalette launcher host.",
+  "kinds": [
+    "overlay"
+  ],
+  "entryPoints": {
+    "overlay": "IrisPalette.qml"
+  },
+  "x-lunana": {
+    "suiteId": "lunana",
+    "role": "iris-palette",
+    "milestone": "parity",
+    "requires": [],
+    "recommends": []
+  }
+}

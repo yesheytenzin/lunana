@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "lunana.iris-lock",
+  "name": "Lunana iRiS Lock",
+  "version": "0.4.0",
+  "author": "lunana",
+  "license": "GPL-3.0",
+  "description": "Lunana iRiS lock host (dormant unless the iris family owns locking).",
+  "kinds": [
+    "service"
+  ],
+  "entryPoints": {
+    "service": "IrisLock.qml"
+  },
+  "x-lunana": {
+    "suiteId": "lunana",
+    "role": "iris-lock",
+    "milestone": "parity",
+    "requires": [],
+    "recommends": []
+  }
+}

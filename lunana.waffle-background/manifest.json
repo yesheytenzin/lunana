@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "lunana.waffle-background",
+  "name": "Lunana Waffle Background",
+  "version": "0.4.0",
+  "author": "lunana",
+  "license": "GPL-3.0",
+  "description": "Lunana Waffle backdrop/background host.",
+  "kinds": [
+    "service"
+  ],
+  "entryPoints": {
+    "service": "WBackground.qml"
+  },
+  "x-lunana": {
+    "suiteId": "lunana",
+    "role": "waffle-background",
+    "milestone": "parity",
+    "requires": [],
+    "recommends": []
+  }
+}

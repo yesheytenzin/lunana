@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "lunana.tiling",
+  "name": "Lunana Tiling",
+  "version": "0.4.0",
+  "author": "lunana",
+  "license": "GPL-3.0",
+  "description": "Lunana exact tiling-overlay host.",
+  "kinds": [
+    "service"
+  ],
+  "entryPoints": {
+    "service": "Tiling.qml"
+  },
+  "x-lunana": {
+    "suiteId": "lunana",
+    "role": "tiling",
+    "milestone": "parity",
+    "requires": [],
+    "recommends": []
+  }
+}

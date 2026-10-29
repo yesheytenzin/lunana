@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "lunana.iris-stage",
+  "name": "Lunana iRiS Stage",
+  "version": "0.4.0",
+  "author": "lunana",
+  "license": "GPL-3.0",
+  "description": "Lunana IrisStage host.",
+  "kinds": [
+    "overlay"
+  ],
+  "entryPoints": {
+    "overlay": "IrisStage.qml"
+  },
+  "x-lunana": {
+    "suiteId": "lunana",
+    "role": "iris-stage",
+    "milestone": "parity",
+    "requires": [],
+    "recommends": []
+  }
+}

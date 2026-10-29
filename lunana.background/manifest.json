@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "lunana.background",
+  "name": "Lunana Background",
+  "version": "0.4.0",
+  "author": "lunana",
+  "license": "GPL-3.0",
+  "description": "Lunana exact ii background host (wallpaper + desktop widgets + items).",
+  "kinds": [
+    "service"
+  ],
+  "entryPoints": {
+    "service": "Background.qml"
+  },
+  "x-lunana": {
+    "suiteId": "lunana",
+    "role": "background",
+    "milestone": "parity",
+    "requires": [],
+    "recommends": []
+  }
+}

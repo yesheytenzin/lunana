@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "lunana.wallpaper",
+  "name": "Lunana Wallpaper",
+  "version": "0.4.0",
+  "author": "lunana",
+  "license": "GPL-3.0",
+  "description": "Lunana wallpaper host (selector summoned; launcher resident for widget flows).",
+  "kinds": [
+    "overlay"
+  ],
+  "entryPoints": {
+    "overlay": "Wallpaper.qml"
+  },
+  "x-lunana": {
+    "suiteId": "lunana",
+    "role": "wallpaper",
+    "milestone": "parity",
+    "requires": [],
+    "recommends": []
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "lunana.iris-settings",
+  "name": "Lunana iRiS Settings",
+  "version": "0.4.0",
+  "author": "lunana",
+  "license": "GPL-3.0",
+  "description": "Lunana iRiS settings host (Compositor page shows Hyprland options).",
+  "kinds": [
+    "overlay"
+  ],
+  "entryPoints": {
+    "overlay": "IrisSettings.qml"
+  },
+  "x-lunana": {
+    "suiteId": "lunana",
+    "role": "iris-settings",
+    "milestone": "parity",
+    "requires": [],
+    "recommends": []
+  }
+}

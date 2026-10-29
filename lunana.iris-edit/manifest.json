@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "lunana.iris-edit",
+  "name": "Lunana iRiS Edit",
+  "version": "0.4.0",
+  "author": "lunana",
+  "license": "GPL-3.0",
+  "description": "Lunana iRiS edit-mode host (interim: IrisEditBar gated panel).",
+  "kinds": [
+    "overlay"
+  ],
+  "entryPoints": {
+    "overlay": "IrisEdit.qml"
+  },
+  "x-lunana": {
+    "suiteId": "lunana",
+    "role": "iris-edit",
+    "milestone": "parity",
+    "requires": [],
+    "recommends": []
+  }
+}

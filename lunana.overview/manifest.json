@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "lunana.overview",
+  "name": "Lunana Overview",
+  "version": "0.4.0",
+  "author": "lunana",
+  "license": "GPL-3.0",
+  "description": "Lunana exact ii overview host (grid + search + calculator, Hyprland path).",
+  "kinds": [
+    "overlay"
+  ],
+  "entryPoints": {
+    "overlay": "Overview.qml"
+  },
+  "x-lunana": {
+    "suiteId": "lunana",
+    "role": "overview",
+    "milestone": "parity",
+    "requires": [],
+    "recommends": []
+  }
+}

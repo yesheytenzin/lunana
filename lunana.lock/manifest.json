@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "lunana.lock",
+  "name": "Lunana Lock",
+  "version": "0.4.0",
+  "author": "lunana",
+  "license": "GPL-3.0",
+  "description": "Lunana exact ii lock host (Hyprland session-lock branches).",
+  "kinds": [
+    "service"
+  ],
+  "entryPoints": {
+    "service": "Lock.qml"
+  },
+  "x-lunana": {
+    "suiteId": "lunana",
+    "role": "lock",
+    "milestone": "parity",
+    "requires": [],
+    "recommends": []
+  }
+}

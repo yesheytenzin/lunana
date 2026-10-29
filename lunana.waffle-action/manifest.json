@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "lunana.waffle-action",
+  "name": "Lunana Waffle Action Center",
+  "version": "0.4.0",
+  "author": "lunana",
+  "license": "GPL-3.0",
+  "description": "Lunana Waffle action-center host.",
+  "kinds": [
+    "overlay"
+  ],
+  "entryPoints": {
+    "overlay": "ActionCenter.qml"
+  },
+  "x-lunana": {
+    "suiteId": "lunana",
+    "role": "waffle-action",
+    "milestone": "parity",
+    "requires": [],
+    "recommends": []
+  }
+}

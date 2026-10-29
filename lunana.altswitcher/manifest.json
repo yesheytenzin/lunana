@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "lunana.altswitcher",
+  "name": "Lunana Alt Switcher",
+  "version": "0.4.0",
+  "author": "lunana",
+  "license": "GPL-3.0",
+  "description": "Lunana exact alt-switcher host (MRU order).",
+  "kinds": [
+    "overlay"
+  ],
+  "entryPoints": {
+    "overlay": "AltSwitcher.qml"
+  },
+  "x-lunana": {
+    "suiteId": "lunana",
+    "role": "altswitcher",
+    "milestone": "parity",
+    "requires": [],
+    "recommends": []
+  }
+}

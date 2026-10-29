@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "lunana.control-center",
+  "name": "Lunana Control Center",
+  "version": "0.4.0",
+  "author": "lunana",
+  "license": "GPL-3.0",
+  "description": "Lunana exact ii control-center host (quick settings).",
+  "kinds": [
+    "overlay"
+  ],
+  "entryPoints": {
+    "overlay": "ControlCenter.qml"
+  },
+  "x-lunana": {
+    "suiteId": "lunana",
+    "role": "control-center",
+    "milestone": "parity",
+    "requires": [],
+    "recommends": []
+  }
+}

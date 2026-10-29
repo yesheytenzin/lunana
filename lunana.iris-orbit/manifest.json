@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "lunana.iris-orbit",
+  "name": "Lunana iRiS Orbit",
+  "version": "0.4.0",
+  "author": "lunana",
+  "license": "GPL-3.0",
+  "description": "Lunana iRiS orbit + workspace edge-strip host (Hyprland model + MRU).",
+  "kinds": [
+    "service"
+  ],
+  "entryPoints": {
+    "service": "IrisOrbit.qml"
+  },
+  "x-lunana": {
+    "suiteId": "lunana",
+    "role": "iris-orbit",
+    "milestone": "parity",
+    "requires": [],
+    "recommends": []
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "lunana.waffle-start",
+  "name": "Lunana Waffle Start",
+  "version": "0.4.0",
+  "author": "lunana",
+  "license": "GPL-3.0",
+  "description": "Lunana Waffle start-menu host (search).",
+  "kinds": [
+    "overlay"
+  ],
+  "entryPoints": {
+    "overlay": "StartMenu.qml"
+  },
+  "x-lunana": {
+    "suiteId": "lunana",
+    "role": "waffle-start",
+    "milestone": "parity",
+    "requires": [],
+    "recommends": []
+  }
+}

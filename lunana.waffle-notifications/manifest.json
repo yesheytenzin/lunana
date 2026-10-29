@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "lunana.waffle-notifications",
+  "name": "Lunana Waffle Notifications",
+  "version": "0.4.0",
+  "author": "lunana",
+  "license": "GPL-3.0",
+  "description": "Lunana Waffle notification-center host.",
+  "kinds": [
+    "overlay"
+  ],
+  "entryPoints": {
+    "overlay": "WNotifications.qml"
+  },
+  "x-lunana": {
+    "suiteId": "lunana",
+    "role": "waffle-notifications",
+    "milestone": "parity",
+    "requires": [],
+    "recommends": []
+  }
+}

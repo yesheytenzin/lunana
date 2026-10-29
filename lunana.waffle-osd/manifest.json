@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "lunana.waffle-osd",
+  "name": "Lunana Waffle OSD",
+  "version": "0.4.0",
+  "author": "lunana",
+  "license": "GPL-3.0",
+  "description": "Lunana Waffle OSD host.",
+  "kinds": [
+    "service"
+  ],
+  "entryPoints": {
+    "service": "WOsd.qml"
+  },
+  "x-lunana": {
+    "suiteId": "lunana",
+    "role": "waffle-osd",
+    "milestone": "parity",
+    "requires": [],
+    "recommends": []
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "lunana.iris-notifications",
+  "name": "Lunana iRiS Notifications",
+  "version": "0.4.0",
+  "author": "lunana",
+  "license": "GPL-3.0",
+  "description": "Lunana iRiS banners host.",
+  "kinds": [
+    "service"
+  ],
+  "entryPoints": {
+    "service": "IrisNotifications.qml"
+  },
+  "x-lunana": {
+    "suiteId": "lunana",
+    "role": "iris-notifications",
+    "milestone": "parity",
+    "requires": [],
+    "recommends": []
+  }
+}

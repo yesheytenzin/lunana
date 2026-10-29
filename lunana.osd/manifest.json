@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "lunana.osd",
+  "name": "Lunana OSD",
+  "version": "0.4.0",
+  "author": "lunana",
+  "license": "GPL-3.0",
+  "description": "Lunana exact ii on-screen-display host (volume/brightness/layout).",
+  "kinds": [
+    "service"
+  ],
+  "entryPoints": {
+    "service": "Osd.qml"
+  },
+  "x-lunana": {
+    "suiteId": "lunana",
+    "role": "osd",
+    "milestone": "parity",
+    "requires": [],
+    "recommends": []
+  }
+}

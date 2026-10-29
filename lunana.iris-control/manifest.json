@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "lunana.iris-control",
+  "name": "Lunana iRiS Control",
+  "version": "0.4.0",
+  "author": "lunana",
+  "license": "GPL-3.0",
+  "description": "Lunana IrisControlCenter grid host.",
+  "kinds": [
+    "overlay"
+  ],
+  "entryPoints": {
+    "overlay": "IrisControl.qml"
+  },
+  "x-lunana": {
+    "suiteId": "lunana",
+    "role": "iris-control",
+    "milestone": "parity",
+    "requires": [],
+    "recommends": []
+  }
+}

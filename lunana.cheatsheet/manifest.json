@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "lunana.cheatsheet",
+  "name": "Lunana Cheatsheet",
+  "version": "0.4.0",
+  "author": "lunana",
+  "license": "GPL-3.0",
+  "description": "Lunana exact ii cheatsheet host (reads Omarchy bindings.lua).",
+  "kinds": [
+    "overlay"
+  ],
+  "entryPoints": {
+    "overlay": "Cheatsheet.qml"
+  },
+  "x-lunana": {
+    "suiteId": "lunana",
+    "role": "cheatsheet",
+    "milestone": "parity",
+    "requires": [],
+    "recommends": []
+  }
+}

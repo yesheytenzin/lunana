@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "lunana.mascot",
+  "name": "Lunana Mascot",
+  "version": "0.4.0",
+  "author": "lunana",
+  "license": "GPL-3.0",
+  "description": "Lunana exact ii mascot host.",
+  "kinds": [
+    "service"
+  ],
+  "entryPoints": {
+    "service": "Mascot.qml"
+  },
+  "x-lunana": {
+    "suiteId": "lunana",
+    "role": "mascot",
+    "milestone": "parity",
+    "requires": [],
+    "recommends": []
+  }
+}

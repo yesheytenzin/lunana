@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "lunana.iris-dock",
+  "name": "Lunana iRiS Dock",
+  "version": "0.4.0",
+  "author": "lunana",
+  "license": "GPL-3.0",
+  "description": "Lunana iRiS dock host (iris family only; ii dock yields while enabled).",
+  "kinds": [
+    "service"
+  ],
+  "entryPoints": {
+    "service": "IrisDock.qml"
+  },
+  "x-lunana": {
+    "suiteId": "lunana",
+    "role": "iris-dock",
+    "milestone": "parity",
+    "requires": [],
+    "recommends": []
+  }
+}

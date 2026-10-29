@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "lunana.notifications",
+  "name": "Lunana Notifications",
+  "version": "0.4.0",
+  "author": "lunana",
+  "license": "GPL-3.0",
+  "description": "Lunana exact ii notification-popup host.",
+  "kinds": [
+    "service"
+  ],
+  "entryPoints": {
+    "service": "Notifications.qml"
+  },
+  "x-lunana": {
+    "suiteId": "lunana",
+    "role": "notifications",
+    "milestone": "parity",
+    "requires": [],
+    "recommends": []
+  }
+}
