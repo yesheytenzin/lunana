@@ -1,8 +1,8 @@
 import QtQuick
 import Quickshell
 import qs.Commons
-import "../lunana-vendor/" as Inir
-import "../lunana-vendor/modules/iris/settings" as LnMod
+import "../../lunana-vendor/" as Inir
+import "../../lunana-vendor/modules/iris/settings" as LnMod
 
 // lunana.iris-settings — Lunana iRiS settings host (Compositor page shows Hyprland options). (kind: overlay).
 //

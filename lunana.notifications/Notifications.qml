@@ -1,7 +1,7 @@
 import QtQuick
 import Quickshell
-import "../lunana-vendor/" as Inir
-import "../lunana-vendor/modules/notificationPopup" as LnMod
+import "../../lunana-vendor/" as Inir
+import "../../lunana-vendor/modules/notificationPopup" as LnMod
 
 // lunana.notifications — Lunana exact ii notification-popup host. (kind: service).
 //

@@ -79,8 +79,8 @@ MANAGED_PLUGINS = [
 ]
 
 # One shared vendored tree for all hosts: <config>/omarchy/lunana-vendor/.
-# Every host imports it via `../lunana-vendor/...` (relative to its own
-# plugin dir), so all plugins share ONE GlobalStates/Config/services universe
+# Every host imports it via `../../lunana-vendor/...` (relative to each
+# plugin file), so all plugins share ONE GlobalStates/Config/services universe
 # — the single-engine semantics inir's tree assumes. Per-plugin vendor/ copies
 # diverge singletons, duplicate every polling service, and cost ~1GB to
 # install; the shared tree is one mechanical copy of repo vendor/.
@@ -269,7 +269,7 @@ def validate_sources(dry: bool) -> None:
 def copy_plugins() -> None:
     """Copy each managed plugin source into the user plugin dir, replacing any
     existing managed copy, plus the one shared lunana-vendor/ tree every host
-    imports via `../lunana-vendor/...`. The shell reloads on save, but see
+    imports via `../../lunana-vendor/...`. The shell reloads on save, but see
     restart_shell().
 
     Built in a staging dir and swapped into place: the host's file watcher

@@ -1,7 +1,7 @@
 import QtQuick
 import Quickshell
-import "../lunana-vendor/" as Inir
-import "../lunana-vendor/modules/waffle/lock" as LnMod
+import "../../lunana-vendor/" as Inir
+import "../../lunana-vendor/modules/waffle/lock" as LnMod
 
 // lunana.waffle-lock — Lunana Waffle lock host (dormant unless the waffle family owns locking). (kind: service).
 //

@@ -1,8 +1,8 @@
 import QtQuick
 import Quickshell
 import qs.Commons
-import "../lunana-vendor/" as Inir
-import "../lunana-vendor/modules/regionSelector" as LnMod
+import "../../lunana-vendor/" as Inir
+import "../../lunana-vendor/modules/regionSelector" as LnMod
 
 // lunana.region — Lunana exact region-selector host (screenshot/OCR/record via grim/slurp). (kind: overlay).
 //

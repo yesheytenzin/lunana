@@ -1,8 +1,8 @@
 import QtQuick
 import Quickshell
 import qs.Commons
-import "../lunana-vendor/" as Inir
-import "../lunana-vendor/modules/overview" as LnMod
+import "../../lunana-vendor/" as Inir
+import "../../lunana-vendor/modules/overview" as LnMod
 
 // lunana.overview — Lunana exact ii overview host (grid + search + calculator, Hyprland path). (kind: overlay).
 //

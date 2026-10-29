@@ -1,8 +1,8 @@
 import QtQuick
 import Quickshell
 import Quickshell.Io
-import "../lunana-vendor/" as Inir
-import "../lunana-vendor/modules/common" as LnCommon
+import "../../lunana-vendor/" as Inir
+import "../../lunana-vendor/modules/common" as LnCommon
 
 // lunana.state — shared state service (kind: service).
 //

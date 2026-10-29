@@ -1,11 +1,11 @@
 import QtQuick
 import Quickshell
-import "../lunana-vendor/" as Inir
+import "../../lunana-vendor/" as Inir
 import Quickshell.Wayland
 import qs.Commons
 import qs.Commons as Commons
-import "../lunana-vendor/modules/common" as LnCommon
-import "../lunana-vendor/modules/sidebarRight" as LSRight
+import "../../lunana-vendor/modules/common" as LnCommon
+import "../../lunana-vendor/modules/sidebarRight" as LSRight
 
 // lunana.sidebar-right — exact ii right sidebar (kind: overlay).
 //

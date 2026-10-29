@@ -1,8 +1,8 @@
 import QtQuick
 import Quickshell
-import "../lunana-vendor/" as Inir
+import "../../lunana-vendor/" as Inir
 import Quickshell.Io
-import "../lunana-vendor/modules/dock" as LnDock
+import "../../lunana-vendor/modules/dock" as LnDock
 
 // lunana.dock — exact ii dock host (kind: service).
 //

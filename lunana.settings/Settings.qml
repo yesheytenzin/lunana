@@ -1,7 +1,7 @@
 import QtQuick
 import Quickshell
 import qs.Commons
-import "../lunana-vendor/" as Inir
+import "../../lunana-vendor/" as Inir
 
 // lunana.settings — Lunana ii settings host (kind: overlay).
 //

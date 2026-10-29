@@ -1,8 +1,8 @@
 import QtQuick
 import Quickshell
 import qs.Commons
-import "../lunana-vendor/" as Inir
-import "../lunana-vendor/modules/waffle/notificationCenter" as LnMod
+import "../../lunana-vendor/" as Inir
+import "../../lunana-vendor/modules/waffle/notificationCenter" as LnMod
 
 // lunana.waffle-notifications — Lunana Waffle notification-center host. (kind: overlay).
 //

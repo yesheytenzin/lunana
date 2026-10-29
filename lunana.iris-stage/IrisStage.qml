@@ -1,9 +1,9 @@
 import QtQuick
 import Quickshell
-import "../lunana-vendor/" as Inir
+import "../../lunana-vendor/" as Inir
 import qs.Commons
 import Quickshell.Wayland
-import "../lunana-vendor/modules/iris/stage" as LnMod
+import "../../lunana-vendor/modules/iris/stage" as LnMod
 
 // lunana.iris-stage — Lunana IrisStage host. (kind: overlay).
 //

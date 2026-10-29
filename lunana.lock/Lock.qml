@@ -1,8 +1,8 @@
 import QtQuick
 import Quickshell
 import qs.Commons
-import "../lunana-vendor/" as Inir
-import "../lunana-vendor/modules/lock" as LnMod
+import "../../lunana-vendor/" as Inir
+import "../../lunana-vendor/modules/lock" as LnMod
 
 // lunana.lock — Lunana exact ii lock host (Hyprland session-lock branches). (kind: service).
 //

@@ -1,8 +1,8 @@
 import QtQuick
 import Quickshell
 import qs.Commons
-import "../lunana-vendor/" as Inir
-import "../lunana-vendor/modules/altSwitcher" as LnMod
+import "../../lunana-vendor/" as Inir
+import "../../lunana-vendor/modules/altSwitcher" as LnMod
 
 // lunana.altswitcher — Lunana exact alt-switcher host (MRU order). (kind: overlay).
 //

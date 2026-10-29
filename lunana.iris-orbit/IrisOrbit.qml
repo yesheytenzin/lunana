@@ -1,7 +1,7 @@
 import QtQuick
 import Quickshell
-import "../lunana-vendor/" as Inir
-import "../lunana-vendor/modules/iris/orbit" as LnMod
+import "../../lunana-vendor/" as Inir
+import "../../lunana-vendor/modules/iris/orbit" as LnMod
 
 // lunana.iris-orbit — Lunana iRiS orbit + workspace edge-strip host (Hyprland model + MRU). (kind: service).
 //

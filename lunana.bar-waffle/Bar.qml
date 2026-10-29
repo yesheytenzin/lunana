@@ -1,8 +1,8 @@
 import QtQuick
 import Quickshell
-import "../lunana-vendor/" as Inir
+import "../../lunana-vendor/" as Inir
 import Quickshell.Io
-import "../lunana-vendor/modules/waffle/bar" as LnBar
+import "../../lunana-vendor/modules/waffle/bar" as LnBar
 
 // lunana.bar-waffle — exact Waffle wBar host (kind: bar).
 //

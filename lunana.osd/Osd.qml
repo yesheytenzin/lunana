@@ -1,7 +1,7 @@
 import QtQuick
 import Quickshell
-import "../lunana-vendor/" as Inir
-import "../lunana-vendor/modules/onScreenDisplay" as LnMod
+import "../../lunana-vendor/" as Inir
+import "../../lunana-vendor/modules/onScreenDisplay" as LnMod
 
 // lunana.osd — Lunana exact ii on-screen-display host (volume/brightness/layout). (kind: service).
 //
