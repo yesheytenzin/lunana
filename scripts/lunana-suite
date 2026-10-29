@@ -85,6 +85,7 @@ MANAGED_PLUGINS = [
 # plugin's vendor/. Computed from the source tree — never hand-maintained,
 # and never the whole vendor/ tree.
 VENDOR_ROOTS = {
+    "lunana.state": "GlobalStates.qml",
     "lunana.bar": "modules/bar/Bar.qml",
     "lunana.dock": "modules/dock/Dock.qml",
     "lunana.sidebar-left": "modules/sidebarLeft/SidebarLeftContent.qml",
