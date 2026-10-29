@@ -1,0 +1,8 @@
+ts	phase	decision	why	evidence	result
+2026-10-29T00:00:00Z	start	started the six-branch parity program	user approved implementation of the audited plan	docs/panel-family-parity-plan.md	P01 active
+2026-10-29T00:00:01Z	forge	used local stacked branches	this checkout has no Git remote	git remote -v	PR and CI operations unavailable
+2026-10-29T00:00:02Z	P01	ran two independent harness designs before implementation	the harness crosses capture, fixture, source, and image boundaries	/tmp/lunana-p01-design-a.md, /tmp/lunana-p01-design-b.md	open
+2026-10-29T00:00:03Z	P01	selected candidate A and grafted candidate B baseline guards	A grounded capture in the real hosts while B had stronger publication rules	/tmp/lunana-p01-design-a.md, /tmp/lunana-p01-design-b.md, judge report	implemented at a47195d
+2026-10-29T00:00:04Z	P01	rejected the first code-ready head	independent probes bypassed baseline integrity and overstated source closure	a47195d, verifier reports	fix-forward round 1 active
+2026-10-29T19:10:00Z	P01	reran full lane set at e8efaec (30/30 unit green)	audit: pin/closure/transform/inventory PASS, dynamic-closure INCONCLUSIVE by design; live INCONCLUSIVE (no isolated launcher)	/tmp/p01-audit/report.json, /tmp/p01-live/report.json	P01 tool done; pixel gates blocked on launcher
+2026-10-29T19:40:00Z	P01	launcher built: nested Hyprland + fixture home + layer-cropped capture, tests 33/33; audit lanes green except 1 real finding (MessageCodeBlock shim, dep absent)	/tmp/lane-*/report.json; branch 03eb386	P01 tool complete; pixel lanes blocked on nested 941x886 vs 1920x1080 fixture

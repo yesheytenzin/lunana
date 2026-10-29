@@ -5,3 +5,9 @@ lunana-suite.json
 # editor / OS cruft
 *.swp
 .DS_Store
+
+# python bytecode
+__pycache__/
+
+# Codex session working docs live here untracked; do not sweep into lunana commits
+/docs/panel-family-parity-plan.md
