@@ -1,0 +1,6 @@
+IrisAppsSync 1.0 IrisAppsSync.qml
+singleton IrisCompositorBlur 1.0 IrisCompositorBlur.qml
+singleton IrisGate 1.0 IrisGate.qml
+singleton IrisMood 1.0 IrisMood.qml
+singleton IrisStyle 1.0 IrisStyle.qml
+singleton IrisWashi 1.0 IrisWashi.qml
