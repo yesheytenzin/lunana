@@ -28,6 +28,10 @@ import tempfile
 import time
 from pathlib import Path
 
+# Coherence rule: exactly one family is fully active at a time. ii and iris
+# share the lunana.bar host (it stays installed throughout); while iris is
+# active the bar stands itself down (lunana.bar yields whenever lunana.iris
+# is enabled — see lunana.bar/Bar.qml) so the island alone owns the top edge.
 # (family name, bar plugin id ["" = stock omarchy.bar], overlay plugin ids)
 FAMILIES = [
     ("ii", "lunana.bar",
@@ -97,15 +101,29 @@ def installed_families() -> list:
     return [f for f in FAMILIES if f[1] == "" or f[1] in have]
 
 
+def enabled_ids(shell: dict) -> set:
+    plugins = shell.get("plugins", [])
+    if not isinstance(plugins, list):
+        fail("shell.json 'plugins' is not an array; fix it before switching")
+    return {e.get("id") for e in plugins if isinstance(e, dict)}
+
+
 def current_family(shell: dict) -> tuple:
     bar = shell.get("bar")
     if not isinstance(bar, dict):
         fail("shell.json 'bar' is not an object; fix it before switching")
     bar_id = bar.get("id", "")
-    for fam in installed_families():
-        if fam[1] == bar_id:
+    have = enabled_ids(shell)
+    cands = [f for f in installed_families() if f[1] == bar_id]
+    if not cands:
+        return ("stock", "", [])
+    # The bar host alone cannot tell ii from iris (shared host): prefer the
+    # family whose overlay set is fully enabled; fall back to the first bar
+    # match for mixed states so the next cycle still converges to coherence.
+    for fam in cands:
+        if set(fam[2]) <= have:
             return fam
-    return ("stock", "", [])
+    return cands[0]
 
 
 def apply_family(shell: dict, fam: tuple) -> None:
