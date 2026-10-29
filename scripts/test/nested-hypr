@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# nested-hypr — nested Hyprland + fixture-home test harness for lunana.
+# nested-hypr — nested Hyprland + fixture-home + shell test harness for lunana.
 #
 # Proves each surface renders and behaves without touching the operator's live
 # Omarchy session. A nested Hyprland compositor opens as a window on the live
@@ -9,13 +9,17 @@
 # Usage:
 #   nested-hypr up [--size WxH] [--scale S]  # start nested compositor + fixture home
 #   nested-hypr install                       # lunana-suite install into the fixture
-#   nested-hypr drive <ipc...>                # omarchy-shell ... inside the fixture
-#   nested-hypr shot <name>                   # grim the nested output -> /tmp/lunana-nested/<name>.png
-#   nested-hypr logs                          # tail the nested shell log (QML errors/warnings)
-#   nested-hypr down                          # exit the nested compositor, drop the fixture
+#   nested-hypr drive <ipc...>                # omarchy-shell ... / hyprctl dispatch, inside the fixture
+#   nested-hypr shot <name>                   # grim the nested output -> /tmp/lunana-nested/shots/<name>.png
+#   nested-hypr logs                          # QML errors/warnings from the nested shell log
+#   nested-hypr down                           # exit the nested compositor, drop the fixture
 #
-# State: /tmp/lunana-nested/env (sig, socket, fixture paths). All hyprctl calls
-# go through `hyprctl -i <sig>` so they never hit the host compositor.
+# State: /tmp/lunana-nested/env (sig, wayland socket, fixture paths).
+# hyprctl goes through `hyprctl -i <sig>` and omarchy-shell through
+# WAYLAND_DISPLAY=<nested socket> so neither ever hits the live session.
+# LUNANA_FIXTURE=1 keeps the suite's enable/disable hermetic (the
+# omarchy-plugin-* tools drive the live shell over IPC and ignore
+# XDG_CONFIG_HOME).
 
 set -euo pipefail
 
@@ -31,8 +35,19 @@ load_env() {
     . "$ENV_FILE"
 }
 
+# Env addressing the nested session (never the live one).
+nested_env() {
+    export HOME="$NESTED_FIXTURE"
+    export XDG_CONFIG_HOME="$NESTED_FIXTURE/.config"
+    export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"
+    export WAYLAND_DISPLAY="$NESTED_WAYLAND"
+    export HYPRLAND_INSTANCE_SIGNATURE="$NESTED_SIG"
+    export OMARCHY_PATH="$NESTED_OMARCHY"
+    export LUNANA_FIXTURE=1
+}
+
 cmd_up() {
-    need Hyprland; need omarchy-shell
+    need Hyprland; need quickshell
     local size="1920x1080" scale="1"
     while [ $# -gt 0 ]; do
         case "$1" in
@@ -41,84 +56,115 @@ cmd_up() {
             *) echo "nested-hypr up [--size WxH] [--scale S]" >&2; exit 2 ;;
         esac
     done
+    [ -n "${OMARCHY_PATH:-}" ] || { echo "nested-hypr: OMARCHY_PATH is not set" >&2; exit 1; }
+    [ -f "$OMARCHY_PATH/shell/shell.qml" ] || { echo "nested-hypr: no shell at $OMARCHY_PATH/shell" >&2; exit 1; }
     mkdir -p "$STATE_DIR/shots"
     local fixture="$STATE_DIR/fixture-home"
     rm -rf "$fixture"
     mkdir -p "$fixture/.config/omarchy/plugins" "$fixture/.config/hypr"
 
     # Minimal Omarchy config: stock bar, deterministic geometry/locale/fonts.
+    # `version: 1` is required — the host treats a versionless shell.json as
+    # unreadable and ignores bar.id/plugins changes.
     cat > "$fixture/.config/omarchy/shell.json" <<'EOF'
 {
+  "version": 1,
   "bar": {},
   "theme": "lunana-test",
   "locale": "en_US.UTF-8"
 }
 EOF
+    # exec-once children inherit the nested WAYLAND_DISPLAY from the
+    # compositor; HOME/XDG_CONFIG_HOME redirect to the fixture while
+    # OMARCHY_PATH stays the live checkout (read-only shell source).
+    # Shell output is captured for `nested-hypr logs` (QML error gate).
     cat > "$fixture/.config/hypr/hyprland.conf" <<EOF
 monitor=,${size}@60,auto,${scale}
-exec-once=HOME=$fixture XDG_CONFIG_HOME=$fixture/.config omarchy-shell
+exec-once=HOME=$fixture XDG_CONFIG_HOME=$fixture/.config OMARCHY_PATH=$OMARCHY_PATH quickshell -n -p $OMARCHY_PATH/shell >>$STATE_DIR/shell.log 2>&1
 EOF
     touch "$fixture/.config/hypr/bindings.lua"
 
     local rt="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"
+    local start
+    start=$(date +%s)
     local sig
     sig=$(ls -t "$rt/hypr" 2>/dev/null | head -n 1 || true)
-    HOME="$fixture" XDG_CONFIG_HOME="$fixture/.config" \
-        Hyprland --config "$fixture/.config/hypr/hyprland.conf" >/tmp/lunana-nested/hypr.log 2>&1 &
+    : > "$STATE_DIR/shell.log"
+    Hyprland --config "$fixture/.config/hypr/hyprland.conf" >/tmp/lunana-nested/hypr.log 2>&1 &
     echo $! > "$STATE_DIR/hypr.pid"
-    # Wait for the nested instance signature to appear.
-    for _ in $(seq 1 100); do
+    # Wait for the nested instance signature and its Wayland socket. Sockets
+    # are matched by mtime (a previous session's stale socket may reuse the
+    # same wayland-N name), never by name exclusion.
+    local wayland=""
+    for _ in $(seq 1 150); do
         local cur
         cur=$(ls -t "$rt/hypr" 2>/dev/null | head -n 1 || true)
-        if [ -n "$cur" ] && [ "$cur" != "$sig" ]; then sig="$cur"; break; fi
-        sleep 0.2
+        if [ -n "$cur" ] && [ "$cur" != "$sig" ]; then sig="$cur"; fi
+        for sock in "$rt"/wayland-[0-9]*; do
+            case "$sock" in *.lock) continue;; esac
+            [ -e "$sock" ] || continue
+            [ "$(stat -c %Y "$sock" 2>/dev/null || echo 0)" -ge "$start" ] || continue
+            wayland="${sock##*/}" && break
+        done
+        [ -n "$wayland" ] && [ -n "${sig:-}" ] && break
+        sleep 0.4
     done
     [ -n "${sig:-}" ] || { echo "nested-hypr: nested instance never registered" >&2; exit 1; }
+    [ -n "$wayland" ] || { echo "nested-hypr: nested Wayland socket never appeared" >&2; exit 1; }
     cat > "$ENV_FILE" <<EOF
 NESTED_SIG=$sig
+NESTED_WAYLAND=$wayland
 NESTED_FIXTURE=$fixture
 NESTED_SIZE=$size
+NESTED_OMARCHY=$OMARCHY_PATH
 EOF
-    echo "nested-hypr: up (sig=$sig size=$size fixture=$fixture)"
+    echo "nested-hypr: up (sig=$sig display=$wayland size=$size fixture=$fixture)"
 }
 
 cmd_install() {
+    need omarchy-shell
     load_env
-    # LUNANA_FIXTURE=1 keeps enable/disable hermetic: the omarchy-plugin-*
-    # tools drive the LIVE shell over IPC and ignore XDG_CONFIG_HOME.
-    HOME="$NESTED_FIXTURE" XDG_CONFIG_HOME="$NESTED_FIXTURE/.config" LUNANA_FIXTURE=1 \
-        python3 "$REPO_ROOT/scripts/lunana-suite" install --yes
+    nested_env
+    python3 "$REPO_ROOT/scripts/lunana-suite" install --yes
     # No `omarchy restart shell` here: that would restart the LIVE shell.
-    # The nested Hyprland config exec-once's a fresh omarchy-shell that reads
+    # The nested Hyprland config exec-once's a fresh quickshell that reads
     # the fixture directly.
-    echo "nested-hypr: installed; waiting for shell IPC..."
-    for _ in $(seq 1 50); do
-        if HOME="$NESTED_FIXTURE" XDG_CONFIG_HOME="$NESTED_FIXTURE/.config" \
-            omarchy-shell ipc 2>/dev/null | grep -q .; then break; fi
-        sleep 0.2
+    echo "nested-hypr: installed; waiting for nested shell IPC..."
+    for _ in $(seq 1 150); do
+        if omarchy-shell -q shell ping 2>/dev/null; then break; fi
+        sleep 0.4
     done
-    echo "nested-hypr: shell IPC ready"
+    omarchy-shell shell ping >/dev/null \
+        || { echo "nested-hypr: nested shell never answered" >&2; exit 1; }
+    echo "nested-hypr: nested shell IPC ready"
 }
 
 cmd_drive() {
+    need omarchy-shell
     load_env
-    HOME="$NESTED_FIXTURE" XDG_CONFIG_HOME="$NESTED_FIXTURE/.config" \
-        hyprctl -i "$NESTED_SIG" dispatch "$@"
+    nested_env
+    case "${1:-}" in
+        dispatch) hyprctl -i "$NESTED_SIG" "$@" ;;
+        shell|lunana.*|omarchy.*) omarchy-shell "$@" ;;
+        *) hyprctl -i "$NESTED_SIG" dispatch "$@" ;;
+    esac
 }
 
 cmd_shot() {
     need grim
     load_env
+    nested_env
     local name="${1:-shot-$(date +%s)}"
-    grim -o "HEADLESS-1" "$STATE_DIR/shots/$name.png" 2>/dev/null \
-        || grim "$STATE_DIR/shots/$name.png"
+    grim "$STATE_DIR/shots/$name.png"
     echo "nested-hypr: shot -> $STATE_DIR/shots/$name.png"
 }
 
 cmd_logs() {
     load_env
-    grep -iE "qml|error|warning|\\.qml" /tmp/lunana-nested/hypr.log 2>/dev/null \
-        | grep -viE "0 errors|0 warnings" | tail -n 50 || true
+    if [ -f "$STATE_DIR/shell.log" ]; then
+        grep -iE "qml|error|warning|failed|SKIP" "$STATE_DIR/shell.log" 2>/dev/null \
+            | grep -viE "0 errors|0 warnings" | tail -n 50 || true
+    fi
     echo "--- (new QML errors/warnings above; empty means clean) ---"
 }
 

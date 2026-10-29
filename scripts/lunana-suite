@@ -255,7 +255,12 @@ KEYBIND_MARK_START = "-- >>> lunana >>>"
 KEYBIND_MARK_END = "-- <<< lunana <<<"
 
 HYPR_CONF_FRAGMENT = REPO_ROOT / "scripts" / "hypr" / "lunana.conf"
-HYPR_CONF_SOURCE_LINE = "source = ~/.config/hypr/lunana.conf"
+
+
+def hypr_source_line() -> str:
+    # Absolute path, never `~`: the compositor's HOME is not necessarily the
+    # config owner's (nested harness), and a glob miss is a hard config error.
+    return f"source = {hypr_lunana_conf()}"
 
 
 def _load_family_table() -> tuple:
@@ -420,16 +425,32 @@ def validate_sources(dry: bool) -> None:
 
 def copy_plugins() -> None:
     """Copy each managed plugin source into the user plugin dir, replacing any
-    existing managed copy. The shell reloads on save, but see restart_shell()."""
+    existing managed copy. The shell reloads on save, but see restart_shell().
+
+    Built in a staging dir and swapped into place per plugin: the host's file
+    watcher fires mid-copy otherwise, and a load attempt against the
+    half-written tree sticks the bar fallback on ("no such directory")
+    until the next manual touch.
+    """
     plugin_dir().mkdir(parents=True, exist_ok=True)
-    for pid in MANAGED_PLUGINS:
-        dst = plugin_dir() / pid
-        if dst.exists():
-            shutil.rmtree(dst)
-        shutil.copytree(REPO_ROOT / pid, dst)
-        info(f"synced {pid}")
-    for pid in VENDOR_ROOTS:
-        materialize_sidebar_vendor(pid)
+    staging = plugin_dir() / ".lunana-staging"
+    if staging.exists():
+        shutil.rmtree(staging)
+    staging.mkdir(parents=True)
+    try:
+        for pid in MANAGED_PLUGINS:
+            shutil.copytree(REPO_ROOT / pid, staging / pid)
+        for pid in VENDOR_ROOTS:
+            materialize_sidebar_vendor(pid, staging / pid)
+        for pid in MANAGED_PLUGINS:
+            dst = plugin_dir() / pid
+            if dst.exists():
+                shutil.rmtree(dst)
+            shutil.move(str(staging / pid), str(dst))
+            info(f"synced {pid}")
+    finally:
+        if staging.exists():
+            shutil.rmtree(staging)
 
 
 import re as _re
@@ -439,7 +460,7 @@ def _sidebar_import_is_relative(target: str) -> bool:
     return not target.startswith("/") and ":" not in target and not target.startswith("Qt")
 
 
-def materialize_sidebar_vendor(pid: str) -> None:
+def materialize_sidebar_vendor(pid: str, plugin_dest: Path | None = None) -> None:
     """Copy the import-closure subset of repo vendor/ needed by a sidebar's
     exact content tree into the installed plugin's vendor/. Starts from the
     content root plus every QML/JS under the sidebar trees (covers same-dir
@@ -493,7 +514,7 @@ def materialize_sidebar_vendor(pid: str) -> None:
                         stack.append(qmldir)
                 elif target.is_file():
                     stack.append(target)
-    dst_vendor = plugin_dir() / pid / "vendor"
+    dst_vendor = (plugin_dest if plugin_dest is not None else plugin_dir() / pid) / "vendor"
     if dst_vendor.exists():
         shutil.rmtree(dst_vendor)
     count = 0
@@ -518,6 +539,11 @@ def restart_shell(dry: bool) -> None:
     """
     if dry:
         info("would run: omarchy restart shell")
+        return
+    if using_fixture():
+        # The fixture shell is managed by the nested harness (down/up); never
+        # restart the live shell from fixture work.
+        info("fixture mode: skipping shell restart (restart the nested session instead)")
         return
     if shutil.which("omarchy"):
         subprocess.run(["omarchy", "restart", "shell"], check=False)
@@ -604,10 +630,14 @@ def install_hypr_conf(dry: bool) -> None:
         return
     shutil.copy2(HYPR_CONF_FRAGMENT, hypr_lunana_conf())
     current = hypr_conf_file().read_text(encoding="utf-8")
-    if HYPR_CONF_SOURCE_LINE not in current:
+    legacy = "source = ~/.config/hypr/lunana.conf"
+    if legacy in current:
+        current = "\n".join(l for l in current.splitlines()
+                            if l.strip() != legacy).rstrip() + "\n"
+    if hypr_source_line() not in current:
         backup = hypr_conf_file().with_name(f"hyprland.conf.lunana-backup-{int(time.time())}")
         shutil.copy2(hypr_conf_file(), backup)
-        hypr_conf_file().write_text(current.rstrip() + "\n\n" + HYPR_CONF_SOURCE_LINE + "\n",
+        hypr_conf_file().write_text(current.rstrip() + "\n\n" + hypr_source_line() + "\n",
                                     encoding="utf-8")
         info("sourced lunana.conf from hyprland.conf")
     else:
@@ -624,11 +654,12 @@ def remove_hypr_conf(dry: bool) -> None:
         info("removed lunana.conf")
     if hypr_conf_file().exists():
         current = hypr_conf_file().read_text(encoding="utf-8")
-        if HYPR_CONF_SOURCE_LINE in current:
+        legacy = "source = ~/.config/hypr/lunana.conf"
+        if hypr_source_line() in current or legacy in current:
             backup = hypr_conf_file().with_name(f"hyprland.conf.lunana-backup-{int(time.time())}")
             shutil.copy2(hypr_conf_file(), backup)
             updated = "\n".join(l for l in current.splitlines()
-                                if l.strip() != HYPR_CONF_SOURCE_LINE).rstrip() + "\n"
+                                if l.strip() not in (hypr_source_line(), "source = ~/.config/hypr/lunana.conf")).rstrip() + "\n"
             hypr_conf_file().write_text(updated, encoding="utf-8")
             info("removed lunana.conf source line")
     _reload_hypr()
