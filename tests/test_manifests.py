@@ -53,6 +53,9 @@ def test_manifests():
 def test_suite_matches_plugins():
     text = (REPO / "scripts" / "lunana-suite").read_text()
     for d in plugin_dirs():
+        m = json.loads((d / "manifest.json").read_text())
+        if m.get("x-lunana", {}).get("role") == "ui-probe":
+            continue  # dev-only probe, manually assembled; never suite-installed
         check(f'"{d.name}"' in text, f"suite MANAGED_PLUGINS missing {d.name}")
 
 

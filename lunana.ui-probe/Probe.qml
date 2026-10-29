@@ -34,13 +34,28 @@ Item {
                     anchors.margins: 14
                     elevation: 2
 
-                    Text {
+                    Column {
                         anchors.centerIn: parent
-                        horizontalAlignment: Text.AlignHCenter
-                        text: "lunana × inir\nvendored PanelSurface\nstyle: " + LnCommon.Appearance.globalStyle
-                        color: LnCommon.Appearance.m3colors.m3onSurface
-                        font.pixelSize: 16
-                        font.bold: true
+                        spacing: 6
+                        Text {
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            horizontalAlignment: Text.AlignHCenter
+                            text: "lunana × inir\nvendored PanelSurface\nstyle: " + LnCommon.Appearance.globalStyle
+                            color: LnCommon.Appearance.m3colors.m3onSurface
+                            font.pixelSize: 16
+                            font.bold: true
+                        }
+                        // Wave-A seam proof: these must equal Omarchy's live palette.
+                        Text {
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            horizontalAlignment: Text.AlignHCenter
+                            text: "primary " + LnCommon.Appearance.m3colors.m3primary
+                                + "  bg " + LnCommon.Appearance.m3colors.m3background
+                                + "  dark:" + LnCommon.Appearance.m3colors.darkmode
+                            color: LnCommon.Appearance.m3colors.m3primary
+                            font.pixelSize: 12
+                            font.family: "monospace"
+                        }
                     }
                 }
             }

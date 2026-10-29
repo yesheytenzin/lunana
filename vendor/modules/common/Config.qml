@@ -1,6 +1,7 @@
 pragma Singleton
 import QtQuick
 import Quickshell
+import "../../services" as LnServices
 
 // LUNANA SHIM (not vendored from inir).
 // inir's real Config is a ~276KB JsonAdapter. lunana drives these surfaces from
@@ -51,4 +52,10 @@ Singleton {
     property var dock: ({})
     property var brightness: ({})
     property bool enable: true
+
+    // Wave-A seam trigger: every vendored surface reads Config, so poking the
+    // palette bridge here guarantees Omarchy's colors reach
+    // Appearance.m3colors (singletons are lazy — nothing else instantiates the
+    // loader, which is why the probe first rendered inir defaults).
+    Component.onCompleted: LnServices.MaterialThemeLoader.applyPalette()
 }
