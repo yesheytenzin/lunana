@@ -175,7 +175,7 @@ Item {
         Config.revision
         return entry.rows.some(spec => IrisOptions.modified(spec))
     }
-    readonly property var pages: SettingsPageRegistry.pages.map(page => Object.assign({}, page, { component: Quickshell.shellPath(root.irisPageFor(page.key) || page.component) }))
+    readonly property var pages: SettingsPageRegistry.pages.map(page => Object.assign({}, page, { component: SettingsPageRegistry.resolveComponent(root.irisPageFor(page.key) || page.component) }))
     function irisPageFor(key: string): string {
         if (key === "about") return "modules/iris/settings/IrisAboutPage.qml"
         if (key === "shortcuts") return "modules/iris/settings/IrisShortcutsPage.qml"

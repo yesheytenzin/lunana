@@ -45,11 +45,11 @@ Scope {
 
     readonly property bool easyMode: Config.options?.settingsUi?.easyMode ?? false
 
-    // Component paths are registry-relative; resolve to absolute shell URLs
-    // so the host's Loaders work regardless of where this file lives.
+    // Component paths are registry-relative; resolve against the registry's
+    // own module tree (not the shell root, which a foreign host does not own).
     readonly property var pages: SettingsPageRegistry.pages.map(p => {
         var entry = Object.assign({}, p);
-        entry.component = Quickshell.shellPath(p.component);
+        entry.component = SettingsPageRegistry.resolveComponent(p.component);
         return entry;
     })
 

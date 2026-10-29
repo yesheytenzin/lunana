@@ -9,11 +9,25 @@ import "../common"
  * Single source of truth for the Settings UI shared between the overlay
  * (modules/settings/SettingsOverlay.qml) and the standalone window
  * (settings.qml): page list, sidebar categories and the static search index.
- * Component paths are relative to the shell root — resolve with
- * Quickshell.shellPath(page.component).
+ * Component paths are relative to the modules tree — resolve with
+ * resolveComponent(page.component), which anchors at this registry's own
+ * module directory. That matches Quickshell.shellPath under inir's own
+ * shell, and keeps working when the tree is re-hosted (e.g. vendored under
+ * Omarchy, whose shell root owns no copy of these files).
  */
 Singleton {
     id: root
+
+    readonly property string modulesBase: {
+        const u = String(Qt.resolvedUrl("../"));
+        return u.endsWith("/") ? u : u + "/";
+    }
+
+    function resolveComponent(path): string {
+        const s = String(path ?? "")
+        const rel = s.startsWith("modules/") ? s.slice("modules/".length) : s
+        return modulesBase + rel
+    }
 
     readonly property var pages: [
         {

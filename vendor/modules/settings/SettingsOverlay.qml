@@ -2181,7 +2181,7 @@ Scope {
 
     readonly property var overlayPages: SettingsPageRegistry.pages.map(p => {
         var entry = Object.assign({}, p);
-        entry.component = Quickshell.shellPath(p.component);
+        entry.component = SettingsPageRegistry.resolveComponent(p.component);
         return entry;
     })
 

@@ -28,7 +28,7 @@ ApplicationWindow {
     // shell URLs so the Loaders work regardless of this file's location.
     readonly property var pages: SettingsPageRegistry.pages.map(p => {
         var entry = Object.assign({}, p);
-        entry.component = Quickshell.shellPath(p.component);
+        entry.component = SettingsPageRegistry.resolveComponent(p.component);
         return entry;
     })
     property int currentPage: 0

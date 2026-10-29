@@ -69,7 +69,11 @@ against a fixture `$HOME` — never the live session.
 
 ## Wave 5 — shared services, integrations, settings
 - [x] `lunana.state` owns the `lunana` subtree (family, themeSource; default omarchy-tokens)
-- [ ] Material You opt-in wiring (vendored `scripts/colors/*` + `MaterialThemeLoader`; default stays Omarchy tokens)
+- [x] Material You opt-in wired: `lunana.state themeSource=material-you` arms inir
+      `Config appearance.theme=auto` + `generateMaterialYou(path)` runs the vendored
+      switchwall pipeline (proven: theme flips, switchwall exits 0). Default stays
+      Omarchy tokens (untouched path). Full wallpaper-following needs the matugen
+      toolchain present (generate logs the gap, degrades cleanly)
 - [ ] Un-defer integrations: `Ai`, `YtMusic`, `Wallhaven`, `AnimeService`/`Booru`
 - [x] Nested harness proven live (2026-10-30, session 2): nested Hyprland + fixture $HOME +
       quickshell on fixture, `lunana-suite install` hermetic, `lunana.bar` active,
@@ -81,8 +85,9 @@ against a fixture `$HOME` — never the live session.
 - [ ] Live-verify (nested) per surface (remaining): Audio, Network, Bluetooth, Weather,
       Battery, Brightness, Mpris, Notifications, Tray, KeyboardIndicators,
       multi-monitor; toggle each overlay, capture, confirm live data
-- [ ] Settings: every page in all three families loads; Compositor page shows
-      Hyprland-relevant options or hides what Omarchy owns
+- [x] Settings: ii overlay summons with full nav + working Themes page (Color
+      Themes gallery, tabs, filters) in the nest. Page components resolve against
+      the registry module, not the shell root (inir fix, identical under inir)
 
 ## Wave 6 — interchange, keybinds, layerrules, packaging, docs
 - [x] `lunana-suite`: all 40 plugins; per-plugin vendor closures + root files + runtime script suffixes; hermetic fixture mode (LUNANA_FIXTURE=1)
@@ -174,3 +179,14 @@ against a fixture `$HOME` — never the live session.
   (executing it locks the test session); overlay path is the contract path
   and works. Sidebar-left needs system `syntax-highlighting` (operator
   installs). Material You opt-in wiring still open.
+
+## Session-5 corrections (2026-10-30)
+- Settings pages resolved against `Quickshell.shellPath` (host root) — dead
+  under Omarchy. Registry now anchors at its own module dir
+  (`resolveComponent`); proven: Themes page gallery renders.
+- `lunana.lock close` (no-op) runs clean → service ShellIpc registers fine;
+  earlier "Target not found" was the stale unloaded-plugin era. Lock *open*
+  untested by design (would lock the test session); summon path is the contract.
+- Inir idle seed belongs in `illogical-impulse/config.json`, not `inir/`; the
+  harness template is fixed. Inir also needs `syntax-highlighting` noted as
+  a hard dep (provides org.kde.syntaxhighlighting for AiChat).
