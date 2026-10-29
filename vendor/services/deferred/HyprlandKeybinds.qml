@@ -45,30 +45,36 @@ Singleton {
 
     // Parse o.bind("MOD + KEY", "Description", "command") lines. Comment lines
     // starting with `-- #!` become section headers; lines tagged `[hidden]`
-    // are skipped — the same conventions as get_keybinds.py.
+    // are skipped — the same conventions as get_keybinds.py. Sections nest
+    // keybinds under children[0], the shape CheatsheetKeybinds reads.
     function parseOmarchyBinds(text): var {
         const sections = []
-        let current = { name: "Omarchy", children: [], keybinds: [] }
+        let current = []
+        let currentName = "Omarchy"
+        const flush = () => {
+            if (current.length > 0)
+                sections.push({ name: currentName, children: [{ name: currentName, keybinds: current }] })
+            current = []
+        }
         try {
             const lines = String(text ?? "").split("\n")
             const bindRe = /o\.bind\(\s*"([^"]+)"\s*,\s*"([^"]*)"/
             for (const raw of lines) {
                 const line = raw.trim()
                 if (line.startsWith("-- #!")) {
-                    if (current.keybinds.length > 0 || current.name !== "Omarchy")
-                        sections.push(current)
-                    current = { name: line.slice(5).trim(), children: [], keybinds: [] }
+                    flush()
+                    currentName = line.slice(5).trim()
                     continue
                 }
                 const m = line.match(bindRe)
                 if (!m) continue
                 if (m[2].includes("[hidden]")) continue
-                current.keybinds.push({
+                current.push({
                     mods: "", key: m[1], dispatcher: "",
                     params: "", comment: m[2].replace("[hidden]", "").trim()
                 })
             }
-            sections.push(current)
+            flush()
         } catch (e) {}
         return { children: sections }
     }
