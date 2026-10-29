@@ -105,6 +105,8 @@ vendor closures, family cycling, and the suite green.
 
 - `lunana.*/` — plugin hosts (one dir per surface; entry QML + manifest).
 - `vendor/` — mechanical copy of the inir tree (`scripts/vendor.py` output).
+- Installed as one shared `~/.config/omarchy/lunana-vendor/` tree: every host imports it via
+  `../../lunana-vendor/...`, so all plugins share one GlobalStates universe (and installs stay ~90MB).
 - `scripts/lunana-suite` — transactional install/swap tool.
 - `lunana.family/family-cycle` — family switcher.
 - `scripts/test/nested-hypr` — nested-Hyprland test harness.

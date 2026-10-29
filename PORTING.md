@@ -156,3 +156,21 @@ against a fixture `$HOME` — never the live session.
   vendor tree is the fix direction (correctness + performance).
 - grim wedges while fullscreen ScreencopyView content is up; host-side
   `grim -g <nested window>` is the fallback capture path.
+
+## Session-4 proofs (2026-10-30, shared-tree nest)
+- Shared `lunana-vendor/` works: bar/dock/background/overview/cheatsheet/
+  island all render from `../../lunana-vendor/...` imports; zero load
+  failures on clean boot.
+- Cross-plugin singleton sharing PROVEN: overview summon slid the bar away
+  via `overviewOwnsEdge` (flag set in overview's plugin, read in bar's).
+- Full family loop live: ii → waffle (wBar renders w/ live data) → iris
+  (island renders, ii set stood down) → stock → ii (20 plugins, bar back).
+- Cheatsheet Keybinds (8) from the suite-installed binds; integrations
+  (Ai/YtMusic/Wallhaven/AnimeService) instantiate with zero errors.
+- Duplicate IpcHandler warnings down to a handful (shared singletons).
+- Fixture stays awake (host + inir idle off); idle lock that wedged session 2
+  cannot recur.
+- Remaining: service-direct IPC registration (lock) unverified by design
+  (executing it locks the test session); overlay path is the contract path
+  and works. Sidebar-left needs system `syntax-highlighting` (operator
+  installs). Material You opt-in wiring still open.
