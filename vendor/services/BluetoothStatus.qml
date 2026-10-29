@@ -10,10 +10,12 @@ Singleton {
 
     property string activeIcon: "bluetooth"
     property bool available: false
-
     property bool _enabled: false
     property bool _connected: false
     property string _deviceName: ""
+    // Real inir interface: iRiS bubble reads enabled + activeDeviceCount.
+    readonly property bool enabled: root._enabled
+    property int activeDeviceCount: 0
 
     function connectionTooltip() {
         if (!root._enabled) return "Bluetooth is disabled";
@@ -48,9 +50,11 @@ Singleton {
                 root.available = hasAdapter;
                 root._enabled = hasAdapter && !softBlocked && powered;
                 root._connected = root._enabled && devicesOut.length > 0;
-                root._deviceName = "";
+                root.activeDeviceCount = 0;
                 if (root._connected) {
-                    const line = devicesOut.split("\n")[0];
+                    const lines = devicesOut.split("\n").filter(function (l) { return l.trim().length > 0; });
+                    root.activeDeviceCount = lines.length;
+                    const line = lines[0];
                     const m = /^Device\s+\S+\s+(.+)$/.exec(line.trim());
                     if (m) root._deviceName = m[1];
                 }

@@ -1,1 +1,4 @@
+CardHeader 1.0 CardHeader.qml
+IrisCardContent 1.0 IrisCardContent.qml
 IrisStage 1.0 IrisStage.qml
+IrisWatchingCard 1.0 IrisWatchingCard.qml

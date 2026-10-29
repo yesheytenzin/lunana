@@ -50,6 +50,9 @@ Singleton {
     property bool waffleTaskViewOpen: false
     property bool waffleWidgetsOpen: false
     property bool widgetEditMode: false
+    // Wave-C R5: the exact members the iRiS Island/Stage closure reads, with
+    // inir's defaults. Orbit needs Hyprland rewrite: irisOrbitOpen exists so
+    // the Island loads, but nothing Niri-backed opens it on Omarchy.
 
     function openEqualizer(outputName) { root._summon("lunana.control-center"); }
     function openOverview(outputName) { root._summon("lunana.overview"); }
@@ -59,21 +62,48 @@ Singleton {
     // No lunana settings surface exists; Control Center hosts the Settings
     // quick action, so it is the summon target here too.
     function toggleSettings() { root._summon("lunana.control-center"); }
+    // Wave-C R5 members: sidebar helpers + iRiS island state. No-ops until
+    // the sidebar waves / Orbit rewrite wire them (R6 owns sidebars).
+    function openSidebarLeft(outputName) {}
+    function openSettingsPage(index, section) {}
+    function closeSidebarLeft() { sidebarLeftOpen = false }
+    function closeSidebarRight() { sidebarRightOpen = false }
+    function setWidgetEditMode(enabled) { if (!enabled) irisEdit = false }
+    function quietIrisLevels() { irisLevelQuietUntil = Date.now() + 700 }
+
+    property real irisLevelQuietUntil: 0
+    property var irisMorphOrigin: null
+    property string irisMorphOwner: ""
+    property string irisIslandPageRequest: ""
+    property var irisBubbleCard: null
+    property string irisBubbleCardRequest: ""
+    property string irisBubbleMenuRequest: ""
+    property bool irisArrange: false
+    property var irisDockBody: ({})
+    property var irisDockHome: null
+    property bool irisControlEdit: false
+    property string irisControlTab: "controls"
+    property string irisControlPickerRequest: ""
+    property bool irisEdit: false
+    property string irisEditSelection: ""
+    property string irisEditTarget: ""
+    property var irisBubbleDrag: null
+    property var irisBubbleKinds: ({})
+    property var irisIslandGeometry: ({})
+    property var irisAbsorbed: ({})
+    property bool irisIslandExpanded: false
+    property bool irisOrbitOpen: false
+    property bool irisControlsWarm: false
+    property bool irisSettingsWarm: false
+    property string irisIslandShape: ""
+    property string irisIslandPage: ""
+    property bool osdMicOpen: false
+    property bool osdMediaOpen: false
+    property bool osdKeyboardLayoutOpen: false
+    property bool settingsOverlayOpen: false
+    property bool regionSelectorOpen: false
+    property string wallpaperSelectorTargetMonitor: ""
+    property bool wallpaperSelectorOpen: false
 
     // Mapping: inir overview -> lunana.overview (workspace columns, live);
-    // inir right sidebar / equalizer / settings -> lunana.control-center
-    // (right-docked panel; volume/mute/Settings live there). Left sidebar
-    // keeps its own keybind summon; nothing in the bar tree calls it.
-    Component {
-        id: summonerFactory
-        Process {}
-    }
-    function _summon(id) {
-        const proc = summonerFactory.createObject(root, {
-            command: ["omarchy-shell", "shell", "toggle", String(id)]
-        });
-        if (!proc) return;
-        proc.exited.connect(function () { proc.destroy(); });
-        proc.running = true;
-    }
 }
