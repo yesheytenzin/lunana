@@ -1,0 +1,17 @@
+# vendor-patches/modules/lock/pam/lunana-permit.conf.patch
+#
+# Creates vendor/modules/lock/pam/lunana-permit.conf (exercises the
+# patch lever's file-creation mode: pure-addition hunks against /dev/null).
+# Upstream would never carry a backdoor-adjacent test service, so it lives
+# here instead of inir.
+#
+--- /dev/null
++++ b/modules/lock/pam/lunana-permit.conf
+@@ -0,0 +1,7 @@
++# Test-only permissive PAM service for the nested harness.
++# Installed as vendor/modules/lock/pam/lunana-permit.conf by
++# vendor-patches/modules/lock/pam/lunana-permit.conf.patch (the lever's
++# file-creation mode); referenced only when LUNANA_TEST_PAM_UNLOCK=1.
++auth       required   pam_permit.so
++account    required   pam_permit.so
++session    required   pam_permit.so

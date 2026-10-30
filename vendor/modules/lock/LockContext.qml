@@ -126,8 +126,17 @@ Scope {
         }
     }
     
+    // Test-only escape hatch (see vendor-patches README): when the
+    // LUNANA_TEST_PAM_UNLOCK env var is "1" — set only by the nested test
+    // harness — authenticate against the permissive fixture-local service
+    // below instead of the system stack, so the PAM-success path is
+    // exercisable without real credentials. Never set outside the nest.
+    readonly property bool _testPamPermit: (Quickshell.env("LUNANA_TEST_PAM_UNLOCK") ?? "") === "1"
+
     PamContext {
         id: pam
+        configDirectory: root._testPamPermit ? "pam" : ""
+        config: root._testPamPermit ? "lunana-permit.conf" : ""
 
         // pam_unix will ask for a response for the password prompt
         onPamMessage: {

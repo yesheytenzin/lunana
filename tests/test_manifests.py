@@ -322,6 +322,12 @@ def test_vendor_patch_lever():
         check(marker in patched, f"patched NiriService.qml lost marker: {marker}")
     check("import Quickshell.Hyprland" in patched,
           "patched NiriService.qml must import Quickshell.Hyprland")
+    permit = REPO / "vendor" / "modules" / "lock" / "pam" / "lunana-permit.conf"
+    check(permit.is_file(), "lever file-creation mode must install lunana-permit.conf")
+    check("pam_permit" in permit.read_text(), "lunana-permit.conf must be permissive")
+    lockctx = (REPO / "vendor" / "modules" / "lock" / "LockContext.qml").read_text()
+    check("LUNANA_TEST_PAM_UNLOCK" in lockctx and 'configDirectory: root._testPamPermit ? "pam" : ""' in lockctx,
+          "LockContext.qml must gate the fixture-local PAM service on LUNANA_TEST_PAM_UNLOCK")
 
 
 def _load_family_table():

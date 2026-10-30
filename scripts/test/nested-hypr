@@ -51,6 +51,15 @@ nested_env() {
     export HYPRLAND_INSTANCE_SIGNATURE="$NESTED_SIG"
     export OMARCHY_PATH="$NESTED_OMARCHY"
     export LUNANA_FIXTURE=1
+    # Test-only passthrough (never set outside the nest): when
+    # LUNANA_TEST_PAM_UNLOCK=1 is present in the operator's environment, the
+    # nested shell inherits it so the vendored lock can authenticate against
+    # its fixture-local permissive PAM service instead of the system stack.
+    # This is the only way to exercise the PAM-success unlock path without
+    # real credentials or /etc changes.
+    if [ "${LUNANA_TEST_PAM_UNLOCK:-}" = "1" ]; then
+        export LUNANA_TEST_PAM_UNLOCK=1
+    fi
 }
 
 nested_hyprctl() {

@@ -323,9 +323,13 @@ Working the four open buckets one by one.
       applies `services/NiriService.qml.patch`, routing closeWindow/
       focusWindow/moveWindowToWorkspaceById/switchToWorkspaceById through
       Omarchy's Lua dsp dialect and intercepting ToggleWindowFloating in
-      `send()` — verified live (go-to focuses, Del closes the right window,
+      `send()` — verified live with explicit baselines (go-to focuses
+      the searched window, Del closes it leaving the right survivor,
       Ctrl+F toggles floating), with Niri paths byte-identical by
-      construction. toggleOverview stays Niri-only (its analog is
+      construction. Debugging that verification found the real blocker:
+      QML `int` truncates 64-bit Hyprland addresses to 32 bits, so the
+      mirror now issues small stable per-address ints (pruned on close)
+      instead of parsed addresses. toggleOverview stays Niri-only (its analog is
       lunana.overview, unreachable from vendored code). Upstream inir has
       no Hyprland orbit to re-vendor, and could not take dsp-dialect code
       for stock Hyprland anyway.
@@ -469,9 +473,11 @@ focused foot terminal, showing its title + app id with Cancel/Close),
 bubble), `iris2-lunana.iris-session.png` (session screen),
 `iris-osd-hook.png` (volume pill via the `lunana.iris-osd test` hook),
 `iris-lock-test.png` (full iris lock UI: clock, weather, battery, avatar,
-password field), `iris-lock-failure.png` (red "Incorrect password" via a
-real PAM round trip), `iris-notif-text-final.png` (banner with icon,
-summary, wrapped body, app name, timestamp), `sidebar-full-syntax.png`
+password field), `iris-lock-failure.png` (red "Incorrect password" via a real PAM round trip
+with the stock stack, proving the gate-off path), `iris-lock-unlocked.png`
+(desktop back after a gated-fixture unlock, no restart), `iris-notif-text-final.png` (banner with icon,
+summary, wrapped body, app name, timestamp), `iris-notif-bus-ingress.png` (real `notify-send` over a private session bus,
+full ingress path), `sidebar-full-syntax.png`
 (full sidebar-left with syntax-highlighting installed),
 `iris-orbit-hyprland-mirror.png` (orbit strips with a live Hyprland window
 card via the NiriService mirror);

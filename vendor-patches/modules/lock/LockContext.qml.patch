@@ -1,0 +1,31 @@
+# vendor-patches/modules/lock/LockContext.qml.patch
+#
+# Test-only PAM-success path (see vendor-patches README). The main
+# PamContext authenticates against the system stack, which the nested
+# harness cannot satisfy without real credentials or /etc changes (both
+# off-limits). With LUNANA_TEST_PAM_UNLOCK=1 (set only by the nested test
+# harness), it uses the fixture-local permissive service created by
+# vendor-patches/modules/lock/pam/lunana-permit.conf.patch instead, so the
+# full PAM-success unlock flow is exercisable. The empty-string branch
+# preserves stock behavior: the failure path was re-verified unchanged.
+#
+--- a/modules/lock/LockContext.qml
++++ b/modules/lock/LockContext.qml
+@@ -126,8 +126,17 @@
+         }
+     }
+     
++    // Test-only escape hatch (see vendor-patches README): when the
++    // LUNANA_TEST_PAM_UNLOCK env var is "1" — set only by the nested test
++    // harness — authenticate against the permissive fixture-local service
++    // below instead of the system stack, so the PAM-success path is
++    // exercisable without real credentials. Never set outside the nest.
++    readonly property bool _testPamPermit: (Quickshell.env("LUNANA_TEST_PAM_UNLOCK") ?? "") === "1"
++
+     PamContext {
+         id: pam
++        configDirectory: root._testPamPermit ? "pam" : ""
++        config: root._testPamPermit ? "lunana-permit.conf" : ""
+ 
+         // pam_unix will ask for a response for the password prompt
+         onPamMessage: {

@@ -254,11 +254,19 @@ def apply_patch_file(patch_path: Path) -> str:
     rel = patch_path.relative_to(PATCHES)
     target_rel = str(rel)[:-len(".patch")]
     target = VENDOR / target_rel
-    if not target.is_file():
-        raise ValueError(f"patch target missing: {target_rel}")
     _header, hunks = _parse_hunks(patch_path.read_text(encoding="utf-8"))
     if not hunks:
         raise ValueError(f"no hunks in {patch_path}")
+    if not target.is_file():
+        # File creation: allowed only for pure-addition patches (every
+        # hunk adds lines and removes none), e.g. test-only vendor files
+        # upstream would never carry.
+        if any(old_lines for _old_start, old_lines, _new_lines in hunks):
+            raise ValueError(f"patch target missing: {target_rel}")
+        created = [line for _old_start, _old_lines, new_lines in hunks for line in new_lines]
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text("\n".join(created) + ("\n" if created else ""), encoding="utf-8")
+        return "created"
     lines = target.read_text(encoding="utf-8").splitlines()
     applied = 0
     for old_start, old_lines, new_lines in hunks:

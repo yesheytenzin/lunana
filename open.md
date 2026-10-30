@@ -1,9 +1,11 @@
 # Lunana — open items (2026-10-30, sessions 7–10)
 
 Sessions 7–10 closed: the nested harness, the full ii/waffle/iris overlay
-matrices, live family switching, dual-monitor behavior, and the iRiS
-satellite completion are proven on Hyprland 0.57.0. What remains is
-environment-dependent or documented reduced fidelity.
+matrices, live family switching, dual-monitor behavior, the iris satellite
+completion, the Hyprland orbit backend (list + actions), and the
+untestable-harness items (OSD, banners incl. bus ingress, PAM both
+branches, wake-word-free recording path) are proven on Hyprland 0.57.0.
+What remains is upstream decisions and documented environment quirks.
 
 ## Graceful fallback (host works without the dependency)
 - `lunana.sidebar-left` now opens, closes, and shows a diagnostic panel when
@@ -87,21 +89,25 @@ environment-dependent or documented reduced fidelity.
   in the nest via `lunana.iris-osd test volume`: the glass volume pill renders
   exactly like inir. The Audio→OSD signal wiring itself is untouched vendored
   code.
-- Notification banners: `notify-send` reaches the host session's notification
-  server (shared bus), and omarchy's notifications service shadows the
-  vendored `notifications` IPC target — so bus ingress is untestable in the
-  nest. Proven instead via `lunana.iris-notifications test`: full banner
-  pixel-verified — icon, summary, wrapped body, app name, and timestamp all
-  render (`iris-notif-text-final.png`; WAYLAND-1 screencopy is flaky in the
-  nest, HEADLESS-1 always captures, so the proof needed a fresh compositor).
-- Lock *open*: proven in the nest with restart recovery — `lunana.iris-lock
-  open` renders the full iris lock UI (clock, weather, battery, avatar,
-  password field); `restart` kills the lock client, the compositor shows its
-  crashed-lockscreen screen, and raw-socket
-  `eval hl.clear_crashed_lockscreen()` restores the desktop. PAM-success
-  unlock stays untestable (no non-interactive password path); the PAM
-  *failure* branch is proven — a wrong password shows the red "Incorrect
-  password" state via a real PAM round trip (`iris-lock-failure.png`).
+- Notification banners: fully proven, two ways. (1) `lunana.iris-notifications
+  test` injects a wrapper-shaped synthetic entry (second call clears) — fast
+  regression path, full banner pixel-verified. (2) Real bus ingress: run the
+  nested shell on a private session bus (`dbus-daemon --session`, point a
+  manually-started nested shell's `DBUS_SESSION_BUS_ADDRESS` at it, revert
+  afterwards) and `notify-send` reaches the nested server, which owns the
+  name there (`iris-notif-bus-ingress.png`). The shared-bus limitation
+  stands for the default harness (host owns the name there).
+- Lock *open*: proven both branches in the nest. Wrong password shows the red
+  "Incorrect password" via a real PAM round trip (stock behavior preserved
+  with the patch applied, `iris-lock-failure.png`). With
+  `LUNANA_TEST_PAM_UNLOCK=1` in the operator's environment, the harness
+  passes it through (`nested-hypr` documents this as test-only) and the
+  vendored `LockContext` uses a fixture-local `pam_permit` service instead of
+  the system stack: any input unlocks, the desktop returns with no restart
+  and no `clear_crashed_lockscreen` dance (`iris-lock-unlocked.png`). Never
+  set the flag outside the nest. PAM against real credentials stays
+  off-limits by design (the restart+eval recovery path remains documented
+  as the no-flag fallback).
 - iRiS single-surface chassis fusion is not reproduced by the satellite model
   (Option A). The known lock-surface, missing `version.json`, and duplicate
   `IpcHandler` warnings remain as recorded in PORTING.md.
@@ -117,10 +123,19 @@ environment-dependent or documented reduced fidelity.
   `lunana.iris-control` content).
 - Family cycle `ii ↔ waffle ↔ iris ↔ stock` live without a shell restart;
   dual-monitor layers (background/bar/dock/notifications) on both outputs.
-- OSD pill, notification banner (full text), lock open + lock failure, and
-  Hyprland orbit window list proven with screenshots; static tests pin the
-  hooks and the orbit Niri-shape contract (`test_iris_test_hooks`,
-  `test_hypr_windows_contract`).
+- OSD pill, notification banner (synthetic + real bus ingress), lock open +
+  lock failure + PAM-success unlock (gated fixture path), recording launch
+  path, sidebar full content, and Hyprland orbit window list + actions
+  (go-to, close, float toggle) proven with screenshots and explicit
+  baselines; static tests pin the hooks, the orbit Niri-shape contract,
+  and the vendor-patch lever (`test_iris_test_hooks`,
+  `test_hypr_windows_contract`, `test_vendor_patch_lever`).
+- Harness notes: WAYLAND-1 screencopy wedges over a compositor's life
+  (works fresh); HEADLESS-1 always captures. Focused-gated UI can be moved
+  to HEADLESS-1 with raw-socket `hl.dsp.focus({ monitor = "HEADLESS-1" })`.
+  Fixture `illogical-impulse/config.json` edits can be clobbered by the
+  shell's own Config write-back — verify after writing, prefer edit-then-
+  restart ordering.
 - Integrations: Network connected, Bluetooth adapter present (`Powered: no`),
   Battery 81%, brightness 100%, PipeWire connected, Weather 8°C, sensors detect
   CPU/GPU, keyring `{}`, widget scan `[]`.
