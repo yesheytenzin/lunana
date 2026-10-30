@@ -175,6 +175,17 @@ What remains is upstream decisions and documented environment quirks.
   full-DL + apply path is plain curl, no key anywhere. Seeded
   `~/Pictures/Wallpapers/` with 10 keyless 16:9 toplist-week fetches
   (1920x1080+, 74MB); Library browser lists folders/files with thumbnails.
+- Iris matching image-32.webp (light Apple/paper look): applied live —
+  `iris.appearance.language=washi` (was `iris`), `appearance.globalStyle=`
+  `editorial` (was `material`); scheme was already `light`. Island, control
+  grid, dock all render warm cream, matching the reference tone. Prior
+  values backed up at /tmp/opencode/config-backup-iris-light.json (revert:
+  globalStyle=material, language=iris, variant=tonalSpot). NOT replicable
+  in this tree: the reference COLOUR page's Look switcher (Apple vs
+  Nothing OS), "Nothing red" signal dot, and System-accent
+  Wallpaper/Theme/Custom cards do not exist in the vendored modules NOR in
+  the upstream checkout (both predate that redesign) — needs an upstream
+  re-vendor or a lunana-side fork of the Colour page.
 - Harness notes: WAYLAND-1 screencopy wedges over a compositor's life
   (works fresh); HEADLESS-1 always captures. Focused-gated UI can be moved
   to HEADLESS-1 with raw-socket `hl.dsp.focus({ monitor = "HEADLESS-1" })`.
