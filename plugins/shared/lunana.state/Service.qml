@@ -142,4 +142,9 @@ Scope {
         root.armMaterialYou()
         root.syncPanelFamily()
     }
+
+    // Hyprland window-model mirror for Niri-shaped consumers (orbit et al).
+    // Dormant unless the compositor is Hyprland without Niri. See file.
+    HyprWindows {
+    }
 }

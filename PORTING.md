@@ -308,13 +308,20 @@ Working the four open buckets one by one.
       (d) `lunana.iris-lock`/`lunana.waffle-lock` mounted bare lock surfaces
       whose required `context` is unset — both now host the full vendored
       `Lock` (same as the ii host). Orbit gained a host surface + toggle
-      (drives `irisOrbitOpen`, honors `iris.orbit.enable`). Verified with
-      screenshots: island pill, dock pill, control grid, palette spotlight,
-      edit bar, session screen, settings window, focus/today sidebars,
-      wallpaper gallery, orbit chrome, stage bubble. Session/sidebars/settings/
-      wallpaper/palette paint their own cards (no field needed). Reduced, not
-      fixable host-side: orbit lists no windows on Hyprland (its window/
-      workspace model is Niri-only upstream — identical on inir-on-Hyprland).
+      (drives `irisOrbitOpen`, honors `iris.orbit.enable`), then a Hyprland
+      window-model mirror: `lunana.state/HyprWindows.qml` translates
+      Hyprland toplevels/workspaces into NiriService's `windows`/
+      `allWorkspaces`/`mruWindowIds` shape (int ids from addresses; dormant
+      unless Hyprland-without-Niri), so orbit renders strips with live
+      window cards on Hyprland. Verified with screenshots: island pill,
+      dock pill, control grid, palette spotlight, edit bar, session screen,
+      settings window, focus/today sidebars, wallpaper gallery, orbit
+      chrome (+ Hyprland window card via the mirror), stage bubble.
+      Session/sidebars/settings/wallpaper/palette paint their own cards
+      (no field needed). Reduced: orbit window *actions* still route to
+      Niri socket functions (dead without Niri) — the vendor-patch lever +
+      dsp-dialect action mapping is the planned Phase 2 (upstream inir has
+      no Hyprland orbit to re-vendor).
       Closed separately (quick-wins): the OSD render path is proven via the
       `lunana.iris-osd test` hook (external wpctl alone never fires it —
       `showLevel` requires a recent `Audio.lastUserChange`, which only the
@@ -455,7 +462,11 @@ focused foot terminal, showing its title + app id with Cancel/Close),
 bubble), `iris2-lunana.iris-session.png` (session screen),
 `iris-osd-hook.png` (volume pill via the `lunana.iris-osd test` hook),
 `iris-lock-test.png` (full iris lock UI: clock, weather, battery, avatar,
-password field), and `iris-notif-hook.png` (banner pill, icon, timestamp
-via the `lunana.iris-notifications test` hook);
+password field), `iris-lock-failure.png` (red "Incorrect password" via a
+real PAM round trip), `iris-notif-text-final.png` (banner with icon,
+summary, wrapped body, app name, timestamp), `sidebar-full-syntax.png`
+(full sidebar-left with syntax-highlighting installed),
+`iris-orbit-hyprland-mirror.png` (orbit strips with a live Hyprland window
+card via the NiriService mirror);
 the overlay matrices were recorded in `/tmp/lunana-nested/overlay-matrix.txt`
 and re-run after the host update.

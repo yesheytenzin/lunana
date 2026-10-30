@@ -567,7 +567,6 @@ is_default_recorder_value() {
 build_common_args() {
     common_args=(
         -f "$output_file"
-        -t
         -r "$FPS"
     )
 
@@ -620,7 +619,6 @@ build_safe_fallback_common_args() {
     fallback_common_args=(
         --pixel-format yuv420p
         -f "$output_file"
-        -t
         -r "$FPS"
     )
     if has_ffmpeg_encoder libx264; then

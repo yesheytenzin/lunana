@@ -268,6 +268,36 @@ def test_iris_test_hooks():
           "lunana.iris-notifications: test hook must clear after itself")
 
 
+def test_hypr_windows_contract():
+    """The Hyprland window-model mirror must publish every Niri-shaped field
+    the orbit reads. On Hyprland-without-Niri, NiriService.windows /
+    allWorkspaces stay empty upstream, so lunana.state mirrors Hyprland's
+    models into exactly the shapes IrisOrbit consumes (actions stay Niri
+    socket-bound and are documented reduced)."""
+    orbit = (REPO / "vendor" / "modules" / "iris" / "orbit" / "IrisOrbit.qml").read_text()
+    mirror = (plugin_dir("lunana.state") / "HyprWindows.qml").read_text()
+    check("HyprWindows" in (plugin_dir("lunana.state") / "Service.qml").read_text(),
+          "lunana.state: Service.qml must instantiate the HyprWindows mirror")
+    window_fields = set(re.findall(r"window\?\.\s*([A-Za-z_]+)", orbit))
+    window_fields |= set(re.findall(r"(?<![A-Za-z_.])window\.([A-Za-z_]+)", orbit))
+    ws_fields = set(re.findall(r"(?<![A-Za-z])(?:slot\.)?ws\.([A-Za-z_]+)", orbit))
+    ws_fields |= set(re.findall(r"\(\s*ws\.([A-Za-z_]+)", orbit))
+    # Array.filter and MinimizedWindows.* share the trailing "ws." spelling;
+    # only bare workspace objects count toward the Niri contract.
+    ws_fields -= {"filter", "getMinimizedForOutput", "isStashWorkspace", "minimize", "restore", "restoreOriginal"}
+    window_contract = {"id", "app_id", "title", "workspace_id", "is_active", "is_focused"}
+    ws_contract = {"id", "idx", "name", "output", "is_active", "active_window_id"}
+    check(window_fields <= window_contract,
+          f"orbit reads window fields outside the mirror contract: {sorted(window_fields - window_contract)}")
+    check(ws_fields <= ws_contract,
+          f"orbit reads workspace fields outside the mirror contract: {sorted(ws_fields - ws_contract)}")
+    for f in sorted(window_contract | ws_contract):
+        check(f"{f}:" in mirror,
+              f"HyprWindows.qml must publish '{f}:' for the orbit contract")
+    check("isHyprland" in mirror and "isNiri" in mirror,
+          "HyprWindows.qml must stay dormant unless Hyprland-without-Niri")
+
+
 def _load_family_table():
     import importlib.util as ilu
     cycle = plugin_dir("lunana.family") / "family-cycle"
@@ -372,7 +402,7 @@ def main():
                test_vendor_closure, test_host_imports, test_sidebar_left_fallback,
                test_closeconfirm_hyprland,
                test_iris_lock_hosts, test_iris_satellite_wiring,
-               test_iris_test_hooks,
+               test_iris_test_hooks, test_hypr_windows_contract,
                test_family_cycle, test_suite_runs, test_hypr_config_adapters):
         try:
             fn()

@@ -43,7 +43,8 @@ Item {
       urgency: "normal",
       actions: []
     }]
-    return "shown"
+    return "shown n=" + Svc.popupList.length
+      + " summary=" + String((Svc.popupList[0] ?? {}).summary ?? "")
   }
 
   ShellIpc {
