@@ -129,13 +129,37 @@ What remains is upstream decisions and documented environment quirks.
   (go-to, close, float toggle) proven with screenshots and explicit
   baselines; static tests pin the hooks, the orbit Niri-shape contract,
   and the vendor-patch lever (`test_iris_test_hooks`,
-  `test_hypr_windows_contract`, `test_vendor_patch_lever`).
+  `test_ii_test_hooks`, `test_hypr_windows_contract`,
+  `test_vendor_patch_lever`).
+- ii family full pass (this session): 11/11 overlays open/close with
+  per-step layer verification — overview (workspace cards on focused
+  output), cheatsheet, control-center (`controlPanel`), sidebar-right,
+  wallpaper (`wallpaperSelector`), region (`regionSelector`), session,
+  settings (`settingsOverlay`), altswitcher (scrim + layer; card list
+  shares the orbit-proven mirror model), sidebar-left
+  (`lunana-sidebar-left`, full widget content), closeconfirm (dialog with
+  icon/title/Cancel/Close over a focused foot; Cancel keeps the window,
+  disabled-config fast path closes directly) — plus residents (bar, dock,
+  background on both outputs), OSD pill via new `lunana.osd test` hook
+  (vendored Audio never fires in the nest), and banner via real private-bus
+  ingress (`ii-notif-banner.png`). Lock/mascot/tiling verified dormant +
+  error-free (mascot companion logs reactions, tiling shows only on drag).
+- Waffle family full pass (this session): bar + `wBackground` on both
+  outputs, start menu (search, pinned apps, user footer), action center
+  (toggles, sliders, battery), notification center (empty state, calendar,
+  Focus timer), OSD pill via `qs ipc call audio volumeUp`.
 - Harness notes: WAYLAND-1 screencopy wedges over a compositor's life
   (works fresh); HEADLESS-1 always captures. Focused-gated UI can be moved
   to HEADLESS-1 with raw-socket `hl.dsp.focus({ monitor = "HEADLESS-1" })`.
   Fixture `illogical-impulse/config.json` edits can be clobbered by the
   shell's own Config write-back — verify after writing, prefer edit-then-
   restart ordering.
+  `pkill -f <pattern>` self-matches the invoking shell when the pattern
+  appears in its own command line — use the `[b]racket` trick or kill by
+  PID (learned the hard way, twice).
+- Upstream notes: `RegionSelection.qml:169` null-screen TypeError on open
+  is inir's own code (vendoring is import-rewrites only) and the selector
+  still renders; altswitcher with zero windows correctly shows scrim only.
 - Integrations: Network connected, Bluetooth adapter present (`Powered: no`),
   Battery 81%, brightness 100%, PipeWire connected, Weather 8°C, sensors detect
   CPU/GPU, keyring `{}`, widget scan `[]`.

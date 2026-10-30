@@ -268,6 +268,18 @@ def test_iris_test_hooks():
           "lunana.iris-notifications: test hook must clear after itself")
 
 
+def test_ii_test_hooks():
+    """ii-family test-only IPC hooks (same rationale as the iris ones):
+    the nest has no volume keys, so the vendored Audio backend never fires
+    there. The hook must drive the exact render path and clear after
+    itself."""
+    osd = (plugin_dir("lunana.osd") / "Osd.qml").read_text()
+    check("function test()" in osd and "setOpenStates(true," in osd,
+          "lunana.osd: test hook must drive the OSD render path directly")
+    check("setOpenStates(false," in osd,
+          "lunana.osd: test hook must clear after itself")
+
+
 def test_hypr_windows_contract():
     """The Hyprland window-model mirror must publish every Niri-shaped field
     the orbit reads. On Hyprland-without-Niri, NiriService.windows /
@@ -434,7 +446,7 @@ def main():
                test_vendor_closure, test_host_imports, test_sidebar_left_fallback,
                test_closeconfirm_hyprland,
                test_iris_lock_hosts, test_iris_satellite_wiring,
-               test_iris_test_hooks, test_hypr_windows_contract,
+               test_iris_test_hooks, test_ii_test_hooks, test_hypr_windows_contract,
                test_vendor_patch_lever,
                test_family_cycle, test_suite_runs, test_hypr_config_adapters):
         try:

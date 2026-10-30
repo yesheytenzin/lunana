@@ -333,16 +333,19 @@ Working the four open buckets one by one.
       lunana.overview, unreachable from vendored code). Upstream inir has
       no Hyprland orbit to re-vendor, and could not take dsp-dialect code
       for stock Hyprland anyway.
-      Closed separately (quick-wins): the OSD render path is proven via the
-      `lunana.iris-osd test` hook (external wpctl alone never fires it —
-      `showLevel` requires a recent `Audio.lastUserChange`, which only the
-      `audio` IPC path sets); the banner render path is proven via the
-      `lunana.iris-notifications test` hook (synthetic wrapper-shaped entry
-      into the delegates' `popupList`; bus ingress stays uncovered — the bus
-      belongs to the host session and omarchy shadows the `notifications`
-      IPC target); lock open is proven with restart recovery
-      (`hl.clear_crashed_lockscreen()` restores the desktop after the lock
-      client dies) — PAM-success unlock stays untestable.
+      Closed separately (quick-wins, extended since): the OSD render path is
+      proven via the `lunana.iris-osd test` hook (external wpctl alone never
+      fires it) and, for the ii family, via the `lunana.osd test` hook added
+      on the same pattern (the vendored Audio backend never fires in the
+      nest; both hooks drive the exact render path and clear after
+      themselves); the banner render path is proven synthetically via the
+      `lunana.iris-notifications test` hook AND by real bus ingress — nested
+      shell on a private session bus owns the name, `notify-send` renders
+      the full banner for both iris (`iris-notif-bus-ingress.png`) and ii
+      (`ii-notif-banner.png`); lock open is proven with restart recovery
+      (`hl.clear_crashed_lockscreen()`) for the failure branch and via the
+      gated fixture-local `pam_permit` service for PAM-success (any input
+      unlocks, desktop back with no restart).
 - Harness fixes (landed + proven in session-7; see below): the nest must launch
   `quickshell` WITHOUT `-n`/`--no-duplicate` when a live shell runs the same config
   name, and must use an OMARCHY_PATH distinct from the live shell's; quickshell
@@ -480,6 +483,9 @@ summary, wrapped body, app name, timestamp), `iris-notif-bus-ingress.png` (real 
 full ingress path), `sidebar-full-syntax.png`
 (full sidebar-left with syntax-highlighting installed),
 `iris-orbit-hyprland-mirror.png` (orbit strips with a live Hyprland window
-card via the NiriService mirror);
+card via the NiriService mirror), `ii-osd-pill.png` (ii volume pill via the
+`lunana.osd test` hook), `ii-notif-banner.png` (ii banner via real
+private-bus ingress), `ii-closeconfirm2.png` (Hyprland-native close-confirm
+dialog over a focused foot terminal);
 the overlay matrices were recorded in `/tmp/lunana-nested/overlay-matrix.txt`
 and re-run after the host update.
