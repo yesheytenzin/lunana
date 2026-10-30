@@ -314,10 +314,17 @@ Working the four open buckets one by one.
       wallpaper gallery, orbit chrome, stage bubble. Session/sidebars/settings/
       wallpaper/palette paint their own cards (no field needed). Reduced, not
       fixable host-side: orbit lists no windows on Hyprland (its window/
-      workspace model is Niri-only upstream — identical on inir-on-Hyprland);
-      OSD volume-trigger and notification banners are environment-limited in
-      the nest (PipeWire sink plumbing; notification bus owned by the host
-      session) — both services instantiate clean.
+      workspace model is Niri-only upstream — identical on inir-on-Hyprland).
+      Closed separately (quick-wins): the OSD render path is proven via the
+      `lunana.iris-osd test` hook (external wpctl alone never fires it —
+      `showLevel` requires a recent `Audio.lastUserChange`, which only the
+      `audio` IPC path sets); the banner render path is proven via the
+      `lunana.iris-notifications test` hook (synthetic wrapper-shaped entry
+      into the delegates' `popupList`; bus ingress stays uncovered — the bus
+      belongs to the host session and omarchy shadows the `notifications`
+      IPC target); lock open is proven with restart recovery
+      (`hl.clear_crashed_lockscreen()` restores the desktop after the lock
+      client dies) — PAM-success unlock stays untestable.
 - Harness fixes (landed + proven in session-7; see below): the nest must launch
   `quickshell` WITHOUT `-n`/`--no-duplicate` when a live shell runs the same config
   name, and must use an OMARCHY_PATH distinct from the live shell's; quickshell
@@ -445,6 +452,10 @@ focused foot terminal, showing its title + app id with Cancel/Close),
 `iris-v2.png` (iris island + dock pills over wallpaper, dual output),
 `iris2-lunana.iris-control.png` (control grid), `iris2-orbit-win.png`
 (orbit chrome with a focused window), `iris2-stage-free.png` (stage clock
-bubble), and `iris2-lunana.iris-session.png` (session screen);
+bubble), `iris2-lunana.iris-session.png` (session screen),
+`iris-osd-hook.png` (volume pill via the `lunana.iris-osd test` hook),
+`iris-lock-test.png` (full iris lock UI: clock, weather, battery, avatar,
+password field), and `iris-notif-hook.png` (banner pill, icon, timestamp
+via the `lunana.iris-notifications test` hook);
 the overlay matrices were recorded in `/tmp/lunana-nested/overlay-matrix.txt`
 and re-run after the host update.

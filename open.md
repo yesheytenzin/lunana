@@ -49,7 +49,29 @@ environment-dependent or documented reduced fidelity.
   owned by the host session); both services instantiate clean. Lock *open*
   stays untested by design.
 
-## Reduced fidelity (documented, not defects)
+## Reduced fidelity (documented, not defects — verified workarounds below)
+- OSD volume trigger: external `wpctl` changes do not reach the OSD because
+  `showLevel` requires a recent `Audio.lastUserChange`, which only the
+  `audio` IPC path sets (`qs ipc --pid <nested-shell> call audio volumeUp`
+  hits the vendored handler — no omarchy `audio` target shadows it). Proven
+  in the nest via `lunana.iris-osd test volume`: the glass volume pill renders
+  exactly like inir. The Audio→OSD signal wiring itself is untouched vendored
+  code.
+- Notification banners: `notify-send` reaches the host session's notification
+  server (shared bus), and omarchy's notifications service shadows the
+  vendored `notifications` IPC target — so bus ingress is untestable in the
+  nest. Proven instead via `lunana.iris-notifications test`, which injects a
+  synthetic entry shaped like the service wrapper straight into the
+  `popupList` the banner delegates read (second call clears): pill, icon,
+  timestamp render; summary/body flow through the identical delegate
+  expressions. Full-pixel summary/body proof awaits a working WAYLAND-1
+  screencopy (only HEADLESS-1 captures in the nest right now).
+- Lock *open*: proven in the nest with restart recovery — `lunana.iris-lock
+  open` renders the full iris lock UI (clock, weather, battery, avatar,
+  password field); `restart` kills the lock client, the compositor shows its
+  crashed-lockscreen screen, and raw-socket
+  `eval hl.clear_crashed_lockscreen()` restores the desktop. PAM-success
+  unlock stays untestable (no non-interactive password path).
 - iRiS single-surface chassis fusion is not reproduced by the satellite model
   (Option A); lock *open* stays untested by design (it would lock the test
   session). The known lock-surface, missing `version.json`, and duplicate

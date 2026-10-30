@@ -252,6 +252,22 @@ def test_iris_satellite_wiring():
           "lunana.iris-orbit: host must drive GlobalStates.irisOrbitOpen (chassis hotcorner)")
 
 
+def test_iris_test_hooks():
+    """Test-only IPC hooks that make the nest-exerciseable what the harness
+    cannot reach: the notification bus belongs to the host session and real
+    volume keys do not exist in the nest. Each hook must stay wired to the
+    exact render path it proves."""
+    iris = REPO / "plugins" / "iris"
+    osd = (iris / "lunana.iris-osd" / "IrisOsd.qml").read_text()
+    check("function test(" in osd and "osdItem.show(" in osd,
+          "lunana.iris-osd: test hook must drive the OSD render path directly")
+    notif = (iris / "lunana.iris-notifications" / "IrisNotifications.qml").read_text()
+    check("function test()" in notif and "popupList = [" in notif,
+          "lunana.iris-notifications: test hook must inject into the popupList the banners read")
+    check("popupList = []" in notif,
+          "lunana.iris-notifications: test hook must clear after itself")
+
+
 def _load_family_table():
     import importlib.util as ilu
     cycle = plugin_dir("lunana.family") / "family-cycle"
@@ -356,6 +372,7 @@ def main():
                test_vendor_closure, test_host_imports, test_sidebar_left_fallback,
                test_closeconfirm_hyprland,
                test_iris_lock_hosts, test_iris_satellite_wiring,
+               test_iris_test_hooks,
                test_family_cycle, test_suite_runs, test_hypr_config_adapters):
         try:
             fn()
