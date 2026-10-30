@@ -59,7 +59,7 @@ FAMILIES = [
       "lunana.iris-notifications", "lunana.iris-settings",
       "lunana.iris-osd", "lunana.iris-session", "lunana.iris-wallpaper",
       "lunana.iris-sidebar-left", "lunana.iris-sidebar-right",
-      "lunana.iris-reservations"]),
+      "lunana.iris-reservations", "lunana.iris-frame"]),
     ("stock", "", []),
 ]
 

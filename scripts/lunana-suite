@@ -76,6 +76,7 @@ MANAGED_PLUGINS = [
     "lunana.iris-sidebar-left",
     "lunana.iris-sidebar-right",
     "lunana.iris-reservations",
+    "lunana.iris-frame",
     "lunana.bar-waffle",
     "lunana.waffle-start",
     "lunana.waffle-action",

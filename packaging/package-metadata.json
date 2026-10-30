@@ -1,7 +1,7 @@
 {
   "name": "lunana-shell",
   "version": "0.4.0",
-  "description": "Lunana — an inir-inspired native plugin suite for the Omarchy Quattro shell",
+  "description": "Lunana \u2014 an inir-inspired native plugin suite for the Omarchy Quattro shell",
   "license": "GPL-3.0",
   "url": "https://github.com/yesheytenzin/lunana",
   "suiteId": "lunana",
@@ -26,6 +26,7 @@
     "lunana.iris-osd",
     "lunana.iris-palette",
     "lunana.iris-reservations",
+    "lunana.iris-frame",
     "lunana.iris-session",
     "lunana.iris-settings",
     "lunana.iris-sidebar-left",
