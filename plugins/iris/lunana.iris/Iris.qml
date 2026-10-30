@@ -1,87 +1,69 @@
 import QtQuick
 import Quickshell
-import "../../lunana-vendor/" as Inir
-import Quickshell.Wayland
+import Quickshell.Io
 import qs.Commons
-import "../../lunana-vendor/modules/iris/bar" as LnIris
-import "../../lunana-vendor/modules/iris/field" as LnField
+import "../../lunana-vendor/" as Inir
 
-// lunana.iris — exact iRiS island panel (kind: service, on by default).
+// lunana.iris — the consolidated iRiS shell (kind: service, on by default).
 //
-// Mounts inir's exact IrisIsland DIRECTLY, not through IrisBar: the full
-// IrisBar chassis (frame bands, dock/control-center/spotlight loaders,
-// tuck + canvas-suppress gating) assumes iRiS owns the whole shell and hides
-// the island whenever the ii suite owns bar+dock — which is always here.
-// The island alone is the panel: morphing clock/media/apps/tray pill.
-// Toggle with `omarchy lunana.iris toggle` (Super+Shift+I).
+// Every iRiS surface lives in THIS one plugin, so they share ONE GlobalStates.
+// That is what makes the island's own buttons work: the island writes
+// GlobalStates.settingsOverlayOpen / sessionOpen / sidebarLeftOpen / etc., and
+// the settings/session/sidebar/control surfaces — mounted here beside it — see
+// the write. (Split across separate plugins each had its own GlobalStates, so
+// the island could not reach them.) It also lets one IrisField fuse the island,
+// dock and surround frame, and lets the edge reservations react to live sidebar
+// and dock state.
 //
-// The island's glass body is not painted by IrisIsland itself: in inir the
-// shared chassis IrisField paints every piece's published shapes. This host
-// mounts a per-output field behind the island fed by island.fieldShapes, so
-// the pill renders exactly as in inir (no cross-surface fusion with the
-// dock/control satellites, which stay separate pills).
-Item {
+// Each surface is a sibling .qml in this directory; Qt resolves them by name.
+Scope {
     id: root
 
     property var shell: null
     property var manifest: null
-    property bool opened: true
 
-    function open() { root.opened = true }
-    function close() { root.opened = false }
-    function toggle() { root.opened = !root.opened }
+    // Always-present chrome.
+    Background {}
+    SurroundFrame {}
+    Reservations {}
+    Dock {}
+    Island {}
 
+    // On-demand surfaces (self-gate on the GlobalStates flag the island sets).
+    Settings {}
+    Session {}
+    Sidebars {}
+    Control {}
+    Orbit {}
+    Palette {}
+    EditMode {}
+    Wallpaper {}
+
+    // Ambient.
+    Osd {}
+    Notifications {}
+    LockHost {}
+
+    // The island is always shown. These drive the shared GlobalStates the same
+    // way the island's own buttons do — so keybinds can summon any iRiS surface,
+    // and the handoff is the same one the buttons use (one GlobalStates).
     ShellIpc {
         target: "lunana.iris"
-        function toggle(): void { root.toggle() }
-        function open(): void { root.open() }
-        function close(): void { root.close() }
+        function toggle(): void {}
+        function open(): void {}
+        function close(): void {}
+        function settings(): void { Inir.GlobalStates.openSettings() }
+        function session(): void { Inir.GlobalStates.sessionOpen = !Inir.GlobalStates.sessionOpen }
+        function focus(): void { Inir.GlobalStates.toggleSidebarLeft("") }
+        function today(): void { Inir.GlobalStates.toggleSidebarRight("") }
+        function controls(): void { Inir.GlobalStates.controlPanelOpen = !Inir.GlobalStates.controlPanelOpen }
+        function spotlight(): void { Inir.GlobalStates.searchOpen = !Inir.GlobalStates.searchOpen }
+        function orbit(): void { Inir.GlobalStates.irisOrbitOpen = !Inir.GlobalStates.irisOrbitOpen }
     }
 
-    Variants {
-        model: Quickshell.screens
-        delegate: Component {
-            PanelWindow {
-                required property var modelData
-                screen: modelData
-                visible: root.opened
-                color: "transparent"
-                exclusionMode: ExclusionMode.Ignore
-                exclusiveZone: 0
-                WlrLayershell.namespace: "lunana-iris"
-                WlrLayershell.layer: WlrLayer.Top
-                anchors { top: true; bottom: true; left: true; right: true }
-                // Fullscreen transparent surface: only the island itself
-                // takes input, everything else passes through.
-                mask: Region {
-                    x: islandItem.x
-                    y: islandItem.y
-                    width: islandItem.width
-                    height: islandItem.height
-                }
-
-                LnField.IrisField {
-                    anchors.fill: parent
-                    compositorAllowed: true
-                    providesBackdrop: true
-                    shapes: islandItem.fieldShapes ?? []
-                }
-
-                LnIris.IrisIsland {
-                    id: islandItem
-                    anchors.top: parent.top
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    targetScreen: modelData
-                }
-            }
-        }
-    }
-
-    // Shell-entry handshake in this plugin's singleton universe (each
-    // installed plugin carries its own vendor/ copy, hence its own
-    // GlobalStates): the vendored tree gates first paint on
+    // Shell-entry handshake: the vendored tree gates first paint on
     // shellEntryReady/deferredPanelsReady, which only inir's shell.qml boot
-    // sets. Mirror the minimal sequence here.
+    // sets. One sequence for the whole consolidated plugin.
     Timer {
         interval: 200; repeat: false; running: true
         onTriggered: {

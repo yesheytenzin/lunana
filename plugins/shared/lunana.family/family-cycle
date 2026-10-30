@@ -51,15 +51,11 @@ FAMILIES = [
      ["lunana.waffle-start", "lunana.waffle-action",
       "lunana.waffle-notifications", "lunana.waffle-lock",
       "lunana.waffle-osd", "lunana.waffle-background"]),
-    ("iris", "lunana.bar",
-     ["lunana.iris",
-      "lunana.iris-background", "lunana.iris-palette",
-      "lunana.iris-control", "lunana.iris-orbit", "lunana.iris-stage",
-      "lunana.iris-dock", "lunana.iris-edit", "lunana.iris-lock",
-      "lunana.iris-notifications", "lunana.iris-settings",
-      "lunana.iris-osd", "lunana.iris-session", "lunana.iris-wallpaper",
-      "lunana.iris-sidebar-left", "lunana.iris-sidebar-right",
-      "lunana.iris-reservations", "lunana.iris-frame"]),
+    # Consolidated iRiS: every iRiS surface lives in the one lunana.iris plugin
+    # so they share a single GlobalStates (the island's own buttons reach the
+    # settings/session/sidebar/control surfaces; the frame/dock/island fuse).
+    # The old split iris-* plugins stay in the repo but are no longer enabled.
+    ("iris", "lunana.bar", ["lunana.iris"]),
     ("stock", "", []),
 ]
 

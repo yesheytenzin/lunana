@@ -205,9 +205,11 @@ def test_iris_satellite_wiring():
     iris = REPO / "plugins" / "iris"
     host = lambda pid, rel: (iris / pid / rel).read_text()
 
-    island = host("lunana.iris", "Iris.qml")
-    check("IrisField" in island and "island.fieldShapes" in island,
-          "lunana.iris: island needs its own IrisField fed by island.fieldShapes")
+    # Consolidated iRiS: the island surface moved to its own file in the one
+    # lunana.iris plugin; it still needs its own IrisField fed by fieldShapes.
+    island = host("lunana.iris", "Island.qml")
+    check("IrisField" in island and "fieldShapes" in island,
+          "lunana.iris: island needs its own IrisField fed by fieldShapes")
 
     dock = host("lunana.iris-dock", "IrisDock.qml")
     check("IrisField" in dock and "bodyShape" in dock,
