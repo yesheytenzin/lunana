@@ -67,11 +67,19 @@ environment-dependent or documented reduced fidelity.
 ## Reduced fidelity (documented, not defects — verified workarounds below)
 - Orbit on Hyprland, Phase 1 landed: `lunana.state` now mirrors Hyprland
   toplevels/workspaces into NiriService's `windows`/`allWorkspaces`/
-  `mruWindowIds` shape (int ids derived from addresses; dormant unless
+  `mruWindowIds` shape (small stable int ids per address — raw address hex
+  overflows QML's 32-bit `int` consumers — dormant unless
   Hyprland-without-Niri), and the orbit renders workspace strips with live
-  window cards on Hyprland (`iris-orbit-hyprland-mirror.png`). Window actions
-  still route to Niri socket functions (dead without Niri) — the
-  vendor-patch lever + dsp-dialect action mapping is the planned Phase 2.
+  window cards on Hyprland (`iris-orbit-hyprland-mirror.png`).
+- Orbit on Hyprland, Phase 2 landed: new `vendor-patches/` lever
+  (`scripts/vendor.py --patch`, idempotent, fails loudly on drift) applies
+  `services/NiriService.qml.patch`, routing closeWindow/focusWindow/
+  moveWindowToWorkspaceById/switchToWorkspaceById through Omarchy's Lua dsp
+  dialect and intercepting ToggleWindowFloating in `send()`. Verified live
+  with explicit baselines: go-to focuses the searched window, Del closes it
+  (correct window dies, survivor keeps working), Ctrl+F toggles floating.
+  toggleOverview stays Niri-only (its analog is lunana.overview, unreachable
+  from vendored code). Niri paths are byte-identical (branches only).
 - OSD volume trigger: external `wpctl` changes do not reach the OSD because
   `showLevel` requires a recent `Audio.lastUserChange`, which only the
   `audio` IPC path sets (`qs ipc --pid <nested-shell> call audio volumeUp`

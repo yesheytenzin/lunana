@@ -318,10 +318,17 @@ Working the four open buckets one by one.
       settings window, focus/today sidebars, wallpaper gallery, orbit
       chrome (+ Hyprland window card via the mirror), stage bubble.
       Session/sidebars/settings/wallpaper/palette paint their own cards
-      (no field needed). Reduced: orbit window *actions* still route to
-      Niri socket functions (dead without Niri) — the vendor-patch lever +
-      dsp-dialect action mapping is the planned Phase 2 (upstream inir has
-      no Hyprland orbit to re-vendor).
+      (no field needed). Phase 2 landed on top: a `vendor-patches/` lever
+      (`scripts/vendor.py --patch`, idempotent, fails loudly on drift)
+      applies `services/NiriService.qml.patch`, routing closeWindow/
+      focusWindow/moveWindowToWorkspaceById/switchToWorkspaceById through
+      Omarchy's Lua dsp dialect and intercepting ToggleWindowFloating in
+      `send()` — verified live (go-to focuses, Del closes the right window,
+      Ctrl+F toggles floating), with Niri paths byte-identical by
+      construction. toggleOverview stays Niri-only (its analog is
+      lunana.overview, unreachable from vendored code). Upstream inir has
+      no Hyprland orbit to re-vendor, and could not take dsp-dialect code
+      for stock Hyprland anyway.
       Closed separately (quick-wins): the OSD render path is proven via the
       `lunana.iris-osd test` hook (external wpctl alone never fires it —
       `showLevel` requires a recent `Audio.lastUserChange`, which only the

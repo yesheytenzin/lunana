@@ -13,12 +13,52 @@ import "../../lunana-vendor/services" as LnServ
 // without Niri — when a Niri socket exists, NiriService owns its fields and
 // this stays dormant.
 //
-// Window actions (close/focus/move) still route through NiriService's
-// socket functions, so listings on Hyprland are browse-only until the
-// dispatcher call-sites are ported (see PORTING.md). Previews stay off:
-// Hyprland has no per-window capture path.
+// Window ids are small stable ints keyed by Hyprland address (NOT the raw
+// address parsed as a number): QML `int`-typed consumers — the orbit's
+// cursorId, card ids, NiriService action args — truncate 64-bit values to
+// 32 bits on assignment, silently corrupting the lookup. Small ints match
+// Niri's own id shape and survive every int round-trip. Ids are stable per
+// address for the session; dead addresses are pruned so the table stays
+// bounded (a pruned id simply stops resolving, and closes become no-ops).
+// Window actions (close/focus/move) route through NiriService's socket
+// functions, which the vendor patch redirects to hl.dsp.* on Hyprland.
+// Previews stay off: Hyprland has no per-window capture path.
 Item {
   id: root
+
+  // address -> small stable int id.
+  property var _addrToId: ({})
+  property int _nextWinId: 1
+
+  function _windowIdFor(address: string): int {
+    const key = String(address ?? "")
+    if (!key)
+      return -1
+    let id = -1
+    try { id = Number(root._addrToId[key] ?? -1) } catch (e) { id = -1 }
+    if (!(id >= 1)) {
+      id = root._nextWinId
+      root._nextWinId = root._nextWinId + 1
+      const next = Object.assign({}, root._addrToId)
+      next[key] = id
+      root._addrToId = next
+    }
+    return id
+  }
+
+  function _pruneIds(live: var): void {
+    try {
+      const keep = {}
+      for (const addr of live) keep[String(addr)] = true
+      const next = {}
+      let dropped = false
+      for (const addr in root._addrToId) {
+        if (keep[addr]) next[addr] = root._addrToId[addr]
+        else dropped = true
+      }
+      if (dropped) root._addrToId = next
+    } catch (e) {}
+  }
 
   readonly property bool active: {
     try {
@@ -38,6 +78,19 @@ Item {
     }
   }
 
+  // Last published population, for the shell log (quiet unless it changes).
+  property string _lastReport: ""
+  function _report(wins, aws): void {
+    try {
+      const ids = wins.map(w => String(w.id));
+      const key = wins.length + ":" + aws.length + ":" + ids.join(",");
+      if (key !== root._lastReport) {
+        root._lastReport = key;
+        console.info("[lunana.hypr-windows] mirroring " + wins.length + " windows: [" + ids.join(", ") + "]");
+      }
+    } catch (e) {}
+  }
+
   function rebuild(): void {
     if (!root.active)
       return
@@ -45,6 +98,7 @@ Item {
     try {
       const tls = Array.from(Hyprland.toplevels?.values ?? [])
       const wins = []
+      const liveAddrs = []
       for (let i = 0; i < tls.length; i++) {
         const t = tls[i]
         if (!t)
@@ -61,15 +115,13 @@ Item {
         let title = ""
         try { title = String(t.title ?? "") } catch (e) { title = "" }
         let addr = ""
-        try { addr = String(t.address ?? "") } catch (e) { addr = "" }
-        // Orbit (and Niri itself) keys windows by int id. Derive one stably
-        // from the Hyprland address hex; unparseable addresses become -1,
-        // which the orbit treats as "no window" and ignores.
-        let wid = -1
-        try {
-          const num = parseInt(String(addr).replace(/^0x/, ""), 16)
-          wid = isNaN(num) ? -1 : num
-        } catch (e) { wid = -1 }
+        try { addr = String(t.address ?? "").replace(/^0x/, "") } catch (e) { addr = "" }
+        // Small stable int id (see _windowIdFor): raw address hex does not
+        // fit QML's 32-bit int consumers. Unmapped addresses stay -1, which
+        // the orbit treats as "no window" and ignores.
+        const wid = root._windowIdFor(addr)
+        if (addr !== "")
+          liveAddrs.push(addr)
         let active = false
         try { active = !!t.activated } catch (e) { active = false }
         wins.push({
@@ -82,6 +134,7 @@ Item {
           is_focused: active
         })
       }
+      root._pruneIds(liveAddrs)
       LnServ.NiriService.windows = wins
 
       const focusedWsId = (() => {
@@ -117,15 +170,18 @@ Item {
         })
       }
       LnServ.NiriService.allWorkspaces = aws
+      root._report(wins, aws)
 
-      // Same int-id space as window.id above (parsed address hex).
+      // Same small-int id space as window.id above; skip addresses with
+      // no live mapping (closed windows).
       try {
         const keys = LnServ.CompositorService.mruWindowKeys ?? []
         const ids = []
         for (let i = 0; i < keys.length; i++) {
-          const num = parseInt(String(keys[i] ?? "").replace(/^0x/, ""), 16)
-          if (!isNaN(num))
-            ids.push(num)
+          const addr = String(keys[i] ?? "").replace(/^0x/, "")
+          const id = Number(root._addrToId[addr] ?? -1)
+          if (id >= 1)
+            ids.push(id)
         }
         LnServ.NiriService.mruWindowIds = ids
       } catch (e) {}

@@ -7,6 +7,7 @@ import QtQuick
 import Quickshell
 import Quickshell.Io
 import Quickshell.Wayland
+import Quickshell.Hyprland
 import "../modules/common"
 import "."
 
@@ -815,7 +816,62 @@ Singleton {
         currentOutputWorkspaces = outputWs
     }
 
+    // Lunana: Hyprland action routing (see vendor-patches README). The
+    // orbit and other Niri-shaped consumers call the socket functions
+    // below; on Hyprland without Niri those would silently no-op, so route
+    // them through Omarchy's Lua dispatcher dialect instead.
+    function _hyprEnabled(): bool {
+        try {
+            return CompositorService.isHyprland && !CompositorService.isNiri
+        } catch (e) {
+            return false
+        }
+    }
+
+    // Window ids on Hyprland are ints parsed from toplevel addresses (see
+    // lunana.state/HyprWindows.qml); prefer the stored address, else
+    // re-derive it from the id.
+    function _hyprAddressFor(windowId): string {
+        try {
+            const list = root.windows ?? []
+            for (let i = 0; i < list.length; i++) {
+                if (list[i]?.id === windowId && list[i]?.address)
+                    return String(list[i].address).replace(/^0x/, "")
+            }
+        } catch (e) {}
+        try {
+            const num = Number(windowId)
+            if (!isNaN(num))
+                return Math.round(num).toString(16)
+            return String(windowId ?? "").replace(/^0x/, "")
+        } catch (e) {
+            return ""
+        }
+    }
+
+    function _hyprDispatch(call: string): bool {
+        try {
+            Hyprland.dispatch(call)
+            return true
+        } catch (e) {
+            console.warn("[NiriService] Hyprland dispatch failed: " + e)
+            return false
+        }
+    }
+
     function send(request) {
+        if (root._hyprEnabled()) {
+            try {
+                const toggle = request?.Action?.ToggleWindowFloating ?? null
+                if (toggle !== null && toggle !== undefined) {
+                    const addr = root._hyprAddressFor(toggle.id)
+                    if (!addr)
+                        return false
+                    return root._hyprDispatch('hl.dsp.window.float({ action = "toggle", window = "address:0x' + addr + '" })')
+                }
+            } catch (e) {}
+            return false
+        }
         if (!CompositorService.isNiri || !requestSocket.connected)
             return false
         requestSocket.send(request)
@@ -848,6 +904,8 @@ Singleton {
     // multi-monitor surfaces (e.g. the workspace strip) to switch to the exact
     // workspace under the pointer regardless of which output owns it.
     function switchToWorkspaceById(workspaceId) {
+        if (root._hyprEnabled())
+            return root._hyprDispatch('hl.dsp.focus({ workspace = "' + String(workspaceId ?? "") + '" })')
         return send({
                         "Action": {
                             "FocusWorkspace": {
@@ -864,6 +922,13 @@ Singleton {
     signal windowFocusRequested()
 
     function focusWindow(windowId) {
+        if (root._hyprEnabled()) {
+            root.windowFocusRequested()
+            const addr = root._hyprAddressFor(windowId)
+            if (!addr)
+                return false
+            return root._hyprDispatch('hl.dsp.focus({ window = "address:0x' + addr + '" })')
+        }
         root.windowFocusRequested()
         return send({
                         "Action": {
@@ -896,6 +961,13 @@ Singleton {
     // resolve against the focused output and could land the window on the wrong
     // monitor in a multi-output setup.
     function moveWindowToWorkspaceById(windowId, workspaceId, focus) {
+        if (root._hyprEnabled()) {
+            const addr = root._hyprAddressFor(windowId)
+            if (!addr)
+                return false
+            const follow = focus === undefined ? false : !!focus
+            return root._hyprDispatch('hl.dsp.window.move({ workspace = "' + String(workspaceId ?? "") + '", follow = ' + (follow ? "true" : "false") + ', window = "address:0x' + addr + '" })')
+        }
         return send({
                         "Action": {
                             "MoveWindowToWorkspace": {
@@ -910,6 +982,12 @@ Singleton {
     }
 
     function closeWindow(windowId) {
+        if (root._hyprEnabled()) {
+            const addr = root._hyprAddressFor(windowId)
+            if (!addr)
+                return false
+            return root._hyprDispatch('hl.dsp.window.close({ window = "address:0x' + addr + '" })')
+        }
         return send({
                         "Action": {
                             "CloseWindow": {

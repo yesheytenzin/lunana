@@ -294,8 +294,34 @@ def test_hypr_windows_contract():
     for f in sorted(window_contract | ws_contract):
         check(f"{f}:" in mirror,
               f"HyprWindows.qml must publish '{f}:' for the orbit contract")
+    check("addrToId" in mirror,
+          "HyprWindows.qml must map addresses to small stable ints (raw "
+          "address hex overflows QML's 32-bit int consumers: cursorId, "
+          "card ids, NiriService action args)")
+    check("parseInt(String(addr" not in mirror and "parseInt(String(keys" not in mirror,
+          "HyprWindows.qml must not derive ids with parseInt (truncation)")
     check("isHyprland" in mirror and "isNiri" in mirror,
           "HyprWindows.qml must stay dormant unless Hyprland-without-Niri")
+
+
+def test_vendor_patch_lever():
+    """The vendor-patch lever must apply cleanly and idempotently, and the
+    NiriService patch must keep its Hyprland routing markers (the Niri path
+    stays byte-identical by construction: branches only, no rewrites)."""
+    import subprocess
+    r = subprocess.run([sys.executable, str(REPO / "scripts" / "vendor.py"), "--patch"],
+                       capture_output=True, text=True)
+    check(r.returncode == 0, f"vendor.py --patch failed: {r.stderr.strip()}")
+    r2 = subprocess.run([sys.executable, str(REPO / "scripts" / "vendor.py"), "--patch"],
+                        capture_output=True, text=True)
+    check(r2.returncode == 0, f"vendor.py --patch is not idempotent: {r2.stderr.strip()}")
+    patched = (REPO / "vendor" / "services" / "NiriService.qml").read_text()
+    for marker in ("_hyprEnabled", "_hyprAddressFor", "_hyprDispatch",
+                   "hl.dsp.window.close", "hl.dsp.focus", "hl.dsp.window.move",
+                   "hl.dsp.window.float"):
+        check(marker in patched, f"patched NiriService.qml lost marker: {marker}")
+    check("import Quickshell.Hyprland" in patched,
+          "patched NiriService.qml must import Quickshell.Hyprland")
 
 
 def _load_family_table():
@@ -403,6 +429,7 @@ def main():
                test_closeconfirm_hyprland,
                test_iris_lock_hosts, test_iris_satellite_wiring,
                test_iris_test_hooks, test_hypr_windows_contract,
+               test_vendor_patch_lever,
                test_family_cycle, test_suite_runs, test_hypr_config_adapters):
         try:
             fn()

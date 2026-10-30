@@ -17,6 +17,16 @@ legitimate derivative — `vendor/INIR-LICENSE` preserves inir's license/attribu
 Usage:
     vendor.py <path> [<path> ...]      # inir paths (files or dirs), repo-relative
     vendor.py --list                   # show what's currently vendored
+    vendor.py --patch                  # apply vendor-patches/*.patch onto vendor/
+
+`vendor/` is never hand-edited: after any `vendor.py <path>` run that touches
+a patched file, re-run `vendor.py --patch`. Patch files live in
+`vendor-patches/`, mirroring the vendor tree (`services/Foo.qml.patch`
+patches `vendor/services/Foo.qml`). They apply with zero fuzz and fail
+loudly on drift so a changed upstream never misapplies silently; re-running
+`--patch` is idempotent. Patches are lunana-local behavior the upstream tree
+cannot carry — e.g. Omarchy's Lua dispatcher dialect, which is a syntax
+error on stock Hyprland.
 """
 
 from __future__ import annotations
@@ -189,6 +199,112 @@ def write_attribution() -> None:
     )
 
 
+PATCHES = LUNANA / "vendor-patches"
+
+
+def _parse_hunks(patch_text):
+    """Parse a unified diff into (header, [(old_start, old_lines, new_lines)]).
+    Context and removal lines must match the target exactly; fuzz is zero so
+    drift fails loudly instead of misapplying."""
+    import re as _re
+    hunks = []
+    header = []
+    cur = None
+    raw = patch_text.splitlines()
+    # Drop trailing empty entries from the file's final newline: in unified
+    # format a bare blank line is always hunk context, never a separator.
+    while raw and raw[-1] == "":
+        raw.pop()
+    for line in raw:
+        m = _re.match(r"^@@ -(\d+)(?:,\d+)? \+(\d+)(?:,\d+)? @@", line)
+        if m:
+            cur = [int(m.group(1)), [], []]
+            hunks.append(cur)
+            continue
+        if cur is None:
+            header.append(line)
+            continue
+        if line.startswith("+++") or line.startswith("---"):
+            header.append(line)
+            cur = None
+            continue
+        if line.startswith("\\"):
+            continue
+        if line == "":
+            cur[1].append("")
+            cur[2].append("")
+        elif line.startswith("+"):
+            cur[2].append(line[1:])
+        elif line.startswith("-"):
+            cur[1].append(line[1:])
+        elif line.startswith(" "):
+            cur[1].append(line[1:])
+            cur[2].append(line[1:])
+        else:
+            raise ValueError(f"bad patch line: {line!r}")
+    return header, [(h[0], h[1], h[2]) for h in hunks]
+
+
+def apply_patch_file(patch_path: Path) -> str:
+    """Apply one vendor-patches/<tree>.patch onto vendor/. Per-hunk
+    idempotency: hunks whose new text is already present are skipped; the
+    rest must match their old text exactly or the patch fails loudly
+    (vendor drift). This also tolerates editing a patch after a partial
+    apply: only the missing hunks are applied."""
+    rel = patch_path.relative_to(PATCHES)
+    target_rel = str(rel)[:-len(".patch")]
+    target = VENDOR / target_rel
+    if not target.is_file():
+        raise ValueError(f"patch target missing: {target_rel}")
+    _header, hunks = _parse_hunks(patch_path.read_text(encoding="utf-8"))
+    if not hunks:
+        raise ValueError(f"no hunks in {patch_path}")
+    lines = target.read_text(encoding="utf-8").splitlines()
+    applied = 0
+    for old_start, old_lines, new_lines in hunks:
+        if new_lines and _find_block(lines, new_lines) is not None:
+            continue  # already applied; skip
+        at = _find_block(lines, old_lines)
+        if at is None:
+            raise ValueError(
+                f"{target_rel}: hunk @@ -{old_start} does not match; "
+                f"vendor file drifted — reconcile the patch")
+        lines[at:at + len(old_lines)] = new_lines
+        applied += 1
+    if applied:
+        target.write_text("\n".join(lines) + ("\n" if lines else ""), encoding="utf-8")
+    return "applied" if applied else "already-applied"
+
+
+def _find_block(lines, block):
+    if not block:
+        return 0
+    for i in range(len(lines) - len(block) + 1):
+        if lines[i:i + len(block)] == block:
+            return i
+    return None
+
+
+def cmd_patch() -> int:
+    if not PATCHES.is_dir():
+        print("vendor: no vendor-patches/ dir; nothing to do")
+        return 0
+    patches = sorted(PATCHES.rglob("*.patch"))
+    if not patches:
+        print("vendor: no patches; nothing to do")
+        return 0
+    results = []
+    for p in patches:
+        try:
+            results.append((p, apply_patch_file(p)))
+        except ValueError as exc:
+            print(f"vendor: PATCH FAILED: {exc}", file=sys.stderr)
+            return 1
+    for p, status in results:
+        print(f"vendor: {p.relative_to(PATCHES)} ... {status}")
+    return 0
+
+
 def main(argv: list[str]) -> int:
     if not argv:
         print(__doc__)
@@ -213,6 +329,8 @@ def main(argv: list[str]) -> int:
                 changed += 1
         print(f"vendor: shellPath rewrite applied to {changed} file(s) in {VENDOR}")
         return 0
+    if argv[0] == "--patch":
+        return cmd_patch()
     if not INIR.is_dir():
         print(f"vendor: inir checkout not found at {INIR} (set INIR_SRC)", file=sys.stderr)
         return 1
