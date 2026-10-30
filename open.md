@@ -167,10 +167,22 @@ What remains is upstream decisions and documented environment quirks.
   Overlays need ~1s+ settle between toggles; rapid re-toggles can appear
   swallowed. Fullscreen empty overlays (stage) are click-to-dismiss by
   design, so verify with no pointer over the layer.
+- Wallpaper, no API key (live-verified this session): the whole
+  Wallhaven path is keyless by design — SFW search/toplist needs no key
+  (only NSFW `purity=111` requires one, correctly gated behind the key
+  field). Proven live with `apiKey: ''`: picker Wallhaven tab fetches and
+  renders real thumbnails (discovery chips, Day/Week/Month/Year, counts);
+  full-DL + apply path is plain curl, no key anywhere. Seeded
+  `~/Pictures/Wallpapers/` with 10 keyless 16:9 toplist-week fetches
+  (1920x1080+, 74MB); Library browser lists folders/files with thumbnails.
 - Harness notes: WAYLAND-1 screencopy wedges over a compositor's life
   (works fresh); HEADLESS-1 always captures. Focused-gated UI can be moved
   to HEADLESS-1 with raw-socket `hl.dsp.focus({ monitor = "HEADLESS-1" })`.
-  Fixture `illogical-impulse/config.json` edits can be clobbered by the
+  Live verification with an active user: fullscreen overlays are
+  click-outside-to-dismiss, so screenshots need ~1s timing and the layer
+  check right after the toggle; rapid re-toggles get swallowed (space
+  toggles 5s+ apart and verify each). Fixture
+  `illogical-impulse/config.json` edits can be clobbered by the
   shell's own Config write-back — verify after writing, prefer edit-then-
   restart ordering.
   OSD methodology lesson: an earlier `lunana.osd test` hook was added on the
