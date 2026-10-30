@@ -231,6 +231,10 @@ def info(msg: str) -> None:
     print(f"lunana-suite: {msg}")
 
 
+def warn(msg: str) -> None:
+    print(f"lunana-suite: WARNING: {msg}", file=sys.stderr)
+
+
 def confirm(prompt: str, assume_yes: bool) -> bool:
     if assume_yes:
         return True
@@ -539,8 +543,14 @@ def enable_plugins(dry: bool) -> None:
         if fixture:
             set_plugin_enabled(pid, True, False)
         elif tool:
-            subprocess.run([tool, pid], check=False, capture_output=True)
-            info(f"enabled {pid}")
+            proc = subprocess.run([tool, pid], check=False, capture_output=True,
+                                  text=True, timeout=60)
+            if proc.returncode != 0:
+                err = (proc.stderr or proc.stdout or "").strip().splitlines()
+                warn(f"omarchy-plugin-enable {pid} failed "
+                     f"({err[-1] if err else 'rc!=0'}); {pid} may stay disabled")
+            else:
+                info(f"enabled {pid}")
         else:
             info(f"omarchy-plugin-enable not on PATH; enable {pid} yourself")
 
@@ -557,8 +567,14 @@ def disable_plugins(dry: bool) -> None:
         if fixture:
             set_plugin_enabled(pid, False, False)
         elif tool:
-            subprocess.run([tool, pid], check=False, capture_output=True)
-            info(f"disabled {pid}")
+            proc = subprocess.run([tool, pid], check=False, capture_output=True,
+                                  text=True, timeout=60)
+            if proc.returncode != 0:
+                err = (proc.stderr or proc.stdout or "").strip().splitlines()
+                warn(f"omarchy-plugin-disable {pid} failed "
+                     f"({err[-1] if err else 'rc!=0'}); {pid} may stay enabled")
+            else:
+                info(f"disabled {pid}")
 
 
 # --- commands --------------------------------------------------------------
@@ -661,9 +677,17 @@ def cmd_install(args: argparse.Namespace) -> int:
                 set_plugin_enabled(pid, False, False)
         info("stood down non-default-family plugins (default family owns fresh installs)")
     elif shutil.which("omarchy-plugin-disable"):
+        tool = shutil.which("omarchy-plugin-disable")
+        failed = []
         for pid in MANAGED_PLUGINS:
             if pid != BAR_PLUGIN_ID and pid not in default_ids:
-                subprocess.run(["omarchy-plugin-disable", pid], check=False, capture_output=True)
+                proc = subprocess.run([tool, pid], check=False,
+                                      capture_output=True, text=True, timeout=60)
+                if proc.returncode != 0:
+                    failed.append(pid)
+        if failed:
+            warn(f"could not stand down: {', '.join(failed)}; "
+                 f"stale family plugins may still render")
         info("stood down non-default-family plugins (default family owns fresh installs)")
 
     # 6. merge keybinds + install surface styling

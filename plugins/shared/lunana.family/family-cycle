@@ -26,6 +26,7 @@ from __future__ import annotations
 import json
 import os
 import shutil
+import subprocess
 import sys
 import tempfile
 import time
@@ -74,6 +75,47 @@ def fail(msg: str) -> "NoReturn":  # type: ignore[valid-type]
 
 def info(msg: str) -> None:
     print(f"family-cycle: {msg}")
+
+
+def warn(msg: str) -> None:
+    print(f"family-cycle: WARNING: {msg}", file=sys.stderr)
+
+
+def using_fixture() -> bool:
+    """True in the nested harness or under test: the omarchy-plugin-* tools
+    drive the LIVE shell over IPC and ignore XDG_CONFIG_HOME, so fixture work
+    must stay in shell.json and never touch the live shell. (XDG_CONFIG_HOME
+    alone cannot signal a fixture: the harness redirects HOME alongside it,
+    keeping the pair self-consistent.)"""
+    if os.environ.get("LUNANA_FIXTURE") == "1":
+        return True
+    return config_home() != Path.home() / ".config"
+
+
+def ensure_shared_runtime() -> None:
+    """Best-effort: make sure the SHARED services (lunana.state, lunana.family)
+    are enabled in the live shell's runtime registry, not just listed in
+    shell.json. The two can drift (e.g. a stand-down that only touched one of
+    them), and every family's overlays silently degrade without the state
+    mirror — orbit/altswitcher show nothing. Skipped in fixtures."""
+    if using_fixture():
+        return
+    tool = shutil.which("omarchy-plugin-enable")
+    if not tool:
+        warn("omarchy-plugin-enable not on PATH; cannot verify shared services")
+        return
+    for pid in sorted(SHARED):
+        try:
+            proc = subprocess.run([tool, pid], check=False,
+                                  capture_output=True, text=True, timeout=30)
+        except (OSError, subprocess.SubprocessError) as exc:
+            warn(f"could not ensure {pid} enabled ({exc})")
+            continue
+        if proc.returncode != 0:
+            err = (proc.stderr or proc.stdout or "").strip().splitlines()
+            warn(f"could not ensure {pid} enabled: {err[-1] if err else 'rc!=0'}")
+        else:
+            info(f"shared service {pid} enabled")
 
 
 def config_home() -> Path:
@@ -177,6 +219,7 @@ def apply_family(shell: dict, fam: tuple) -> None:
             plugins[:] = [e for e in plugins
                           if not (isinstance(e, dict) and e.get("id") == oid)]
     write_shell(shell)
+    ensure_shared_runtime()
     info(f"family -> {name} (bar: {bar_id or 'omarchy.bar (stock)'})")
 
 

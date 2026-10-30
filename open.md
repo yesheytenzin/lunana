@@ -148,6 +148,25 @@ What remains is upstream decisions and documented environment quirks.
   outputs, start menu (search, pinned apps, user footer), action center
   (toggles, sliders, battery), notification center (empty state, calendar,
   Focus timer), OSD pill via `qs ipc call audio volumeUp`.
+- Live iris pass (this session, real session): island pill over maximized
+  windows, auto-hiding dock (correct inir behavior), control grid, palette
+  spotlight with suggestions, edit bar, session screen (clock + 5 actions +
+  uptime), settings (full nav, "iRiS · Island family"), Focus + Today
+  sidebars, wallpaper selector, orbit with a live Firefox card, iris OSD
+  pill, full-text banner. All overlays open/close with layer verification.
+- BUG FOUND + FIXED live: `lunana.state` was runtime-disabled (orbit showed
+  chrome with no cards; the mirror never ran). shell.json listed it, so the
+  runtime registry had diverged. Fix: family-cycle now runtime-ensures
+  SHARED services on live switches (fixture-gated), and lunana-suite
+  reports omarchy-plugin-{enable,disable} failures instead of claiming
+  success (`test_shared_services_guarded`). Proven: state survives a full
+  ii→waffle→iris→stock→ii cycle; mirror logs 4 windows; orbit cards live.
+- Live IPC mapping: service-kind plugins answer direct
+  `omarchy-shell <target> toggle`; overlay-kind plugins answer
+  `omarchy-shell shell toggle <id>` (direct gives "Target not found").
+  Overlays need ~1s+ settle between toggles; rapid re-toggles can appear
+  swallowed. Fullscreen empty overlays (stage) are click-to-dismiss by
+  design, so verify with no pointer over the layer.
 - Harness notes: WAYLAND-1 screencopy wedges over a compositor's life
   (works fresh); HEADLESS-1 always captures. Focused-gated UI can be moved
   to HEADLESS-1 with raw-socket `hl.dsp.focus({ monitor = "HEADLESS-1" })`.

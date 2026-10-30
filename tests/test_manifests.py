@@ -400,6 +400,20 @@ def test_suite_runs():
     check(r.returncode == 0, f"lunana-suite install --dry-run exited {r.returncode}: {r.stderr.strip()}")
 
 
+def test_shared_services_guarded():
+    """The lunana.state outage (orbit/altswitcher silently empty on iris):
+    shared services must be runtime-ensured on live switches, never touched
+    in fixtures, and enable/disable failures must be reported, not claimed."""
+    cycle_src = (plugin_dir("lunana.family") / "family-cycle").read_text()
+    check("ensure_shared_runtime" in cycle_src and "using_fixture" in cycle_src,
+          "family-cycle must runtime-ensure SHARED services outside fixtures")
+    check("LUNANA_FIXTURE" in cycle_src and "config_home() != Path.home()" in cycle_src,
+          "family-cycle fixture gate must cover both the harness flag and redirected configs")
+    suite_src = (REPO / "scripts" / "lunana-suite").read_text()
+    check("proc.returncode != 0" in suite_src,
+          "lunana-suite must check omarchy-plugin-{enable,disable} results instead of claiming success")
+
+
 def test_hypr_config_adapters():
     suite = runpy.run_path(str(REPO / "scripts" / "lunana-suite"))
     suite["_reload_hypr"] = lambda: None
@@ -436,7 +450,7 @@ def main():
                test_iris_lock_hosts, test_iris_satellite_wiring,
                test_iris_test_hooks, test_hypr_windows_contract,
                test_vendor_patch_lever,
-               test_family_cycle, test_suite_runs, test_hypr_config_adapters):
+               test_family_cycle, test_suite_runs, test_shared_services_guarded, test_hypr_config_adapters):
         try:
             fn()
         except Exception as exc:  # noqa: BLE001

@@ -335,7 +335,8 @@ Working the four open buckets one by one.
       for stock Hyprland anyway.
       Closed separately (quick-wins, extended since): the OSD render path is
       proven via the `lunana.iris-osd test` hook (external wpctl alone never
-      fires it) and, for the ii family, via the natural `audio volumeUp`
+      fires it; live, the pill also answers the natural `audio volumeUp`
+path) and, for the ii family, via the natural `audio volumeUp`
       path with fast layer polling (a `lunana.osd test` hook was briefly
       added on the unproven claim that vendored Audio never fires in the
       nest, then reverted once polling proved otherwise — the pill
@@ -489,5 +490,17 @@ card via the NiriService mirror), `ii-osd-pill.png` (ii volume pill via the
 natural audio path), `ii-notif-banner.png` (ii banner via real
 private-bus ingress), `ii-closeconfirm2.png` (Hyprland-native close-confirm
 dialog over a focused foot terminal);
+Live iris pass (real session): island pill over maximized windows,
+auto-hiding dock, control grid, palette spotlight, edit bar, session
+screen, full settings, Focus/Today sidebars, wallpaper selector, orbit
+with a live Firefox card (after fixing the state outage below), iris OSD
+pill, full-text banner — every overlay open/close layer-verified.
+Found live: `lunana.state` runtime-disabled while shell.json listed it, so
+orbit/altswitcher showed chrome with no window data and the Hyprland mirror
+never ran. Fixed: family-cycle runtime-ensures SHARED services on live
+switches (never in fixtures); lunana-suite reports plugin-tool failures
+honestly instead of claiming success (`test_shared_services_guarded`).
+Live IPC mapping: service plugins take direct `omarchy-shell <target>`;
+overlay plugins take `omarchy-shell shell toggle <id>`.
 the overlay matrices were recorded in `/tmp/lunana-nested/overlay-matrix.txt`
 and re-run after the host update.
