@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "lunana.iris-reservations",
+  "name": "Lunana iRiS Reservations",
+  "version": "0.4.0",
+  "author": "lunana",
+  "license": "GPL-3.0",
+  "description": "Lunana iRiS edge-space reservations so tiled windows warp around the island, dock and pinned sidebars.",
+  "kinds": [
+    "service"
+  ],
+  "entryPoints": {
+    "service": "Reservations.qml"
+  },
+  "x-lunana": {
+    "suiteId": "lunana",
+    "role": "iris-reservations",
+    "milestone": "parity",
+    "requires": [],
+    "recommends": []
+  }
+}
