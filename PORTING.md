@@ -75,9 +75,14 @@ against a fixture `$HOME` — never the live session.
       Kept satellites instead; single-surface blur-fusion + cross-surface morph recorded as
       reduced fidelity (and the .qsb blur shaders already fall back on this Qt anyway).
 - [x] iRiS lock ownership per family: enforced by the mutually-exclusive family sets. Lock is
-      NOT in SHARED (only state+family are); ii→`lunana.lock`, iris→`lunana.iris-lock`
-      (IrisLockSurface), waffle→`lunana.waffle-lock`. Exactly one WlSessionLock host enabled at
-      a time. Lock *open* stays untested by design (would lock the test session).
+      NOT in SHARED (only state+family are); ii→`lunana.lock`, iris→`lunana.iris-lock`,
+      waffle→`lunana.waffle-lock` — each a thin host of the full vendored `Lock`
+      (which owns the PAM `LockContext`, the `WlSessionLock` surface, the fallback
+      path, and the per-family surface switch). Mounting a bare `IrisLockSurface` /
+      `WaffleLockSurface` leaves its required `context` unset and the plugin fails
+      to create (`service plugin createObject returned null`). Exactly one
+      WlSessionLock host enabled at a time. Lock *open* stays untested by design
+      (would lock the test session).
 
 ## Wave 4 — Waffle family (new)
 - [x] `lunana.bar-waffle` (bar) + `wBar`
@@ -287,6 +292,32 @@ Working the four open buckets one by one.
       an undefined lock-context at rest (lock open untested by design); ShellUpdates
       version.json absent in fixture. Session-7 completed the residual per-overlay
       toggle matrix and the nested dual-output multi-monitor proof.
+- [x] #5 iRiS satellite completion (nested Hyprland 0.57.0, dual output): every
+      satellite now renders exactly its inir UI. Bugs fixed, all host-side:
+      (a) island/dock/control/stage/edit content floated without glass bodies —
+      the chassis `IrisField` used to paint every piece's published shapes, so
+      each satellite host now mounts a per-output field fed by that piece's
+      `fieldShapes`/`bodyShape` (no cross-surface fusion — separate pills, per
+      Option A); (b) `lunana.iris-dock` had no surface at all (embeddable item
+      with no window) — wrapped in a per-output PanelWindow with an input mask
+      from the dock's published body rects; (c) stage/edit/control/palette
+      loaders were `centerIn` (0×0 for fullscreen items → invisible) and missed
+      required props/state — all fill now, with `modelData` (stage),
+      `screenData` + `irisEdit` (edit), `screen` + `searchOpen` (palette),
+      `screenData` + `controlPanelOpen`/`irisMorphOwner` (control);
+      (d) `lunana.iris-lock`/`lunana.waffle-lock` mounted bare lock surfaces
+      whose required `context` is unset — both now host the full vendored
+      `Lock` (same as the ii host). Orbit gained a host surface + toggle
+      (drives `irisOrbitOpen`, honors `iris.orbit.enable`). Verified with
+      screenshots: island pill, dock pill, control grid, palette spotlight,
+      edit bar, session screen, settings window, focus/today sidebars,
+      wallpaper gallery, orbit chrome, stage bubble. Session/sidebars/settings/
+      wallpaper/palette paint their own cards (no field needed). Reduced, not
+      fixable host-side: orbit lists no windows on Hyprland (its window/
+      workspace model is Niri-only upstream — identical on inir-on-Hyprland);
+      OSD volume-trigger and notification banners are environment-limited in
+      the nest (PipeWire sink plumbing; notification bus owned by the host
+      session) — both services instantiate clean.
 - Harness fixes (landed + proven in session-7; see below): the nest must launch
   `quickshell` WITHOUT `-n`/`--no-duplicate` when a live shell runs the same config
   name, and must use an OMARCHY_PATH distinct from the live shell's; quickshell
@@ -409,7 +440,11 @@ Evidence: `/tmp/lunana-nested/shots/dual-monitor-ii.png`,
 `overlay-iris-control.png`, `family-lunana.waffle-start.png`,
 `sidebar-left-fallback-dual.png` (missing module → diagnostic on both
 outputs), `sidebar-left-stub.png` (temporary stub module → full panel),
-and `closeconfirm-dialog.png` (Hyprland-native close-confirm dialog over a
-focused foot terminal, showing its title + app id with Cancel/Close);
+`closeconfirm-dialog.png` (Hyprland-native close-confirm dialog over a
+focused foot terminal, showing its title + app id with Cancel/Close),
+`iris-v2.png` (iris island + dock pills over wallpaper, dual output),
+`iris2-lunana.iris-control.png` (control grid), `iris2-orbit-win.png`
+(orbit chrome with a focused window), `iris2-stage-free.png` (stage clock
+bubble), and `iris2-lunana.iris-session.png` (session screen);
 the overlay matrices were recorded in `/tmp/lunana-nested/overlay-matrix.txt`
 and re-run after the host update.

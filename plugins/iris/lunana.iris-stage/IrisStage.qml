@@ -4,6 +4,7 @@ import "../../lunana-vendor/" as Inir
 import qs.Commons
 import Quickshell.Wayland
 import "../../lunana-vendor/modules/iris/stage" as LnMod
+import "../../lunana-vendor/modules/iris/field" as LnField
 
 // lunana.iris-stage — Lunana IrisStage host. (kind: overlay).
 //
@@ -47,11 +48,23 @@ Item {
         MouseArea { anchors.fill: parent; onClicked: root.close() }
         Item { anchors.fill: parent; focus: root.opened; Keys.onEscapePressed: root.close() }
 
+        // The stage cards paint no bodies themselves: in inir the chassis
+        // field paints their published shapes. Dedicated per-output field
+        // here, behind the content.
+        LnField.IrisField {
+          anchors.fill: parent
+          compositorAllowed: true
+          providesBackdrop: true
+          shapes: stageLoader.item?.fieldShapes ?? []
+        }
+
         Loader {
-          anchors.centerIn: parent
+          id: stageLoader
+          anchors.fill: parent
           active: root.opened
           sourceComponent: Component {
             LnMod.IrisStage {
+              modelData: modelData
             }
           }
         }

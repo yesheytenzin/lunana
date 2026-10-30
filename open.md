@@ -29,6 +29,26 @@ environment-dependent or documented reduced fidelity.
   and the full `sidebar-left` content (blocked above). All services
   instantiate with zero errors in the nest.
 
+## iRiS family — fully verified this session (nested Hyprland 0.57.0, dual output)
+- Resident services render on both outputs with zero QML errors: `lunana-iris`
+  (island pill + clock/wifi), `lunana-iris-dock` (dock pill + icons),
+  `quickshell:iris-background` (wallpaper).
+- All 9 overlays + orbit open/close with visible inir-exact content: control
+  grid, edit bar, palette spotlight, stage (empty by default — correct; a
+  placed clock bubble renders), session screen, settings window,
+  focus/today sidebars, wallpaper gallery, orbit chrome.
+- Host fixes (all host-side, no vendor edits): per-output `IrisField` behind
+  every shape-publishing piece (island/dock/control/stage/edit), host
+  PanelWindow for the windowless dock, `fill` loaders + required props/state
+  for stage/edit/control/palette, orbit surface + toggle, and full-`Lock`
+  hosts for iris/waffle lock (bare surfaces fail creation without `context`).
+- Reduced, not fixable host-side: orbit lists no windows on Hyprland (its
+  window/workspace model is Niri-only upstream — identical on
+  inir-on-Hyprland). OSD volume-trigger and notification banners are
+  environment-limited in the nest (PipeWire sink plumbing; notification bus
+  owned by the host session); both services instantiate clean. Lock *open*
+  stays untested by design.
+
 ## Reduced fidelity (documented, not defects)
 - iRiS single-surface chassis fusion is not reproduced by the satellite model
   (Option A); lock *open* stays untested by design (it would lock the test
@@ -42,7 +62,8 @@ environment-dependent or documented reduced fidelity.
 - ii overlays: 11/11 open/close (sidebar-left opens with the diagnostic
   fallback when `org.kde.syntaxhighlighting` is absent; closeconfirm is a
   Hyprland-native host around the vendored dialog content); waffle: 3/3;
-  iris: 9/9 (including visible `lunana.iris-control` content).
+  iris: 9/9 overlays + orbit open/close (including visible
+  `lunana.iris-control` content).
 - Family cycle `ii ↔ waffle ↔ iris ↔ stock` live without a shell restart;
   dual-monitor layers (background/bar/dock/notifications) on both outputs.
 - Integrations: Network connected, Bluetooth adapter present (`Powered: no`),

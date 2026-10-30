@@ -3,8 +3,8 @@ import Quickshell
 import "../../lunana-vendor/" as Inir
 import Quickshell.Wayland
 import qs.Commons
-import qs.Commons as Commons
 import "../../lunana-vendor/modules/iris/bar" as LnIris
+import "../../lunana-vendor/modules/iris/field" as LnField
 
 // lunana.iris — exact iRiS island panel (kind: service, on by default).
 //
@@ -14,6 +14,12 @@ import "../../lunana-vendor/modules/iris/bar" as LnIris
 // the island whenever the ii suite owns bar+dock — which is always here.
 // The island alone is the panel: morphing clock/media/apps/tray pill.
 // Toggle with `omarchy lunana.iris toggle` (Super+Shift+I).
+//
+// The island's glass body is not painted by IrisIsland itself: in inir the
+// shared chassis IrisField paints every piece's published shapes. This host
+// mounts a per-output field behind the island fed by island.fieldShapes, so
+// the pill renders exactly as in inir (no cross-surface fusion with the
+// dock/control satellites, which stay separate pills).
 Item {
     id: root
 
@@ -40,12 +46,29 @@ Item {
                 screen: modelData
                 visible: root.opened
                 color: "transparent"
+                exclusionMode: ExclusionMode.Ignore
+                exclusiveZone: 0
                 WlrLayershell.namespace: "lunana-iris"
                 WlrLayershell.layer: WlrLayer.Top
-                anchors { top: true; left: true; right: true }
-                implicitHeight: 120
+                anchors { top: true; bottom: true; left: true; right: true }
+                // Fullscreen transparent surface: only the island itself
+                // takes input, everything else passes through.
+                mask: Region {
+                    x: islandItem.x
+                    y: islandItem.y
+                    width: islandItem.width
+                    height: islandItem.height
+                }
+
+                LnField.IrisField {
+                    anchors.fill: parent
+                    compositorAllowed: true
+                    providesBackdrop: true
+                    shapes: islandItem.fieldShapes ?? []
+                }
 
                 LnIris.IrisIsland {
+                    id: islandItem
                     anchors.top: parent.top
                     anchors.horizontalCenter: parent.horizontalCenter
                     targetScreen: modelData

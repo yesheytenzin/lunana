@@ -178,6 +178,80 @@ def test_closeconfirm_hyprland():
               f"lunana.closeconfirm: host must keep the {variant} variant")
 
 
+def test_iris_lock_hosts():
+    """Every family lock host must mount the full vendored Lock, not a bare
+    lock surface. The surfaces (ii LockSurface, WaffleLockSurface,
+    IrisLockSurface) all declare a required `context` (PAM LockContext) that
+    only the full Lock provides; mounting one directly fails plugin creation
+    (`service plugin createObject returned null`)."""
+    for pid, surface in (("lunana.iris-lock", "IrisLockSurface"),
+                         ("lunana.waffle-lock", "WaffleLockSurface")):
+        d = plugin_dir(pid)
+        m = json.loads((d / "manifest.json").read_text())
+        texts = [(rel, (d / rel).read_text()) for rel in m.get("entryPoints", {}).values()]
+        for rel, text in texts:
+            check("modules/lock" in text,
+                  f"{pid}: {rel} must mount the full vendored Lock (context owner)")
+            check(f"LnMod.{surface}" not in text and f"LnIris.{surface}" not in text,
+                  f"{pid}: {rel} must not mount bare {surface} (required context unset)")
+
+
+def test_iris_satellite_wiring():
+    """Satellite hosts must wire what the chassis used to provide. The glass
+    bodies behind island/dock/control/stage/edit are painted by the shared
+    chassis IrisField from each piece's published shapes — without a
+    per-output field the content floats bare. Embeddable pieces also need a
+    filled loader (centerIn collapses them to 0x0) and their screen + state."""
+    iris = REPO / "plugins" / "iris"
+    host = lambda pid, rel: (iris / pid / rel).read_text()
+
+    island = host("lunana.iris", "Iris.qml")
+    check("IrisField" in island and "island.fieldShapes" in island,
+          "lunana.iris: island needs its own IrisField fed by island.fieldShapes")
+
+    dock = host("lunana.iris-dock", "IrisDock.qml")
+    check("IrisField" in dock and "bodyShape" in dock,
+          "lunana.iris-dock: dock needs its own IrisField fed by its bodyShape")
+    check("screen: modelData" in dock,
+          "lunana.iris-dock: dock needs the output screen")
+    check("PanelWindow" in dock,
+          "lunana.iris-dock: the embeddable dock needs a host PanelWindow surface")
+
+    control = host("lunana.iris-control", "IrisControl.qml")
+    check("anchors.fill: parent" in control and "anchors.centerIn: parent" not in control,
+          "lunana.iris-control: fullscreen surface must fill, not center")
+    check("screenData: modelData" in control,
+          "lunana.iris-control: control needs the output screenData")
+    check("controlPanelOpen = true" in control,
+          "lunana.iris-control: host must drive controlPanelOpen like the chassis morph")
+    check("fieldShapes" in control,
+          "lunana.iris-control: control card needs its own IrisField")
+
+    stage = host("lunana.iris-stage", "IrisStage.qml")
+    check("modelData: modelData" in stage,
+          "lunana.iris-stage: stage has a required modelData (unset fails the Loader)")
+    check("anchors.centerIn: parent" not in stage,
+          "lunana.iris-stage: fullscreen surface must fill, not center")
+
+    edit = host("lunana.iris-edit", "IrisEdit.qml")
+    check("screenData: modelData" in edit,
+          "lunana.iris-edit: edit bar needs the output screenData")
+    check("irisEdit = true" in edit,
+          "lunana.iris-edit: host must drive GlobalStates.irisEdit like the chassis")
+
+    palette = host("lunana.iris-palette", "IrisPalette.qml")
+    check("screen: modelData" in palette,
+          "lunana.iris-palette: palette needs the output screen (null breaks placement)")
+    check("searchOpen = true" in palette,
+          "lunana.iris-palette: host must drive GlobalStates.searchOpen like the chassis")
+
+    orbit = host("lunana.iris-orbit", "IrisOrbit.qml")
+    check("screen: modelData" in orbit,
+          "lunana.iris-orbit: orbit needs the output screen")
+    check("irisOrbitOpen = true" in orbit,
+          "lunana.iris-orbit: host must drive GlobalStates.irisOrbitOpen (chassis hotcorner)")
+
+
 def _load_family_table():
     import importlib.util as ilu
     cycle = plugin_dir("lunana.family") / "family-cycle"
@@ -281,6 +355,7 @@ def main():
     for fn in (test_manifests, test_suite_matches_plugins, test_packaging_matches_plugins,
                test_vendor_closure, test_host_imports, test_sidebar_left_fallback,
                test_closeconfirm_hyprland,
+               test_iris_lock_hosts, test_iris_satellite_wiring,
                test_family_cycle, test_suite_runs, test_hypr_config_adapters):
         try:
             fn()

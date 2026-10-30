@@ -4,6 +4,7 @@ import "../../lunana-vendor/" as Inir
 import qs.Commons
 import Quickshell.Wayland
 import "../../lunana-vendor/modules/iris/edit" as LnMod
+import "../../lunana-vendor/modules/iris/field" as LnField
 
 // lunana.iris-edit — Lunana iRiS edit-mode host (interim: IrisEditBar gated panel). (kind: overlay).
 //
@@ -18,8 +19,17 @@ Item {
 
   property bool opened: false
 
-  function open(payloadJson) { root.opened = true }
-  function close() { root.opened = false }
+  // Edit mode is chassis state in inir (GlobalStates.irisEdit); drive it
+  // here so the standalone overlay has visible content, and clear it on
+  // close like the chassis does when edit ends.
+  function open(payloadJson) {
+    root.opened = true
+    Inir.GlobalStates.irisEdit = true
+  }
+  function close() {
+    root.opened = false
+    Inir.GlobalStates.irisEdit = false
+  }
   function toggle() { root.opened = !root.opened }
 
   ShellIpc {
@@ -47,11 +57,23 @@ Item {
         MouseArea { anchors.fill: parent; onClicked: root.close() }
         Item { anchors.fill: parent; focus: root.opened; Keys.onEscapePressed: root.close() }
 
+        // The edit bar paints no body itself: in inir the chassis field
+        // paints its published shapes. Dedicated per-output field here,
+        // behind the content.
+        LnField.IrisField {
+          anchors.fill: parent
+          compositorAllowed: true
+          providesBackdrop: true
+          shapes: editLoader.item?.fieldShapes ?? []
+        }
+
         Loader {
-          anchors.centerIn: parent
+          id: editLoader
+          anchors.fill: parent
           active: root.opened
           sourceComponent: Component {
             LnMod.IrisEditBar {
+              screenData: modelData
             }
           }
         }

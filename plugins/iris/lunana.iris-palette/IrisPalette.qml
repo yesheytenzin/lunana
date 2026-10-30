@@ -18,8 +18,17 @@ Item {
 
   property bool opened: false
 
-  function open(payloadJson) { root.opened = true }
-  function close() { root.opened = false }
+  // Spotlight is chassis state in inir (GlobalStates.searchOpen); drive it
+  // here so the standalone overlay has visible content, and clear it on
+  // close like the chassis does when the palette dismisses.
+  function open(payloadJson) {
+    root.opened = true
+    Inir.GlobalStates.searchOpen = true
+  }
+  function close() {
+    root.opened = false
+    Inir.GlobalStates.searchOpen = false
+  }
   function toggle() { root.opened = !root.opened }
 
   ShellIpc {
@@ -48,10 +57,11 @@ Item {
         Item { anchors.fill: parent; focus: root.opened; Keys.onEscapePressed: root.close() }
 
         Loader {
-          anchors.centerIn: parent
+          anchors.fill: parent
           active: root.opened
           sourceComponent: Component {
             LnMod.IrisPalette {
+              screen: modelData
             }
           }
         }

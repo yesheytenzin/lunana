@@ -4,6 +4,7 @@ import "../../lunana-vendor/" as Inir
 import qs.Commons
 import Quickshell.Wayland
 import "../../lunana-vendor/modules/iris/control" as LnMod
+import "../../lunana-vendor/modules/iris/field" as LnField
 
 // lunana.iris-control — Lunana IrisControlCenter grid host. (kind: overlay).
 //
@@ -61,8 +62,19 @@ Item {
         MouseArea { anchors.fill: parent; onClicked: root.close() }
         Item { anchors.fill: parent; focus: root.opened; Keys.onEscapePressed: root.close() }
 
+        // The control card paints no body itself: in inir the chassis field
+        // paints its published shapes. Dedicated per-output field here,
+        // behind the content (declared first paints first).
+        LnField.IrisField {
+          anchors.fill: parent
+          compositorAllowed: true
+          providesBackdrop: true
+          shapes: controlLoader.item?.fieldShapes ?? []
+        }
+
         Loader {
-          anchors.centerIn: parent
+          id: controlLoader
+          anchors.fill: parent
           active: root.opened
           sourceComponent: Component {
             LnMod.IrisControlCenter {
