@@ -153,6 +153,31 @@ def test_sidebar_left_fallback():
           "lunana.sidebar-left: SidebarContent.qml must instantiate the vendored sidebar")
 
 
+def test_closeconfirm_hyprland():
+    """The ii close-confirm host must be Hyprland-native. The vendored
+    CloseConfirm trigger/close path uses `niri msg`, so a host that mounts it
+    directly can never open on Hyprland (and `confirmItem.trigger` does not
+    even exist on the Scope root). The host must snapshot
+    Hyprland.activeToplevel, gate on closeConfirm.enabled, and close via the
+    Hyprland closewindow path."""
+    host = plugin_dir("lunana.closeconfirm") / "CloseConfirm.qml"
+    text = host.read_text()
+    check("LnMod.CloseConfirm {" not in text and "LnMod.CloseConfirm{" not in text,
+          "lunana.closeconfirm: host must not mount the niri-only vendored CloseConfirm")
+    check("Hyprland.activeToplevel" in text,
+          "lunana.closeconfirm: host must snapshot Hyprland.activeToplevel")
+    check("hl.dsp.window.close" in text,
+          "lunana.closeconfirm: host must close via Omarchy's Lua dispatcher dialect "
+          "(upstream `closewindow address:` is a Lua syntax error on this compositor)")
+    check("closeConfirm?.enabled" in text or "closeConfirm.enabled" in text,
+          "lunana.closeconfirm: host must honor Config.options.closeConfirm.enabled")
+    check("WlrKeyboardFocus.Exclusive" in text,
+          "lunana.closeconfirm: dialog must keep exclusive keyboard focus")
+    for variant in ("CloseConfirmContent", "WCloseConfirmContent", "IrisCloseConfirmContent"):
+        check(variant in text,
+              f"lunana.closeconfirm: host must keep the {variant} variant")
+
+
 def _load_family_table():
     import importlib.util as ilu
     cycle = plugin_dir("lunana.family") / "family-cycle"
@@ -255,6 +280,7 @@ def test_hypr_config_adapters():
 def main():
     for fn in (test_manifests, test_suite_matches_plugins, test_packaging_matches_plugins,
                test_vendor_closure, test_host_imports, test_sidebar_left_fallback,
+               test_closeconfirm_hyprland,
                test_family_cycle, test_suite_runs, test_hypr_config_adapters):
         try:
             fn()

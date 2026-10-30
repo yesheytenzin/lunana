@@ -30,9 +30,6 @@ environment-dependent or documented reduced fidelity.
   instantiate with zero errors in the nest.
 
 ## Reduced fidelity (documented, not defects)
-- `lunana.closeconfirm` has no Hyprland close-intercept analog; the vendored
-  trigger falls back to `niri msg`, so the overlay cannot open in the nest
-  without a toplevel/niri fallback. Kept as reduced fidelity.
 - iRiS single-surface chassis fusion is not reproduced by the satellite model
   (Option A); lock *open* stays untested by design (it would lock the test
   session). The known lock-surface, missing `version.json`, and duplicate
@@ -42,9 +39,10 @@ environment-dependent or documented reduced fidelity.
 - Harness: distinct nested shell without `-n`, runtime `log.qslog` discovery,
   `up --monitors 2`, Lua fixture, clean `down`, and host PipeWire sockets
   linked into the nested runtime.
-- ii overlays: 10/11 open/close (sidebar-left opens with the diagnostic
-  fallback; closeconfirm remains reduced fidelity); waffle: 3/3; iris: 9/9
-  (including visible `lunana.iris-control` content).
+- ii overlays: 11/11 open/close (sidebar-left opens with the diagnostic
+  fallback when `org.kde.syntaxhighlighting` is absent; closeconfirm is a
+  Hyprland-native host around the vendored dialog content); waffle: 3/3;
+  iris: 9/9 (including visible `lunana.iris-control` content).
 - Family cycle `ii ↔ waffle ↔ iris ↔ stock` live without a shell restart;
   dual-monitor layers (background/bar/dock/notifications) on both outputs.
 - Integrations: Network connected, Bluetooth adapter present (`Powered: no`),

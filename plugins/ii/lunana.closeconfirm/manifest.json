@@ -5,7 +5,7 @@
   "version": "0.4.0",
   "author": "lunana",
   "license": "GPL-3.0",
-  "description": "Lunana exact close-confirm host (IpcHandler trigger/close; Hyprland trigger lookup pending).",
+  "description": "Lunana close-confirm host (Hyprland-native trigger/close; vendored dialog content).",
   "kinds": [
     "overlay"
   ],

@@ -53,7 +53,10 @@ against a fixture `$HOME` — never the live session.
 - [x] `lunana.mascot` (service)
 - [x] `lunana.altswitcher` (overlay; MRU order via Wave 1 tracker)
 - [x] `lunana.tiling` (service) — tiling overlay
-- [x] `lunana.closeconfirm` (overlay; vendored trigger falls back to `niri msg` — no Hyprland analog yet)
+- [x] `lunana.closeconfirm` (overlay; Hyprland-native host around the vendored
+  ii/waffle/iris dialog content — the vendored trigger/close path is
+  niri-only, so the host snapshots the focused toplevel itself and closes
+  via Omarchy's Lua dispatcher dialect)
 - [x] `lunana.settings` (overlay; Loader-gated ApplicationWindow)
 
 ## Wave 3 — iRiS family parity
@@ -124,8 +127,9 @@ against a fixture `$HOME` — never the live session.
   as one glass body, cross-surface morph) is not reproduced by the satellite-plugin model
   (Option A). Each iRiS surface is its own layer; `.qsb` blur shaders also fall back on this Qt.
 - iRiS has no close-confirm / mascot / alt-switcher / tiling-overlay satellite: `IrisCloseConfirmContent`
-  needs the chassis's close-intercept + `targetWindow` (same reduced status as the ii closeconfirm,
-  which has no Hyprland analog); mascot/altswitcher/tiling have no iRiS module (iRiS folds window
+  needs the chassis's close-intercept + `targetWindow`. The ii host now
+  supplies that interception on Hyprland natively (snapshot + Lua-dialect
+  close); mascot/altswitcher/tiling have no iRiS module (iRiS folds window
   switching into orbit/pieces). Recorded, not hosted.
 - `org.kde.syntaxhighlighting` (KF6 `syntax-highlighting`) is a hard dependency of the vendored
   AiChat. The ii `sidebar-left` host now isolates that content in a separate compilation unit and
@@ -370,12 +374,23 @@ re-run on Hyprland 0.57.0. Results below are the 0.57.0 run unless noted.
 ### Verification matrix (nested Hyprland 0.57.0, dual output)
 - ii overlays open/close: overview, cheatsheet, control-center, sidebar-left
   (diagnostic fallback without `org.kde.syntaxhighlighting`), sidebar-right,
-  wallpaper, region, session, settings, altswitcher.
+  wallpaper, region, session, settings, altswitcher, closeconfirm.
 - ii `sidebar-left` shows its diagnostic panel instead of the vendored content
   because `org.kde.syntaxhighlighting` (KF6 `syntax-highlighting`) is not
   installed; with a temporary stub module the real panel renders on both
-  outputs. `closeconfirm` cannot open without a toplevel/niri fallback; it
-  remains reduced fidelity, not a host crash.
+  outputs.
+- ii `closeconfirm` is a Hyprland-native host around the vendored dialog
+  content: it snapshots the focused toplevel at trigger time
+  (`Hyprland.activeToplevel`, activated-scan, then a direct `hyprctl
+  activewindow` query as fallback for stale IPC caches), shows the
+  ii/waffle/iris variant by `panelFamily`, and closes via Omarchy's Lua
+  dispatcher dialect (`hl.dsp.window.close`, since the socket's `dispatch`
+  is `hl.dispatch(...)` shorthand and the upstream `closewindow address:…`
+  form is a Lua syntax error there). Verified in the nest with a focused
+  foot terminal: dialog shows title + app id, confirm kills the window,
+  cancel/Escape dismisses with the window surviving,
+  `closeConfirm.enabled=false` closes immediately with no dialog, and no
+  focused window warns without opening.
 - waffle: `wBackground` + waffle bar; `wStartMenu`, `wActionCenter`,
   `wNotificationCenter` open/close.
 - iris: `lunana-iris` + `quickshell:iris-background`; control, edit, palette,
@@ -393,6 +408,8 @@ re-run on Hyprland 0.57.0. Results below are the 0.57.0 run unless noted.
 Evidence: `/tmp/lunana-nested/shots/dual-monitor-ii.png`,
 `overlay-iris-control.png`, `family-lunana.waffle-start.png`,
 `sidebar-left-fallback-dual.png` (missing module → diagnostic on both
-outputs), and `sidebar-left-stub.png` (temporary stub module → full panel);
+outputs), `sidebar-left-stub.png` (temporary stub module → full panel),
+and `closeconfirm-dialog.png` (Hyprland-native close-confirm dialog over a
+focused foot terminal, showing its title + app id with Cancel/Close);
 the overlay matrices were recorded in `/tmp/lunana-nested/overlay-matrix.txt`
 and re-run after the host update.
