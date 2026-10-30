@@ -132,6 +132,27 @@ def test_host_imports():
                       f"{d.name}: {rel} uses ShellIpc without importing qs.Commons")
 
 
+def test_sidebar_left_fallback():
+    """The ii left sidebar must keep the vendored content in a separate
+    compilation unit. AiChat imports org.kde.syntaxhighlighting; if the host
+    referenced SidebarLeftContent directly, a host without that optional QML
+    module would fail to load and the overlay would never open."""
+    host = plugin_dir("lunana.sidebar-left") / "SidebarLeft.qml"
+    content = plugin_dir("lunana.sidebar-left") / "SidebarContent.qml"
+    host_text = host.read_text()
+    check(content.is_file(), "lunana.sidebar-left: SidebarContent.qml is missing")
+    if not content.is_file():
+        return
+    check("LSLeft.SidebarLeftContent" not in host_text,
+          "lunana.sidebar-left: host must not compile the vendored sidebar directly")
+    check('source: "SidebarContent.qml"' in host_text,
+          "lunana.sidebar-left: host must load SidebarContent.qml through a Loader")
+    check("Loader.Error" in host_text,
+          "lunana.sidebar-left: host must show a diagnostic on Loader.Error")
+    check("LSLeft.SidebarLeftContent" in content.read_text(),
+          "lunana.sidebar-left: SidebarContent.qml must instantiate the vendored sidebar")
+
+
 def _load_family_table():
     import importlib.util as ilu
     cycle = plugin_dir("lunana.family") / "family-cycle"
@@ -233,8 +254,8 @@ def test_hypr_config_adapters():
 
 def main():
     for fn in (test_manifests, test_suite_matches_plugins, test_packaging_matches_plugins,
-               test_vendor_closure, test_host_imports, test_family_cycle, test_suite_runs,
-               test_hypr_config_adapters):
+               test_vendor_closure, test_host_imports, test_sidebar_left_fallback,
+               test_family_cycle, test_suite_runs, test_hypr_config_adapters):
         try:
             fn()
         except Exception as exc:  # noqa: BLE001

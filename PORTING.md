@@ -128,8 +128,10 @@ against a fixture `$HOME` — never the live session.
   which has no Hyprland analog); mascot/altswitcher/tiling have no iRiS module (iRiS folds window
   switching into orbit/pieces). Recorded, not hosted.
 - `org.kde.syntaxhighlighting` (KF6 `syntax-highlighting`) is a hard dependency of the vendored
-  AiChat, so ii `sidebar-left` content cannot be exercised until the operator installs that system
-  QML module. The host itself summons and closes.
+  AiChat. The ii `sidebar-left` host now isolates that content in a separate compilation unit and
+  opens a diagnostic fallback when the module is absent, so the overlay still summons and closes
+  on every output. Full sidebar content (AI chat and the other tabs) needs the system QML module;
+  the success path was verified with a temporary stub module.
 - `wf-recorder` is absent on the verification host; region screenshot/OCR works (grim/slurp/
   tesseract), but region recording is untested.
 - `matugen` is absent; Material You opt-in degrades cleanly by design (default Omarchy tokens needs
@@ -137,8 +139,8 @@ against a fixture `$HOME` — never the live session.
 - Bulk wallpaper thumbnails prefer inir's venv (`$HOME/.local/state/quickshell/.venv`); without it
   the vendored ImageMagick fallback runs. Both scripts are vendored; the venv is an optional
   operator install.
-- Live AI/YtMusic/Wallhaven/Anime network exercise needs API keys and/or `sidebar-left` (blocked
-  above); the services instantiate clean.
+- Live AI/YtMusic/Wallhaven/Anime network exercise needs API keys and the full `sidebar-left`
+  content (blocked above); the services instantiate clean.
 - Hosting blocked: none. The items above are environment-dependent verification
   gaps or documented reduced fidelity, not missing plugin hosts. If a surface
   cannot be hosted as an Omarchy plugin, record it here and ask the operator.
@@ -344,6 +346,14 @@ re-run on Hyprland 0.57.0. Results below are the 0.57.0 run unless noted.
       `irisMorphOwner` state and passes `screenData` to the vendored
       `IrisControlCenter`. Previously the layer toggled but the morph surface
       rendered empty; the quick panel now has visible content.
+- [x] `lunana.sidebar-left` degrades gracefully when the vendored AiChat cannot
+      compile. The host no longer references `LSLeft.SidebarLeftContent` in its
+      own compilation unit; a `Loader` loads `SidebarContent.qml` and shows a
+      themed diagnostic panel on `Loader.Error`. The layer now opens and closes
+      on both outputs without `org.kde.syntaxhighlighting`, and the diagnostic
+      logs once per plugin instance. A static regression test
+      (`test_sidebar_left_fallback`) pins the isolation. The success path (full
+      panel, no fallback) was verified with a temporary stub QML module.
 
 ### Vendoring
 - [x] `vendor/` regenerated via `scripts/vendor.py` for `go.mod`,
@@ -358,12 +368,14 @@ re-run on Hyprland 0.57.0. Results below are the 0.57.0 run unless noted.
       `packaging/package-metadata.json` (now 44 managed plugins).
 
 ### Verification matrix (nested Hyprland 0.57.0, dual output)
-- ii overlays open/close: overview, cheatsheet, control-center, sidebar-right,
+- ii overlays open/close: overview, cheatsheet, control-center, sidebar-left
+  (diagnostic fallback without `org.kde.syntaxhighlighting`), sidebar-right,
   wallpaper, region, session, settings, altswitcher.
-- ii `sidebar-left` cannot render its AiChat content because
-  `org.kde.syntaxhighlighting` (KF6 `syntax-highlighting`) is not installed;
-  `closeconfirm` cannot open without a toplevel/niri fallback. Both are reduced
-  fidelity, not host crashes.
+- ii `sidebar-left` shows its diagnostic panel instead of the vendored content
+  because `org.kde.syntaxhighlighting` (KF6 `syntax-highlighting`) is not
+  installed; with a temporary stub module the real panel renders on both
+  outputs. `closeconfirm` cannot open without a toplevel/niri fallback; it
+  remains reduced fidelity, not a host crash.
 - waffle: `wBackground` + waffle bar; `wStartMenu`, `wActionCenter`,
   `wNotificationCenter` open/close.
 - iris: `lunana-iris` + `quickshell:iris-background`; control, edit, palette,
@@ -379,6 +391,8 @@ re-run on Hyprland 0.57.0. Results below are the 0.57.0 run unless noted.
   known reduced-fidelity noise).
 
 Evidence: `/tmp/lunana-nested/shots/dual-monitor-ii.png`,
-`overlay-iris-control.png`, `family-lunana.waffle-start.png`; the overlay
-matrices were recorded in `/tmp/lunana-nested/overlay-matrix.txt` and re-run
-after the host update.
+`overlay-iris-control.png`, `family-lunana.waffle-start.png`,
+`sidebar-left-fallback-dual.png` (missing module → diagnostic on both
+outputs), and `sidebar-left-stub.png` (temporary stub module → full panel);
+the overlay matrices were recorded in `/tmp/lunana-nested/overlay-matrix.txt`
+and re-run after the host update.

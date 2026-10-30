@@ -5,10 +5,18 @@ matrix, live family switching, and dual-monitor behavior are proven on Hyprland
 0.57.0 (first pass on 0.56.2, re-run after the host update). What remains is
 environment-dependent or documented reduced fidelity.
 
+## Graceful fallback (host works without the dependency)
+- `lunana.sidebar-left` now opens, closes, and shows a diagnostic panel when
+  the vendored sidebar cannot compile because `org.kde.syntaxhighlighting`
+  is missing. The overlay layer appears on every output; the fallback names
+  the missing module and stays click-to-close. Install `syntax-highlighting`
+  to get the full panel. The success path (real content, no fallback) was
+  verified with a temporary stub QML module.
+
 ## Blocked by missing system packages / tools
 - `org.kde.syntaxhighlighting` (KF6 `syntax-highlighting`): required by the
-  vendored AiChat, so `lunana.sidebar-left` content cannot be exercised. The
-  host opens and closes; install the package to verify content.
+  vendored AiChat, so the full `lunana.sidebar-left` content cannot be
+  exercised until it is installed. The host degrades gracefully as above.
 - `wf-recorder`: absent; the region-recording path is untested. Region
   screenshot/OCR (grim/slurp/tesseract) works.
 - `matugen`: absent; Material You opt-in degrades cleanly. It is an optional
@@ -18,8 +26,8 @@ environment-dependent or documented reduced fidelity.
 
 ## Needs credentials / live services
 - AI, YtMusic, Wallhaven, and AnimeService network exercise needs API keys
-  and/or `sidebar-left` (blocked above). All services instantiate with zero
-  errors in the nest.
+  and the full `sidebar-left` content (blocked above). All services
+  instantiate with zero errors in the nest.
 
 ## Reduced fidelity (documented, not defects)
 - `lunana.closeconfirm` has no Hyprland close-intercept analog; the vendored
@@ -34,8 +42,9 @@ environment-dependent or documented reduced fidelity.
 - Harness: distinct nested shell without `-n`, runtime `log.qslog` discovery,
   `up --monitors 2`, Lua fixture, clean `down`, and host PipeWire sockets
   linked into the nested runtime.
-- ii overlays: 9/11 open/close (sidebar-left and closeconfirm above); waffle:
-  3/3; iris: 9/9 (including visible `lunana.iris-control` content).
+- ii overlays: 10/11 open/close (sidebar-left opens with the diagnostic
+  fallback; closeconfirm remains reduced fidelity); waffle: 3/3; iris: 9/9
+  (including visible `lunana.iris-control` content).
 - Family cycle `ii ↔ waffle ↔ iris ↔ stock` live without a shell restart;
   dual-monitor layers (background/bar/dock/notifications) on both outputs.
 - Integrations: Network connected, Bluetooth adapter present (`Powered: no`),
