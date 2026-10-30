@@ -10,6 +10,7 @@ runs read-only. Pure stdlib; run with:
 import json
 import os
 import re
+import runpy
 import subprocess
 import sys
 import tempfile
@@ -20,6 +21,7 @@ PLUGINS = REPO / "plugins"
 ID_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]*$")
 KIND_ENTRY = {"bar": "bar", "overlay": "overlay", "menu": "menu", "panel": "panel"}
 VENDOR_IMPORT_RE = re.compile(r'import\s+"(\.\./\.\./lunana-vendor/[^"]+)"')
+RELATIVE_IMPORT_RE = re.compile(r'import\s+"([^"]+)"')
 
 failures = []
 
@@ -74,6 +76,22 @@ def test_suite_matches_plugins():
         check(owned, f"neither suite nor family-cycle owns {d.name}")
 
 
+def test_packaging_matches_plugins():
+    """Every suite-installed plugin must be in the package metadata (the
+    session-6 iris-wallpaper addition was missed there)."""
+    meta = json.loads((REPO / "packaging" / "package-metadata.json").read_text())
+    packaged = set(meta.get("plugins", []))
+    expected = set()
+    for d in plugin_dirs():
+        m = json.loads((d / "manifest.json").read_text())
+        if m.get("x-lunana", {}).get("role") == "ui-probe":
+            continue
+        expected.add(d.name)
+    check(packaged == expected,
+          "packaging plugin set mismatch: "
+          f"missing={sorted(expected - packaged)} extra={sorted(packaged - expected)}")
+
+
 def test_vendor_closure():
     """Every `import "../../lunana-vendor/..."` in a plugin entry resolves in
     repo vendor/ (installed once as <config>/omarchy/lunana-vendor/)."""
@@ -82,6 +100,10 @@ def test_vendor_closure():
         m = json.loads((d / "manifest.json").read_text())
         for rel in m.get("entryPoints", {}).values():
             text = (d / rel).read_text()
+            for target in RELATIVE_IMPORT_RE.findall(text):
+                if "vendor/" in target:
+                    check(target.startswith("../../lunana-vendor/"),
+                          f"{d.name}: {rel} uses stale vendor import {target}")
             for target in VENDOR_IMPORT_RE.findall(text):
                 if target == "../../lunana-vendor/":
                     # Root import: needs the root qmldir + at least GlobalStates.
@@ -149,7 +171,10 @@ def test_family_cycle():
                 r = run("cycle")
                 check(r.returncode == 0, f"family-cycle cycle failed: {r.stderr.strip()}")
                 shell = json.loads(shell_path.read_text())
-                seen.append(mod.current_family(shell)[0])
+                fam = mod.current_family(shell)[0]
+                seen.append(fam)
+                check(shell.get("lunana", {}).get("family") == fam,
+                      f"shell.json lunana.family does not record {fam}: {shell.get('lunana')!r}")
         finally:
             if old is None:
                 del os.environ["XDG_CONFIG_HOME"]
@@ -177,9 +202,39 @@ def test_suite_runs():
     check(r.returncode == 0, f"lunana-suite install --dry-run exited {r.returncode}: {r.stderr.strip()}")
 
 
+def test_hypr_config_adapters():
+    suite = runpy.run_path(str(REPO / "scripts" / "lunana-suite"))
+    suite["_reload_hypr"] = lambda: None
+    old = os.environ.get("XDG_CONFIG_HOME")
+    try:
+        for kind in ("lua", "conf"):
+            with tempfile.TemporaryDirectory() as tmp:
+                cfg = Path(tmp) / "hypr"
+                cfg.mkdir()
+                entry = cfg / f"hyprland.{kind}"
+                entry.write_text("-- sentinel\n" if kind == "lua" else "# sentinel\n")
+                os.environ["XDG_CONFIG_HOME"] = tmp
+                suite["install_hypr_conf"](False)
+                suite["install_hypr_conf"](False)
+                text = entry.read_text()
+                token = "-- >>> lunana >>>" if kind == "lua" else "source = "
+                check(text.count(token) == 1, f"{kind}: Lunana include is not idempotent")
+                installed = cfg / f"lunana.{kind}"
+                check(installed.is_file(), f"{kind}: fragment was not installed")
+                suite["remove_hypr_conf"](False)
+                check(not installed.exists(), f"{kind}: fragment survived uninstall")
+                check("lunana" not in entry.read_text(), f"{kind}: include survived uninstall")
+    finally:
+        if old is None:
+            os.environ.pop("XDG_CONFIG_HOME", None)
+        else:
+            os.environ["XDG_CONFIG_HOME"] = old
+
+
 def main():
-    for fn in (test_manifests, test_suite_matches_plugins, test_vendor_closure,
-               test_host_imports, test_family_cycle, test_suite_runs):
+    for fn in (test_manifests, test_suite_matches_plugins, test_packaging_matches_plugins,
+               test_vendor_closure, test_host_imports, test_family_cycle, test_suite_runs,
+               test_hypr_config_adapters):
         try:
             fn()
         except Exception as exc:  # noqa: BLE001

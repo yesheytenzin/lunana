@@ -8,7 +8,15 @@ import "../../lunana-vendor/modules/waffle/background" as LnMod
 // Resident host for inir's exact WaffleBackground (modules/waffle/background); it shows itself on the
 // vendored tree's own state. No toggle: summoned only through the family
 // switcher or not at all (see PORTING.md).
-LnMod.WaffleBackground {
+//
+// Scope wrapper: WaffleBackground's root is a bare Variants, whose default
+// property is its delegate. A child declared here would replace the vendored
+// PanelWindow delegate, so the handshake Timer lives beside the Variants in
+// this Scope rather than inside it (same shape as the ii Background host).
+Scope {
+    id: root
+
+    LnMod.WaffleBackground {}
 
     // Shell-entry handshake in this plugin's singleton universe (each
     // installed plugin carries its own vendor/ copy, hence its own

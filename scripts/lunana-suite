@@ -27,6 +27,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -114,6 +115,9 @@ KEYBIND_MARK_START = "-- >>> lunana >>>"
 KEYBIND_MARK_END = "-- <<< lunana <<<"
 
 HYPR_CONF_FRAGMENT = REPO_ROOT / "scripts" / "hypr" / "lunana.conf"
+HYPR_LUA_FRAGMENT = REPO_ROOT / "scripts" / "hypr" / "lunana.lua"
+HYPR_LUA_MARK_START = "-- >>> lunana >>>"
+HYPR_LUA_MARK_END = "-- <<< lunana <<<"
 
 
 def hypr_source_line() -> str:
@@ -397,50 +401,104 @@ def hypr_conf_file() -> Path:
     return config_home() / "hypr" / "hyprland.conf"
 
 
+def hypr_lua_file() -> Path:
+    return config_home() / "hypr" / "hyprland.lua"
+
+
 def hypr_lunana_conf() -> Path:
     return config_home() / "hypr" / "lunana.conf"
 
 
-def install_hypr_conf(dry: bool) -> None:
-    """Install the iNiR-owned layerrule conf and source it from hyprland.conf.
+def hypr_lunana_lua() -> Path:
+    return config_home() / "hypr" / "lunana.lua"
 
-    Backed up and idempotent (an existing source line is not duplicated);
-    removed by uninstall. Coexists with Omarchy's config — this file only
-    adds blur/shadow layerrules for lunana-* namespaces.
-    """
-    if not HYPR_CONF_FRAGMENT.is_file():
+
+def hypr_config_adapter() -> dict | None:
+    if hypr_lua_file().is_file():
+        include = f"dofile({json.dumps(str(hypr_lunana_lua()))})"
+        return {
+            "kind": "lua",
+            "entry": hypr_lua_file(),
+            "source": HYPR_LUA_FRAGMENT,
+            "installed": hypr_lunana_lua(),
+            "include": include,
+        }
+    if hypr_conf_file().is_file():
+        return {
+            "kind": "conf",
+            "entry": hypr_conf_file(),
+            "source": HYPR_CONF_FRAGMENT,
+            "installed": hypr_lunana_conf(),
+            "include": hypr_source_line(),
+        }
+    return None
+
+
+def hypr_surface_plan() -> str:
+    adapter = hypr_config_adapter()
+    if adapter is None:
+        return "no hyprland.lua or hyprland.conf found; surface styling will be skipped"
+    return (f"install {adapter['source'].name} -> {adapter['installed']} "
+            f"({adapter['kind']} include, backed up)")
+
+
+def _strip_lunana_lua_block(text: str) -> str:
+    pattern = re.compile(
+        re.escape(HYPR_LUA_MARK_START) + r".*?" + re.escape(HYPR_LUA_MARK_END) + r"\n?",
+        re.DOTALL,
+    )
+    return pattern.sub("", text)
+
+
+def install_hypr_conf(dry: bool) -> None:
+    adapter = hypr_config_adapter()
+    if adapter is None:
+        info("no hyprland.lua or hyprland.conf found; skipping surface styling")
+        return
+    if not adapter["source"].is_file():
         info("hypr fragment missing; skipping surface styling")
         return
     if dry:
-        info(f"would install lunana.conf -> {hypr_lunana_conf()} (sourced)")
+        info(f"would install {adapter['source'].name} -> {adapter['installed']} (loaded)")
         return
-    if not hypr_conf_file().exists():
-        info(f"{hypr_conf_file()} not found; skipping surface styling")
-        return
-    shutil.copy2(HYPR_CONF_FRAGMENT, hypr_lunana_conf())
-    current = hypr_conf_file().read_text(encoding="utf-8")
+    shutil.copy2(adapter["source"], adapter["installed"])
+    current = adapter["entry"].read_text(encoding="utf-8")
     legacy = "source = ~/.config/hypr/lunana.conf"
-    if legacy in current:
-        current = "\n".join(l for l in current.splitlines()
-                            if l.strip() != legacy).rstrip() + "\n"
-    if hypr_source_line() not in current:
-        backup = hypr_conf_file().with_name(f"hyprland.conf.lunana-backup-{int(time.time())}")
-        shutil.copy2(hypr_conf_file(), backup)
-        hypr_conf_file().write_text(current.rstrip() + "\n\n" + hypr_source_line() + "\n",
-                                    encoding="utf-8")
-        info("sourced lunana.conf from hyprland.conf")
+    if adapter["kind"] == "lua":
+        current = _strip_lunana_lua_block(current).rstrip()
+        block = f"{HYPR_LUA_MARK_START}\n{adapter['include']}\n{HYPR_LUA_MARK_END}"
+        updated = current + "\n\n" + block + "\n"
     else:
-        info("lunana.conf already sourced")
+        current = "\n".join(l for l in current.splitlines()
+                            if l.strip() not in (legacy, adapter["include"])).rstrip()
+        updated = current + "\n\n" + adapter["include"] + "\n"
+    backup = adapter["entry"].with_name(
+        f"{adapter['entry'].name}.lunana-backup-{int(time.time())}"
+    )
+    shutil.copy2(adapter["entry"], backup)
+    adapter["entry"].write_text(updated, encoding="utf-8")
+    info(f"loaded {adapter['installed'].name} from {adapter['entry'].name}")
     _reload_hypr()
 
 
 def remove_hypr_conf(dry: bool) -> None:
     if dry:
-        info(f"would remove {hypr_lunana_conf()} and its source line")
+        info("would remove Lunana Hyprland fragments and their load directives")
         return
-    if hypr_lunana_conf().exists():
-        hypr_lunana_conf().unlink()
-        info("removed lunana.conf")
+    for fragment in (hypr_lunana_conf(), hypr_lunana_lua()):
+        if fragment.exists():
+            fragment.unlink()
+            info(f"removed {fragment.name}")
+    if hypr_lua_file().exists():
+        current = hypr_lua_file().read_text(encoding="utf-8")
+        updated = _strip_lunana_lua_block(current).rstrip() + "\n"
+        if updated != current:
+            backup = hypr_lua_file().with_name(
+                f"hyprland.lua.lunana-backup-{int(time.time())}"
+            )
+            shutil.copy2(hypr_lua_file(), backup)
+            hypr_lua_file().write_text(updated, encoding="utf-8")
+            info("removed lunana.lua load block")
     if hypr_conf_file().exists():
         current = hypr_conf_file().read_text(encoding="utf-8")
         legacy = "source = ~/.config/hypr/lunana.conf"
@@ -523,10 +581,11 @@ def cmd_install(args: argparse.Namespace) -> int:
         f"copy {len(MANAGED_PLUGINS)} plugin(s) -> {plugin_dir()}/ + shared {SHARED_VENDOR_DIRNAME}/",
         f"back up {shell_path.name} (if present)",
         f'set shell.json bar.id = "{BAR_PLUGIN_ID}" (was "{previous_bar_id or "<stock>"}")',
+        "record shell.json lunana.family = default (ii) for lunana.state",
         "stand down stock omarchy.dock + omarchy.background (restored on uninstall)",
         "enable the default (ii) family plugin set (family-exclusive plugins join via family-cycle)",
         f"merge lunana keybinds into {hypr_bindings_file()} (backed up)",
-        f"install lunana.conf layerrules -> {hypr_lunana_conf()} (sourced, backed up)",
+        hypr_surface_plan(),
     ]
     info("planned actions:")
     for step in plan:
@@ -552,6 +611,16 @@ def cmd_install(args: argparse.Namespace) -> int:
     # 3. select the lunana bar
     shell.setdefault("bar", {})
     shell["bar"]["id"] = BAR_PLUGIN_ID
+    # 3a. record the default family: lunana.state mirrors lunana.family into
+    # the vendored Config's panelFamily. A reinstall over a waffle/iris session
+    # would otherwise leave the vendored panels gated to a family whose
+    # plugins were just stood down below.
+    families, _shared = _load_family_table()
+    default_family = families[0][0] if families else "ii"
+    lunana = shell.setdefault("lunana", {})
+    if not isinstance(lunana, dict):
+        fail("shell.json 'lunana' is not an object; fix it before running")
+    lunana["family"] = default_family
     # 3b. stand down the stock dock + background while lunana's exact dock and
     # background own those layers. Every lunana family ships its own background
     # (ii/iris/waffle), so the stock one would otherwise render a second
@@ -644,7 +713,7 @@ def cmd_uninstall(args: argparse.Namespace) -> int:
         f'restore shell.json bar.id -> "{previous_bar_id or "<stock omarchy.bar>"}"',
         f"remove {len(MANAGED_PLUGINS)} managed plugin(s) from {plugin_dir()}/ + shared {SHARED_VENDOR_DIRNAME}/",
         "remove lunana keybinds from bindings.lua",
-        "remove lunana.conf layerrules + its source line",
+        "remove Lunana Hyprland fragments + their load directives",
         "restore omarchy.dock + omarchy.background if this suite stood them down",
     ]
     info("planned actions:")

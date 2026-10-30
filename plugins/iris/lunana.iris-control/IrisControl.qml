@@ -18,9 +18,23 @@ Item {
 
   property bool opened: false
 
-  function open(payloadJson) { root.opened = true }
-  function close() { root.opened = false }
-  function toggle() { root.opened = !root.opened }
+  // IrisControlCenter is the bar's morph surface: it renders only when the
+  // shared control-panel state is open and the screen is the focused one.
+  // Drive that state here so the standalone overlay has visible content, and
+  // pass the delegate's screen through (the component needs screenData.name).
+  function open(payloadJson) {
+    root.opened = true
+    Inir.GlobalStates.controlPanelOpen = true
+    Inir.GlobalStates.irisMorphOwner = "stage"
+    Inir.GlobalStates.irisMorphOrigin = null
+  }
+  function close() {
+    root.opened = false
+    Inir.GlobalStates.controlPanelOpen = false
+    if (Inir.GlobalStates.irisMorphOwner === "stage")
+      Inir.GlobalStates.irisMorphOwner = ""
+  }
+  function toggle() { root.opened ? root.close() : root.open("") }
 
   ShellIpc {
     target: "lunana.iris-control"
@@ -52,6 +66,7 @@ Item {
           active: root.opened
           sourceComponent: Component {
             LnMod.IrisControlCenter {
+              screenData: modelData
             }
           }
         }

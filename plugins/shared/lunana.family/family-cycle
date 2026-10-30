@@ -2,9 +2,11 @@
 """family-cycle — switch the live bar-family set for the Lunana suite.
 
 One step of the ii -> waffle -> iris family UX: select the family's bar host
-(shell.json -> bar.id; absent id means the stock omarchy.bar) and ensure
-exactly that family's owned set is enabled. The state service
-(lunana.state) is deliberately untouched — it is shared. Every family owns
+(shell.json -> bar.id; absent id means the stock omarchy.bar), ensure exactly
+that family's owned set is enabled, and record the choice in
+shell.json -> lunana.family. lunana.state mirrors that into the vendored
+Config's panelFamily, which is what the vendored panels gate on. The state
+service itself is deliberately untouched — it is shared. Every family owns
 its own dock/lock/background/osd, so exactly one of each is active.
 
 Usage:  family-cycle cycle   # advance to the next installed family, print it
@@ -153,6 +155,13 @@ def apply_family(shell: dict, fam: tuple) -> None:
         bar["id"] = bar_id
     else:
         bar.pop("id", None)
+    # lunana.state reads this subtree to keep the vendored Config's
+    # panelFamily in step with the enabled set (the vendored tree cannot see
+    # shell.json's bar.id on its own).
+    lunana = shell.setdefault("lunana", {})
+    if not isinstance(lunana, dict):
+        fail("shell.json 'lunana' is not an object; fix it before switching")
+    lunana["family"] = name
     # Enable exactly this family's owned set; disable the other families'.
     # Shared services are never touched. Bar hosts are selected via bar.id,
     # so the enabled set only carries the non-bar members.

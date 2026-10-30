@@ -1,9 +1,9 @@
 import QtQuick
 import Quickshell
 import Quickshell.Wayland
-import "vendor/modules/common" as LnCommon
-import "vendor/modules/common/widgets" as LnWidgets
-import "vendor/modules/dock" as LnDock
+import "../../lunana-vendor/modules/common" as LnCommon
+import "../../lunana-vendor/modules/common/widgets" as LnWidgets
+import "../../lunana-vendor/modules/dock" as LnDock
 
 // Wave-0 foundation probe (kind: service, dev-only).
 //

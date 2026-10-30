@@ -64,6 +64,26 @@ Scope {
         }
     }
 
+    // family-cycle owns shell.json.lunana.family; the vendored tree gates its
+    // panels on Config.options.panelFamily instead. Mirror the choice into the
+    // vendored config whenever the family or Config readiness changes, so a
+    // switch made from any surface (IPC, keybind, settings) reaches the
+    // vendored panels. "stock" is outside the vendored domain and disables
+    // every lunana panel anyway; keep the last real family there.
+    function syncPanelFamily(): void {
+        if (!LnCommon.Config.ready)
+            return
+        const want = root.family === "stock" ? "ii" : root.family
+        if (String(LnCommon.Config.options.panelFamily ?? "") === want)
+            return
+        try {
+            LnCommon.Config.setNestedValue(["panelFamily"], want)
+            console.log("[lunana.state] panelFamily -> " + want)
+        } catch (err) {
+            console.warn("[lunana.state] panelFamily sync failed: " + err)
+        }
+    }
+
     function generateMaterialYou(wallpaperPath): void {
         const img = String(wallpaperPath ?? "")
         if (!root.materialYou) {
@@ -90,9 +110,13 @@ Scope {
 
     Connections {
         target: LnCommon.Config
-        function onReadyChanged() { root.armMaterialYou() }
+        function onReadyChanged() {
+            root.armMaterialYou()
+            root.syncPanelFamily()
+        }
     }
     onMaterialYouChanged: root.armMaterialYou()
+    onFamilyChanged: root.syncPanelFamily()
 
     // Mirror of shell.qml's boot timers (entry animation delay, then
     // deferred tier). Run once per session; hot-reload reuses the flags.
@@ -116,5 +140,6 @@ Scope {
     Component.onCompleted: {
         console.log("[lunana.state] family=" + root.family + " themeSource=" + root.themeSource)
         root.armMaterialYou()
+        root.syncPanelFamily()
     }
 }

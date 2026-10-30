@@ -15,7 +15,8 @@ against a fixture `$HOME` — never the live session.
 ## Wave 0 — harness + baseline [DONE]
 - [x] Work landed on `main` (clean tree, all committed; the `lunana/parity` branch name in the plan was not used)
 - [x] This file created
-- [x] `scripts/test/nested-hypr` harness adopted (up/install/drive/shot/logs/down)
+- [x] `scripts/test/nested-hypr` harness adopted (up/install/drive/shot/logs/down;
+      session-7 adds `--monitors`, a Lua fixture, runtime-log discovery, and a clean `down`)
 - [x] `scripts/hypr/lunana.conf` (layerrules for `lunana-*` namespaces)
 - [x] Full re-vendor of the iNiR module/service/script set below
 - [x] `lunana-suite --dry-run` + `tests/test_manifests.py` green
@@ -100,18 +101,18 @@ against a fixture `$HOME` — never the live session.
       cheatsheet summon + binds, zero load failures, hermetic install/uninstall
 - [x] Live-verify (nested, session-6): Audio/Network/Bluetooth/Weather/Battery/
       Brightness/Mpris singletons init with no errors; iRiS bar shows live weather
-      (7°C) + clock in the capture. Remaining manual: per-overlay toggle of every
-      surface + nested dual-output multi-monitor.
+      (7°C) + clock in the capture. Session-7 completed the residual per-overlay
+      toggle matrix and the nested dual-output multi-monitor proof (below).
 - [x] Settings: ii overlay summons with full nav + working Themes page (Color
       Themes gallery, tabs, filters) in the nest. Page components resolve against
       the registry module, not the shell root (inir fix, identical under inir)
 
 ## Wave 6 — interchange, keybinds, layerrules, packaging, docs
-- [x] `lunana-suite`: all 40 plugins; per-plugin vendor closures + root files + runtime script suffixes; hermetic fixture mode (LUNANA_FIXTURE=1)
+- [x] `lunana-suite`: all 44 managed plugins (45 including the dev probe); per-plugin vendor closures + root files + runtime script suffixes; hermetic fixture mode (LUNANA_FIXTURE=1)
 - [x] `family-cycle`: `ii ↔ waffle ↔ iris ↔ stock`, exactly one family active (fixture-tested)
 - [x] Keybinds: 8-surface additive set (plan §1.6); merged/removed by suite
 - [x] Layerrules (`scripts/hypr/lunana.conf`) installed/removed by the suite
-- [x] `packaging/package-metadata.json` (39 plugins + grim/slurp/wf-recorder/tesseract deps); `README.md` rewritten; stale
+- [x] `packaging/package-metadata.json` (44 plugins + grim/slurp/wf-recorder/tesseract deps); `README.md` rewritten; stale
       P01–P06 references retired; `vendor/README.md` refreshed
 - [x] `tests/test_manifests.py`: manifests + suite/family ownership + vendor-closure + family-cycle fixture test + suite smoke (vendor closure resolves) green
 
@@ -126,8 +127,21 @@ against a fixture `$HOME` — never the live session.
   needs the chassis's close-intercept + `targetWindow` (same reduced status as the ii closeconfirm,
   which has no Hyprland analog); mascot/altswitcher/tiling have no iRiS module (iRiS folds window
   switching into orbit/pieces). Recorded, not hosted.
-- Blocked: none. If a surface cannot be hosted as an Omarchy plugin, record it
-  here with the reason and ask the operator.
+- `org.kde.syntaxhighlighting` (KF6 `syntax-highlighting`) is a hard dependency of the vendored
+  AiChat, so ii `sidebar-left` content cannot be exercised until the operator installs that system
+  QML module. The host itself summons and closes.
+- `wf-recorder` is absent on the verification host; region screenshot/OCR works (grim/slurp/
+  tesseract), but region recording is untested.
+- `matugen` is absent; Material You opt-in degrades cleanly by design (default Omarchy tokens needs
+  nothing).
+- Bulk wallpaper thumbnails prefer inir's venv (`$HOME/.local/state/quickshell/.venv`); without it
+  the vendored ImageMagick fallback runs. Both scripts are vendored; the venv is an optional
+  operator install.
+- Live AI/YtMusic/Wallhaven/Anime network exercise needs API keys and/or `sidebar-left` (blocked
+  above); the services instantiate clean.
+- Hosting blocked: none. The items above are environment-dependent verification
+  gaps or documented reduced fidelity, not missing plugin hosts. If a surface
+  cannot be hosted as an Omarchy plugin, record it here and ask the operator.
 
 ## Nested-session findings (2026-10-30, folded back into the tree)
 - Install race: copying plugins straight into the plugin dir lets the host's
@@ -227,7 +241,7 @@ Working the four open buckets one by one.
 - [x] #2b Material You `matugen` marked `optionalDependencies` in
       `packaging/package-metadata.json` (hard deps unchanged; default
       omarchy-tokens needs nothing; the pipeline already degrades cleanly).
-- [ ] #2c **Broad shellPath finding (root cause, not cosmetic):** the vendored
+- [x] #2c **Broad shellPath finding (root cause, not cosmetic):** the vendored
       tree calls `Quickshell.shellPath(X)` in **186** sites (fonts, mascot
       assets, translations, and the `scripts/inir` runtime + color/capture
       scripts). Omarchy plugins resolve own files via `Quickshell.env(
@@ -256,7 +270,7 @@ Working the four open buckets one by one.
       `Cannot load` errors 35→0, no new syntax errors, iRiS text renders in
       Inter/Rubik (screenshot). Covers all 186 sites (fonts, mascot assets,
       scripts/inir runtime, color/capture scripts).
-- [~] #4 Live-verify pass (nested Hyprland, 2026-10-30, session-6): PROVEN —
+- [x] #4 Live-verify pass (nested Hyprland, 2026-10-30, session-6): PROVEN —
       ii family (quickshell:bar/dock/background layers) and iRiS family (lunana-iris
       island + stacked clock + live weather 7°C + afterglow wallpaper, screenshot
       `/tmp/lunana-nested/shots/iris-family.png`) both render; the 5 new iris
@@ -265,11 +279,106 @@ Working the four open buckets one by one.
       AnimeService instantiate clean; background stand-down confirmed (disabledPlugins
       = [omarchy.dock, omarchy.background]). Residual non-fatal: IrisLockStage reads
       an undefined lock-context at rest (lock open untested by design); ShellUpdates
-      version.json absent in fixture. NOT yet exercised: per-overlay toggle of every
-      surface + nested dual-output multi-monitor (lower-value confirmations).
-- Harness fix found (not yet committed): the nest must launch `quickshell` WITHOUT
-  `-n`/`--no-duplicate` when a live shell runs the same config name, and must use an
-  OMARCHY_PATH distinct from the live shell's; quickshell logs to its instance
-  runtime dir (`/run/user/<uid>/quickshell/by-id/<id>/log.qslog`), not the redirect.
-  The fixture `hyprland.conf:1` monitor line also errors on this Hyprland (geometry
-  falls back, as P01 flagged).
+      version.json absent in fixture. Session-7 completed the residual per-overlay
+      toggle matrix and the nested dual-output multi-monitor proof.
+- Harness fixes (landed + proven in session-7; see below): the nest must launch
+  `quickshell` WITHOUT `-n`/`--no-duplicate` when a live shell runs the same config
+  name, and must use an OMARCHY_PATH distinct from the live shell's; quickshell
+  logs to its instance runtime dir
+  (`/run/user/<uid>/quickshell/by-id/<id>/log.qslog`), not the redirect. The
+  fixture now uses `hyprland.lua`, which removes the old `hyprland.conf:1` monitor
+  line error (geometry no longer falls back).
+
+## Session-7 — open-items campaign (2026-10-30)
+
+First verified on Hyprland 0.56.2; after a host reboot/update the whole matrix was
+re-run on Hyprland 0.57.0. Results below are the 0.57.0 run unless noted.
+
+### Harness
+- [x] Distinct nested shell: `up` copies `$OMARCHY_PATH/shell` to
+      `/tmp/lunana-nested/omarchy/shell` (the rest of Omarchy is symlinked) and
+      launches `quickshell -p <nested>/shell` **without** `-n`. With `-n` and the
+      live `OMARCHY_PATH`, Quickshell treated the nest as a duplicate of the live
+      shell. This unblocked every live check below.
+- [x] Log discovery: Quickshell writes to its instance runtime dir
+      (`/run/user/<uid>/quickshell/by-id/<id>/log.qslog`), not the launcher
+      redirect. The harness finds the path through `/proc/<pid>/fd`; `logs` reads
+      it with `quickshell log --tail`.
+- [x] `up --monitors N`: creates `headless` outputs, applies the same
+      `hl.monitor` geometry via `hyprctl eval`, and asserts the monitor count.
+      Clean `up --monitors 2` gives `WAYLAND-1` + `HEADLESS-1` at 1920x1080.
+- [x] Fixture uses `hyprland.lua` (`hl.monitor({...})`), matching live Omarchy;
+      the old `hyprland.conf:1` monitor-line error is gone.
+- [x] Runtime socket links: the nested `XDG_RUNTIME_DIR` gets symlinks to the
+      host's `pipewire-0`, `pipewire-0-manager`, and `pulse`, so audio
+      integrations exercise the real PipeWire stack (`wpctl status` connects).
+- [x] `install` stops/restarts only the fixture shell (matched by fixture `HOME`
+      in `/proc/<pid>/environ`); `restart`/`logs`/`shot` share the same path.
+      `down` kills the compositor (Hyprland 0.56+ Lua no longer accepts legacy
+      `dispatch exit`) and removes the fixture/nested Omarchy/runtime/env while
+      keeping shots and logs.
+
+### Suite/config
+- [x] `lunana-suite` detects `hyprland.lua` first, else `hyprland.conf`; installs
+      `lunana.lua` with an idempotent `dofile(<abs path>)` block (or `lunana.conf`
+      with `source = ...`), backs up the entry file, and removes both fragments and
+      load directives on uninstall. `tests/test_manifests.py::test_hypr_config_adapters`
+      covers both adapters, idempotency, and removal.
+- [x] `scripts/hypr/lunana.lua` mirrors the conf layerrules for Lua configs.
+- [x] Install records `shell.json.lunana.family = <default>` (ii), so reinstalling
+      over a waffle/iris session cannot leave `panelFamily` gated to a family whose
+      plugins were just stood down.
+
+### Product fixes
+- [x] Waffle/iris background hosts: `WaffleBackground`/`IrisBackground` are bare
+      `Variants`; their default property is `delegate`, so the handshake `Timer`
+      child replaced the vendored `PanelWindow` delegate. Both hosts now wrap the
+      vendored item in a `Scope` with the Timer as a sibling. Proven:
+      `quickshell:wBackground` and `quickshell:iris-background` appear on both
+      outputs.
+- [x] Family switching: `family-cycle` writes `shell.json.lunana.family`;
+      `lunana.state` mirrors it into the vendored `Config.options.panelFamily` on
+      family/ready changes (`stock` keeps the last real family). Live
+      ii→waffle→iris→stock→ii now works without a shell restart.
+- [x] `lunana.iris-control` now drives the shared `controlPanelOpen`/
+      `irisMorphOwner` state and passes `screenData` to the vendored
+      `IrisControlCenter`. Previously the layer toggled but the morph surface
+      rendered empty; the quick panel now has visible content.
+
+### Vendoring
+- [x] `vendor/` regenerated via `scripts/vendor.py` for `go.mod`,
+      `scripts/scan-widgets.sh`, `scripts/detect_sensors.py`,
+      `scripts/clipboard-copy.sh`, `scripts/keyring/*`, and `scripts/thumbnails/*`
+      (byte-identical to inir). The shellPath-rewritten callers now resolve;
+      `IrisWashi` warning gone and `inir-washi` builds. Bulk wallpaper thumbnails
+      use inir's venv when present and the vendored ImageMagick fallback otherwise.
+- [x] `tests/test_manifests.py` rejects stale `vendor/` relative imports;
+      `lunana.ui-probe` moved to `../../lunana-vendor/...`.
+- [x] Packaging parity test added; `lunana.iris-wallpaper` was missing from
+      `packaging/package-metadata.json` (now 44 managed plugins).
+
+### Verification matrix (nested Hyprland 0.57.0, dual output)
+- ii overlays open/close: overview, cheatsheet, control-center, sidebar-right,
+  wallpaper, region, session, settings, altswitcher.
+- ii `sidebar-left` cannot render its AiChat content because
+  `org.kde.syntaxhighlighting` (KF6 `syntax-highlighting`) is not installed;
+  `closeconfirm` cannot open without a toplevel/niri fallback. Both are reduced
+  fidelity, not host crashes.
+- waffle: `wBackground` + waffle bar; `wStartMenu`, `wActionCenter`,
+  `wNotificationCenter` open/close.
+- iris: `lunana-iris` + `quickshell:iris-background`; control, edit, palette,
+  stage, wallpaper, session, settings, sidebar-left, sidebar-right open/close.
+- family cycle iris→stock→ii restores ii fully (`background`/`bar`/`dock`; no
+  iris/waffle layers). Dual monitor: both outputs show background/bar/dock/
+  notifications; control-center summoned on `WAYLAND-1`.
+- Integrations: Network connected (`nmcli`), Bluetooth adapter present but
+  `Powered: no`, Battery 81%, brightness 100%, PipeWire connected (`wpctl`),
+  Weather 8°C, sensors detect CPU/GPU, keyring script returns `{}`,
+  `scan-widgets.sh` returns `[]`. No missing-script warnings after the vendor
+  additions (lock-surface/`version.json`/duplicate-IpcHandler warnings remain
+  known reduced-fidelity noise).
+
+Evidence: `/tmp/lunana-nested/shots/dual-monitor-ii.png`,
+`overlay-iris-control.png`, `family-lunana.waffle-start.png`; the overlay
+matrices were recorded in `/tmp/lunana-nested/overlay-matrix.txt` and re-run
+after the host update.
