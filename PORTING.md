@@ -335,10 +335,12 @@ Working the four open buckets one by one.
       for stock Hyprland anyway.
       Closed separately (quick-wins, extended since): the OSD render path is
       proven via the `lunana.iris-osd test` hook (external wpctl alone never
-      fires it) and, for the ii family, via the `lunana.osd test` hook added
-      on the same pattern (the vendored Audio backend never fires in the
-      nest; both hooks drive the exact render path and clear after
-      themselves); the banner render path is proven synthetically via the
+      fires it) and, for the ii family, via the natural `audio volumeUp`
+      path with fast layer polling (a `lunana.osd test` hook was briefly
+      added on the unproven claim that vendored Audio never fires in the
+      nest, then reverted once polling proved otherwise — the pill
+      auto-hides after 1.5s, so slow checks miss it); the banner render
+      path is proven synthetically via the
       `lunana.iris-notifications test` hook AND by real bus ingress — nested
       shell on a private session bus owns the name, `notify-send` renders
       the full banner for both iris (`iris-notif-bus-ingress.png`) and ii
@@ -484,7 +486,7 @@ full ingress path), `sidebar-full-syntax.png`
 (full sidebar-left with syntax-highlighting installed),
 `iris-orbit-hyprland-mirror.png` (orbit strips with a live Hyprland window
 card via the NiriService mirror), `ii-osd-pill.png` (ii volume pill via the
-`lunana.osd test` hook), `ii-notif-banner.png` (ii banner via real
+natural audio path), `ii-notif-banner.png` (ii banner via real
 private-bus ingress), `ii-closeconfirm2.png` (Hyprland-native close-confirm
 dialog over a focused foot terminal);
 the overlay matrices were recorded in `/tmp/lunana-nested/overlay-matrix.txt`

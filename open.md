@@ -129,8 +129,7 @@ What remains is upstream decisions and documented environment quirks.
   (go-to, close, float toggle) proven with screenshots and explicit
   baselines; static tests pin the hooks, the orbit Niri-shape contract,
   and the vendor-patch lever (`test_iris_test_hooks`,
-  `test_ii_test_hooks`, `test_hypr_windows_contract`,
-  `test_vendor_patch_lever`).
+  `test_hypr_windows_contract`, `test_vendor_patch_lever`).
 - ii family full pass (this session): 11/11 overlays open/close with
   per-step layer verification — overview (workspace cards on focused
   output), cheatsheet, control-center (`controlPanel`), sidebar-right,
@@ -140,9 +139,10 @@ What remains is upstream decisions and documented environment quirks.
   (`lunana-sidebar-left`, full widget content), closeconfirm (dialog with
   icon/title/Cancel/Close over a focused foot; Cancel keeps the window,
   disabled-config fast path closes directly) — plus residents (bar, dock,
-  background on both outputs), OSD pill via new `lunana.osd test` hook
-  (vendored Audio never fires in the nest), and banner via real private-bus
-  ingress (`ii-notif-banner.png`). Lock/mascot/tiling verified dormant +
+  background on both outputs), OSD pill via the natural `audio volumeUp`
+  path (fast layer polling — the pill auto-hides after 1.5s, which is why
+  slow checks miss it), and banner via real private-bus ingress
+  (`ii-notif-banner.png`). Lock/mascot/tiling verified dormant +
   error-free (mascot companion logs reactions, tiling shows only on drag).
 - Waffle family full pass (this session): bar + `wBackground` on both
   outputs, start menu (search, pinned apps, user footer), action center
@@ -154,6 +154,11 @@ What remains is upstream decisions and documented environment quirks.
   Fixture `illogical-impulse/config.json` edits can be clobbered by the
   shell's own Config write-back — verify after writing, prefer edit-then-
   restart ordering.
+  OSD methodology lesson: an earlier `lunana.osd test` hook was added on the
+  unproven claim that vendored Audio never fires in the nest, then reverted
+  once fast polling proved the natural path works — always verify a
+  negative with timing tighter than the UI's own hide timer before adding
+  test-only code.
   `pkill -f <pattern>` self-matches the invoking shell when the pattern
   appears in its own command line — use the `[b]racket` trick or kill by
   PID (learned the hard way, twice).
