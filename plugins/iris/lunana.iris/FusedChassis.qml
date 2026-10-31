@@ -30,7 +30,8 @@ Variants {
             exclusiveZone: 0
             WlrLayershell.namespace: "lunana-iris"
             WlrLayershell.layer: WlrLayer.Top
-            WlrLayershell.keyboardFocus: WlrKeyboardFocus.None
+            readonly property bool islandOpen: (islandItem.expanded ?? false) || (islandItem.pinned ?? false)
+            WlrLayershell.keyboardFocus: chassis.islandOpen ? WlrKeyboardFocus.OnDemand : WlrKeyboardFocus.None
             anchors { top: true; bottom: true; left: true; right: true }
 
             // Input only on the island + dock bodies; the glass passes through.
@@ -46,9 +47,14 @@ Variants {
                 const m = 24
                 return { x: x0 - m, y: y0 - m, width: x1 - x0 + m * 2, height: y1 - y0 + m * 2 }
             }
+            // Open island: take the whole surface so an outside click can dismiss
+            // it. Otherwise only the island + dock bodies take input; everything
+            // else passes through to the windows below.
             mask: Region {
-                x: islandItem.x; y: islandItem.y
-                width: islandItem.width; height: islandItem.height
+                x: chassis.islandOpen ? 0 : islandItem.x
+                y: chassis.islandOpen ? 0 : islandItem.y
+                width: chassis.islandOpen ? chassis.width : islandItem.width
+                height: chassis.islandOpen ? chassis.height : islandItem.height
                 Region {
                     x: chassis.dockBounds.x; y: chassis.dockBounds.y
                     width: chassis.dockBounds.width; height: chassis.dockBounds.height
@@ -97,6 +103,21 @@ Variants {
                 compositorAllowed: true
                 providesBackdrop: true
                 shapes: chassis.fieldShapes
+            }
+
+            // Dismiss the island on an outside press / Escape while it is open.
+            // Declared before the island + dock so their own clicks hit them
+            // first; only a press that misses both reaches this.
+            MouseArea {
+                anchors.fill: parent
+                enabled: chassis.islandOpen
+                acceptedButtons: Qt.AllButtons
+                onPressed: { islandItem.pinned = false; islandItem.expanded = false }
+            }
+            Shortcut {
+                sequence: "Escape"
+                enabled: chassis.islandOpen
+                onActivated: { islandItem.pinned = false; islandItem.expanded = false }
             }
 
             LnDock.IrisDock {
