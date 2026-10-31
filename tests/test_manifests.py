@@ -212,6 +212,10 @@ def test_iris_composition():
     panels = read("Panels.qml")
     for comp in ("IrisSidebar", "IrisSettingsOverlay", "IrisSessionScreen", "IrisOSD", "Lock"):
         check(comp in panels, f"lunana.iris: Panels must mount {comp}")
+    check("component OnDemandPanelLoader: Loader" in panels and "closeGraceMs" in panels,
+          "lunana.iris: on-demand panels must preserve inir's exit-animation grace")
+    check("LnServ.CompositorService.isNiri" in panels and "!root.irisBarEnabled" in panels,
+          "lunana.iris: standalone OSD must not duplicate the island feedback")
 
     iris = read("Iris.qml")
     check("Chassis {" in iris and "Panels {" in iris,
