@@ -22,12 +22,13 @@ Scope {
     property var shell: null
     property var manifest: null
 
-    // Always-present chrome.
+    // Always-present chrome. ONE fused IrisField draws the island, dock and
+    // surround frame together (the warp-around: island melts into the frame,
+    // windows mold around it); reservations keep tiled windows out of the
+    // island/dock area.
     Background {}
-    SurroundFrame {}
     Reservations {}
-    Dock {}
-    Island {}
+    FusedChassis {}
 
     // On-demand surfaces (self-gate on the GlobalStates flag the island sets).
     Settings {}
