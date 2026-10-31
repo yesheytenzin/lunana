@@ -70,15 +70,45 @@ Scope {
     // switch made from any surface (IPC, keybind, settings) reaches the
     // vendored panels. "stock" is outside the vendored domain and disables
     // every lunana panel anyway; keep the last real family there.
+    // Mirrors inir shell.qml `panelFamilies`: which vendored panels each family
+    // enables. The vendored tree gates internal behavior on
+    // Config.options.enabledPanels (e.g. IrisReservations/the chassis read
+    // enabledPanels.includes("irisBar") for chassisPresent, OSD gating), so this
+    // must track the family alongside panelFamily.
+    readonly property var panelFamilies: ({
+        "ii": ["iiBar", "iiBackground", "iiBackdrop", "iiBootGreeting", "iiCheatsheet",
+            "iiControlPanel", "iiDock", "iiLock", "iiMediaControls", "iiNotificationPopup",
+            "iiOnScreenDisplay", "iiOnScreenKeyboard", "iiOverlay", "iiOverview", "iiPolkit",
+            "iiRegionSelector", "iiScreenCorners", "iiSessionScreen", "iiSidebarLeft",
+            "iiSidebarRight", "iiTilingOverlay", "iiVerticalBar", "iiWallpaperSelector",
+            "iiWallpaperLauncher", "iiCoverflowSelector", "iiClipboard", "iiShellUpdate",
+            "iiRecordingOsd", "iiDashboard", "iiMascotCompanion"],
+        "waffle": ["wBar", "wBackground", "wBackdrop", "wStartMenu", "wActionCenter",
+            "wNotificationCenter", "wNotificationPopup", "wOnScreenDisplay", "wWidgets",
+            "wTaskView", "wLock", "wPolkit", "wSessionScreen", "iiBootGreeting", "iiCheatsheet",
+            "iiOnScreenKeyboard", "iiOverlay", "iiOverview", "iiRegionSelector", "iiScreenCorners",
+            "iiWallpaperSelector", "iiWallpaperLauncher", "iiCoverflowSelector", "iiClipboard",
+            "iiShellUpdate", "iiMascotCompanion"],
+        "iris": ["irisBar", "irisBackground", "irisPalette", "irisControlCenter",
+            "irisNotificationPopup", "irisOnScreenDisplay", "irisSessionScreen",
+            "irisLock", "irisPolkit"]
+    })
+
     function syncPanelFamily(): void {
         if (!LnCommon.Config.ready)
             return
         const want = root.family === "stock" ? "ii" : root.family
-        if (String(LnCommon.Config.options.panelFamily ?? "") === want)
+        const panels = root.panelFamilies[want] ?? []
+        const curFamily = String(LnCommon.Config.options.panelFamily ?? "")
+        const curPanels = LnCommon.Config.options.enabledPanels ?? []
+        const panelsMatch = Array.isArray(curPanels) && curPanels.length === panels.length
+            && panels.every(p => curPanels.includes(p))
+        if (curFamily === want && panelsMatch)
             return
         try {
             LnCommon.Config.setNestedValue(["panelFamily"], want)
-            console.log("[lunana.state] panelFamily -> " + want)
+            LnCommon.Config.setNestedValue(["enabledPanels"], panels)
+            console.log("[lunana.state] panelFamily -> " + want + " (" + panels.length + " panels)")
         } catch (err) {
             console.warn("[lunana.state] panelFamily sync failed: " + err)
         }

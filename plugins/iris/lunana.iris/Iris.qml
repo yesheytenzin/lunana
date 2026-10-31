@@ -6,48 +6,32 @@ import "../../lunana-vendor/" as Inir
 
 // lunana.iris — the consolidated iRiS shell (kind: service, on by default).
 //
-// Every iRiS surface lives in THIS one plugin, so they share ONE GlobalStates.
-// That is what makes the island's own buttons work: the island writes
-// GlobalStates.settingsOverlayOpen / sessionOpen / sidebarLeftOpen / etc., and
-// the settings/session/sidebar/control surfaces — mounted here beside it — see
-// the write. (Split across separate plugins each had its own GlobalStates, so
-// the island could not reach them.) It also lets one IrisField fuse the island,
-// dock and surround frame, and lets the edge reservations react to live sidebar
-// and dock state.
+// Faithful mount of inir's real iRiS composition in ONE plugin (so every
+// surface shares one GlobalStates):
+//   Chassis.qml  mirrors modules/iris/critical/ShellIrisCriticalPanels.qml
+//                (IrisReservations + the IrisBar chassis: island, dock, control,
+//                 spotlight, gallery, orbit, edit, stage, banners — with the
+//                 full input regions, piece hit-rects and gating).
+//   Panels.qml   mirrors modules/iris/ShellIrisPanelsImpl.qml (sidebars,
+//                settings, OSD, session, lock, background, studio, OSK, region,
+//                wallpaper, recording, tiling, cheatsheet, polkit, …).
 //
-// Each surface is a sibling .qml in this directory; Qt resolves them by name.
+// Mounted directly because omarchy-shell is not inir's host, so
+// IrisGate.official is false and inir's own loaders would gate everything off.
+// Config must set panelFamily="iris" and enabledPanels to the iris set (the
+// chassis reads enabledPanels.includes("irisBar")) — lunana.state/family-cycle.
 Scope {
     id: root
 
     property var shell: null
     property var manifest: null
 
-    // Always-present chrome. ONE fused IrisField draws the island, dock and
-    // surround frame together (the warp-around: island melts into the frame,
-    // windows mold around it); reservations keep tiled windows out of the
-    // island/dock area.
-    Background {}
-    Reservations {}
-    FusedChassis {}
+    Chassis {}
+    Panels {}
 
-    // On-demand surfaces (self-gate on the GlobalStates flag the island sets).
-    Settings {}
-    Session {}
-    Sidebars {}
-    Control {}
-    Orbit {}
-    Palette {}
-    EditMode {}
-    Wallpaper {}
-
-    // Ambient.
-    Osd {}
-    Notifications {}
-    LockHost {}
-
-    // The island is always shown. These drive the shared GlobalStates the same
-    // way the island's own buttons do — so keybinds can summon any iRiS surface,
-    // and the handoff is the same one the buttons use (one GlobalStates).
+    // The island is always shown; expose its actions so keybinds can summon any
+    // iRiS surface, driving the same shared GlobalStates the island's own
+    // buttons use.
     ShellIpc {
         target: "lunana.iris"
         function toggle(): void {}

@@ -196,63 +196,26 @@ def test_iris_lock_hosts():
                   f"{pid}: {rel} must not mount bare {surface} (required context unset)")
 
 
-def test_iris_satellite_wiring():
-    """Satellite hosts must wire what the chassis used to provide. The glass
-    bodies behind island/dock/control/stage/edit are painted by the shared
-    chassis IrisField from each piece's published shapes — without a
-    per-output field the content floats bare. Embeddable pieces also need a
-    filled loader (centerIn collapses them to 0x0) and their screen + state."""
-    iris = REPO / "plugins" / "iris"
-    host = lambda pid, rel: (iris / pid / rel).read_text()
+def test_iris_composition():
+    """lunana.iris mounts inir's real iRiS composition directly (bypassing
+    IrisGate.official): Chassis.qml mirrors ShellIrisCriticalPanels (the IrisBar
+    chassis + IrisReservations) and Panels.qml mirrors ShellIrisPanelsImpl (the
+    panel set). Iris.qml composes both. This is what gives inir parity — the
+    chassis owns the island/dock/control/stage/pieces/regions."""
+    d = REPO / "plugins" / "iris" / "lunana.iris"
+    read = lambda rel: (d / rel).read_text()
 
-    # Consolidated iRiS: the island, dock and surround frame share ONE fused
-    # IrisField (the warp-around) in FusedChassis.qml, fed by the composed
-    # fieldShapes.
-    island = host("lunana.iris", "FusedChassis.qml")
-    check("IrisField" in island and "fieldShapes" in island and "IrisIsland" in island,
-          "lunana.iris: FusedChassis needs one IrisField fed by fieldShapes over IrisIsland")
+    chassis = read("Chassis.qml")
+    check("IrisBar" in chassis, "lunana.iris: Chassis must mount the IrisBar chassis")
+    check("IrisReservations" in chassis, "lunana.iris: Chassis must mount IrisReservations")
 
-    dock = host("lunana.iris-dock", "IrisDock.qml")
-    check("IrisField" in dock and "bodyShape" in dock,
-          "lunana.iris-dock: dock needs its own IrisField fed by its bodyShape")
-    check("screen: modelData" in dock,
-          "lunana.iris-dock: dock needs the output screen")
-    check("PanelWindow" in dock,
-          "lunana.iris-dock: the embeddable dock needs a host PanelWindow surface")
+    panels = read("Panels.qml")
+    for comp in ("IrisSidebar", "IrisSettingsOverlay", "IrisSessionScreen", "IrisOSD", "Lock"):
+        check(comp in panels, f"lunana.iris: Panels must mount {comp}")
 
-    control = host("lunana.iris-control", "IrisControl.qml")
-    check("anchors.fill: parent" in control and "anchors.centerIn: parent" not in control,
-          "lunana.iris-control: fullscreen surface must fill, not center")
-    check("screenData: modelData" in control,
-          "lunana.iris-control: control needs the output screenData")
-    check("controlPanelOpen = true" in control,
-          "lunana.iris-control: host must drive controlPanelOpen like the chassis morph")
-    check("fieldShapes" in control,
-          "lunana.iris-control: control card needs its own IrisField")
-
-    stage = host("lunana.iris-stage", "IrisStage.qml")
-    check("modelData: modelData" in stage,
-          "lunana.iris-stage: stage has a required modelData (unset fails the Loader)")
-    check("anchors.centerIn: parent" not in stage,
-          "lunana.iris-stage: fullscreen surface must fill, not center")
-
-    edit = host("lunana.iris-edit", "IrisEdit.qml")
-    check("screenData: modelData" in edit,
-          "lunana.iris-edit: edit bar needs the output screenData")
-    check("irisEdit = true" in edit,
-          "lunana.iris-edit: host must drive GlobalStates.irisEdit like the chassis")
-
-    palette = host("lunana.iris-palette", "IrisPalette.qml")
-    check("screen: modelData" in palette,
-          "lunana.iris-palette: palette needs the output screen (null breaks placement)")
-    check("searchOpen = true" in palette,
-          "lunana.iris-palette: host must drive GlobalStates.searchOpen like the chassis")
-
-    orbit = host("lunana.iris-orbit", "IrisOrbit.qml")
-    check("screen: modelData" in orbit,
-          "lunana.iris-orbit: orbit needs the output screen")
-    check("irisOrbitOpen = true" in orbit,
-          "lunana.iris-orbit: host must drive GlobalStates.irisOrbitOpen (chassis hotcorner)")
+    iris = read("Iris.qml")
+    check("Chassis {" in iris and "Panels {" in iris,
+          "lunana.iris: Iris.qml must compose Chassis + Panels")
 
 
 def test_iris_test_hooks():
@@ -450,7 +413,7 @@ def main():
     for fn in (test_manifests, test_suite_matches_plugins, test_packaging_matches_plugins,
                test_vendor_closure, test_host_imports, test_sidebar_left_fallback,
                test_closeconfirm_hyprland,
-               test_iris_lock_hosts, test_iris_satellite_wiring,
+               test_iris_lock_hosts, test_iris_composition,
                test_iris_test_hooks, test_hypr_windows_contract,
                test_vendor_patch_lever,
                test_family_cycle, test_suite_runs, test_shared_services_guarded, test_hypr_config_adapters):
