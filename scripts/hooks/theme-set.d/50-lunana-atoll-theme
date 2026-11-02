@@ -1,0 +1,154 @@
+#!/bin/bash
+# 50-lunana-atoll-theme — Lunana-managed Omarchy theme-set hook.
+#
+# Installed by `lunana-suite install` into ~/.config/omarchy/hooks/theme-set.d/
+# and refreshed by `lunana-suite sync`; removed by `lunana-suite uninstall`.
+# Do not edit the installed copy — edit this file and reinstall.
+#
+# Every `omarchy theme set <name>` runs this with the theme slug ($1, e.g.
+# "rose-pine"). It maps the slug onto lunana's own colour theme ids and writes
+# appearance.theme into the lunana config, so the Atoll island, dock, panels and
+# edges follow the Omarchy theme through the existing followTheme path
+# (accent, highlight and material become the theme's). It also stashes the
+# Omarchy palette in omarchy-theme.json beside the lunana config, so the washi
+# solver paints surfaces with the theme's true colours instead of
+# wallpaper-derived ones. Slugs with no lunana equivalent fall back to "auto"
+# (wallpaper colours). The user's "Match the shell" choice is left untouched;
+# turning that off in settings keeps lunana independent. Nothing happens when
+# the lunana config does not exist yet.
+#
+# It also converges the system icon theme on the Omarchy theme's icons.theme
+# and writes it to lunana's appearance.iconTheme. lunana's own default
+# (WhiteSur-dark) is not installed on every machine, and a missing icon theme
+# makes Qt resolve no icon at all (the dock draws placeholder squares). The
+# hook runs after Omarchy's own theme commands, so it is the last word; the
+# config write keeps lunana's IconThemeService from reintroducing the missing
+# name on its next mode change.
+set -u
+
+slug="${1:-}"
+[ -n "$slug" ] || exit 0
+
+case "$slug" in
+  catppuccin) lunana_theme="catppuccin-mocha" ;;
+  catppuccin-latte) lunana_theme="catppuccin-latte" ;;
+  everforest) lunana_theme="everforest" ;;
+  gruvbox) lunana_theme="gruvbox-material" ;;
+  kanagawa) lunana_theme="kanagawa" ;;
+  nord) lunana_theme="nord" ;;
+  rose-pine) lunana_theme="rose-pine" ;;
+  tokyo-night) lunana_theme="tokyo-night" ;;
+  dracula) lunana_theme="dracula" ;;
+  *) lunana_theme="auto" ;;
+esac
+
+config="${XDG_CONFIG_HOME:-$HOME/.config}/illogical-impulse/config.json"
+[ -f "$config" ] || exit 0
+
+colors_file="$HOME/.local/state/omarchy/current/theme/colors.toml"
+icons_file="$HOME/.local/state/omarchy/current/theme/icons.theme"
+sidecar="${config%/*}/omarchy-theme.json"
+
+python3 - "$config" "$slug" "$lunana_theme" "$colors_file" "$sidecar" "$icons_file" <<'EOF' || true
+import configparser, json, os, re, subprocess, sys
+path, slug, want, colors_path, sidecar_path, icons_path = sys.argv[1:7]
+try:
+    with open(path) as f:
+        cfg = json.load(f)
+except Exception:
+    sys.exit(0)
+if not isinstance(cfg, dict):
+    sys.exit(0)
+app = cfg.get("appearance")
+if not isinstance(app, dict):
+    app = {}
+    cfg["appearance"] = app
+changed = False
+if app.get("theme", "auto") != want:
+    app["theme"] = want
+    changed = True
+
+# Icon theme: prefer the Omarchy theme's choice, but never a name that is not
+# installed. Qt resolves nothing for a missing theme, so this is what keeps the
+# dock and tray icons real.
+candidates = []
+try:
+    with open(icons_path) as f:
+        name = f.read().strip()
+    if name:
+        candidates.append(name)
+except Exception:
+    pass
+candidates += ["Yaru-blue", "Papirus", "Adwaita"]
+icon_dirs = [os.path.expanduser("~/.local/share/icons"),
+             os.path.expanduser("~/.icons"), "/usr/share/icons"]
+icon = next((n for n in candidates
+             if any(os.path.isfile(os.path.join(d, n, "index.theme")) for d in icon_dirs)), "")
+if icon and app.get("iconTheme") != icon:
+    app["iconTheme"] = icon
+    changed = True
+if changed:
+    with open(path, "w") as f:
+        json.dump(cfg, f, indent=4)
+
+# GTK and Qt read their own files under Hyprland; gsettings alone leaves them
+# on whatever lunana last wrote.
+def set_ini_key(filename, section, key, value):
+    parser = configparser.ConfigParser()
+    parser.optionxform = str
+    if os.path.exists(filename):
+        try:
+            parser.read(filename)
+        except Exception:
+            return
+    if not parser.has_section(section):
+        parser.add_section(section)
+    if parser.get(section, key, fallback=None) == value:
+        return
+    parser.set(section, key, value)
+    try:
+        os.makedirs(os.path.dirname(filename), exist_ok=True)
+        with open(filename, "w") as f:
+            parser.write(f, space_around_delimiters=False)
+    except Exception:
+        pass
+
+if icon:
+    home = os.path.expanduser("~")
+    for filename in (os.path.join(home, ".config/gtk-3.0/settings.ini"),
+                     os.path.join(home, ".config/gtk-4.0/settings.ini")):
+        set_ini_key(filename, "Settings", "gtk-icon-theme-name", icon)
+    for filename in (os.path.join(home, ".config/qt5ct/qt5ct.conf"),
+                     os.path.join(home, ".config/qt6ct/qt6ct.conf")):
+        set_ini_key(filename, "Appearance", "icon_theme", icon)
+    set_ini_key(os.path.join(home, ".config/kdeglobals"), "Icons", "Theme", icon)
+    if os.environ.get("DBUS_SESSION_BUS_ADDRESS"):
+        try:
+            subprocess.run(["gsettings", "set", "org.gnome.desktop.interface",
+                            "icon-theme", icon], check=False,
+                           stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        except Exception:
+            pass
+
+# Stash the Omarchy palette in a sidecar for the washi solver (see
+# AtollWashi): a file of its own, so no FileView contends with Config's
+# own writes to config.json.
+palette = {"slug": slug}
+try:
+    with open(colors_path) as f:
+        for line in f:
+            m = re.match(r'\s*([A-Za-z_]+)\s*=\s*"?(#[0-9a-fA-F]{6})"?', line)
+            if m and m.group(1) in ("background", "accent", "blue", "magenta"):
+                palette[m.group(1)] = m.group(2)
+except Exception:
+    pass
+if palette.get("background") and palette.get("accent"):
+    try:
+        with open(sidecar_path) as f:
+            old = json.load(f)
+    except Exception:
+        old = None
+    if old != palette:
+        with open(sidecar_path, "w") as f:
+            json.dump(palette, f, indent=4)
+EOF

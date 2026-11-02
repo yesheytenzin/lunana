@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "id": "lunana.family-switch",
+  "name": "Lunana Family Switch",
+  "version": "0.1.0",
+  "author": "lunana",
+  "license": "GPL-3.0",
+  "description": "Bar widget showing the live Lunana panel family (drift, slate, atoll, stock). Click opens a picker that jumps straight to any family, so no family — stock included — strands the user without a way back.",
+  "kinds": [
+    "bar-widget"
+  ],
+  "entryPoints": {
+    "barWidget": "BarWidget.qml"
+  },
+  "barWidget": {
+    "displayName": "Lunana Family",
+    "description": "Shows the active Lunana panel family; click to switch to drift, slate, atoll or stock Omarchy.",
+    "category": "Lunana",
+    "defaultSection": "left"
+  },
+  "x-lunana": {
+    "suiteId": "lunana",
+    "role": "family-switch",
+    "milestone": "parity",
+    "requires": [],
+    "recommends": []
+  }
+}
