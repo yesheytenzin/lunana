@@ -40,7 +40,7 @@ Item {
     readonly property real d: IrisStyle.density
     readonly property var sections: IrisOptions.sections
     // Sources and More Settings sit in a footer under the list, always in view.
-    readonly property int footerCluster: 6
+    readonly property int footerCluster: 3
     readonly property var specifications: IrisOptions.settings
     readonly property var currentSection: IrisOptions.sectionById(root.section)
     readonly property bool searching: root.query.length > 0
@@ -199,7 +199,15 @@ Item {
             return terms.every(term => text.includes(term))
         })
     }
-    readonly property bool pagesFirst: root.pageMatches.some(entry => Translation.tr(entry.label).toLowerCase().startsWith(root.query.trim().toLowerCase()))
+    // A setting label that starts with the query beats a page whose label does: typing the
+    // name of a row takes you to the row, not to a neighbouring page.
+    readonly property bool settingStarts: {
+        const q = root.query.trim().toLowerCase()
+        if (q.length === 0) return false
+        return root.matches.some(spec => Translation.tr(spec.label).toLowerCase().startsWith(q))
+    }
+    readonly property bool pagesFirst: root.query.trim().length > 1 && !root.settingStarts
+        && root.pageMatches.some(entry => Translation.tr(entry.label).toLowerCase().startsWith(root.query.trim().toLowerCase()))
     function openFirstResult(): void {
         if (root.pageMatches.length > 0 && (root.pagesFirst || root.matches.length === 0)) {
             root.moreLink(root.pageMatches[0]).action()
@@ -220,10 +228,10 @@ Item {
         const entry = IrisOptions.morePages.find(candidate => candidate.key === page?.key)
         return entry ? Translation.tr(entry.label) : String(page?.name ?? page?.title ?? "")
     }
-    readonly property var editTargets: ({ bar: "island", player: "bodies", bubbles: "pieces", dock: "dock", appearance: "material", colour: "colour",
-        motion: "motion", desktop: "desktop", sidebars: "places", spotlight: "places", controlCenter: "bodies" })
-    readonly property var studioTargets: ({ bar: "island", bubbles: "pieces", dock: "dock", appearance: "material", colour: "colour", motion: "motion",
-        desktop: "desktop", sidebars: "places", controlCenter: "bodies", spotlight: "places", sound: "transients", notifications: "transients", player: "bodies" })
+    readonly property var editTargets: ({ bar: "island", player: "bodies", bubbles: "pieces", appearance: "material",
+        sidebars: "places", notifications: "transients" })
+    readonly property var studioTargets: ({ bar: "island", bubbles: "pieces", appearance: "material",
+        sidebars: "places", notifications: "transients", player: "bodies" })
 
     function here(): var { return { section: root.section, group: root.group, advancedPage: root.advancedPage } }
     function same(a: var, b: var): bool { return a.section === b.section && a.group === b.group && a.advancedPage === b.advancedPage }
@@ -278,8 +286,15 @@ Item {
             }
         }
     }
-    // A link written before a topic got its own section (appearance/Accent, lock/Login screen, desktop/Wallpaper gallery)
-    // still lands: a group asked for where it no longer is opens in the section that holds it now.
+    // Sections folded away (see movedGroups in IrisOptions): an old deep link still lands,
+    // on the page that holds its rows now. Applied before requestedGroup handling so a
+    // "section/group" link keeps its group while the section is rewritten.
+    readonly property var renamedSections: ({ colour: "appearance", motion: "appearance", desktop: "wallpaper",
+        dock: "bar", controlCenter: "sidebars", spotlight: "sidebars", sound: "notifications", battery: "display",
+        gaming: "display", login: "lock", frameMusic: "player", anime: "player", sources: "player" })
+    function resolveSection(id: string): string {
+        return String(root.renamedSections[id] ?? (id.length > 0 ? id : "general"))
+    }
     readonly property var renamedGroups: ({ "appearance/wallpaper": "Wallpaper tint" })
     function followMovedGroup(): void {
         let wanted = root.requestedGroup.toLowerCase()
@@ -311,7 +326,7 @@ Item {
         }
         if (GlobalStates.settingsOverlayRequestedPage >= 0) root.group = ""
         const request = String(GlobalStates.settingsOverlayRequestedSection ?? "").split("/")
-        root.requestedSection = request[0] ?? ""
+        root.requestedSection = root.resolveSection(request[0] ?? "")
         if (request.length > 1) {
             root.requestedGroup = request.slice(1).join("/")
             groupRequest.restart()
@@ -744,7 +759,8 @@ Item {
                     }
                     IrisButton {
                         readonly property bool rehearses: root.section === "lock"
-                        readonly property bool arranges: root.section === "controlCenter"
+                        readonly property bool arranges: root.section === "sidebars"
+                            && (root.openGroup.length === 0 || root.openGroup === "Control Center")
                         visible: !root.searching && root.advancedPage < 0 && (rehearses || arranges)
                         quiet: !rehearses
                         emphasized: rehearses

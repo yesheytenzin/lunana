@@ -3,6 +3,7 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import Quickshell
+import Quickshell.Io
 import "../../common"
 import "../../../services"
 import "../style"
@@ -12,7 +13,7 @@ import "../control"
 import "../background"
 import "../../background/widgets"
 
-QtObject {
+Singleton {
     id: root
 
     function plain(value: var): var {
@@ -43,7 +44,7 @@ QtObject {
     }
     function commit(spec: var, next: var): void {
         // A family switch goes through the shell's transition, never a bare config write.
-        if (spec.path === "panelFamily") Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")), "panelFamily", "set", String(next)])
+        if (spec.path === "panelFamily") Quickshell.execDetached(["omarchy-shell", "lunana.family", "set", String(next)])
         else if (spec.widgetDesign) DesktopWidgetDesign.apply(String(next))
         else if (spec.niri) IrisNiri.set(spec, next)
         else if (spec.kind === "icon") IrisPieces.setGlyph(String(spec.piece ?? ""), String(next ?? ""))
@@ -117,6 +118,18 @@ QtObject {
     function modified(spec: var): bool {
         return root.resettable(spec) && !root.same(root.currentValue(spec), spec.fallback)
     }
+    // Whether Omarchy's CLI is around: gates the Omarchy theme/background rows.
+    // -1 unknown, 0 no, 1 yes (same shape as FileUtils.supportsFish).
+    property int _omarchyAvailable: -1
+    readonly property bool omarchyPresent: root._omarchyAvailable === 1
+    Process {
+        id: omarchyCheckProc
+        command: ["sh", "-c", "command -v omarchy >/dev/null 2>&1"]
+        onExited: (exitCode, exitStatus) => {
+            root._omarchyAvailable = (exitCode === 0) ? 1 : 0
+        }
+    }
+    Component.onCompleted: omarchyCheckProc.running = true
 
     readonly property bool widgetGlass: DesktopWidgetDesign.current === "iris"
     readonly property var pairings: [
@@ -254,6 +267,7 @@ QtObject {
         { target: "material", group: "Colour theme", label: "Style", description: "iRiS is vivid, Washi is paper and pigment, Material You follows your wallpaper.", kind: "choice", tiles: true, flatTiles: true, fallback: "iris", bundle: ["iris.appearance.language", "iris.appearance.variant"], choices: root.styleChoices, keywords: ["style", "palette style", "iris", "washi", "paper", "pigment", "material you", "material", "android", "monet", "dynamic colour", "dynamic color", "tonal spot", "vibrant", "expressive", "fidelity", "monochrome", "preset", "estilo", "paleta"] },
         { target: "material", group: "Colour theme", label: "Colour theme", description: "The palette your shell and apps wear. Wallpaper makes one for each wallpaper.", path: "appearance.theme", kind: "choice", tiles: true, fallback: "auto", choices: root.colourThemeChoices, note: () => root.themeNote(), keywords: ["palette", "catppuccin", "nord", "gruvbox", "dracula", "rose pine", "tokyo night", "everforest", "kanagawa", "theme", "apps", "terminal", "colours", "colors", "tema", "paleta", "ink"] },
         { target: "material", group: "Colour theme", label: "Match the shell", description: "The shell takes the theme's accent, highlight and material too.", path: "iris.appearance.followTheme", visibleWhen: "!appearance.theme=auto", kind: "switch", fallback: true, keywords: ["sync", "match", "follow", "apps", "shell", "accent", "sincronizar"] },
+        { target: "material", group: "Colour theme", label: "Omarchy theme", description: "The system theme for terminals, apps and the desktop. Opens Omarchy's switcher; this shell follows it live.", kind: "action", button: "Switch", run: () => Quickshell.execDetached(["omarchy", "theme", "switcher"]), showIf: () => root.omarchyPresent, keywords: ["omarchy", "system theme", "switcher", "theme switcher", "terminal", "apps", "sistema", "tema"] },
         { target: "material", group: "Scheme", label: "Scheme", description: "Ink sits between dark and light: paper and ink, easier on the eyes.", path: "iris.appearance.scheme", kind: "choice", fallback: "auto", choices: [{label:"Auto",value:"auto",glyph:"auto_awesome"},{label:"Dark mode",value:"dark",glyph:"dark_mode"},{label:"Ink",value:"ink",glyph:"ink_pen"},{label:"Light mode",value:"light",glyph:"light_mode"}], keywords: ["light", "dark", "ink", "sumi", "washi", "paper", "japanese", "day", "night", "mode", "theme", "bright", "white", "black", "claro", "oscuro", "tinta", "modo"] , note: () => root.schemeNote() },
         { target: "material", group: "Scheme", label: "Light or dark from the wallpaper", description: "With Auto, bright wallpapers pick light and dark ones pick dark.", path: "appearance.wallpaperTheming.autoDarkLightMode", visibleWhen: "iris.appearance.scheme=auto", kind: "switch", fallback: false, keywords: ["auto", "brightness", "night", "day", "wallpaper", "luminance", "claro", "oscuro"] },
         { target: "material", group: "Dark look", showIf: () => root.schemeShown("dark"), label: "Paper", description: "Night is your style's own. Kuro, Sumi and Usuzumi are ink at night: washi paper, gentle on the eyes.", kind: "choice", tiles: true, flatTiles: true, fallback: "night", bundle: ["iris.appearance.tune.dark.tone", "iris.appearance.tune.dark.warmth", "iris.appearance.darkStyle"], choices: root.paperChoices("dark"), keywords: ["paper", "washi", "ink", "sumi", "night", "eyes", "charcoal", "warm", "papel", "tinta", "noche"] },
@@ -617,6 +631,7 @@ QtObject {
 
     readonly property var behaviour: [
         { section: "appearance", group: "Look", label: "Base look", description: "The starting shape and contrast language. Customize tweaks stay on top of it.", path: "iris.appearance.preset", kind: "choice", fallback: "iris", choices: [{label:"iRiS",value:"iris"},{label:"Soft",value:"soft"},{label:"Round",value:"round"},{label:"Crisp",value:"crisp"},{label:"Angular",value:"angular"},{label:"Contrast",value:"contrast"}] },
+        { section: "appearance", group: "Look", label: "Chrome contrast", description: "How far the Island, Dock and the edge frame lift off the wallpaper and the apps. 0 keeps one material; 100 uses the palette's next step.", path: "iris.appearance.chromeContrast", kind: "range", fallback: 100, min: 0, max: 100, step: 5, unit: " %", keywords: ["chrome", "contrast", "dock", "island", "edge", "frame", "surface", "elevation", "depth"] },
         { section: "bar", group: "Layout", label: "Composition", description: "Cluster splits media and controls into bubbles beside the clock.", path: "iris.bar.composition", kind: "choice", fallback: "cluster", choices: [{label:"Unified",value:"unified",glyph:"crop_7_5"},{label:"Cluster",value:"cluster",glyph:"bubble_chart"}] },
         { section: "bar", group: "Visibility", label: "Automatically hide", description: "The Island tucks into its edge and comes back when you rest the pointer there.", path: "iris.bar.autoHide", kind: "switch", fallback: false },
         { section: "bar", group: "Visibility", label: "Stay visible on empty workspaces", description: "When auto-hide is on, keep the Island visible on workspaces with no windows.", path: "iris.bar.revealOnEmpty", visibleWhen: "iris.bar.autoHide", kind: "switch", fallback: true },
@@ -777,6 +792,9 @@ QtObject {
         { section: "desktop", group: "Wallpaper shuffle", label: "Shuffle wallpapers", description: "A new wallpaper from your folder every few minutes. Next wallpaper in the desktop menu does it once.", path: "background.autoWallpaper.enable", kind: "switch", fallback: false, keywords: ["shuffle", "random", "slideshow", "rotate", "cycle", "change", "automatic", "timer", "next wallpaper"] },
         { section: "desktop", group: "Wallpaper shuffle", label: "Every", path: "background.autoWallpaper.intervalMinutes", visibleWhen: "background.autoWallpaper.enable", kind: "range", fallback: 30, min: 1, max: 240, step: 1, unit: " min", keywords: ["interval", "minutes", "how often", "slideshow"] },
         { section: "desktop", group: "Wallpaper shuffle", label: "Colours follow", description: "Each new wallpaper recolours the shell and your apps. Off keeps the current colours.", path: "background.autoWallpaper.generateColors", visibleWhen: "background.autoWallpaper.enable", kind: "switch", fallback: true, keywords: ["colors", "theme", "recolor", "palette"] },
+        { section: "desktop", group: "Wallpaper shuffle", label: "Follow Omarchy background", description: "Theme switches and Next background change this desktop too. Off keeps inir's wallpaper independent.", path: "background.followOmarchyBackground", kind: "switch", fallback: true, showIf: () => root.omarchyPresent, keywords: ["omarchy", "follow", "sync", "background", "theme", "sincronizar", "fondo", "seguir"] },
+        { section: "desktop", group: "Wallpaper shuffle", label: "Next Omarchy background", description: "One step through the theme's backgrounds, right now.", kind: "action", button: "Next", run: () => Quickshell.execDetached(["omarchy", "theme", "bg", "next"]), showIf: () => root.omarchyPresent, keywords: ["omarchy", "next", "background", "cycle", "siguiente", "fondo"] },
+        { section: "desktop", group: "Wallpaper shuffle", label: "Choose Omarchy background", description: "Opens Omarchy's background switcher; the choice lands on this desktop too.", kind: "action", button: "Choose", run: () => Quickshell.execDetached(["omarchy", "theme", "bg-switcher"]), showIf: () => root.omarchyPresent, keywords: ["omarchy", "choose", "background", "switcher", "gallery", "elegir", "fondo"] },
         { section: "desktop", group: "Wallpaper gallery", label: "Preview on the desktop", description: "The highlighted wallpaper shows behind the gallery; closing without applying restores yours.", path: "iris.wallpaper.livePreview", kind: "switch", fallback: true },
         { section: "desktop", group: "Wallpaper gallery", label: "Play previews", description: "Live wallpapers play a muted preview while chosen or hovered in the gallery. Only one plays at a time.", path: "iris.wallpaper.motion", kind: "switch", fallback: true },
         { section: "desktop", group: "Wallpaper gallery", label: "Library order", description: "How your folders line up in the gallery.", path: "iris.wallpaper.sort", kind: "choice", fallback: "newest", choices: [{label:"Newest",value:"newest",glyph:"schedule"},{label:"Oldest",value:"oldest",glyph:"history"},{label:"Name",value:"name",glyph:"sort_by_alpha"}], keywords: ["sort", "order", "date", "recent", "newest", "oldest", "name", "alphabetical"] },
@@ -828,7 +846,7 @@ QtObject {
         { section: "general", group: "Settings window", label: "Opens as", description: "Over the desktop previews every change on the screen behind it. A window sits with your apps: Niri sizes, maximizes and moves it like any other.", path: "iris.appearance.settingsHost", kind: "choice", fallback: "overlay", choices: [{ label: "Over the desktop", value: "overlay", glyph: "layers" }, { label: "Window", value: "window", glyph: "web_asset" }], keywords: ["settings", "window", "overlay", "floating", "tile", "maximize"] },
         { section: "general", group: "Settings window", label: "Layout", description: "Sidebar lists every area beside the page. Rail keeps only their marks, for more room. Home opens on every area at once; each opens full width.", path: "iris.appearance.settingsLayout", kind: "choice", fallback: "sidebar", choices: [{ label: "Sidebar", value: "sidebar", glyph: "view_sidebar" }, { label: "Rail", value: "rail", glyph: "view_week" }, { label: "Home", value: "home", glyph: "grid_view" }], keywords: ["settings", "navigation", "sidebar", "rail", "grid", "home", "layout"] },
         { section: "general", group: "Performance", label: "Low power", description: "Turns glass, blur and heavy wallpaper effects off everywhere.", path: "performance.lowPower", kind: "switch", fallback: false, keywords: ["performance", "battery", "effects", "glass", "blur", "rendimiento"] },
-        { section: "general", group: "Shell family", label: "Family", description: "The whole shell's look. Each family keeps its own settings, so you can come back.", path: "panelFamily", kind: "choice", fallback: "iris", choices: [{label:"iRiS",value:"iris",glyph:"visibility"},{label:"Material",value:"ii",glyph:"dashboard"},{label:"Windows 11",value:"waffle",glyph:"window"}], keywords: ["family", "material", "waffle", "windows", "ii", "switch", "familia"] },
+        { section: "general", group: "Shell family", label: "Family", description: "The whole shell's look. Each family keeps its own settings, so you can come back — or go back to stock Omarchy.", path: "panelFamily", kind: "choice", fallback: "iris", choices: [{label:"iRiS",value:"iris",glyph:"visibility"},{label:"Material",value:"ii",glyph:"dashboard"},{label:"Windows 11",value:"waffle",glyph:"window"},{label:"Omarchy stock",value:"stock",glyph:"desktop_windows"}], keywords: ["family", "material", "waffle", "windows", "ii", "switch", "familia", "stock", "omarchy", "back"] },
         { section: "general", group: "Shell family", label: "Switch shortcut goes through", description: "The families the switch keybind steps through, in the order you turn them on.", path: "familyCycle", kind: "pieces", fallback: ["ii", "waffle", "iris"], choices: [{label:"iRiS",value:"iris"},{label:"Material",value:"ii"},{label:"Windows 11",value:"waffle"}], keywords: ["family", "cycle", "shortcut", "keybind", "switch"] },
         { section: "general", group: "Shell family", label: "Animated switch", description: "A short transition while the families swap, instead of a cut.", path: "familyTransitionAnimation", kind: "switch", fallback: true, keywords: ["family", "transition", "animation"] },
 
@@ -1037,35 +1055,26 @@ QtObject {
         { label: "Current window", value: "window" }, { label: "Time", value: "time" }
     ].concat(IrisPieces.extras.filter(piece => piece.id !== "workspaces").map(piece => ({ label: piece.label, value: piece.id })))
     // Settings' sidebar, in the order and clusters it shows. `tip` is the one line a section opens on.
+    // Fifteen sections: related surfaces share one page (Island & Dock, Panels & Search,
+    // Notifications & Sound, Display & Power, Lock & Login, Media & Sources) so a task
+    // no longer spans three sections. Retired ids still resolve via renamedSections
+    // (IrisSettings.qml) and movedGroups below, so old deep links keep landing.
     readonly property var sections: [
         { id: "general", cluster: 0, title: "General", subtitle: "Time, language and how iRiS behaves", icon: "settings", get tint() { return IrisStyle.identity.gray }, tip: "Settings that shape the whole shell, whichever surface shows them." },
-        { id: "appearance", cluster: 0, title: "Appearance", subtitle: "Look, material, shape and type", icon: "style", get tint() { return IrisStyle.identity.purple }, tip: "Customize edits the same values live, on top of your desktop." },
-        { id: "colour", cluster: 0, title: "Colour", subtitle: "Light or dark, accent, highlight and your apps", icon: "palette", get tint() { return IrisStyle.identity.pink }, tip: "Colour can come from your wallpaper, from a theme, or be one you pick." },
-        { id: "wallpaper", cluster: 0, title: "Wallpaper", subtitle: "Shuffle, live wallpapers, the gallery and the overview", icon: "wallpaper", get tint() { return IrisStyle.identity.teal }, tip: "Next wallpaper in the desktop menu changes it once; Shuffle keeps changing it." },
-        { id: "motion", cluster: 0, title: "Motion", subtitle: "How every shape grows, moves and settles", icon: "animation", get tint() { return IrisStyle.identity.indigo }, tip: "Shorter durations feel snappier; the curve stays the same." },
-        { id: "bar", cluster: 1, title: "Island", subtitle: "Composition, size and how the Island responds", icon: "pill", get tint() { return IrisStyle.identity.blue }, tip: "Rest on the Island to peek, click to keep it, scroll for volume." },
-        { id: "bubbles", cluster: 1, title: "Bubbles & Cards", subtitle: "Pieces you carry and the cards they grow", icon: "bubble_chart", get tint() { return IrisStyle.identity.sky }, tip: "Hold a bubble to carry it; drop it beside the Island to bring it back." },
-        { id: "dock", cluster: 1, title: "Dock", subtitle: "Visibility, material and app icons", icon: "dock_to_bottom", get tint() { return IrisStyle.identity.indigo }, tip: "Slide an icon along the Dock to move it. Right-click it for its windows or to float it as a bubble; middle-click opens a new one." },
-        { id: "desktop", cluster: 1, title: "Desktop", subtitle: "Widgets and the desktop menu", icon: "widgets", get tint() { return IrisStyle.identity.yellow }, tip: "Right-click the desktop to edit widgets." },
+        { id: "appearance", cluster: 0, title: "Look & Colour", subtitle: "Theme, light and dark, accent, shape and type", icon: "style", get tint() { return IrisStyle.identity.purple }, tip: "Colour can come from your wallpaper, from a theme, or be one you pick." },
+        { id: "wallpaper", cluster: 0, title: "Desktop & Wallpaper", subtitle: "Widgets, shuffle, live wallpapers and the gallery", icon: "wallpaper", get tint() { return IrisStyle.identity.teal }, tip: "Next wallpaper in the desktop menu changes it once; Shuffle keeps changing it." },
+        { id: "bar", cluster: 0, title: "Island & Dock", subtitle: "Composition, apps, size and how the Island responds", icon: "pill", get tint() { return IrisStyle.identity.blue }, tip: "Rest on the Island to peek, click to keep it, scroll for volume." },
+        { id: "bubbles", cluster: 0, title: "Bubbles & Cards", subtitle: "Pieces you carry and the cards they grow", icon: "bubble_chart", get tint() { return IrisStyle.identity.sky }, tip: "Hold a bubble to carry it; drop it beside the Island to bring it back." },
+        { id: "sidebars", cluster: 0, title: "Panels & Search", subtitle: "Side panels, Control Center and Spotlight", icon: "dock_to_right", get tint() { return IrisStyle.identity.green }, tip: "Ctrl+E customizes a panel; ; in Spotlight lists the clipboard, = calculates." },
+        { id: "orbit", cluster: 0, title: "Orbit", subtitle: "Every workspace and window, and the way to any of them", icon: "workspaces", get tint() { return IrisStyle.identity.indigo }, tip: "Type to light up where a window is; ↵ takes you to it. Bind inir orbit toggle." },
+        { id: "notifications", cluster: 0, title: "Notifications & Sound", subtitle: "Banners, volume, alert sounds and Do Not Disturb", icon: "notifications", get tint() { return IrisStyle.identity.red }, tip: "Hover a banner to keep it; scroll on the Island for volume." },
+        { id: "capture", cluster: 0, title: "Screenshots & Recording", subtitle: "Snip, annotate, read Japanese and record", icon: "screenshot_region", get tint() { return IrisStyle.identity.orange }, tip: "Super+Shift+S snips; the toolbar switches to text, search or recording." },
+        { id: "display", cluster: 1, title: "Display & Power", subtitle: "Resolution, night light, battery and fullscreen gaming", icon: "brightness_6", get tint() { return IrisStyle.identity.blue }, tip: "Shift and scroll on the Island for brightness; game mode turns on by itself." },
+        { id: "keyboard", cluster: 1, title: "Keyboard & Mouse", subtitle: "Layouts, repeat, pointer speed and cursor", icon: "keyboard", get tint() { return IrisStyle.identity.gray }, tip: "Your shortcuts are in General, Keyboard shortcuts." },
         { id: "windows", cluster: 1, title: "Windows", subtitle: "Gaps, borders, corners and how Niri moves them", icon: "select_window", get tint() { return IrisStyle.identity.orange }, tip: "Niri draws these; they change right away and live in your Niri config." },
-        { id: "sidebars", cluster: 1, title: "Side Panels", subtitle: "Focus and Today, arranged around your workflow", icon: "dock_to_right", get tint() { return IrisStyle.identity.green }, tip: "Ctrl+E customizes a panel; Keep open makes room beside windows." },
-        { id: "controlCenter", cluster: 2, title: "Control Center", subtitle: "What it carries and how it looks", icon: "toggle_on", get tint() { return IrisStyle.identity.gray }, tip: "Arrange it in place from the button beside the lock in its header." },
-        { id: "spotlight", cluster: 2, title: "Spotlight", subtitle: "Search apps, files, the clipboard and more", icon: "search", get tint() { return IrisStyle.identity.blue }, tip: "Prefixes: ; clipboard, = calculator, / actions." },
-        { id: "orbit", cluster: 2, title: "Orbit", subtitle: "Every workspace and window, and the way to any of them", icon: "workspaces", get tint() { return IrisStyle.identity.indigo }, tip: "Type to light up where a window is; ↵ takes you to it. Bind inir orbit toggle." },
-        { id: "notifications", cluster: 2, title: "Notifications", subtitle: "Banners, quiet hours and Do Not Disturb", icon: "notifications", get tint() { return IrisStyle.identity.red }, tip: "Hover a banner to keep it; swipe it away to dismiss." },
-        { id: "sound", cluster: 2, title: "Sound & Feedback", subtitle: "Volume, alert sounds and what the OSD shows", icon: "volume_up", get tint() { return IrisStyle.identity.pink }, tip: "Scroll on the Island for volume; Ctrl for the microphone." },
-        { id: "capture", cluster: 2, title: "Screenshots & Recording", subtitle: "Snip, annotate, read Japanese and record", icon: "screenshot_region", get tint() { return IrisStyle.identity.orange }, tip: "Super+Shift+S snips; the toolbar switches to text, search or recording." },
-        { id: "display", cluster: 3, title: "Display", subtitle: "Resolution, scale, night light and bright flashes", icon: "brightness_6", get tint() { return IrisStyle.identity.blue }, tip: "Shift and scroll on the Island for brightness." },
-        { id: "keyboard", cluster: 3, title: "Keyboard & Mouse", subtitle: "Layouts, repeat, pointer speed and cursor", icon: "keyboard", get tint() { return IrisStyle.identity.gray }, tip: "Your shortcuts are in General, Keyboard shortcuts." },
-        { id: "battery", cluster: 3, title: "Battery", subtitle: "Warnings, suspend and charge limit", icon: "battery_full", get tint() { return IrisStyle.identity.green }, tip: "Only matters on a machine with a battery." },
-        { id: "gaming", cluster: 3, title: "Gaming & Fullscreen", subtitle: "What iRiS steps back from while you play", icon: "sports_esports", get tint() { return IrisStyle.identity.purple }, tip: "Game mode turns on by itself for fullscreen games." },
-        { id: "lock", cluster: 4, title: "Lock Screen", subtitle: "What it shows, when it locks and how it reads", icon: "lock", get tint() { return IrisStyle.identity.gray }, tip: "Rehearse it: the real surface, editable, with nothing to unlock." },
-        { id: "login", cluster: 4, title: "Login Screen", subtitle: "Where you sign in after starting the computer", icon: "login", get tint() { return IrisStyle.identity.indigo }, tip: "A change shows the next time you sign in." },
-        { id: "player", cluster: 5, title: "Now Playing", subtitle: "Music in the Island and on the lock screen", icon: "music_note", get tint() { return IrisStyle.identity.pink }, tip: "Middle-click the Island to play or pause." },
-        { id: "frameMusic", cluster: 5, title: "Frame Music", subtitle: "Shape and response of the music-driven frame", icon: "graphic_eq", get tint() { return IrisStyle.identity.pink }, tip: "Choose The frame to make the screen contour move with your music." },
-        { id: "anime", cluster: 5, title: "Anime", subtitle: "Airing, Continue and the anime colour layer", icon: "live_tv", get tint() { return IrisStyle.identity.purple }, tip: "Airing tracks what is coming; Continue resumes what you were watching." },
-        { id: "sources", cluster: 6, title: "Sources", subtitle: "Where the Island gets what it shows", icon: "cloud_sync", get tint() { return IrisStyle.identity.yellow }, tip: "A setting belongs here when an iRiS surface puts its data on screen." },
-        { id: "system", cluster: 6, title: "More Settings", subtitle: "Wallpaper engine, Niri, widgets and services", icon: "tune", get tint() { return IrisStyle.identity.gray }, tip: "Pages iRiS shares with the other families." }
+        { id: "lock", cluster: 1, title: "Lock & Login", subtitle: "What it shows, when it locks and how you sign in", icon: "lock", get tint() { return IrisStyle.identity.gray }, tip: "Rehearse it: the real surface, editable, with nothing to unlock." },
+        { id: "player", cluster: 2, title: "Media & Sources", subtitle: "Now playing, frame music, anime and island data", icon: "music_note", get tint() { return IrisStyle.identity.pink }, tip: "Middle-click the Island to play or pause." },
+        { id: "system", cluster: 3, title: "More Settings", subtitle: "Wallpaper engine, Niri, widgets and services", icon: "tune", get tint() { return IrisStyle.identity.gray }, tip: "Pages iRiS shares with the other families." }
     ]
     // The shared iNiR pages that still act under iRiS, as "More Settings" lists them. Pages for other families stay out.
     readonly property var morePages: [
@@ -1088,21 +1097,21 @@ QtObject {
             about: "Accent, highlight, the light bodies carry and how much wallpaper iRiS takes in." },
         { id: "type", label: "Type", glyph: "text_fields", get tint() { return IrisStyle.identity.orange }, tipOf: "", tip: "Figures have their own face: the clock and every level read it.",
             about: "Typefaces, figures and how large text reads." },
-        { id: "motion", label: "Motion", glyph: "animation", get tint() { return IrisStyle.identity.indigo }, tipOf: "motion",
+        { id: "motion", label: "Motion", glyph: "animation", get tint() { return IrisStyle.identity.indigo }, tipOf: "appearance",
             about: "How shapes open, move and settle, everywhere at once or per surface." },
         { id: "island", label: "Island", glyph: "pill", get tint() { return IrisStyle.identity.blue }, tipOf: "bar",
             about: "Its shape on the edge, what it shows at rest, and its pages." },
         { id: "pieces", label: "Pieces", glyph: "bubble_chart", get tint() { return IrisStyle.identity.sky }, tipOf: "bubbles",
             about: "Bubbles off the Island and the bars they form." },
-        { id: "bodies", label: "Cards", glyph: "web_asset", get tint() { return IrisStyle.identity.teal }, tipOf: "controlCenter",
+        { id: "bodies", label: "Cards", glyph: "web_asset", get tint() { return IrisStyle.identity.teal }, tipOf: "sidebars",
             about: "Cards, the Control Center and the player." },
         { id: "places", label: "Panels", glyph: "space_dashboard", get tint() { return IrisStyle.identity.green }, tipOf: "sidebars",
             about: "Side panels, Spotlight, the gallery, Settings and menus." },
         { id: "transients", label: "Feedback", glyph: "notifications", get tint() { return IrisStyle.identity.red }, tipOf: "notifications",
-            about: "Notifications and level feedback." },
-        { id: "dock", label: "Dock", glyph: "dock_to_bottom", get tint() { return IrisStyle.identity.lavender }, tipOf: "dock",
+            about: "Notifications, sound and level feedback." },
+        { id: "dock", label: "Dock", glyph: "dock_to_bottom", get tint() { return IrisStyle.identity.lavender }, tipOf: "bar",
             about: "The Dock's shape and its icons." },
-        { id: "desktop", label: "Desktop", glyph: "widgets", get tint() { return IrisStyle.identity.yellow }, tipOf: "desktop",
+        { id: "desktop", label: "Desktop", glyph: "widgets", get tint() { return IrisStyle.identity.yellow }, tipOf: "wallpaper",
             about: "Widgets on the desktop." },
         { id: "themes", label: "Themes", glyph: "style", get tint() { return IrisStyle.identity.gray }, tipOf: "", tip: "A theme is one small file: copy it to share, paste one to try it.",
             about: "Whole redesigns of iRiS, and the ones you save and share." }
@@ -1326,53 +1335,92 @@ QtObject {
     }
     // The order a section's groups are listed in: what someone came to change first, the rest as they were declared.
     readonly property var groupOrder: ({
-        appearance: ["Look", "Themes", "Material", "Glass", "Texture", "Edges", "Light", "Shape", "Corners per surface",
-            "Frame", "Text", "Faces", "Icons", "Material per surface", "Menus", "Settings", "Badges", "Customize", "Previews"],
-        colour: ["Scheme", "Accent", "Highlight", "Colour theme", "App colours", "Dark look", "Ink look", "Light look", "Wallpaper tint"],
-        bar: ["Notch", "Layout", "Shape", "At rest", "Resting Island", "Bar", "Pages", "Desktop page", "Player page", "Interaction", "Visibility", "Connections"],
+        appearance: ["Look", "Themes", "Scheme", "Accent", "Highlight", "Colour theme", "App colours", "Dark look", "Ink look", "Light look", "Wallpaper tint",
+            "Material", "Glass", "Texture", "Edges", "Light", "Shape", "Corners per surface",
+            "Frame", "Text", "Faces", "Icons", "Material per surface", "Menus", "Settings", "Badges", "Customize", "Previews",
+            "Motion", "Curve", "Timing", "Touch", "Per surface", "Style per surface"],
+        bar: ["Notch", "Layout", "Shape", "At rest", "Resting Island", "Bar", "Pages", "Desktop page", "Player page", "Interaction", "Visibility", "Connections",
+            "Apps", "Icons", "Look"],
         bubbles: ["Size", "Behaviour", "On the contour", "Floating", "Opening bodies", "Cards", "Card contents", "Joining", "Tray"],
-        dock: ["Notch", "Look", "Icons", "Visibility"],
-        desktop: ["Widgets", "Desktop menu"],
-        wallpaper: ["Wallpaper shuffle", "Live wallpapers", "Wallpaper gallery", "Scaling", "Behind windows", "Parallax", "Overview backdrop"],
-        lock: ["When idle", "Security", "Scene", "Clock", "At a glance", "Now playing", "Activity", "Status", "Sign in", "Type"]
+        sidebars: ["Focus · left", "Today · right", "Panel look", "Control Center", "Spotlight", "Clipboard", "Web search"],
+        notifications: ["Banners", "Do Not Disturb", "Sound", "Volume", "Feedback", "Alert sounds"],
+        display: ["Screen", "Comfort", "Night Light", "Warnings", "Suspend", "Charge limit", "Game mode", "Fullscreen"],
+        player: ["Bubble", "Airing", "Continue", "Finish", "Frame response", "On the edges", "Calendar", "Weather", "Updates", "VPN", "New iNiR"],
+        wallpaper: ["Wallpaper shuffle", "Live wallpapers", "Wallpaper gallery", "Scaling", "Behind windows", "Parallax", "Overview backdrop", "Widgets", "Desktop menu"],
+        lock: ["When idle", "Security", "Scene", "Clock", "At a glance", "Now playing", "Activity", "Status", "Sign in", "Login Screen", "Type"]
     })
     // How a section's page reads: named blocks of groups, by what someone came to change.
     readonly property var groupClusters: ({
         appearance: [
-            { caption: "Look", groups: ["Look", "Themes"] },
+            { caption: "Look", groups: ["Look", "Themes", "Scheme", "Accent", "Highlight"] },
+            { caption: "Where colour comes from, and where it goes", flow: true, groups: ["Colour theme", "App colours"] },
+            { caption: "Fine tuning", groups: ["Dark look", "Ink look", "Light look", "Wallpaper tint"] },
             { caption: "Surfaces", groups: ["Material", "Glass", "Texture", "Edges", "Light", "Adaptive"] },
             { caption: "Shape and type", groups: ["Shape", "Corners per surface", "Frame", "Text", "Faces", "Icons"] },
+            { caption: "Motion", groups: ["Motion", "Curve", "Timing", "Touch", "Per surface", "Style per surface"] },
             { caption: "Per surface", groups: ["Material per surface", "Menus", "Settings"] }
         ],
         bar: [
             { caption: "Shape", groups: ["Notch", "Layout", "Shape"] },
             { caption: "What it shows", groups: ["At rest", "Resting Island", "Bar", "Pages", "Desktop page", "Player page"] },
-            { caption: "Behaviour", groups: ["Interaction", "Visibility", "Connections"] }
+            { caption: "Behaviour", groups: ["Interaction", "Visibility", "Connections"] },
+            { caption: "Dock", groups: ["Apps", "Icons", "Look"] }
         ],
         bubbles: [
             { caption: "Bubbles", groups: ["Size", "Behaviour", "On the contour", "Floating"] },
             { caption: "Cards", groups: ["Opening bodies", "Cards", "Card contents", "Joining", "Tray"] }
         ],
-        colour: [
-            { caption: "What you see first", groups: ["Scheme", "Accent", "Highlight"] },
-            { caption: "Where colour comes from, and where it goes", flow: true, groups: ["Colour theme", "App colours"] },
-            { caption: "Fine tuning", groups: ["Dark look", "Ink look", "Light look", "Wallpaper tint"] }
+        sidebars: [
+            { caption: "Panels", groups: ["Focus · left", "Today · right", "Panel look"] },
+            { caption: "Search", groups: ["Spotlight", "Clipboard", "Web search"] },
+            { caption: "Controls", groups: ["Control Center"] }
+        ],
+        notifications: [
+            { caption: "Banners", groups: ["Banners", "Do Not Disturb", "Sound"] },
+            { caption: "Sound", groups: ["Volume", "Feedback", "Alert sounds"] }
+        ],
+        display: [
+            { caption: "Screen", groups: ["Screen", "Comfort", "Night Light"] },
+            { caption: "Power", groups: ["Warnings", "Suspend", "Charge limit"] },
+            { caption: "Gaming", groups: ["Game mode", "Fullscreen"] }
+        ],
+        player: [
+            { caption: "Now playing", groups: ["Bubble"] },
+            { caption: "Watching", groups: ["Airing", "Continue"] },
+            { caption: "Frame music", groups: ["Finish", "Frame response", "On the edges"] },
+            { caption: "Sources", groups: ["Calendar", "Weather", "Updates", "VPN", "New iNiR"] }
         ],
         wallpaper: [
             { caption: "Changing it", groups: ["Wallpaper shuffle", "Live wallpapers", "Wallpaper gallery"] },
-            { caption: "How it sits", groups: ["Scaling", "Behind windows", "Parallax", "Overview backdrop"] }
+            { caption: "How it sits", groups: ["Scaling", "Behind windows", "Parallax", "Overview backdrop"] },
+            { caption: "Desktop", groups: ["Widgets", "Desktop menu"] }
         ],
         lock: [
             { caption: "Locking", groups: ["When idle", "Security"] },
             { caption: "Look", groups: ["Scene", "Clock", "Type"] },
-            { caption: "What it shows", groups: ["At a glance", "Now playing", "Activity", "Status", "Sign in"] }
+            { caption: "What it shows", groups: ["At a glance", "Now playing", "Activity", "Status", "Sign in", "Login Screen"] }
         ]
     })
     // Topics big enough to be looked for by name have a section of their own; their rows are declared where their
     // surface's other rows are (Customize reads them there) and are shown here.
+    // Topics folded into a shared page keep their rows where they are declared (Customize reads
+    // them there); placed() shows them on the surviving section. Every retired section id must
+    // appear here with ALL of its groups (declared rows and studio mirrors alike) or its rows
+    // vanish from `settings`, which iterates sectionOrder. Retired ids also live in
+    // renamedSections (IrisSettings.qml) so deep links keep landing.
     readonly property var movedGroups: ({
-        appearance: { to: "colour", groups: ["Colour theme", "Scheme", "Accent", "Highlight", "App colours", "Dark look", "Ink look", "Light look", "Wallpaper tint"] },
-        desktop: { to: "wallpaper", groups: ["Wallpaper shuffle", "Scaling", "Live wallpapers", "Wallpaper gallery", "Behind windows", "Parallax", "Overview backdrop"] }
+        desktop: { to: "wallpaper", groups: ["Wallpaper shuffle", "Scaling", "Live wallpapers", "Wallpaper gallery", "Behind windows", "Parallax", "Overview backdrop", "Widgets", "Desktop menu"] },
+        dock: { to: "bar", groups: ["Apps", "Icons", "Visibility", "Notch", "Look"] },
+        motion: { to: "appearance", groups: ["Motion", "Curve", "Timing", "Touch", "Per surface", "Style per surface"] },
+        controlCenter: { to: "sidebars", groups: ["Control Center"] },
+        spotlight: { to: "sidebars", groups: ["Spotlight", "Clipboard", "Web search"] },
+        sound: { to: "notifications", groups: ["Alert sounds", "Feedback", "Volume"] },
+        battery: { to: "display", groups: ["Charge limit", "Suspend", "Warnings"] },
+        gaming: { to: "display", groups: ["Fullscreen", "Game mode"] },
+        login: { to: "lock", groups: ["Login Screen"] },
+        frameMusic: { to: "player", groups: ["Finish", "Frame response", "On the edges"] },
+        anime: { to: "player", groups: ["Airing", "Continue"] },
+        sources: { to: "player", groups: ["Calendar", "New iNiR", "Updates", "VPN", "Weather"] }
     })
     function placed(spec: var): var {
         const move = root.movedGroups[String(spec.section ?? "")]
