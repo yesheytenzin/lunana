@@ -97,7 +97,7 @@ Scope {
     // One-time brand migration (pre-rename installs): old family names,
     // panel ids and config subtrees map onto the new ones. New installs never
     // hit these branches; they exist so an update does not orphan settings.
-    readonly property var legacyFamilies: ({ "drift": "drift", "slate": "slate", "atoll": "atoll" })
+    readonly property var legacyFamilies: ({ "ii": "drift", "waffle": "slate", "iris": "atoll" }) // pre-rename ids on purpose
     function normalizeFamily(name: string): string {
         return root.legacyFamilies[name] ?? name
     }

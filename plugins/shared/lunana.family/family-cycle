@@ -174,8 +174,8 @@ def enabled_ids(shell: dict) -> set:
 # Brand migration (pre-rename installs): old family names and bar ids map
 # onto the new ones exactly once, so an update converges instead of
 # stranding the session on an unknown bar.
-LEGACY_FAMILIES = {"drift": "drift", "slate": "slate", "atoll": "atoll"}
-LEGACY_BARS = {"lunana.bar-slate": "lunana.bar-slate"}
+LEGACY_FAMILIES = {"ii": "drift", "waffle": "slate", "iris": "atoll"}
+LEGACY_BARS = {"lunana.bar-waffle": "lunana.bar-slate"}  # pre-rename ids on purpose
 
 
 def normalize_shell(shell: dict) -> bool:
