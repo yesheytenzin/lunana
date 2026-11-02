@@ -134,7 +134,7 @@ Variants {
 
         Connections {
             target: GlobalStates
-            function onIrisDesktopMenuRequested(outputName: string, x: real, y: real): void {
+            function onAtollDesktopMenuRequested(outputName: string, x: real, y: real): void {
                 if (outputName !== (panel.modelData?.name ?? "")) return
                 desktopMenuAnchor.x = x
                 desktopMenuAnchor.y = y

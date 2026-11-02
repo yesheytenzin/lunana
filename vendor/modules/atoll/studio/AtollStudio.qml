@@ -94,7 +94,7 @@ PanelWindow {
     Component.onCompleted: root.takeRequest()
     Connections {
         target: GlobalStates
-        function onIrisStudioTargetChanged(): void { root.takeRequest() }
+        function onAtollStudioTargetChanged(): void { root.takeRequest() }
     }
 
     visible: GlobalStates.atollStudioOpen || frame.progress > 0

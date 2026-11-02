@@ -56,8 +56,8 @@ Item {
     }
     Connections {
         target: GlobalStates
-        function onIrisEditTargetChanged(): void { root.route(GlobalStates.atollEditTarget) }
-        function onIrisEditChanged(): void { if (!GlobalStates.atollEdit) root.tool = "" }
+        function onAtollEditTargetChanged(): void { root.route(GlobalStates.atollEditTarget) }
+        function onAtollEditChanged(): void { if (!GlobalStates.atollEdit) root.tool = "" }
     }
     Component.onCompleted: {
         root.route(GlobalStates.atollEditTarget)

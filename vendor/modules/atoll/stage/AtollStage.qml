@@ -720,7 +720,7 @@ Item {
     Component.onCompleted: { root.land(); root.publishAbsorbed() }
     Connections {
         target: GlobalStates
-        function onIrisBubbleDragChanged(): void { root.land() }
+        function onAtollBubbleDragChanged(): void { root.land() }
     }
     function land(): void {
         const drag = root.drag
@@ -972,7 +972,7 @@ Item {
         Connections {
             target: GlobalStates
             enabled: bubble.floating
-            function onIrisBubbleMenuRequestChanged(): void {
+            function onAtollBubbleMenuRequestChanged(): void {
                 const want = GlobalStates.atollBubbleMenuRequest
                 if (want.length === 0 || root.screenName !== (GlobalStates.focusedScreen?.name ?? "")) return
                 if (want !== bubble.kind && want !== bubble.slot) return
@@ -1008,7 +1008,7 @@ Item {
     }
     Connections {
         target: GlobalStates
-        function onIrisBubbleCardRequestChanged(): void {
+        function onAtollBubbleCardRequestChanged(): void {
             const kind = GlobalStates.atollBubbleCardRequest
             if (kind.length === 0 || root.screenName !== (GlobalStates.focusedScreen?.name ?? "")) return
             const index = root.allSlots.findIndex((slot, i) => root.rects[i] !== null && root.kindOf(slot) === kind)
@@ -1034,7 +1034,7 @@ Item {
     }
     Connections {
         target: GlobalStates
-        function onIrisBubbleCardChanged(): void {
+        function onAtollBubbleCardChanged(): void {
             if (GlobalStates.atollBubbleCard && GlobalStates.controlPanelOpen) GlobalStates.controlPanelOpen = false
         }
         function onControlPanelOpenChanged(): void {

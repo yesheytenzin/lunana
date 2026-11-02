@@ -30,7 +30,7 @@ Item {
     }
     Connections {
         target: GlobalStates
-        function onIrisControlPickerRequestChanged(): void { root.takePickerRequest() }
+        function onAtollControlPickerRequestChanged(): void { root.takePickerRequest() }
     }
     Component.onCompleted: root.takePickerRequest()
     // Right click on any tile that has a list (Wi-Fi, Bluetooth) opens it, whatever the tile's shape:

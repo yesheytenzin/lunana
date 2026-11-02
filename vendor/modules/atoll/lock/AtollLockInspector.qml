@@ -51,7 +51,7 @@ Item {
 
     Connections {
         target: GlobalStates
-        function onIrisLockSelectionChanged(): void {
+        function onAtollLockSelectionChanged(): void {
             const id = GlobalStates.atollLockSelection
             if (id.length > 0) GlobalStates.atollLockPage = AtollLockOptions.groupOf(id)
         }

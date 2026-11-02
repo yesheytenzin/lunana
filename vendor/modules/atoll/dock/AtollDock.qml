@@ -122,7 +122,7 @@ Item {
     }
     Connections {
         target: GlobalStates
-        function onIrisDockSlideChanged(): void {
+        function onAtollDockSlideChanged(): void {
             const request = GlobalStates.atollDockSlide
             if (!request || root.screen?.name !== GlobalStates.focusedScreen?.name) return
             if (!root.sliding) {
@@ -378,7 +378,7 @@ Item {
             Shortcut { sequence: "Escape"; enabled: window.menuOpen; onActivated: window.menuApp = null }
             Connections {
                 target: GlobalStates
-                function onIrisDockMenuRequestChanged(): void {
+                function onAtollDockMenuRequestChanged(): void {
                     if (GlobalStates.atollDockMenuRequest?.mode !== "close") return
                     GlobalStates.atollDockMenuRequest = null
                     window.menuApp = null
@@ -675,7 +675,7 @@ Item {
                             Connections {
                                 target: GlobalStates
                                 enabled: !entry.separator
-                                function onIrisDockMenuRequestChanged(): void {
+                                function onAtollDockMenuRequestChanged(): void {
                                     const request = GlobalStates.atollDockMenuRequest
                                     if (!request || request.appId !== entry.modelData.appId
                                         || root.screen?.name !== GlobalStates.focusedScreen?.name) return

@@ -908,7 +908,7 @@ Item {
     }
     Connections {
         target: GlobalStates
-        function onIrisBubbleCardRequestChanged(): void {
+        function onAtollBubbleCardRequestChanged(): void {
             if (GlobalStates.atollBubbleCardRequest.length === 0 || !root.focusedOutput) return
             Qt.callLater(() => {
                 const kind = GlobalStates.atollBubbleCardRequest
@@ -1099,7 +1099,7 @@ Item {
             root.publishRestOrigin()
             if (GlobalStates.searchOpen) root.expanded = false
         }
-        function onIrisOrbitOpenChanged(): void {
+        function onAtollOrbitOpenChanged(): void {
             root.publishRestOrigin()
             if (GlobalStates.atollOrbitOpen) root.expanded = false
         }
@@ -1321,7 +1321,7 @@ Item {
     readonly property bool focusedOutput: root.targetScreen?.name === GlobalStates.focusedScreen?.name
     Connections {
         target: GlobalStates
-        function onIrisIslandPageRequestChanged(): void {
+        function onAtollIslandPageRequestChanged(): void {
             const page = GlobalStates.atollIslandPageRequest
             if (page.length === 0 || !root.focusedOutput) return
             GlobalStates.atollIslandPageRequest = ""

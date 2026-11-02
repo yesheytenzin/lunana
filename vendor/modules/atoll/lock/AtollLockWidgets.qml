@@ -48,7 +48,7 @@ Item {
     onSelectedItemChanged: root.showTab()
     Connections {
         target: GlobalStates
-        function onIrisLockWidgetTabChanged(): void { root.showTab() }
+        function onAtollLockWidgetTabChanged(): void { root.showTab() }
     }
     function item(key: string): var {
         for (let i = 0; i < slots.count; i++) {

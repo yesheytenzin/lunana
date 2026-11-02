@@ -226,7 +226,7 @@ Item {
             root.takeRequestedQuery()
             root.focusInput()
         }
-        function onIrisSpotlightQueryChanged(): void {
+        function onAtollSpotlightQueryChanged(): void {
             if (GlobalStates.searchOpen && root.here) root.takeRequestedQuery()
         }
     }

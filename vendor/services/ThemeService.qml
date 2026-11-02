@@ -29,7 +29,7 @@ Singleton {
     readonly property bool atollMaterialApps: panelFamily === "atoll" && (Config.options?.atoll?.appearance?.materialForApps ?? true)
     property string appsSurfaceSeed: ""
     // A scheme the person picks is also their saved preference, so Auto keeps what they last saw instead of an older toggle.
-    onIrisSchemeChoiceChanged: {
+    onAtollSchemeChoiceChanged: {
         if (!Config.ready || atollSchemeChoice === "auto") return
         const wantDark = atollSchemeChoice === "dark"
         if ((Config.options?.appearance?.customTheme?.darkmode ?? true) !== wantDark)

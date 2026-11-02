@@ -1985,7 +1985,7 @@ Scope {
             // something under Atoll (shell layout editing is drift/Slate-only).
             Connections {
                 target: GlobalStates
-                function onIrisDesktopMenuRequested(outputName: string, x: real, y: real): void {
+                function onAtollDesktopMenuRequested(outputName: string, x: real, y: real): void {
                     if (outputName !== bgRoot.screenName || (Config.options?.panelFamily ?? "drift") !== "atoll") return
                     desktopMenuAnchor.x = x
                     desktopMenuAnchor.y = y

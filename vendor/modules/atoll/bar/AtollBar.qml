@@ -57,7 +57,7 @@ Scope {
     }
     Connections {
         target: GlobalStates
-        function onIrisEditChanged(): void {
+        function onAtollEditChanged(): void {
             if (GlobalStates.atollEdit) root.editScreen = GlobalStates.focusedScreen?.name ?? ""
         }
     }

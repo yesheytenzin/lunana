@@ -54,6 +54,9 @@ RULES: list[tuple[str, str]] = [
     (r"\bIris(?=[A-Z])", "Atoll"),    # IrisBar, IrisStyle, ...
     (r"\bIris\b", "Atoll"),
     (r"([a-z0-9])Iris\b", r"\1Atoll"),  # widgetIris
+    (r"onIris", "onAtoll"),               # signal handlers: onIrisEditChanged
+    (r"onWaffle", "onSlate"),
+    (r"onIi", "onDrift"),
     (r"\biris\b", "atoll"),
     (r"\biris(?=[A-Z])", "atoll"),    # irisEdit, irisBar, ...
     (r"_iris\b", "_atoll"),
@@ -133,6 +136,13 @@ PROTECTED = {
     "/home/tenzin/development/inir": "\ue000UPSTREAM_CHECKOUT\ue001",
     "snowarch/inir": "\ue000UPSTREAM_REPO\ue001",
     "github.com/snowarch/inir": "\ue000UPSTREAM_URL\ue001",
+    # Legacy-migration data (pre-rename ids the new world maps FROM).
+    # These literals must survive verbatim or migration silently no-ops.
+    '{"ii": "drift", "waffle": "slate", "iris": "atoll"}': "\ue000LEGACY_FAMS\ue001",
+    '{ "ii": "drift", "waffle": "slate", "iris": "atoll" }': "\ue000LEGACY_FAMS_QML\ue001",
+    '{"lunana.bar-waffle": "lunana.bar-slate"}': "\ue000LEGACY_BARS\ue001",
+    '/^ii(?=[A-Z])/': "\ue000LEGACY_RE_II\ue001",
+    '/^iris(?=[A-Z])/': "\ue000LEGACY_RE_IRIS\ue001",
 }
 
 

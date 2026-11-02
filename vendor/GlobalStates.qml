@@ -400,13 +400,13 @@ Singleton {
     // A Studio target the edit bar should inspect ("" = keep what it shows).
     property string atollEditTarget: ""
     property int atollChassisEpoch: 0
-    onIrisEditChanged: {
+    onAtollEditChanged: {
         if (!atollEdit) { atollEditSelection = ""; atollEditTarget = "" }
         else if (widgetEditMode) setWidgetEditMode(false)
         if (atollEdit && atollStudioOpen) atollStudioOpen = false
     }
-    onIrisEditSelectionChanged: if (atollEditSelection.length > 0) atollEditTarget = ""
-    onIrisEditTargetChanged: if (atollEditTarget.length > 0) atollEditSelection = ""
+    onAtollEditSelectionChanged: if (atollEditSelection.length > 0) atollEditTarget = ""
+    onAtollEditTargetChanged: if (atollEditTarget.length > 0) atollEditSelection = ""
     // The in-place editors belong to Atoll: leaving the family ends them, or they are destroyed open and
     // come back open when the family does.
     function endIrisEditing(): void {
@@ -415,10 +415,10 @@ Singleton {
         atollControlEdit = false
     }
     onControlPanelOpenChanged: if (!controlPanelOpen) atollControlEdit = false
-    onIrisControlEditChanged: if (!atollControlEdit) atollControlTab = "controls"
+    onAtollControlEditChanged: if (!atollControlEdit) atollControlTab = "controls"
     // Atoll Studio, the panel form of Customize, is open. It and Customize on the shell never show together.
     property bool atollStudioOpen: false
-    onIrisStudioOpenChanged: if (atollStudioOpen && atollEdit) atollEdit = false
+    onAtollStudioOpenChanged: if (atollStudioOpen && atollEdit) atollEdit = false
     // Customize, in the form the person chose (atoll.appearance.customize), on a target ("" = where it was).
     function openIrisCustomize(target): void {
         const wanted = String(target ?? "")
@@ -474,7 +474,7 @@ Singleton {
         _irisOrbitOutputAsked = true
         atollOrbitOpen = true
     }
-    onIrisOrbitOpenChanged: {
+    onAtollOrbitOpenChanged: {
         if (!atollOrbitOpen) return
         if (!_irisOrbitOutputAsked) atollOrbitOutput = ""
         _irisOrbitOutputAsked = false

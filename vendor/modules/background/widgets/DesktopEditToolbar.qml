@@ -158,7 +158,7 @@ Item {
         const off = root.atollEntries.filter(entry => !entry.on).map(entry => entry.key)
         root.atollOrder = on.length > 0 && off.length > 0 ? on.concat(["|"], off) : on.concat(off)
     }
-    onIrisOnCountChanged: if (!railHover.hovered) root.atollResort()
+    onAtollOnCountChanged: if (!railHover.hovered) root.atollResort()
     Component.onCompleted: root.atollResort()
     readonly property real bodyHeight: root.atoll ? Math.round(56 * root.d) : 48
     readonly property real bodyRadius: root.atoll ? Math.min(AtollStyle.radius, root.bodyHeight / 2) : 0

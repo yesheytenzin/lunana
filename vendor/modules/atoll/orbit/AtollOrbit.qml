@@ -291,7 +291,7 @@ Item {
 
     Connections {
         target: GlobalStates
-        function onIrisOrbitOpenChanged(): void { if (GlobalStates.atollOrbitOpen && root.here) root.opened() }
+        function onAtollOrbitOpenChanged(): void { if (GlobalStates.atollOrbitOpen && root.here) root.opened() }
     }
     onVisibleChanged: if (!visible) root.query = ""
     Component.onCompleted: if (root.wanted) root.opened()

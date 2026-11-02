@@ -175,7 +175,7 @@ def enabled_ids(shell: dict) -> set:
 # onto the new ones exactly once, so an update converges instead of
 # stranding the session on an unknown bar.
 LEGACY_FAMILIES = {"ii": "drift", "waffle": "slate", "iris": "atoll"}
-LEGACY_BARS = {"lunana.bar-waffle": "lunana.bar-slate"}  # pre-rename ids on purpose
+LEGACY_BARS = {"lunana.bar-waffle": "lunana.bar-slate"}  # pre-rename ids on purpose (protected from vendor_rename.py)
 
 
 def normalize_shell(shell: dict) -> bool:

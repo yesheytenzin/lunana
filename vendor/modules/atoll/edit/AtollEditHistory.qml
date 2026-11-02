@@ -90,7 +90,7 @@ Singleton {
     }
     Connections {
         target: GlobalStates
-        function onIrisEditChanged(): void { if (GlobalStates.atollEdit) root.reset() }
-        function onIrisStudioOpenChanged(): void { if (GlobalStates.atollStudioOpen) root.reset() }
+        function onAtollEditChanged(): void { if (GlobalStates.atollEdit) root.reset() }
+        function onAtollStudioOpenChanged(): void { if (GlobalStates.atollStudioOpen) root.reset() }
     }
 }
