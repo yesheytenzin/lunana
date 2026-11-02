@@ -22,15 +22,31 @@ Item {
     id: root
 
     readonly property bool desktopWidgets: LnCommon.Config.options?.iris?.modules?.desktopWidgets ?? true
+    // Mirrors inir's CriticalPanelLoader gating (Config.ready; IrisGate.official
+    // is false in the re-host so it is dropped, but readiness + the irisBar
+    // identifier are kept): no chassis, reservations, or background before
+    // the config is ready, and trimming irisBar out of enabledPanels stands
+    // the bar down like inir.
+    readonly property bool barEnabled: LnCommon.Config.ready
+        && (LnCommon.Config.options?.enabledPanels ?? []).includes("irisBar")
 
-    LnFrame.IrisReservations {}
+    Loader {
+        active: LnCommon.Config.ready
+        sourceComponent: Component { LnFrame.IrisReservations {} }
+    }
 
     // Background without desktop widgets (the widgets-on path mounts the shared
-    // Background in Panels.qml, matching inir).
+    // Background in Panels.qml, matching inir). Identifier gate mirrors inir's
+    // CriticalPanelLoader("irisBackground").
     Loader {
-        active: !root.desktopWidgets
+        active: LnCommon.Config.ready
+            && (LnCommon.Config.options?.enabledPanels ?? []).includes("irisBackground")
+            && !root.desktopWidgets
         sourceComponent: Component { LnIrisBg.IrisBackground {} }
     }
 
-    LnBar.IrisBar {}
+    Loader {
+        active: root.barEnabled
+        sourceComponent: Component { LnBar.IrisBar {} }
+    }
 }

@@ -23,8 +23,11 @@ Item {
   property var manifest: null
 
   function test(kind) {
-    osdItem.show(kind && String(kind).length > 0 ? String(kind) : "volume", 8000)
-    return "shown"
+    const next = kind && String(kind).length > 0 ? String(kind) : "volume"
+    if (!osdItem.allows(next))
+      return "refused kind=" + next + " (game-rule/prefs, nothing rendered)"
+    osdItem.show(next, 8000)
+    return "shown kind=" + next
   }
 
   ShellIpc {
@@ -35,7 +38,8 @@ Item {
   LnMod.IrisOSD {
     id: osdItem
 
-    // Shell-entry handshake in this plugin's singleton universe: the vendored
+    // Shell-entry handshake against the shared lunana-vendor/ tree (one
+    // GlobalStates universe for all hosts): the vendored
     // tree gates first paint on shellEntryReady/deferredPanelsReady, which only
     // inir's shell.qml boot sets. Mirror the minimal sequence here.
     Timer {

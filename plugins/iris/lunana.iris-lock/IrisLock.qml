@@ -35,9 +35,8 @@ Item {
   LnMod.Lock {
   }
 
-  // Shell-entry handshake in this plugin's singleton universe (each
-  // installed plugin carries its own vendor/ copy, hence its own
-  // GlobalStates): the vendored tree gates first paint on
+  // Shell-entry handshake against the shared lunana-vendor/ tree (one
+  // GlobalStates universe for all hosts): the vendored tree gates first paint on
   // shellEntryReady/deferredPanelsReady, which only inir's shell.qml boot
   // sets. Mirror the minimal sequence here.
   Timer {

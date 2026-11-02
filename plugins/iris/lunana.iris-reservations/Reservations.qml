@@ -8,20 +8,18 @@ import "../../lunana-vendor/modules/iris/frame" as LnFrame
 
 // lunana.iris-reservations — edge-space reservations for the iRiS family. (kind: service).
 //
-// In native iRiS the IrisBar chassis hosts inir's IrisReservations, whose
-// invisible Background-layer stubs reserve an exclusive zone at each screen
-// edge so tiled windows warp around the island, dock and pinned sidebars.
-// Lunana runs the satellite model (Option A — no monolithic chassis), so
-// IrisReservations is never instantiated and apps open underneath the island,
-// dock and side panels. This host supplies the reservation directly.
-//
-// It reserves the resting VISUAL footprint via IrisFrame.inset(edge) — band +
-// island visual depth on the island edge, dock visual depth on the dock edge —
-// NOT reserve(edge, chassisPresent), whose island term is gated on a chassis we
-// do not run (so reserve() would leave the island edge unreserved here). Sidebar
-// depth is reserved when a sidebar is pinned with reserveSpace, mirroring inir's
-// IrisReservations.sidebarDepth exactly. Stubs live on the Background layer with
-// an empty input mask, so they take no input and paint nothing.
+// DORMANT satellite: family-cycle enables only the consolidated lunana.iris
+// plugin (whose Chassis.qml already mounts inir's IrisReservations with
+// reserve()), so this host is never active alongside it — enabling both
+// would double-reserve every edge. Kept for standalone use without the
+// consolidated chassis: it reserves the resting VISUAL footprint via
+// IrisFrame.inset(edge) — band + island visual depth on the island edge,
+// dock visual depth on the dock edge — NOT reserve(edge, chassisPresent),
+// whose island term needs a chassis this standalone host cannot assume.
+// Sidebar depth is reserved when a sidebar is pinned with reserveSpace,
+// mirroring inir's IrisReservations.sidebarDepth exactly. Stubs live on the
+// Background layer with an empty input mask, so they take no input and paint
+// nothing.
 Scope {
     id: root
 
@@ -83,7 +81,8 @@ Scope {
         }
     }
 
-    // Shell-entry handshake in this plugin's singleton universe: the vendored
+    // Shell-entry handshake against the shared lunana-vendor/ tree (one
+    // GlobalStates universe for all hosts): the vendored
     // tree gates on shellEntryReady/deferredPanelsReady, which only inir's
     // shell.qml boot sets. Mirror the minimal sequence here.
     Timer {

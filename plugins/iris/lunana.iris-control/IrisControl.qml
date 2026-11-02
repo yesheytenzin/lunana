@@ -23,17 +23,17 @@ Item {
   // shared control-panel state is open and the screen is the focused one.
   // Drive that state here so the standalone overlay has visible content, and
   // pass the delegate's screen through (the component needs screenData.name).
+  // Matches the chassis (IrisBar): opening from the island leaves
+  // irisMorphOwner empty ("" = from island; "stage" = from a stage piece).
   function open(payloadJson) {
     root.opened = true
     Inir.GlobalStates.controlPanelOpen = true
-    Inir.GlobalStates.irisMorphOwner = "stage"
-    Inir.GlobalStates.irisMorphOrigin = null
+    Inir.GlobalStates.irisMorphOwner = ""
   }
   function close() {
     root.opened = false
     Inir.GlobalStates.controlPanelOpen = false
-    if (Inir.GlobalStates.irisMorphOwner === "stage")
-      Inir.GlobalStates.irisMorphOwner = ""
+    Inir.GlobalStates.irisMorphOwner = ""
   }
   function toggle() { root.opened ? root.close() : root.open("") }
 
@@ -86,9 +86,8 @@ Item {
     }
   }
 
-    // Shell-entry handshake in this plugin's singleton universe (each
-    // installed plugin carries its own vendor/ copy, hence its own
-    // GlobalStates): the vendored tree gates first paint on
+    // Shell-entry handshake against the shared lunana-vendor/ tree (one
+    // GlobalStates universe for all hosts): the vendored tree gates first paint on
     // shellEntryReady/deferredPanelsReady, which only inir's shell.qml boot
     // sets. Mirror the minimal sequence here.
     Timer {

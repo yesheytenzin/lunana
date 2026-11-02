@@ -130,8 +130,10 @@ Item {
     }
 
     // OSD (its own internal show/hide on the GlobalStates.osd*Open flags).
+    // Identifier gate mirrors inir's PanelLoader("irisOnScreenDisplay").
     Loader {
-        active: LnCommon.Config.ready && (root.opts?.iris?.modules?.osd ?? true)
+        active: LnCommon.Config.ready && root.enabledPanels.includes("irisOnScreenDisplay")
+            && (root.opts?.iris?.modules?.osd ?? true)
             && (!Inir.GlobalStates.barOpen
                 || (LnServ.CompositorService.isNiri
                     && LnServ.GameMode.hasFullscreenOnOutput(Inir.GlobalStates.focusedScreen?.name ?? "")
@@ -157,19 +159,25 @@ Item {
         sourceComponent: Component { LnNotifications.IrisNotificationPopup {} }
     }
 
-    // Lock + polkit (resident).
+    // Lock + polkit (resident). Identifier gates mirror inir's
+    // DeferredPanelLoader("irisLock") / ("irisPolkit").
     Loader {
-        active: root.opts?.iris?.modules?.lock ?? true
+        active: LnCommon.Config.ready && root.enabledPanels.includes("irisLock")
+            && (root.opts?.iris?.modules?.lock ?? true)
         sourceComponent: Component { LnLock.Lock {} }
     }
     Loader {
-        active: root.opts?.iris?.modules?.polkit ?? true
+        active: LnCommon.Config.ready && root.enabledPanels.includes("irisPolkit")
+            && (root.opts?.iris?.modules?.polkit ?? true)
         sourceComponent: Component { LnPolkit.IrisPolkit {} }
     }
 
     // Desktop background with widgets (the no-widgets path is in Chassis.qml).
+    // Identifier gate mirrors inir (irisBackground + desktopWidgets).
+    // Niri-only background/backdrop path is intentionally omitted on Hyprland.
     Loader {
-        active: root.desktopWidgets
+        active: LnCommon.Config.ready && root.enabledPanels.includes("irisBackground")
+            && root.desktopWidgets
         sourceComponent: Component { LnBg.Background {} }
     }
 

@@ -56,7 +56,8 @@ Scope {
         }
     }
 
-    // Shell-entry handshake in this plugin's singleton universe.
+    // Shell-entry handshake against the shared lunana-vendor/ tree
+    // (one GlobalStates universe for all hosts).
     Timer {
         interval: 200; repeat: false; running: true
         onTriggered: {

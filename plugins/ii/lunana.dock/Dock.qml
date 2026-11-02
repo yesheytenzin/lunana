@@ -8,11 +8,11 @@ import "../../lunana-vendor/modules/dock" as LnDock
 //
 // Mounts inir's exact dock Scope from the shared lunana-vendor/ tree.
 //
-// Family coherence: the iRiS family owns its own dock (lunana.iris-dock), so
-// this host stands down whenever the switcher has lunana.iris-dock enabled
-// and returns the moment it is disabled — mirroring lunana.bar/Bar.qml's
-// yield to lunana.iris. Fail-visible: an unreadable shell.json keeps today's
-// dock.
+// Family coherence: the iRiS family owns its own dock inside the consolidated
+// lunana.iris chassis, so this host stands down whenever the switcher has
+// lunana.iris enabled and returns the moment it is disabled — mirroring
+// lunana.bar/Bar.qml's yield to lunana.iris. Fail-visible: an unreadable
+// shell.json keeps today's dock.
 Scope {
     id: root
 
@@ -31,7 +31,7 @@ Scope {
             if (!Array.isArray(plugins))
                 return false;
             for (var i = 0; i < plugins.length; ++i)
-                if (plugins[i] && plugins[i].id === "lunana.iris-dock")
+                if (plugins[i] && plugins[i].id === "lunana.iris")
                     return true;
         } catch (err) {}
         return false;
@@ -42,9 +42,8 @@ Scope {
         sourceComponent: LnDock.Dock {}
     }
 
-    // Shell-entry handshake in this plugin's singleton universe (each
-    // installed plugin carries its own vendor/ copy, hence its own
-    // GlobalStates): the vendored tree gates first paint on
+    // Shell-entry handshake against the shared lunana-vendor/ tree (one
+    // GlobalStates universe for all hosts): the vendored tree gates first paint on
     // shellEntryReady/deferredPanelsReady, which only inir's shell.qml boot
     // sets. Mirror the minimal sequence here.
     Timer {
