@@ -8,7 +8,7 @@ import "../../../../services"
 import "../../../common"
 import "../../../common/widgets"
 import ".."
-import "../../../iris/style"
+import "../../../atoll/style"
 
 /**
  * Desktop mascot widget: a pose from the catalog living on the wallpaper
@@ -319,7 +319,7 @@ AbstractBackgroundWidget {
                         StyledText {
                             Layout.fillWidth: true
                             text: root.customPath.length > 0 ? Translation.tr("Custom image") : root._poseLabel(root.pose)
-                            color: root.widgetIrisFamily ? IrisStyle.text : Appearance.colors.colOnLayer2
+                            color: root.widgetIrisFamily ? AtollStyle.text : Appearance.colors.colOnLayer2
                             font.pixelSize: Appearance.font.pixelSize.small
                             font.weight: Font.DemiBold
                             wrapMode: Text.NoWrap
@@ -604,7 +604,7 @@ AbstractBackgroundWidget {
     // Card chrome is off by default — she's a cutout living on the desktop.
     // Users can turn the card back on from the widget manager / settings.
     WidgetSurface {
-        irisPresentation: root.widgetIris
+        atollPresentation: root.widgetAtoll
         regionBrightness: root.regionBrightness
         anchors.fill: parent
         surfaceRadius: root.cornerRadiusOverride >= 0 ? root.cornerRadiusOverride : root.widgetCardRadius
@@ -663,7 +663,7 @@ AbstractBackgroundWidget {
         enabled: !GlobalStates.widgetEditMode && sprite.visible
         onTapped: {
             if (root.customPath.length > 0) {
-                Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")), "mascot", "poke"])
+                Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/lunana")), "mascot", "poke"])
             } else {
                 root._reactToClick()
             }

@@ -88,7 +88,7 @@ Item {
                         implicitHeight: todoContentRowLayout.implicitHeight
                         color: Appearance.editorialEverywhere ? (modelData.done ? Appearance.editorial.layer(1) : Appearance.editorial.secondaryField)
                             : Appearance.angelEverywhere ? Appearance.angel.colGlassCard
-                            : Appearance.inirEverywhere ? Appearance.inir.colLayer2
+                            : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2
                             : Appearance.auroraEverywhere ? Appearance.aurora.colElevatedSurface : Appearance.colors.colLayer2
                         radius: Appearance.rounding.small
                         ColumnLayout {

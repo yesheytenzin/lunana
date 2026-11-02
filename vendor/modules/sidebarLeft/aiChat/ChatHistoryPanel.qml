@@ -25,7 +25,7 @@ Rectangle {
 
     radius: Appearance.rounding.small
     color: Appearance.angelEverywhere ? Appearance.angel.colGlassCard
-        : Appearance.inirEverywhere ? Appearance.inir.colLayer1
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer1
         : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurface
         : Appearance.colors.colLayer1
 

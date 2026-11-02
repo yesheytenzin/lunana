@@ -72,7 +72,7 @@
             "glass": true,
             "glassBlur": 1
         },
-        "iiMotionProfile": "contextual",
+        "driftMotionProfile": "contextual",
         "regalia": {
             "glass": true,
             "glassBlur": 0.72,
@@ -138,7 +138,7 @@
             "material": 1,
             "cards": 3,
             "aurora": 0,
-            "inir": 1,
+            "lunana": 1,
             "angel": 1,
             "regalia": 1,
             "zzz": 0,
@@ -251,7 +251,7 @@
             "enableChrome": true,
             "enableFirefox": true,
             "enableSpicetify": true,
-            "spicetifyTheme": "Inir",
+            "spicetifyTheme": "Lunana",
             "enableSteam": true,
             "enablePearDesktop": true,
             "enableLimusic": false,
@@ -2291,7 +2291,7 @@
         "niriWindowListUpdateIntervalMsGameMode": 500
     },
     "hotspot": {
-        "ssid": "iNiR Hotspot",
+        "ssid": "Lunana Hotspot",
         "password": "",
         "band": "bg"
     },
@@ -2375,7 +2375,7 @@
         "stylePreset": "material",
         "performancePreset": "balanced"
     },
-    "iris": {
+    "atoll": {
         "sidebars": {
             "left": {
                 "enable": true, "width": 380, "height": 88,
@@ -2392,7 +2392,7 @@
                 "expanded": []
             }
         },
-        "widgets": { "radius": 22, "opacity": 100, "tint": "wallpaper", "vibrance": 85, "legibleAlways": false, "design": "iris", "material": "glass", "weight": "regular", "rim": false, "outline": "auto", "brightWallpapers": false },
+        "widgets": { "radius": 22, "opacity": 100, "tint": "wallpaper", "vibrance": 85, "legibleAlways": false, "design": "atoll", "material": "glass", "weight": "regular", "rim": false, "outline": "auto", "brightWallpapers": false },
         "desktopMenu": { "wallpaper": true, "items": ["widgets", "customize", "screenshot", "terminal", "settings", "restart"] },
         "dock": {
             "enable": true,
@@ -2428,14 +2428,14 @@
             "highlight": "orange",
             "anime": { "enabled": false, "palette": "sakura", "strength": 60, "highlight": false },
             "figureWeight": "bold",
-            "icons": { "style": "iris", "plate": "black" },
+            "icons": { "style": "atoll", "plate": "black" },
             "numbersFontFamily": "",
             "density": 1.0,
             "motion": true,
             "motionDuration": 220,
             "accent": "blue",
             "scheme": "auto",
-            "language": "iris",
+            "language": "atoll",
             "variant": "tonalSpot",
             "inkStyle": "washi",
             "darkStyle": "style",
@@ -2448,7 +2448,7 @@
                 "light": { "tone": -8, "warmth": 38, "colour": 85, "widgets": 110, "lume": true }
             },
             "expandedRadius": 28,
-            "preset": "iris",
+            "preset": "atoll",
             "morph": "direct",
             "tint": 0,
             "aura": "subtle",
@@ -2459,7 +2459,7 @@
             "settingsLayout": "sidebar",
             "settingsHost": "overlay",
             "saved": [],
-            "themeId": "iris",
+            "themeId": "atoll",
             "glass": {
                 "mode": "off",
                 "tint": 58,
@@ -2781,7 +2781,7 @@
             "controls": "tiles",
             "width": 360,
             "sections": ["connectivity", "media", "shortcuts", "levels", "notifications"],
-            "preset": "iris",
+            "preset": "atoll",
             "columns": 4,
             "labels": true,
             "modules": ["platter", "media", "darkMode", "nightLight", "levels", "idle", "snip", "devices", "record", "notifications"],
@@ -2792,7 +2792,7 @@
             "sliders": "neutral"
         },
         "lock": {
-            "preset": "iris",
+            "preset": "atoll",
             "material": "glass",
             "scene": {
                 "source": "desktop",
@@ -2855,7 +2855,7 @@
             "polkit": true
         }
     },
-    "waffles": {
+    "slate": {
         "settings": {
             "useMaterialStyle": false
         },
@@ -3064,37 +3064,37 @@
         }
     },
     "familyTransitionAnimation": true,
-    "familyCycle": ["ii", "waffle", "iris"],
-    "panelFamily": "ii",
+    "familyCycle": ["drift", "slate", "atoll"],
+    "panelFamily": "drift",
     "enabledPanels": [
-        "iiBar",
-        "iiBackground",
-        "iiBackdrop",
-        "iiCheatsheet",
-        "iiControlPanel",
-        "iiDock",
-        "iiLock",
-        "iiMediaControls",
-        "iiNotificationPopup",
-        "iiOnScreenDisplay",
-        "iiOnScreenKeyboard",
-        "iiOverlay",
-        "iiOverview",
-        "iiPolkit",
-        "iiRegionSelector",
-        "iiScreenCorners",
-        "iiSessionScreen",
-        "iiSidebarLeft",
-        "iiSidebarRight",
-        "iiTilingOverlay",
-        "iiVerticalBar",
-        "iiWallpaperSelector",
-        "iiWallpaperLauncher",
-        "iiCoverflowSelector",
-        "iiClipboard",
-        "iiShellUpdate",
-        "iiDashboard",
-        "iiMascotCompanion"
+        "driftBar",
+        "driftBackground",
+        "driftBackdrop",
+        "driftCheatsheet",
+        "driftControlPanel",
+        "driftDock",
+        "driftLock",
+        "driftMediaControls",
+        "driftNotificationPopup",
+        "driftOnScreenDisplay",
+        "driftOnScreenKeyboard",
+        "driftOverlay",
+        "driftOverview",
+        "driftPolkit",
+        "driftRegionSelector",
+        "driftScreenCorners",
+        "driftSessionScreen",
+        "driftSidebarLeft",
+        "driftSidebarRight",
+        "driftTilingOverlay",
+        "driftVerticalBar",
+        "driftWallpaperSelector",
+        "driftWallpaperLauncher",
+        "driftCoverflowSelector",
+        "driftClipboard",
+        "driftShellUpdate",
+        "driftDashboard",
+        "driftMascotCompanion"
     ],
     "workspaceStrip": {
         "style": "auto",

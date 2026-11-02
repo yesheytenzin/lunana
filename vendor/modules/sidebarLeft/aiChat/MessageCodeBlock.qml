@@ -39,7 +39,7 @@ ColumnLayout {
         bottomRightRadius: Appearance.rounding.unsharpen
         color: Appearance.editorialEverywhere ? Appearance.editorial.field
             : Appearance.angelEverywhere ? Appearance.angel.colGlassElevated
-            : Appearance.inirEverywhere ? Appearance.inir.colLayer2 
+            : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2 
             : Appearance.auroraEverywhere ? Appearance.aurora.colElevatedSurface : Appearance.colors.colSurfaceContainerHighest
         implicitHeight: codeBlockTitleBarRowLayout.implicitHeight + codeBlockHeaderPadding * 2
 
@@ -142,7 +142,7 @@ ColumnLayout {
             bottomLeftRadius: codeBlockBackgroundRounding
             topRightRadius: Appearance.rounding.unsharpen
             bottomRightRadius: Appearance.rounding.unsharpen
-            color: Appearance.inirEverywhere ? Appearance.inir.colLayer1
+            color: Appearance.lunanaEverywhere ? Appearance.lunana.colLayer1
                 : Appearance.auroraEverywhere ? Appearance.aurora.colElevatedSurface : Appearance.colors.colLayer2
 
             ColumnLayout {
@@ -179,7 +179,7 @@ ColumnLayout {
             bottomLeftRadius: Appearance.rounding.unsharpen
             topRightRadius: Appearance.rounding.unsharpen
             bottomRightRadius: codeBlockBackgroundRounding
-            color: Appearance.inirEverywhere ? Appearance.inir.colLayer1
+            color: Appearance.lunanaEverywhere ? Appearance.lunana.colLayer1
                 : Appearance.auroraEverywhere ? Appearance.aurora.colElevatedSurface : Appearance.colors.colLayer2
             implicitHeight: codeColumnLayout.implicitHeight
 

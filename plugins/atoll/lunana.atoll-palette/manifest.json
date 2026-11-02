@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "lunana.atoll-palette",
+  "name": "Lunana Atoll Palette",
+  "version": "0.4.0",
+  "author": "lunana",
+  "license": "GPL-3.0",
+  "description": "Lunana AtollPalette launcher host.",
+  "kinds": [
+    "overlay"
+  ],
+  "entryPoints": {
+    "overlay": "AtollPalette.qml"
+  },
+  "x-lunana": {
+    "suiteId": "lunana",
+    "role": "atoll-palette",
+    "milestone": "parity",
+    "requires": [],
+    "recommends": []
+  }
+}

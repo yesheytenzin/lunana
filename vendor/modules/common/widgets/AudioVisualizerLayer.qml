@@ -6,7 +6,7 @@ import ".."
 import "../../../services"
 import "../../../services/deferred"
 
-// Shared presentation layer for iNiR's internal Cava consumers.
+// Shared presentation layer for Lunana's internal Cava consumers.
 // CavaService owns audio acquisition; this item owns only rendering/response.
 Item {
     id: root

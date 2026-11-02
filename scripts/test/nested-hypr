@@ -188,9 +188,9 @@ cmd_up() {
   }
 }
 EOF
-    # Same for inir's own swayidle path (vendored Idle service): zero the
-    # timeouts so no lock/DPMS command ever fires in the nest. inir's Config
-    # lives at ~/.config/illogical-impulse/config.json (not ~/.config/inir/).
+    # Same for lunana's own swayidle path (vendored Idle service): zero the
+    # timeouts so no lock/DPMS command ever fires in the nest. lunana's Config
+    # lives at ~/.config/illogical-impulse/config.json (not ~/.config/lunana/).
     mkdir -p "$fixture/.config/illogical-impulse"
     cat > "$fixture/.config/illogical-impulse/config.json" <<'EOF'
 {

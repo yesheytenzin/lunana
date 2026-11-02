@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "lunana.atoll",
+  "name": "Lunana Atoll Island",
+  "version": "0.4.0",
+  "author": "lunana",
+  "license": "GPL-3.0",
+  "description": "Lunana Atoll island panel (exact lunana tree). Always-on morphing island: clock, apps, tray, media.",
+  "kinds": [
+    "service"
+  ],
+  "entryPoints": {
+    "service": "Atoll.qml"
+  },
+  "x-lunana": {
+    "suiteId": "lunana",
+    "role": "atoll-panel",
+    "milestone": "atoll-1",
+    "requires": [],
+    "recommends": []
+  }
+}

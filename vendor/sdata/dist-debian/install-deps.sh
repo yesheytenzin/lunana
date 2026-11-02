@@ -1,4 +1,4 @@
-# Install dependencies for iNiR on Debian/Ubuntu-based systems
+# Install dependencies for Lunana on Debian/Ubuntu-based systems
 # This script is meant to be sourced, not run directly.
 
 # shellcheck shell=bash
@@ -110,14 +110,14 @@ if [[ -n "${ONLY_MISSING_DEPS:-}" ]]; then
   fi
 
   # Providers which are not native apt packages. Mission Center intentionally
-  # uses Flatpak on Debian; expose a host wrapper because iNiR's launcher and
+  # uses Flatpak on Debian; expose a host wrapper because Lunana's launcher and
   # Doctor work with executable commands, not desktop-file-only Flatpak apps.
   if [[ " ${_deb_special_cmds[*]} " == *" missioncenter " ]] && ! command -v missioncenter &>/dev/null; then
     sudo apt install $installflags flatpak >/dev/null 2>&1 || true
     if command -v flatpak &>/dev/null; then
       flatpak remote-add --if-not-exists --user flathub https://flathub.org/repo/flathub.flatpakrepo >/dev/null 2>&1 || true
       if flatpak install -y --user flathub io.missioncenter.MissionCenter >/dev/null 2>&1; then
-        _mc_wrapper="$(mktemp /tmp/inir-missioncenter.XXXXXX)"
+        _mc_wrapper="$(mktemp /tmp/lunana-missioncenter.XXXXXX)"
         printf '%s\n' '#!/bin/sh' 'exec flatpak run io.missioncenter.MissionCenter "$@"' > "$_mc_wrapper"
         sudo install -m 0755 "$_mc_wrapper" /usr/local/bin/missioncenter
         rm -f "$_mc_wrapper"
@@ -128,7 +128,7 @@ if [[ -n "${ONLY_MISSING_DEPS:-}" ]]; then
   if [[ " ${_deb_special_cmds[*]} " == *" gowall " ]] && ! command -v gowall &>/dev/null; then
     sudo apt install $installflags golang-go >/dev/null 2>&1 || true
     if command -v go &>/dev/null; then
-      _gowall_build="$(mktemp -d /tmp/inir-gowall.XXXXXX)"
+      _gowall_build="$(mktemp -d /tmp/lunana-gowall.XXXXXX)"
       if git clone --depth 1 https://github.com/Achno/gowall.git "$_gowall_build/src" >/dev/null 2>&1 \
           && (cd "$_gowall_build/src" && go build -o "$_gowall_build/gowall" . >/dev/null 2>&1); then
         sudo install -m 0755 "$_gowall_build/gowall" /usr/local/bin/gowall
@@ -167,12 +167,12 @@ fi
 #####################################################################################
 # Version warnings
 #####################################################################################
-# iNiR needs Qt 6.9 or newer (QtQuick.Effects shadows, typed nested functions); Quickshell itself
+# Lunana needs Qt 6.9 or newer (QtQuick.Effects shadows, typed nested functions); Quickshell itself
 # needs 6.6. Stop early instead of failing after a long source build.
 if $IS_UBUNTU; then
   case "$UBUNTU_VERSION" in
     2[0-4].*|25.04)
-      log_error "Ubuntu ${UBUNTU_VERSION} ships Qt older than 6.9, which iNiR needs. Use Ubuntu 25.10 or newer."
+      log_error "Ubuntu ${UBUNTU_VERSION} ships Qt older than 6.9, which Lunana needs. Use Ubuntu 25.10 or newer."
       exit 1
       ;;
   esac
@@ -181,11 +181,11 @@ fi
 if $IS_DEBIAN; then
   case "$DEBIAN_VERSION" in
     12*|11*|10*|9*)
-      log_error "Debian ${DEBIAN_VERSION} ships Qt older than 6.9, which iNiR needs. Use Debian 14 (forky) or testing."
+      log_error "Debian ${DEBIAN_VERSION} ships Qt older than 6.9, which Lunana needs. Use Debian 14 (forky) or testing."
       exit 1
       ;;
     13*)
-      log_warning "Debian 13 ships Qt 6.8; iNiR needs 6.9. Some surfaces may not load until Qt 6.9 is available (testing or backports)."
+      log_warning "Debian 13 ships Qt 6.8; Lunana needs 6.9. Some surfaces may not load until Qt 6.9 is available (testing or backports)."
       ;;
   esac
 fi
@@ -399,7 +399,7 @@ ensure_debian_component() {
   mirror="$(get_debian_primary_mirror)" || return 1
   log_info "Enabling Debian '${component}' component using ${mirror}..."
   printf 'deb %s %s %s\n' "$mirror" "$DEBIAN_CODENAME" "$component" \
-    | sudo tee "/etc/apt/sources.list.d/inir-${DEBIAN_CODENAME}-${component}.list" >/dev/null || return 1
+    | sudo tee "/etc/apt/sources.list.d/lunana-${DEBIAN_CODENAME}-${component}.list" >/dev/null || return 1
 
   if ! v sudo apt update; then
     log_warning "Could not refresh Debian '${component}' component"
@@ -428,7 +428,7 @@ ensure_debian_backports() {
 
   log_info "Enabling Debian ${suite} using ${mirror}..."
   printf 'deb %s %s main\n' "$mirror" "$suite" \
-    | sudo tee "/etc/apt/sources.list.d/inir-${suite}.list" >/dev/null || return 1
+    | sudo tee "/etc/apt/sources.list.d/lunana-${suite}.list" >/dev/null || return 1
   if ! v sudo apt update; then
     log_warning "Could not refresh ${suite}; source-build fallbacks remain available"
     return 1
@@ -922,7 +922,7 @@ if ! command -v songrec &>/dev/null; then
     
     # Rust is only needed when the repository/PPA paths above were unavailable.
     if ensure_rust_toolchain; then
-      SONGREC_ROOT="$(mktemp -d /tmp/inir-songrec.XXXXXX)"
+      SONGREC_ROOT="$(mktemp -d /tmp/lunana-songrec.XXXXXX)"
       if cargo install --root "$SONGREC_ROOT" songrec 2>/dev/null \
           && [[ -x "$SONGREC_ROOT/bin/songrec" ]]; then
         sudo install -m 0755 "$SONGREC_ROOT/bin/songrec" /usr/local/bin/songrec
@@ -939,7 +939,7 @@ if ! command -v songrec &>/dev/null; then
 fi
 
 # Mission Center - Debian/Ubuntu provider. Flathub is the cross-distro
-# package source already documented by iNiR; add a host command wrapper so the
+# package source already documented by Lunana; add a host command wrapper so the
 # launcher and Doctor can treat it like every other configured application.
 if ! command -v missioncenter &>/dev/null; then
   log_info "Installing Mission Center from Flathub..."
@@ -947,7 +947,7 @@ if ! command -v missioncenter &>/dev/null; then
   if command -v flatpak &>/dev/null; then
     flatpak remote-add --if-not-exists --user flathub https://flathub.org/repo/flathub.flatpakrepo >/dev/null 2>&1 || true
     if flatpak install -y --user flathub io.missioncenter.MissionCenter >/dev/null 2>&1; then
-      _mc_wrapper="$(mktemp /tmp/inir-missioncenter.XXXXXX)"
+      _mc_wrapper="$(mktemp /tmp/lunana-missioncenter.XXXXXX)"
       printf '%s\n' '#!/bin/sh' 'exec flatpak run io.missioncenter.MissionCenter "$@"' > "$_mc_wrapper"
       sudo install -m 0755 "$_mc_wrapper" /usr/local/bin/missioncenter
       rm -f "$_mc_wrapper"
@@ -964,7 +964,7 @@ if ${INSTALL_TOOLKIT:-true} && ! command -v gowall &>/dev/null; then
   log_info "Installing gowall wallpaper editor..."
   sudo apt install $installflags golang-go >/dev/null 2>&1 || true
   if command -v go &>/dev/null; then
-    _gowall_build="$(mktemp -d /tmp/inir-gowall.XXXXXX)"
+    _gowall_build="$(mktemp -d /tmp/lunana-gowall.XXXXXX)"
     if git clone --depth 1 https://github.com/Achno/gowall.git "$_gowall_build/src" >/dev/null 2>&1 \
         && (cd "$_gowall_build/src" && go build -o "$_gowall_build/gowall" . >/dev/null 2>&1); then
       sudo install -m 0755 "$_gowall_build/gowall" /usr/local/bin/gowall

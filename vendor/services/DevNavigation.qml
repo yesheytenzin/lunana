@@ -33,33 +33,33 @@ Singleton {
         { id: "sidebar-right/weather", family: "shared", surface: "sidebar-right", view: "weather", safe: true, settleMs: 450 },
         { id: "sidebar-right/timer", family: "shared", surface: "sidebar-right", view: "timer", safe: true, settleMs: 350 },
         { id: "sidebar-right/screentime", family: "shared", surface: "sidebar-right", view: "screentime", safe: true, settleMs: 350 },
-        { id: "control-panel", family: "ii", surface: "control-panel", view: "", safe: true, settleMs: 350 },
-        { id: "dashboard", family: "ii", surface: "dashboard", view: "", safe: true, settleMs: 450 },
+        { id: "control-panel", family: "drift", surface: "control-panel", view: "", safe: true, settleMs: 350 },
+        { id: "dashboard", family: "drift", surface: "dashboard", view: "", safe: true, settleMs: 450 },
         { id: "media-controls", family: "shared", surface: "media-controls", view: "", safe: true, settleMs: 350 },
         { id: "clipboard", family: "shared", surface: "clipboard", view: "", safe: true, settleMs: 350 },
         { id: "cheatsheet", family: "shared", surface: "cheatsheet", view: "", safe: true, settleMs: 350 },
         { id: "overview", family: "shared", surface: "overview", view: "", safe: true, settleMs: 450 },
         { id: "overview/actions", family: "shared", surface: "overview", view: "actions", safe: true, settleMs: 450 },
         { id: "overview/clipboard", family: "shared", surface: "overview", view: "clipboard", safe: true, settleMs: 450 },
-        { id: "wallpaper/grid", family: "ii", surface: "wallpaper-grid", view: "", safe: true, settleMs: 500 },
-        { id: "wallpaper/coverflow", family: "ii", surface: "wallpaper-coverflow", view: "", safe: true, settleMs: 500 },
+        { id: "wallpaper/grid", family: "drift", surface: "wallpaper-grid", view: "", safe: true, settleMs: 500 },
+        { id: "wallpaper/coverflow", family: "drift", surface: "wallpaper-coverflow", view: "", safe: true, settleMs: 500 },
         { id: "tiling/picker", family: "shared", surface: "tiling", view: "picker", safe: true, settleMs: 350 },
         { id: "tiling/osd", family: "shared", surface: "tiling", view: "osd", safe: true, settleMs: 350 },
-        { id: "iris/palette", family: "iris", surface: "iris-palette", view: "", safe: true, settleMs: 300 },
-        { id: "iris/controls", family: "iris", surface: "iris-controls", view: "", safe: true, settleMs: 300 },
-        { id: "iris/session", family: "iris", surface: "iris-session", view: "", safe: true, settleMs: 300 },
-        { id: "waffle/start", family: "waffle", surface: "waffle-search", view: "start", safe: true, settleMs: 350 },
-        { id: "waffle/all-apps", family: "waffle", surface: "waffle-search", view: "all-apps", safe: true, settleMs: 350 },
-        { id: "waffle/search", family: "waffle", surface: "waffle-search", view: "search", safe: true, settleMs: 450 },
-        { id: "waffle/action-center", family: "waffle", surface: "waffle-action-center", view: "", safe: true, settleMs: 350 },
-        { id: "waffle/notification-center", family: "waffle", surface: "waffle-notification-center", view: "", safe: true, settleMs: 350 },
-        { id: "waffle/widgets", family: "waffle", surface: "waffle-widgets", view: "", safe: true, settleMs: 350 },
-        { id: "waffle/taskview", family: "waffle", surface: "waffle-taskview", view: "", safe: true, settleMs: 450 }
+        { id: "atoll/palette", family: "atoll", surface: "atoll-palette", view: "", safe: true, settleMs: 300 },
+        { id: "atoll/controls", family: "atoll", surface: "atoll-controls", view: "", safe: true, settleMs: 300 },
+        { id: "atoll/session", family: "atoll", surface: "atoll-session", view: "", safe: true, settleMs: 300 },
+        { id: "slate/start", family: "slate", surface: "slate-search", view: "start", safe: true, settleMs: 350 },
+        { id: "slate/all-apps", family: "slate", surface: "slate-search", view: "all-apps", safe: true, settleMs: 350 },
+        { id: "slate/search", family: "slate", surface: "slate-search", view: "search", safe: true, settleMs: 450 },
+        { id: "slate/action-center", family: "slate", surface: "slate-action-center", view: "", safe: true, settleMs: 350 },
+        { id: "slate/notification-center", family: "slate", surface: "slate-notification-center", view: "", safe: true, settleMs: 350 },
+        { id: "slate/widgets", family: "slate", surface: "slate-widgets", view: "", safe: true, settleMs: 350 },
+        { id: "slate/taskview", family: "slate", surface: "slate-taskview", view: "", safe: true, settleMs: 450 }
     ]
     property var settingsDestinations: []
     readonly property var destinations: baseDestinations.concat(settingsDestinations)
     property string currentDestination: ""
-    property string requestedWaffleStartView: "start"
+    property string requestedSlateStartView: "start"
 
     function registerSettingsPages(pages): void {
         const out = []
@@ -93,12 +93,12 @@ Singleton {
         GlobalStates.tilingOverlayOsdOpen = false
         GlobalStates.settingsOverlayOpen = false
         GlobalStates.searchOpen = false
-        GlobalStates.waffleActionCenterOpen = false
-        GlobalStates.waffleNotificationCenterOpen = false
-        GlobalStates.waffleWidgetsOpen = false
-        GlobalStates.waffleTaskViewOpen = false
+        GlobalStates.slateActionCenterOpen = false
+        GlobalStates.slateNotificationCenterOpen = false
+        GlobalStates.slateWidgetsOpen = false
+        GlobalStates.slateTaskViewOpen = false
         GlobalStates.sidebarRightRequestedWidget = ""
-        requestedWaffleStartView = "start"
+        requestedSlateStartView = "start"
         LauncherSearch.query = ""
         currentDestination = ""
     }
@@ -106,7 +106,7 @@ Singleton {
     function request(destination: string): string {
         const entry = entryFor(destination)
         if (!entry) return "error:unknown-destination"
-        const family = Config.options?.panelFamily ?? "ii"
+        const family = Config.options?.panelFamily ?? "drift"
         if (entry.family !== "shared" && entry.family !== family)
             return "error:requires-family-" + entry.family
 
@@ -135,26 +135,26 @@ Singleton {
             GlobalStates.tilingOverlayPickerOpen = entry.view === "picker"
             GlobalStates.tilingOverlayOsdOpen = entry.view === "osd"
             break
-        case "iris-palette": GlobalStates.searchOpen = true; break
-        case "iris-controls": GlobalStates.controlPanelOpen = true; break
-        case "iris-session": GlobalStates.sessionOpen = true; break
+        case "atoll-palette": GlobalStates.searchOpen = true; break
+        case "atoll-controls": GlobalStates.controlPanelOpen = true; break
+        case "atoll-session": GlobalStates.sessionOpen = true; break
         case "settings":
-            if ((Config.options?.panelFamily ?? "ii") === "waffle"
-                    && Config.options?.waffles?.settings?.useMaterialStyle !== true) {
+            if ((Config.options?.panelFamily ?? "drift") === "slate"
+                    && Config.options?.slate?.settings?.useMaterialStyle !== true) {
                 currentDestination = ""
-                return "error:material-settings-page-unavailable-in-waffle"
+                return "error:material-settings-page-unavailable-in-slate"
             }
             GlobalStates.openSettingsPage(entry.pageIndex ?? -1)
             break
-        case "waffle-search":
-            requestedWaffleStartView = entry.view
+        case "slate-search":
+            requestedSlateStartView = entry.view
             LauncherSearch.query = entry.view === "search" ? "a" : ""
             GlobalStates.searchOpen = true
             break
-        case "waffle-action-center": GlobalStates.waffleActionCenterOpen = true; break
-        case "waffle-notification-center": GlobalStates.waffleNotificationCenterOpen = true; break
-        case "waffle-widgets": GlobalStates.waffleWidgetsOpen = true; break
-        case "waffle-taskview": GlobalStates.waffleTaskViewOpen = true; break
+        case "slate-action-center": GlobalStates.slateActionCenterOpen = true; break
+        case "slate-notification-center": GlobalStates.slateNotificationCenterOpen = true; break
+        case "slate-widgets": GlobalStates.slateWidgetsOpen = true; break
+        case "slate-taskview": GlobalStates.slateTaskViewOpen = true; break
         default: currentDestination = ""; return "error:unsupported-surface"
         }
         return "ok:" + destination
@@ -190,12 +190,12 @@ Singleton {
         running: false
         onTriggered: {
             const t = Date.now() - root.dragStart
-            if (Date.now() >= root.dragUntil) { dragSim.stop(); GlobalStates.irisBubbleDrag = null; return }
+            if (Date.now() >= root.dragUntil) { dragSim.stop(); GlobalStates.atollBubbleDrag = null; return }
             const screen = GlobalStates.focusedScreen
             const cx = (screen?.width ?? 1920) / 2, cy = (screen?.height ?? 1080) / 2
             for (let k = 0; k < root.dragPerFrame; k++) {
                 const a = (t + k * 13 / root.dragPerFrame) / 400
-                GlobalStates.irisBubbleDrag = { slot: root.dragSlot, kind: root.dragSlot.replace(/^extra-/, ""), screen: screen?.name ?? "",
+                GlobalStates.atollBubbleDrag = { slot: root.dragSlot, kind: root.dragSlot.replace(/^extra-/, ""), screen: screen?.name ?? "",
                     x: cx + cx * 0.3 * Math.cos(a), y: cy + cy * 0.37 * Math.sin(a), size: 40, released: false }
             }
         }
@@ -235,7 +235,7 @@ Singleton {
         function dropBubble(slot: string, x: string, y: string): string {
             const screen = GlobalStates.focusedScreen
             if (!screen) return "error:no-screen"
-            GlobalStates.irisBubbleDrag = { slot: slot, kind: slot.startsWith("app:") ? "app" : slot.replace(/^extra-/, ""),
+            GlobalStates.atollBubbleDrag = { slot: slot, kind: slot.startsWith("app:") ? "app" : slot.replace(/^extra-/, ""),
                 screen: screen.name, x: Number(x), y: Number(y), size: 40, released: false }
             dropRelease.restart()
             return "dropped:" + slot + "@" + x + "," + y
@@ -252,7 +252,7 @@ Singleton {
     Timer {
         id: dropRelease
         interval: 200
-        onTriggered: if (GlobalStates.irisBubbleDrag) GlobalStates.irisBubbleDrag = Object.assign({}, GlobalStates.irisBubbleDrag, { released: true })
+        onTriggered: if (GlobalStates.atollBubbleDrag) GlobalStates.atollBubbleDrag = Object.assign({}, GlobalStates.atollBubbleDrag, { released: true })
     }
     property string slideApp: ""
     property real slideDistance: 0
@@ -263,8 +263,8 @@ Singleton {
         onTriggered: {
             const t = Math.min(1, (Date.now() - root.slideStart) / 1000)
             const eased = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2
-            GlobalStates.irisDockSlide = { appId: root.slideApp, along: root.slideDistance * eased, done: t >= 1 }
-            if (t >= 1) { slideSim.stop(); GlobalStates.irisDockSlide = null }
+            GlobalStates.atollDockSlide = { appId: root.slideApp, along: root.slideDistance * eased, done: t >= 1 }
+            if (t >= 1) { slideSim.stop(); GlobalStates.atollDockSlide = null }
         }
     }
 }

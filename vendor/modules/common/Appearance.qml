@@ -14,7 +14,7 @@ Singleton {
     property QtObject animation
     property QtObject animationCurves
     property QtObject aurora
-    property QtObject inir
+    property QtObject lunana
     property QtObject angel
     property QtObject regalia
     property QtObject zzz
@@ -58,9 +58,9 @@ Singleton {
 
     // Global style - centralized style detection (reactive bindings)
     readonly property string globalStyle: Config?.options?.appearance?.globalStyle ?? "material"
-    readonly property string iiMotionProfile: Config?.options?.appearance?.iiMotionProfile ?? "classic"
-    readonly property bool contextualMotionProfile: iiMotionProfile === "contextual"
-    readonly property bool inirEverywhere: globalStyle === "inir"
+    readonly property string driftMotionProfile: Config?.options?.appearance?.driftMotionProfile ?? "classic"
+    readonly property bool contextualMotionProfile: driftMotionProfile === "contextual"
+    readonly property bool lunanaEverywhere: globalStyle === "lunana"
     // angelEverywhere - flagship neo-brutalism glass style (superset of aurora)
     readonly property bool angelEverywhere: globalStyle === "angel"
     // auroraEverywhere controls blur/glass backgrounds — angel inherits aurora blur
@@ -157,7 +157,7 @@ Singleton {
             return compositorBlurActive && topologyExact ? "compositor" : "wallpaper"
         // Auto is fidelity-first. Native blur is an explicit backend choice,
         // never a reason to replace a style-owned wallpaper material.
-        if (area === "islands" || area === "waffle")
+        if (area === "islands" || area === "slate")
             return "wallpaper"
         if (auroraEverywhere || angelEverywhere)
             return "wallpaper"
@@ -206,7 +206,7 @@ Singleton {
     }
 
     // Style-aware hover/active fills. One source of truth so every component's hover matches the
-    // active global style instead of re-implementing the zzz/angel/inir/aurora/material ternary.
+    // active global style instead of re-implementing the zzz/angel/lunana/aurora/material ternary.
     // zzz promotes one fill step (paper -> paperAlt) instead of a translucent mix, per its
     // separate-by-fill doctrine (was missing here; components used to hardcode zzz.paperAlt).
     // Cookie promotes one tonal step, like zzz: Expressive stacks plates, so a
@@ -216,30 +216,30 @@ Singleton {
         : cookieEverywhere ? cookie.bg2
         : zzzEverywhere ? zzz.paperAlt
         : angelEverywhere ? angel.colGlassCardHover
-        : inirEverywhere ? inir.colLayer1Hover
+        : lunanaEverywhere ? lunana.colLayer1Hover
         : auroraEverywhere ? aurora.colSubSurfaceHover
         : colors.colLayer1Hover
     readonly property color colLayer2Hover: root.editorialEverywhere ? root.editorial.controlHover : regaliaEverywhere ? regalia.chassis3
         : cookieEverywhere ? cookie.bg3
         : zzzEverywhere ? zzz.bg3
         : angelEverywhere ? angel.colGlassElevatedHover
-        : inirEverywhere ? inir.colLayer2Hover
+        : lunanaEverywhere ? lunana.colLayer2Hover
         : auroraEverywhere ? aurora.colElevatedSurfaceHover
         : colors.colLayer2Hover
     // Active/pressed fills — did not exist at top level before, so click feedback
-    // (RippleButton etc.) read straight from raw `colors.*`, skipping inir/zzz entirely.
+    // (RippleButton etc.) read straight from raw `colors.*`, skipping lunana/zzz entirely.
     readonly property color colLayer1Active: root.editorialEverywhere ? root.editorial.controlPressed : regaliaEverywhere ? regalia.pressPlate
         : cookieEverywhere ? cookie.bg3
         : zzzEverywhere ? zzz.bg3
         : angelEverywhere ? angel.colGlassCardActive
-        : inirEverywhere ? inir.colLayer1Active
+        : lunanaEverywhere ? lunana.colLayer1Active
         : auroraEverywhere ? aurora.colSubSurfaceActive
         : colors.colLayer1Active
     readonly property color colLayer2Active: root.editorialEverywhere ? root.editorial.controlPressed : regaliaEverywhere ? regalia.controlPlateActive
         : cookieEverywhere ? cookie.bg4
         : zzzEverywhere ? zzz.bg4
         : angelEverywhere ? angel.colGlassPopupActive
-        : inirEverywhere ? inir.colLayer2Active
+        : lunanaEverywhere ? lunana.colLayer2Active
         : auroraEverywhere ? aurora.colElevatedSurfaceActive
         : colors.colLayer2Active
     readonly property color colInactiveControlSurface: root.editorialEverywhere ? colors.colLayer2
@@ -247,7 +247,7 @@ Singleton {
         : cookieEverywhere ? cookie.bg2
         : zzzEverywhere ? zzz.chrome
         : angelEverywhere ? ColorUtils.transparentize(angel.colGlassCard, 0.76)
-        : inirEverywhere ? ColorUtils.transparentize(inir.colLayer1, 0.22)
+        : lunanaEverywhere ? ColorUtils.transparentize(lunana.colLayer1, 0.22)
         : globalStyle === "aurora" ? aurora.colInactiveControlSurface
         : ColorUtils.transparentize(colors.colLayer2, 0.24)
     readonly property color colInactiveControlSurfaceHover: root.editorialEverywhere ? colLayer2Hover
@@ -255,7 +255,7 @@ Singleton {
         : cookieEverywhere ? cookie.bg3
         : zzzEverywhere ? zzz.paperAlt
         : angelEverywhere ? angel.colGlassCardHover
-        : inirEverywhere ? inir.colLayer2Hover
+        : lunanaEverywhere ? lunana.colLayer2Hover
         : globalStyle === "aurora" ? aurora.colInactiveControlSurfaceHover
         : ColorUtils.transparentize(colLayer2Hover, 0.20)
     readonly property color colInactiveControlSurfaceActive: root.editorialEverywhere ? colLayer2Active
@@ -263,20 +263,20 @@ Singleton {
         : cookieEverywhere ? cookie.bg4
         : zzzEverywhere ? zzz.bg3
         : angelEverywhere ? angel.colGlassCardActive
-        : inirEverywhere ? inir.colLayer2Active
+        : lunanaEverywhere ? lunana.colLayer2Active
         : globalStyle === "aurora" ? aurora.colInactiveControlSurfaceActive
         : ColorUtils.transparentize(colLayer2Active, 0.18)
     readonly property color colActionIcon: root.editorialEverywhere ? root.editorial.accent
         : regaliaEverywhere ? regalia.hardwarePrimary
         : zzzEverywhere ? zzz.accent
         : angelEverywhere ? angel.colPrimary
-        : inirEverywhere ? inir.colPrimary
+        : lunanaEverywhere ? lunana.colPrimary
         : colors.colPrimary
     readonly property color colSecondaryActionIcon: root.editorialEverywhere ? root.editorial.accent
         : regaliaEverywhere ? regalia.hardwareSecondary
         : zzzEverywhere ? zzz.secondary
         : angelEverywhere ? angel.colSecondary
-        : inirEverywhere ? inir.colSecondary
+        : lunanaEverywhere ? lunana.colSecondary
         : colors.colSecondary
     readonly property color colMetadataText: ColorUtils.ensureReadable(
         ColorUtils.mix(colors.colOnLayer1, colSecondaryActionIcon, 0.84),
@@ -470,7 +470,7 @@ Singleton {
             : root.cookieEverywhere ? root.cookie.inkMuted
             : root.zzzEverywhere ? root.zzz.inkMuted
             : root.angelEverywhere ? root.angel.colTextSecondary
-            : root.inirEverywhere ? root.inir.colTextSecondary
+            : root.lunanaEverywhere ? root.lunana.colTextSecondary
             : (_needsHighContrast ? _baseOnSurface : (root._auroraLightMode ? _inkSecondary : _baseOnSurfaceVariant))
         property color colSubtext: ColorUtils.ensureReadable(
             ColorUtils.mix(_semanticSubtextBase, root.colSecondaryActionIcon, 0.84),
@@ -750,11 +750,11 @@ Singleton {
     readonly property var _themeMeta: activeThemePreset.meta || {}
     
     // Font Strategy:
-    // 1. Inir style -> Always Monospace (TUI feel)
+    // 1. Lunana style -> Always Monospace (TUI feel)
     // 2. Theme requests mono (Matrix, Vesper) -> Monospace
     // 3. Theme requests serif (Angel) -> Serif (if mapped)
     // 4. Default -> Config Main Font
-    readonly property bool _forceMono: globalStyle === "inir" || _themeMeta.fontStyle === "mono"
+    readonly property bool _forceMono: globalStyle === "lunana" || _themeMeta.fontStyle === "mono"
     readonly property string _angelFont: "Oxanium"
     readonly property bool _useAngelFont: globalStyle === "angel"
     readonly property string _regaliaFont: "Space Grotesk"
@@ -1061,8 +1061,8 @@ Singleton {
         readonly property real popupSurfaceTransparentize: popupTransparentize
     }
 
-    inir: QtObject {
-        // Inir style - Elegant terminal UI aesthetic
+    lunana: QtObject {
+        // Lunana style - Elegant terminal UI aesthetic
         
         // ═══════════════════════════════════════════════════════════════
         // LAYER SYSTEM
@@ -1884,7 +1884,7 @@ Singleton {
     function toggleDarkMode(): void {
         const newMode = !root.m3colors.darkmode
         if (ThemeService.isAutoTheme) {
-            // The same path as every other switch: mode passed explicitly, iRiS scheme kept in step.
+            // The same path as every other switch: mode passed explicitly, Atoll scheme kept in step.
             MaterialThemeLoader.setDarkMode(newMode)
         } else {
             Config.setNestedValue("appearance.customTheme.darkmode", newMode)

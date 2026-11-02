@@ -9,7 +9,7 @@ import "../../../services"
 import "../../../services/deferred"
 import "."
 
-// Top-level InnerTune surface for the ii sidebar — modeled on the InnerTune Android app:
+// Top-level InnerTune surface for the drift sidebar — modeled on the InnerTune Android app:
 // a search app-bar, a Home/Search body, a bottom NavigationBar (Home/Songs/Artists/
 // Albums/Playlists), the MiniPlayer above it, and a full Player that expands over all.
 // Browse data comes from InnerTube (no cookies); playback flows through YtMusic.

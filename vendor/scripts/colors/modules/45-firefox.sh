@@ -8,8 +8,8 @@ source "$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/lib/module-runtime.sh"
 COLOR_MODULE_ID="firefox"
 
 APP_PALETTE="$STATE_DIR/user/generated/app-palette.json"
-BLOCK_BEGIN='// iNiR colours: begin (rewritten by iNiR on every wallpaper change)'
-BLOCK_END='// iNiR colours: end'
+BLOCK_BEGIN='// Lunana colours: begin (rewritten by Lunana on every wallpaper change)'
+BLOCK_END='// Lunana colours: end'
 
 list_profiles() {
   local root ini path
@@ -90,7 +90,7 @@ apply_profile() {
     log_module "left $user_js alone: it is a link"
     return 0
   fi
-  # Giving the colours back only touches a profile iNiR coloured.
+  # Giving the colours back only touches a profile Lunana coloured.
   [[ "$mode" == "off" ]] && ! grep -qsxF -- "$BLOCK_BEGIN" "$user_js" && return 0
   if {
     [[ -f "$user_js" ]] && awk -v b="$BLOCK_BEGIN" -v e="$BLOCK_END" '

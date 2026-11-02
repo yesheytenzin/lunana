@@ -23,18 +23,18 @@ RippleButton {
 
     colBackground: menuEntry.isSeparator
         ? (Appearance.angelEverywhere ? Appearance.angel.colBorderSubtle
-            : Appearance.inirEverywhere ? Appearance.inir.colBorderSubtle
+            : Appearance.lunanaEverywhere ? Appearance.lunana.colBorderSubtle
             : Appearance.colors.colOutlineVariant)
         : "transparent"
     colBackgroundHover: Appearance.angelEverywhere
         ? Appearance.angel.colGlassPopupHover
-        : Appearance.inirEverywhere
-            ? Appearance.inir.colLayer1Hover
+        : Appearance.lunanaEverywhere
+            ? Appearance.lunana.colLayer1Hover
             : ColorUtils.transparentize(Appearance.colors.colPrimary, 0.85)
     colRipple: Appearance.angelEverywhere
         ? Appearance.angel.colGlassPopupActive
-        : Appearance.inirEverywhere
-            ? Appearance.inir.colLayer1Active
+        : Appearance.lunanaEverywhere
+            ? Appearance.lunana.colLayer1Active
             : ColorUtils.transparentize(Appearance.colors.colPrimary, 0.7)
     enabled: !menuEntry.isSeparator
     opacity: 1

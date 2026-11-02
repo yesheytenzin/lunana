@@ -127,7 +127,7 @@ Item {
     readonly property color workspaceForeground: surfaceDialect === "zzz" ? Appearance.zzz.ink
         : surfaceDialect === "regalia" ? Appearance.regalia.onColor
         : surfaceDialect === "angel" ? Appearance.angel.colText
-        : surfaceDialect === "inir" ? Appearance.inir.colText
+        : surfaceDialect === "lunana" ? Appearance.lunana.colText
         : Appearance.colors.colOnLayer1
     readonly property var workspacesForOutput: (NiriService.allWorkspaces ?? [])
         .filter(workspace => workspace.output === root.outputName && !root.isStashWorkspace(workspace.id))

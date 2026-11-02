@@ -48,7 +48,7 @@ Item {
     StyledRectangularShadow { 
         target: card
         visible: !Appearance.zzzEverywhere
-            && (Appearance.angelEverywhere || (!Appearance.inirEverywhere && !Appearance.auroraEverywhere))
+            && (Appearance.angelEverywhere || (!Appearance.lunanaEverywhere && !Appearance.auroraEverywhere))
     }
     
     Rectangle {
@@ -57,7 +57,7 @@ Item {
         width: parent.width - Appearance.sizes.elevationMargin
         height: parent.height - Appearance.sizes.elevationMargin
         radius: Appearance.zzzEverywhere ? Appearance.zzz.panelRadius
-            : Appearance.inirEverywhere ? Appearance.inir.roundingNormal : root.radius
+            : Appearance.lunanaEverywhere ? Appearance.lunana.roundingNormal : root.radius
         color: Appearance.zzzEverywhere ? Appearance.zzz.paper : "transparent"
         border.width: root.vizType === "organic" && root.vizPosition !== "none"
             ? 0 : (Appearance.zzzEverywhere ? Appearance.zzz.borderThick : 0)
@@ -99,8 +99,8 @@ Item {
         Rectangle {
             anchors.fill: parent
             visible: !playerBase.downloaded
-            color: Appearance.inirEverywhere 
-                ? playerBase.inirLayer1
+            color: Appearance.lunanaEverywhere 
+                ? playerBase.lunanaLayer1
                 : Appearance.zzzEverywhere ? Appearance.zzz.paperAlt
                 : (effectiveColors?.colLayer0 ?? Appearance.colors.colLayer0)
             
@@ -108,8 +108,8 @@ Item {
                 anchors.centerIn: parent
                 text: "music_note"
                 iconSize: 64
-                color: Appearance.inirEverywhere 
-                    ? playerBase.inirTextSecondary 
+                color: Appearance.lunanaEverywhere 
+                    ? playerBase.lunanaTextSecondary 
                     : Appearance.zzzEverywhere ? Appearance.zzz.inkMuted
                     : (effectiveColors?.colSubtext ?? Appearance.colors.colSubtext)
             }

@@ -16,8 +16,8 @@ Singleton {
             if ((Config.options?.time?.secondPrecision ?? false) || GlobalStates.screenLocked)
                 return SystemClock.Seconds;
             // The lock screen may show seconds, and it is rehearsed while unlocked.
-            if ((Config.options?.iris?.lock?.type?.seconds ?? false)
-                    && (GlobalStates.irisLockEdit || GlobalStates.screenLocked))
+            if ((Config.options?.atoll?.lock?.type?.seconds ?? false)
+                    && (GlobalStates.atollLockEdit || GlobalStates.screenLocked))
                 return SystemClock.Seconds;
             return SystemClock.Minutes;
         }

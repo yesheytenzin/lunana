@@ -31,7 +31,7 @@ Rectangle {
     radius: root.editorial ? Appearance.editorial.radius : Appearance.rounding.normal
     color: root.editorial ? (root.userMessage ? Appearance.editorial.secondaryField : Appearance.editorial.layer(1))
         : Appearance.angelEverywhere ? Appearance.angel.colGlassCard
-        : Appearance.inirEverywhere ? Appearance.inir.colLayer1
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer1
         : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurface : Appearance.colors.colLayer1
 
     function saveMessage() {

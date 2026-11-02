@@ -1,11 +1,11 @@
 # PORTING.md — living checklist (supersedes P01–P06)
 
-> Governing process for full iNiR UI parity on Omarchy. Updated after every
+> Governing process for full Lunana UI parity on Omarchy. Updated after every
 > task so a fresh session resumes here. P01–P06 pixel-parity program is retired;
 > `docs/panel-family-parity-plan.md`, `.audit/*parity*`, `codex/p01*` stay as
 > history only.
 
-Feature source: `/home/tenzin/development/inir` @ `2.33.0` (`48cdcec`).
+Feature source: `/home/tenzin/development/inir` @ `2.33.0` (`48cdcec`) — see README credits for the source.
 Delivery: this repo (`lunana.*` plugin hosts + `lunana-suite` + `family-cycle`).
 Vendored tree `vendor/` is never hand-edited — regenerate via `scripts/vendor.py`.
 
@@ -18,14 +18,14 @@ against a fixture `$HOME` — never the live session.
 - [x] `scripts/test/nested-hypr` harness adopted (up/install/drive/shot/logs/down;
       session-7 adds `--monitors`, a Lua fixture, runtime-log discovery, and a clean `down`)
 - [x] `scripts/hypr/lunana.conf` (layerrules for `lunana-*` namespaces)
-- [x] Full re-vendor of the iNiR module/service/script set below
+- [x] Full re-vendor of the Lunana module/service/script set below
 - [x] `lunana-suite --dry-run` + `tests/test_manifests.py` green
 
-## Wave 1 — iNiR Hyprland-completion (inir checkout, then re-vendor)
+## Wave 1 — Lunana Hyprland-completion (lunana checkout, then re-vendor)
 - [x] Overview: Hyprland `OverviewWidget` path is the one in use (orbitMode falls back to it, no null stage); orbit mode on
       Hyprland uses the compositor-agnostic orbital stage (no `null` branch)
 - [x] MRU tracker (new, compositor-agnostic) in CompositorService from Hyprland `activewindow` events
-- [x] iRiS orbit host + MRU wiring; full OrbitOrbitalStage port remains (Niri-native internals)
+- [x] Atoll orbit host + MRU wiring; full OrbitOrbitalStage port remains (Niri-native internals)
 - [x] Column keybind ops (Hyprland shims in CompositorService; nearest-behavior only): `CompositorService` Hyprland shims (`movefocus`,
       `movewindow`, `fullscreen`, `layoutmsg`, `resizeactive`)
 - [x] GameMode: Hyprland fullscreen via IPC snapshot; animations via `hyprctl keyword animations:enabled`
@@ -35,7 +35,7 @@ against a fixture `$HOME` — never the live session.
 - [x] Cheatsheet: `HyprlandKeybinds` parses Omarchy bindings.lua (proven: Keybinds (8)
       with the full Omarchy section in the nest; binds nested under children[0])
 
-## Wave 2 — ii family parity (lunana hosts)
+## Wave 2 — drift family parity (lunana hosts)
 - [x] `lunana.bar` (bar, exists) — all styles: classic/islands/scenic/frame/pill/m3
 - [x] `lunana.dock` (service, exists) — 4 positions + app icons
 - [x] `lunana.overview` (overlay) — grid + search + calculator (flag host)
@@ -54,45 +54,45 @@ against a fixture `$HOME` — never the live session.
 - [x] `lunana.altswitcher` (overlay; MRU order via Wave 1 tracker)
 - [x] `lunana.tiling` (service) — tiling overlay
 - [x] `lunana.closeconfirm` (overlay; Hyprland-native host around the vendored
-  ii/waffle/iris dialog content — the vendored trigger/close path is
+  drift/slate/atoll dialog content — the vendored trigger/close path is
   niri-only, so the host snapshots the focused toplevel itself and closes
   via Omarchy's Lua dispatcher dialect)
 - [x] `lunana.settings` (overlay; Loader-gated ApplicationWindow)
 
-## Wave 3 — iRiS family parity
-- [x] `lunana.iris` island mount (exists — interim direct `IrisIsland`)
+## Wave 3 — Atoll family parity
+- [x] `lunana.atoll` island mount (exists — interim direct `AtollIsland`)
 - [x] Satellite hosts: background, palette, control, orbit, stage, dock, edit (interim), lock, notifications, settings
-- [x] Satellite gaps filled (session-6): `lunana.iris-osd` (IrisOSD), `lunana.iris-session`
-      (IrisSessionScreen), `lunana.iris-wallpaper` (IrisWallpaperPicker / galleryLoader),
-      `lunana.iris-sidebar-left` + `-right` (IrisSidebar focus/today). Without these the
-      iris family lost OSD/session/gallery/sidebars (the ii-owned set is stood down under
-      iris). Registered in MANAGED_PLUGINS + family-cycle iris set + packaging; render +
+- [x] Satellite gaps filled (session-6): `lunana.atoll-osd` (AtollOSD), `lunana.atoll-session`
+      (AtollSessionScreen), `lunana.atoll-wallpaper` (AtollWallpaperPicker / galleryLoader),
+      `lunana.atoll-sidebar-left` + `-right` (AtollSidebar focus/today). Without these the
+      atoll family lost OSD/session/gallery/sidebars (the drift-owned set is stood down under
+      atoll). Registered in MANAGED_PLUGINS + family-cycle atoll set + packaging; render +
       output-targeting to be proven in #4.
-- [~] Full `IrisBar` chassis composition — **decided (operator, session-6): Option A, keep the
+- [~] Full `AtollBar` chassis composition — **decided (operator, session-6): Option A, keep the
       satellite-plugin model.** The monolithic chassis is one PanelWindow fusing island+dock+
-      control+spotlight+orbit+stage+edit+banners under a shared IrisField; it assumes iRiS owns
-      the whole shell. Hosting it would retire every iris-* satellite and fork family-cycle.
+      control+spotlight+orbit+stage+edit+banners under a shared AtollField; it assumes Atoll owns
+      the whole shell. Hosting it would retire every atoll-* satellite and fork family-cycle.
       Kept satellites instead; single-surface blur-fusion + cross-surface morph recorded as
       reduced fidelity (and the .qsb blur shaders already fall back on this Qt anyway).
-- [x] iRiS lock ownership per family: enforced by the mutually-exclusive family sets. Lock is
-      NOT in SHARED (only state+family are); ii→`lunana.lock`, iris→`lunana.iris-lock`,
-      waffle→`lunana.waffle-lock` — each a thin host of the full vendored `Lock`
+- [x] Atoll lock ownership per family: enforced by the mutually-exclusive family sets. Lock is
+      NOT in SHARED (only state+family are); drift→`lunana.lock`, atoll→`lunana.atoll-lock`,
+      slate→`lunana.slate-lock` — each a thin host of the full vendored `Lock`
       (which owns the PAM `LockContext`, the `WlSessionLock` surface, the fallback
-      path, and the per-family surface switch). Mounting a bare `IrisLockSurface` /
-      `WaffleLockSurface` leaves its required `context` unset and the plugin fails
+      path, and the per-family surface switch). Mounting a bare `AtollLockSurface` /
+      `SlateLockSurface` leaves its required `context` unset and the plugin fails
       to create (`service plugin createObject returned null`). Exactly one
       WlSessionLock host enabled at a time. Lock *open* stays untested by design
       (would lock the test session).
 
-## Wave 4 — Waffle family (new)
-- [x] `lunana.bar-waffle` (bar) + `wBar`
-- [x] `lunana.waffle-start` (searchOpen), `-action`,
+## Wave 4 — Slate family (new)
+- [x] `lunana.bar-slate` (bar) + `wBar`
+- [x] `lunana.slate-start` (searchOpen), `-action`,
       `-notifications`, `-lock` (dormant), `-osd`, `-background`
-- [x] `family-cycle` gains the `waffle` line (present: ii/waffle/iris/stock all wired in FAMILIES)
+- [x] `family-cycle` gains the `slate` line (present: drift/slate/atoll/stock all wired in FAMILIES)
 
 ## Wave 5 — shared services, integrations, settings
 - [x] `lunana.state` owns the `lunana` subtree (family, themeSource; default omarchy-tokens)
-- [x] Material You opt-in wired: `lunana.state themeSource=material-you` arms inir
+- [x] Material You opt-in wired: `lunana.state themeSource=material-you` arms lunana
       `Config appearance.theme=auto` + `generateMaterialYou(path)` runs the vendored
       switchwall pipeline (proven: theme flips, switchwall exits 0). Default stays
       Omarchy tokens (untouched path). Full wallpaper-following needs the matugen
@@ -108,16 +108,16 @@ against a fixture `$HOME` — never the live session.
 - [x] Verified in nest: bar (live data), dock, background, overview summon,
       cheatsheet summon + binds, zero load failures, hermetic install/uninstall
 - [x] Live-verify (nested, session-6): Audio/Network/Bluetooth/Weather/Battery/
-      Brightness/Mpris singletons init with no errors; iRiS bar shows live weather
+      Brightness/Mpris singletons init with no errors; Atoll bar shows live weather
       (7°C) + clock in the capture. Session-7 completed the residual per-overlay
       toggle matrix and the nested dual-output multi-monitor proof (below).
-- [x] Settings: ii overlay summons with full nav + working Themes page (Color
+- [x] Settings: drift overlay summons with full nav + working Themes page (Color
       Themes gallery, tabs, filters) in the nest. Page components resolve against
-      the registry module, not the shell root (inir fix, identical under inir)
+      the registry module, not the shell root (lunana fix, identical under lunana)
 
 ## Wave 6 — interchange, keybinds, layerrules, packaging, docs
 - [x] `lunana-suite`: all 44 managed plugins (45 including the dev probe); per-plugin vendor closures + root files + runtime script suffixes; hermetic fixture mode (LUNANA_FIXTURE=1)
-- [x] `family-cycle`: `ii ↔ waffle ↔ iris ↔ stock`, exactly one family active (fixture-tested)
+- [x] `family-cycle`: `drift ↔ slate ↔ atoll ↔ stock`, exactly one family active (fixture-tested)
 - [x] Keybinds: 8-surface additive set (plan §1.6); merged/removed by suite
 - [x] Layerrules (`scripts/hypr/lunana.conf`) installed/removed by the suite
 - [x] `packaging/package-metadata.json` (44 plugins + grim/slurp/wf-recorder/tesseract deps); `README.md` rewritten; stale
@@ -128,16 +128,16 @@ against a fixture `$HOME` — never the live session.
 - Niri scrolling-column semantics → nearest Hyprland dispatcher (see §9 of plan).
 - Default theme Omarchy tokens; Material You opt-in.
 - `place-within-backdrop` dropped (no Hyprland analog).
-- iRiS single-surface chassis fusion (one IrisField blurring island+dock+control+banners
+- Atoll single-surface chassis fusion (one AtollField blurring island+dock+control+banners
   as one glass body, cross-surface morph) is not reproduced by the satellite-plugin model
-  (Option A). Each iRiS surface is its own layer; `.qsb` blur shaders also fall back on this Qt.
-- iRiS has no close-confirm / mascot / alt-switcher / tiling-overlay satellite: `IrisCloseConfirmContent`
-  needs the chassis's close-intercept + `targetWindow`. The ii host now
+  (Option A). Each Atoll surface is its own layer; `.qsb` blur shaders also fall back on this Qt.
+- Atoll has no close-confirm / mascot / alt-switcher / tiling-overlay satellite: `AtollCloseConfirmContent`
+  needs the chassis's close-intercept + `targetWindow`. The drift host now
   supplies that interception on Hyprland natively (snapshot + Lua-dialect
-  close); mascot/altswitcher/tiling have no iRiS module (iRiS folds window
+  close); mascot/altswitcher/tiling have no Atoll module (Atoll folds window
   switching into orbit/pieces). Recorded, not hosted.
 - `org.kde.syntaxhighlighting` (KF6 `syntax-highlighting`) is a hard dependency of the vendored
-  AiChat. The ii `sidebar-left` host now isolates that content in a separate compilation unit and
+  AiChat. The drift `sidebar-left` host now isolates that content in a separate compilation unit and
   opens a diagnostic fallback when the module is absent, so the overlay still summons and closes
   on every output. Full sidebar content (AI chat and the other tabs) needs the system QML module;
   the success path was verified with a temporary stub module.
@@ -145,7 +145,7 @@ against a fixture `$HOME` — never the live session.
   tesseract), but region recording is untested.
 - `matugen` is absent; Material You opt-in degrades cleanly by design (default Omarchy tokens needs
   nothing).
-- Bulk wallpaper thumbnails prefer inir's venv (`$HOME/.local/state/quickshell/.venv`); without it
+- Bulk wallpaper thumbnails prefer lunana's venv (`$HOME/.local/state/quickshell/.venv`); without it
   the vendored ImageMagick fallback runs. Both scripts are vendored; the venv is an optional
   operator install.
 - Live AI/YtMusic/Wallhaven/Anime network exercise needs API keys and the full `sidebar-left`
@@ -160,7 +160,7 @@ against a fixture `$HOME` — never the live session.
   builds in `.lunana-staging` and swaps per plugin. Proven: reinstall shows
   `lunana.bar active` with no fallback.
 - Shell-entry handshake: vendored surfaces gate on
-  `GlobalStates.shellEntryReady` (set only by inir's shell.qml). `lunana.state`
+  `GlobalStates.shellEntryReady` (set only by lunana's shell.qml). `lunana.state`
   now mirrors the minimal boot (200ms entry, 500ms deferred); theme/icon
   boots stay Omarchy's.
 - `omarchy-plugin-enable/disable` drive the LIVE shell over IPC and ignore
@@ -175,7 +175,7 @@ against a fixture `$HOME` — never the live session.
 - Fixture shell.json needs `version: 1` or the host ignores bar.id/plugins.
 - Benign/known: duplicate IpcHandler targets (per-plugin singleton copies —
   first wins); `.qsb` shaders fail to deserialize on this Qt (fallback
-  rendering); `IrisStyle` FontLoader points at a host font dir that does not
+  rendering); `AtollStyle` FontLoader points at a host font dir that does not
   exist; mascot reads a host manifest path; stock `omarchy-background` stays
   up alongside lunana's (stand-down not implemented); per-plugin singleton
   universes diverge for cross-plugin GlobalStates reads (degrades to
@@ -217,12 +217,12 @@ against a fixture `$HOME` — never the live session.
   failures on clean boot.
 - Cross-plugin singleton sharing PROVEN: overview summon slid the bar away
   via `overviewOwnsEdge` (flag set in overview's plugin, read in bar's).
-- Full family loop live: ii → waffle (wBar renders w/ live data) → iris
-  (island renders, ii set stood down) → stock → ii (20 plugins, bar back).
+- Full family loop live: drift → slate (wBar renders w/ live data) → atoll
+  (island renders, drift set stood down) → stock → drift (20 plugins, bar back).
 - Cheatsheet Keybinds (8) from the suite-installed binds; integrations
   (Ai/YtMusic/Wallhaven/AnimeService) instantiate with zero errors.
 - Duplicate IpcHandler warnings down to a handful (shared singletons).
-- Fixture stays awake (host + inir idle off); idle lock that wedged session 2
+- Fixture stays awake (host + lunana idle off); idle lock that wedged session 2
   cannot recur.
 - Remaining: service-direct IPC registration (lock) unverified by design
   (executing it locks the test session); overlay path is the contract path
@@ -236,14 +236,14 @@ against a fixture `$HOME` — never the live session.
 - `lunana.lock close` (no-op) runs clean → service ShellIpc registers fine;
   earlier "Target not found" was the stale unloaded-plugin era. Lock *open*
   untested by design (would lock the test session); summon path is the contract.
-- Inir idle seed belongs in `illogical-impulse/config.json`, not `inir/`; the
-  harness template is fixed. Inir also needs `syntax-highlighting` noted as
+- Lunana idle seed belongs in `illogical-impulse/config.json`, not `lunana/`; the
+  harness template is fixed. Lunana also needs `syntax-highlighting` noted as
   a hard dep (provides org.kde.syntaxhighlighting for AiChat).
 
 ## Session-6 — "fix open" campaign (2026-10-30)
 Working the four open buckets one by one.
 - [x] #1 Record reconciled: work is on `main` (not `lunana/parity`);
-      `family-cycle` waffle line confirmed present (checkboxes corrected above).
+      `family-cycle` slate line confirmed present (checkboxes corrected above).
 - [x] #2a Stock `omarchy.background` stand-down: `lunana-suite` now stands it
       down on install (mirrors the `omarchy.dock` stand-down) and restores it on
       uninstall, recorded via `backgroundWasEnabled`. Every lunana family ships
@@ -254,11 +254,11 @@ Working the four open buckets one by one.
       omarchy-tokens needs nothing; the pipeline already degrades cleanly).
 - [x] #2c **Broad shellPath finding (root cause, not cosmetic):** the vendored
       tree calls `Quickshell.shellPath(X)` in **186** sites (fonts, mascot
-      assets, translations, and the `scripts/inir` runtime + color/capture
+      assets, translations, and the `scripts/lunana` runtime + color/capture
       scripts). Omarchy plugins resolve own files via `Quickshell.env(
       "OMARCHY_PATH")` + subpath or `Qt.resolvedUrl(...)`; `Quickshell.shellPath`
       returns the **omarchy-shell root**, so every one of these resolves into
-      Omarchy's tree where the file is absent. The `IrisStyle` FontLoader is the
+      Omarchy's tree where the file is absent. The `AtollStyle` FontLoader is the
       canary (fires on load → font fallback); scripts fail only when a feature
       invokes them (why the nest saw "instantiate with zero errors"). Session-5
       already fixed the settings-registry instance via a module-dir anchor
@@ -268,8 +268,8 @@ Working the four open buckets one by one.
       re-vendor. Subtleties to prove in the nest (URL vs bare path for
       `FontLoader.source`, template-literal args, env handling) — so this fix is
       folded into #4 (live-verify), where the running nest can prove it.
-- [x] #3 Un-defer iRiS (Option A, operator-chosen): kept the satellite model and
-      filled its gaps — added iris-osd/-session/-wallpaper/-sidebar-left/-right (45
+- [x] #3 Un-defer Atoll (Option A, operator-chosen): kept the satellite model and
+      filled its gaps — added atoll-osd/-session/-wallpaper/-sidebar-left/-right (45
       plugins now, tests green). Per-family lock ownership confirmed enforced by the
       family sets. Full chassis fusion recorded as reduced (see Wave 3 + reduced list).
       Render/output-targeting of the new satellites to be proven in #4.
@@ -278,37 +278,37 @@ Working the four open buckets one by one.
       `${…}`-ternary args) wired into `vendor_path` + a `--shellpath` in-place
       mode; 102 vendored files rewritten so `Quickshell.shellPath(X)` resolves to
       `<XDG_CONFIG_HOME|~/.config>/omarchy/lunana-vendor/X`. Nest proof: font
-      `Cannot load` errors 35→0, no new syntax errors, iRiS text renders in
+      `Cannot load` errors 35→0, no new syntax errors, Atoll text renders in
       Inter/Rubik (screenshot). Covers all 186 sites (fonts, mascot assets,
-      scripts/inir runtime, color/capture scripts).
+      scripts/lunana runtime, color/capture scripts).
 - [x] #4 Live-verify pass (nested Hyprland, 2026-10-30, session-6): PROVEN —
-      ii family (quickshell:bar/dock/background layers) and iRiS family (lunana-iris
+      drift family (quickshell:bar/dock/background layers) and Atoll family (lunana-atoll
       island + stacked clock + live weather 7°C + afterglow wallpaper, screenshot
-      `/tmp/lunana-nested/shots/iris-family.png`) both render; the 5 new iris
+      `/tmp/lunana-nested/shots/atoll-family.png`) both render; the 5 new atoll
       satellites load with ZERO load/type errors; Audio/Network/Bluetooth/Weather/
       Battery/Brightness/Mpris singletons init with no errors; Ai/YtMusic/Wallhaven/
       AnimeService instantiate clean; background stand-down confirmed (disabledPlugins
-      = [omarchy.dock, omarchy.background]). Residual non-fatal: IrisLockStage reads
+      = [omarchy.dock, omarchy.background]). Residual non-fatal: AtollLockStage reads
       an undefined lock-context at rest (lock open untested by design); ShellUpdates
       version.json absent in fixture. Session-7 completed the residual per-overlay
       toggle matrix and the nested dual-output multi-monitor proof.
-- [x] #5 iRiS satellite completion (nested Hyprland 0.57.0, dual output): every
-      satellite now renders exactly its inir UI. Bugs fixed, all host-side:
+- [x] #5 Atoll satellite completion (nested Hyprland 0.57.0, dual output): every
+      satellite now renders exactly its lunana UI. Bugs fixed, all host-side:
       (a) island/dock/control/stage/edit content floated without glass bodies —
-      the chassis `IrisField` used to paint every piece's published shapes, so
+      the chassis `AtollField` used to paint every piece's published shapes, so
       each satellite host now mounts a per-output field fed by that piece's
       `fieldShapes`/`bodyShape` (no cross-surface fusion — separate pills, per
-      Option A); (b) `lunana.iris-dock` had no surface at all (embeddable item
+      Option A); (b) `lunana.atoll-dock` had no surface at all (embeddable item
       with no window) — wrapped in a per-output PanelWindow with an input mask
       from the dock's published body rects; (c) stage/edit/control/palette
       loaders were `centerIn` (0×0 for fullscreen items → invisible) and missed
       required props/state — all fill now, with `modelData` (stage),
-      `screenData` + `irisEdit` (edit), `screen` + `searchOpen` (palette),
-      `screenData` + `controlPanelOpen`/`irisMorphOwner` (control);
-      (d) `lunana.iris-lock`/`lunana.waffle-lock` mounted bare lock surfaces
+      `screenData` + `atollEdit` (edit), `screen` + `searchOpen` (palette),
+      `screenData` + `controlPanelOpen`/`atollMorphOwner` (control);
+      (d) `lunana.atoll-lock`/`lunana.slate-lock` mounted bare lock surfaces
       whose required `context` is unset — both now host the full vendored
-      `Lock` (same as the ii host). Orbit gained a host surface + toggle
-      (drives `irisOrbitOpen`, honors `iris.orbit.enable`), then a Hyprland
+      `Lock` (same as the drift host). Orbit gained a host surface + toggle
+      (drives `atollOrbitOpen`, honors `atoll.orbit.enable`), then a Hyprland
       window-model mirror: `lunana.state/HyprWindows.qml` translates
       Hyprland toplevels/workspaces into NiriService's `windows`/
       `allWorkspaces`/`mruWindowIds` shape (int ids from addresses; dormant
@@ -330,22 +330,22 @@ Working the four open buckets one by one.
       QML `int` truncates 64-bit Hyprland addresses to 32 bits, so the
       mirror now issues small stable per-address ints (pruned on close)
       instead of parsed addresses. toggleOverview stays Niri-only (its analog is
-      lunana.overview, unreachable from vendored code). Upstream inir has
+      lunana.overview, unreachable from vendored code). Upstream lunana has
       no Hyprland orbit to re-vendor, and could not take dsp-dialect code
       for stock Hyprland anyway.
       Closed separately (quick-wins, extended since): the OSD render path is
-      proven via the `lunana.iris-osd test` hook (external wpctl alone never
+      proven via the `lunana.atoll-osd test` hook (external wpctl alone never
       fires it; live, the pill also answers the natural `audio volumeUp`
-path) and, for the ii family, via the natural `audio volumeUp`
+path) and, for the drift family, via the natural `audio volumeUp`
       path with fast layer polling (a `lunana.osd test` hook was briefly
       added on the unproven claim that vendored Audio never fires in the
       nest, then reverted once polling proved otherwise — the pill
       auto-hides after 1.5s, so slow checks miss it); the banner render
       path is proven synthetically via the
-      `lunana.iris-notifications test` hook AND by real bus ingress — nested
+      `lunana.atoll-notifications test` hook AND by real bus ingress — nested
       shell on a private session bus owns the name, `notify-send` renders
-      the full banner for both iris (`iris-notif-bus-ingress.png`) and ii
-      (`ii-notif-banner.png`); lock open is proven with restart recovery
+      the full banner for both atoll (`atoll-notif-bus-ingress.png`) and drift
+      (`drift-notif-banner.png`); lock open is proven with restart recovery
       (`hl.clear_crashed_lockscreen()`) for the failure branch and via the
       gated fixture-local `pam_permit` service for PAM-success (any input
       unlocks, desktop back with no restart).
@@ -393,24 +393,24 @@ re-run on Hyprland 0.57.0. Results below are the 0.57.0 run unless noted.
       load directives on uninstall. `tests/test_manifests.py::test_hypr_config_adapters`
       covers both adapters, idempotency, and removal.
 - [x] `scripts/hypr/lunana.lua` mirrors the conf layerrules for Lua configs.
-- [x] Install records `shell.json.lunana.family = <default>` (ii), so reinstalling
-      over a waffle/iris session cannot leave `panelFamily` gated to a family whose
+- [x] Install records `shell.json.lunana.family = <default>` (drift), so reinstalling
+      over a slate/atoll session cannot leave `panelFamily` gated to a family whose
       plugins were just stood down.
 
 ### Product fixes
-- [x] Waffle/iris background hosts: `WaffleBackground`/`IrisBackground` are bare
+- [x] Slate/atoll background hosts: `SlateBackground`/`AtollBackground` are bare
       `Variants`; their default property is `delegate`, so the handshake `Timer`
       child replaced the vendored `PanelWindow` delegate. Both hosts now wrap the
       vendored item in a `Scope` with the Timer as a sibling. Proven:
-      `quickshell:wBackground` and `quickshell:iris-background` appear on both
+      `quickshell:wBackground` and `quickshell:atoll-background` appear on both
       outputs.
 - [x] Family switching: `family-cycle` writes `shell.json.lunana.family`;
       `lunana.state` mirrors it into the vendored `Config.options.panelFamily` on
       family/ready changes (`stock` keeps the last real family). Live
-      ii→waffle→iris→stock→ii now works without a shell restart.
-- [x] `lunana.iris-control` now drives the shared `controlPanelOpen`/
-      `irisMorphOwner` state and passes `screenData` to the vendored
-      `IrisControlCenter`. Previously the layer toggled but the morph surface
+      drift→slate→atoll→stock→drift now works without a shell restart.
+- [x] `lunana.atoll-control` now drives the shared `controlPanelOpen`/
+      `atollMorphOwner` state and passes `screenData` to the vendored
+      `AtollControlCenter`. Previously the layer toggled but the morph surface
       rendered empty; the quick panel now has visible content.
 - [x] `lunana.sidebar-left` degrades gracefully when the vendored AiChat cannot
       compile. The host no longer references `LSLeft.SidebarLeftContent` in its
@@ -425,27 +425,27 @@ re-run on Hyprland 0.57.0. Results below are the 0.57.0 run unless noted.
 - [x] `vendor/` regenerated via `scripts/vendor.py` for `go.mod`,
       `scripts/scan-widgets.sh`, `scripts/detect_sensors.py`,
       `scripts/clipboard-copy.sh`, `scripts/keyring/*`, and `scripts/thumbnails/*`
-      (byte-identical to inir). The shellPath-rewritten callers now resolve;
-      `IrisWashi` warning gone and `inir-washi` builds. Bulk wallpaper thumbnails
-      use inir's venv when present and the vendored ImageMagick fallback otherwise.
+      (byte-identical to lunana). The shellPath-rewritten callers now resolve;
+      `AtollWashi` warning gone and `lunana-washi` builds. Bulk wallpaper thumbnails
+      use lunana's venv when present and the vendored ImageMagick fallback otherwise.
 - [x] `tests/test_manifests.py` rejects stale `vendor/` relative imports;
       `lunana.ui-probe` moved to `../../lunana-vendor/...`.
-- [x] Packaging parity test added; `lunana.iris-wallpaper` was missing from
+- [x] Packaging parity test added; `lunana.atoll-wallpaper` was missing from
       `packaging/package-metadata.json` (now 44 managed plugins).
 
 ### Verification matrix (nested Hyprland 0.57.0, dual output)
-- ii overlays open/close: overview, cheatsheet, control-center, sidebar-left
+- drift overlays open/close: overview, cheatsheet, control-center, sidebar-left
   (diagnostic fallback without `org.kde.syntaxhighlighting`), sidebar-right,
   wallpaper, region, session, settings, altswitcher, closeconfirm.
-- ii `sidebar-left` shows its diagnostic panel instead of the vendored content
+- drift `sidebar-left` shows its diagnostic panel instead of the vendored content
   because `org.kde.syntaxhighlighting` (KF6 `syntax-highlighting`) is not
   installed; with a temporary stub module the real panel renders on both
   outputs.
-- ii `closeconfirm` is a Hyprland-native host around the vendored dialog
+- drift `closeconfirm` is a Hyprland-native host around the vendored dialog
   content: it snapshots the focused toplevel at trigger time
   (`Hyprland.activeToplevel`, activated-scan, then a direct `hyprctl
   activewindow` query as fallback for stale IPC caches), shows the
-  ii/waffle/iris variant by `panelFamily`, and closes via Omarchy's Lua
+  drift/slate/atoll variant by `panelFamily`, and closes via Omarchy's Lua
   dispatcher dialect (`hl.dsp.window.close`, since the socket's `dispatch`
   is `hl.dispatch(...)` shorthand and the upstream `closewindow address:…`
   form is a Lua syntax error there). Verified in the nest with a focused
@@ -453,12 +453,12 @@ re-run on Hyprland 0.57.0. Results below are the 0.57.0 run unless noted.
   cancel/Escape dismisses with the window surviving,
   `closeConfirm.enabled=false` closes immediately with no dialog, and no
   focused window warns without opening.
-- waffle: `wBackground` + waffle bar; `wStartMenu`, `wActionCenter`,
+- slate: `wBackground` + slate bar; `wStartMenu`, `wActionCenter`,
   `wNotificationCenter` open/close.
-- iris: `lunana-iris` + `quickshell:iris-background`; control, edit, palette,
+- atoll: `lunana-atoll` + `quickshell:atoll-background`; control, edit, palette,
   stage, wallpaper, session, settings, sidebar-left, sidebar-right open/close.
-- family cycle iris→stock→ii restores ii fully (`background`/`bar`/`dock`; no
-  iris/waffle layers). Dual monitor: both outputs show background/bar/dock/
+- family cycle atoll→stock→drift restores drift fully (`background`/`bar`/`dock`; no
+  atoll/slate layers). Dual monitor: both outputs show background/bar/dock/
   notifications; control-center summoned on `WAYLAND-1`.
 - Integrations: Network connected (`nmcli`), Bluetooth adapter present but
   `Powered: no`, Battery 81%, brightness 100%, PipeWire connected (`wpctl`),
@@ -467,33 +467,33 @@ re-run on Hyprland 0.57.0. Results below are the 0.57.0 run unless noted.
   additions (lock-surface/`version.json`/duplicate-IpcHandler warnings remain
   known reduced-fidelity noise).
 
-Evidence: `/tmp/lunana-nested/shots/dual-monitor-ii.png`,
-`overlay-iris-control.png`, `family-lunana.waffle-start.png`,
+Evidence: `/tmp/lunana-nested/shots/dual-monitor-drift.png`,
+`overlay-atoll-control.png`, `family-lunana.slate-start.png`,
 `sidebar-left-fallback-dual.png` (missing module → diagnostic on both
 outputs), `sidebar-left-stub.png` (temporary stub module → full panel),
 `closeconfirm-dialog.png` (Hyprland-native close-confirm dialog over a
 focused foot terminal, showing its title + app id with Cancel/Close),
-`iris-v2.png` (iris island + dock pills over wallpaper, dual output),
-`iris2-lunana.iris-control.png` (control grid), `iris2-orbit-win.png`
+`atoll-v2.png` (atoll island + dock pills over wallpaper, dual output),
+`iris2-lunana.atoll-control.png` (control grid), `iris2-orbit-win.png`
 (orbit chrome with a focused window), `iris2-stage-free.png` (stage clock
-bubble), `iris2-lunana.iris-session.png` (session screen),
-`iris-osd-hook.png` (volume pill via the `lunana.iris-osd test` hook),
-`iris-lock-test.png` (full iris lock UI: clock, weather, battery, avatar,
-password field), `iris-lock-failure.png` (red "Incorrect password" via a real PAM round trip
-with the stock stack, proving the gate-off path), `iris-lock-unlocked.png`
-(desktop back after a gated-fixture unlock, no restart), `iris-notif-text-final.png` (banner with icon,
-summary, wrapped body, app name, timestamp), `iris-notif-bus-ingress.png` (real `notify-send` over a private session bus,
+bubble), `iris2-lunana.atoll-session.png` (session screen),
+`atoll-osd-hook.png` (volume pill via the `lunana.atoll-osd test` hook),
+`atoll-lock-test.png` (full atoll lock UI: clock, weather, battery, avatar,
+password field), `atoll-lock-failure.png` (red "Incorrect password" via a real PAM round trip
+with the stock stack, proving the gate-off path), `atoll-lock-unlocked.png`
+(desktop back after a gated-fixture unlock, no restart), `atoll-notif-text-final.png` (banner with icon,
+summary, wrapped body, app name, timestamp), `atoll-notif-bus-ingress.png` (real `notify-send` over a private session bus,
 full ingress path), `sidebar-full-syntax.png`
 (full sidebar-left with syntax-highlighting installed),
-`iris-orbit-hyprland-mirror.png` (orbit strips with a live Hyprland window
-card via the NiriService mirror), `ii-osd-pill.png` (ii volume pill via the
-natural audio path), `ii-notif-banner.png` (ii banner via real
-private-bus ingress), `ii-closeconfirm2.png` (Hyprland-native close-confirm
+`atoll-orbit-hyprland-mirror.png` (orbit strips with a live Hyprland window
+card via the NiriService mirror), `drift-osd-pill.png` (drift volume pill via the
+natural audio path), `drift-notif-banner.png` (drift banner via real
+private-bus ingress), `drift-closeconfirm2.png` (Hyprland-native close-confirm
 dialog over a focused foot terminal);
-Live iris pass (real session): island pill over maximized windows,
+Live atoll pass (real session): island pill over maximized windows,
 auto-hiding dock, control grid, palette spotlight, edit bar, session
 screen, full settings, Focus/Today sidebars, wallpaper selector, orbit
-with a live Firefox card (after fixing the state outage below), iris OSD
+with a live Firefox card (after fixing the state outage below), atoll OSD
 pill, full-text banner — every overlay open/close layer-verified.
 Found live: `lunana.state` runtime-disabled while shell.json listed it, so
 orbit/altswitcher showed chrome with no window data and the Hyprland mirror

@@ -27,15 +27,15 @@ Window {
 
     visible: !root.probeMode
     color: "black"
-    title: "iNiR Web Wallpaper"
+    title: "Lunana Web Wallpaper"
     flags: root.interactive
         ? Qt.FramelessWindowHint
         : (Qt.FramelessWindowHint | Qt.WindowTransparentForInput)
 
-    // Passive web wallpapers live below iNiR's desktop surface so widgets and
+    // Passive web wallpapers live below Lunana's desktop surface so widgets and
     // desktop items stay usable. Explicit interactive mode moves above that
     // surface and owns desktop input while the user is playing.
-    LayerShell.Window.scope: "inir:web-wallpaper"
+    LayerShell.Window.scope: "lunana:web-wallpaper"
     LayerShell.Window.layer: root.interactive
         ? LayerShell.Window.LayerBottom
         : LayerShell.Window.LayerBackground

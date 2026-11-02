@@ -13,7 +13,7 @@ source "$SCRIPT_DIR/lib/module-runtime.sh"
 inputs_fingerprint() {
   local generated="$STATE_DIR/user/generated" name path
   {
-    for name in colors.json palette.json app-palette.json terminal.json theme-meta.json material_colors.scss color.txt iris-surface.json; do
+    for name in colors.json palette.json app-palette.json terminal.json theme-meta.json material_colors.scss color.txt atoll-surface.json; do
       if [[ -f "$generated/$name" ]]; then sha1sum "$generated/$name"; fi
     done
     if [[ -f "$CONFIG_FILE" ]]; then sha1sum "$CONFIG_FILE"; fi
@@ -36,7 +36,7 @@ inputs_fingerprint() {
 main() {
   ensure_generated_dirs
 
-  # One run at a time: a wallpaper change and iRiS handing over its new surface each start one, and two
+  # One run at a time: a wallpaper change and Atoll handing over its new surface each start one, and two
   # runs side by side both restyled every app. The later one now waits and finds nothing left to do.
   if command -v flock >/dev/null 2>&1; then
     exec 9>"$STATE_DIR/user/generated/applycolor.lock"
@@ -47,7 +47,7 @@ main() {
   for arg in "$@"; do
     [[ "$arg" == "--force" ]] && force=1
   done
-  [[ "${INIR_THEME_FORCE:-0}" == "1" ]] && force=1
+  [[ "${LUNANA_THEME_FORCE:-0}" == "1" ]] && force=1
   local stamp_file="$STATE_DIR/user/generated/applycolor.inputs"
   local fingerprint
   fingerprint="$(inputs_fingerprint)"
@@ -101,7 +101,7 @@ main() {
 
   local cpu_count max_jobs running failed
   cpu_count="$(nproc 2>/dev/null || printf '4')"
-  max_jobs="${INIR_THEME_MAX_JOBS:-$((cpu_count / 2))}"
+  max_jobs="${LUNANA_THEME_MAX_JOBS:-$((cpu_count / 2))}"
   [[ "$max_jobs" =~ ^[0-9]+$ ]] || max_jobs=2
   (( max_jobs < 2 )) && max_jobs=2
   (( max_jobs > 4 )) && max_jobs=4

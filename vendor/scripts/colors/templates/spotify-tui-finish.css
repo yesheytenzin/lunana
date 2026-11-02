@@ -1,10 +1,10 @@
-/* iNiR's finish for the text theme: panes with the shell's rounded corners (btop's rounded box), the shell's mono face */
-/* Appended by apply-spicetify-theme.sh after the line that defines --inir-mono (the shell's monospace face). */
+/* Lunana's finish for the text theme: panes with the shell's rounded corners (btop's rounded box), the shell's mono face */
+/* Appended by apply-spicetify-theme.sh after the line that defines --lunana-mono (the shell's monospace face). */
 :root {
   --border-radius: 10px;
   /* Resting panes are quiet lines; the pane under the pointer takes the accent */
   --spice-border-inactive: color-mix(in srgb, var(--spice-text) 22%, var(--spice-main));
-  --font-family: var(--inir-mono), "JetBrainsMono Nerd Font", "JetBrains Mono", monospace;
+  --font-family: var(--lunana-mono), "JetBrainsMono Nerd Font", "JetBrains Mono", monospace;
 }
 .Root__globalNav::before, .Root__main-view::before, .main-nowPlayingBar-container::before,
 .Root__right-sidebar:has(aside:not(:empty))::before,

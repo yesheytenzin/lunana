@@ -240,7 +240,7 @@ ContentPage {
             MaterialTextArea {
                 Layout.fillWidth: true
                 placeholderText: Translation.tr("Network name (SSID)")
-                text: Config.options?.hotspot?.ssid ?? "iNiR Hotspot"
+                text: Config.options?.hotspot?.ssid ?? "Lunana Hotspot"
                 wrapMode: TextEdit.Wrap
                 onTextChanged: Config.setNestedValue("hotspot.ssid", text)
                 StyledToolTip {
@@ -494,12 +494,12 @@ ContentPage {
         settingsTaskSection: "updates"
         expanded: false
         icon: "deployed_code_update"
-        title: Translation.tr("iNiR Shell Updates")
+        title: Translation.tr("Lunana Shell Updates")
 
         SettingsGroup {
             StyledText {
                 Layout.fillWidth: true
-                text: Translation.tr("Automatically checks the iNiR git repository for new versions and shows a notification in the bar.")
+                text: Translation.tr("Automatically checks the Lunana git repository for new versions and shows a notification in the bar.")
                 color: Appearance.colors.colOnSurfaceVariant
                 font.pixelSize: Appearance.font.pixelSize.small
                 wrapMode: Text.WordWrap
@@ -522,7 +522,7 @@ ContentPage {
                 onValueChanged: Config.setNestedValue("shellUpdates.checkIntervalMinutes", value)
                 enabled: Config.options?.shellUpdates?.enabled ?? true
                 StyledToolTip {
-                    text: Translation.tr("How often to check for iNiR updates (in minutes). Default: 360 (6 hours)")
+                    text: Translation.tr("How often to check for Lunana updates (in minutes). Default: 360 (6 hours)")
                 }
             }
 
@@ -854,7 +854,7 @@ ContentPage {
                             // Separate window mode (default): settings.qml is a separate qs process.
                             // Singletons are isolated per-process, so we must use IPC to reach
                             // the main shell's ShellUpdates.openOverlay() instead.
-                            Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")), "shellUpdate", "open"])
+                            Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/lunana")), "shellUpdate", "open"])
                         }
                     }
 
@@ -994,8 +994,8 @@ ContentPage {
             SettingsSwitch {
                 buttonIcon: "visibility_off"
                 text: Translation.tr("Hide weather location")
-                checked: Config.options?.waffles?.widgetsPanel?.weatherHideLocation ?? false
-                onCheckedChanged: Config.setNestedValue("waffles.widgetsPanel.weatherHideLocation", checked)
+                checked: Config.options?.slate?.widgetsPanel?.weatherHideLocation ?? false
+                onCheckedChanged: Config.setNestedValue("slate.widgetsPanel.weatherHideLocation", checked)
                 enabled: Config.options?.bar?.weather?.enable ?? false
             }
 

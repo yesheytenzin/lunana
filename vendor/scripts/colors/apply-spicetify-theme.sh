@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
 # apply-spicetify-theme.sh - Generate and apply Spicetify color scheme
-# from iNiR Material colors using custom theme with live updates.
+# from Lunana Material colors using custom theme with live updates.
 #
 # Design:
 # - Always regenerate theme files (color.ini, user.css bridge) from the
@@ -13,8 +13,8 @@
 # - This script never starts/opens Spotify itself.
 #
 # Reads: app-palette.json first, then palette.json/colors.json fallback
-# Writes: ~/.config/spicetify/Themes/Inir/{color.ini,user.css}
-#         ~/.config/spicetify/Themes/InirTUI/{color.ini,user.css}
+# Writes: ~/.config/spicetify/Themes/Lunana/{color.ini,user.css}
+#         ~/.config/spicetify/Themes/LunanaTUI/{color.ini,user.css}
 
 set -euo pipefail
 
@@ -28,12 +28,12 @@ APP_PALETTE_JSON="$STATE_DIR/user/generated/app-palette.json"
 COLORS_JSON="$STATE_DIR/user/generated/colors.json"
 LOG_FILE="$STATE_DIR/user/generated/spicetify_theme.log"
 
-THEME_NAME="Inir"
-TUI_THEME_NAME="InirTUI"
+THEME_NAME="Lunana"
+TUI_THEME_NAME="LunanaTUI"
 SCHEME_NAME="matugen"
 TEXT_CSS_URL="https://raw.githubusercontent.com/spicetify/spicetify-themes/master/text/user.css"
 REQUESTED_THEME=""
-INIR_FINISH_CSS="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/templates/spotify-finish.css"
+LUNANA_FINISH_CSS="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/templates/spotify-finish.css"
 TUI_FINISH_CSS="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/templates/spotify-tui-finish.css"
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/lib/config-path.sh"
 
@@ -210,7 +210,7 @@ def receive(wanted_id):
 swap = """(() => {
   const links = [...document.querySelectorAll('link.userCSS, link[href^="user.css"]')];
   // Each link keeps its own file: colors.css is a userCSS link too, and pointing it at user.css dropped the scheme.
-  links.forEach(link => { link.href = new URL(link.href, location.href).pathname.split('/').pop() + '?inir=' + Date.now(); });
+  links.forEach(link => { link.href = new URL(link.href, location.href).pathname.split('/').pop() + '?lunana=' + Date.now(); });
   return links.length;
 })()"""
 send({"id": 1, "method": "Runtime.evaluate", "params": {"expression": swap, "returnByValue": True}})
@@ -355,7 +355,7 @@ regenerate_user_css_bridge() {
 
   # ── Build the bridge block ────────────────────────────────────────────────
   local bridge_block
-  bridge_block="/* === iNiR CSS variable bridge - auto-generated, do not edit === */
+  bridge_block="/* === Lunana CSS variable bridge - auto-generated, do not edit === */
 :root {
   --spice-text:                #$(strip_hash "${COLORS[on_surface]}");
   --spice-subtext:             #$(strip_hash "${COLORS[on_surface_variant]}");
@@ -406,7 +406,7 @@ regenerate_user_css_bridge() {
   --spice-rgb-misc:            $(hex_to_rgb "${COLORS[outline]}");
   --spice-rgb-main-secondary:  $(hex_to_rgb "$main_secondary");
 }
-/* === end iNiR CSS variable bridge === */"
+/* === end Lunana CSS variable bridge === */"
 
   # ── Replace only the bridge block in user.css (keep everything else) ──────
   # Use python3 for reliable multi-line regex replace without temp file races.
@@ -418,7 +418,7 @@ css_path = pathlib.Path(sys.argv[1])
 new_block = sys.argv[2]
 content = css_path.read_text()
 pattern = re.compile(
-    r'/\* === iNiR CSS variable bridge - auto-generated, do not edit === \*/.*?/\* === end iNiR CSS variable bridge === \*/\n?',
+    r'/\* === Lunana CSS variable bridge - auto-generated, do not edit === \*/.*?/\* === end Lunana CSS variable bridge === \*/\n?',
     re.DOTALL
 )
 # Strip ALL existing bridge blocks (including duplicates from prior bad runs)
@@ -444,7 +444,7 @@ regenerate_playback_controls_fix() {
   playback_rgb="$(hex_to_rgb "${COLORS[on_surface_variant]}")"
 
   local playback_block
-  playback_block="/* === iNiR playback controls fix - auto-generated === */
+  playback_block="/* === Lunana playback controls fix - auto-generated === */
 .main-playbackBar__slider,
 .playback-bar__progress-time-elapsed,
 .main-playbackBar__slider::before {
@@ -468,7 +468,7 @@ regenerate_playback_controls_fix() {
 .progress-bar__bg {
   background-color: rgba($playback_rgb, 0.3) !important;
 }
-/* === end iNiR playback controls fix === */"
+/* === end Lunana playback controls fix === */"
 
   python3 - "$css_file" "$playback_block" <<'PYEOF'
 import sys, re, pathlib
@@ -476,11 +476,11 @@ css_path = pathlib.Path(sys.argv[1])
 new_block = sys.argv[2]
 content = css_path.read_text()
 pattern = re.compile(
-    r'/\* === iNiR playback controls fix - auto-generated === \*/.*?(?=(/\* === end iNiR playback controls fix === \*/|/\* === iNiR playback controls fix - auto-generated === \*/|\Z))',
+    r'/\* === Lunana playback controls fix - auto-generated === \*/.*?(?=(/\* === end Lunana playback controls fix === \*/|/\* === Lunana playback controls fix - auto-generated === \*/|\Z))',
     re.DOTALL
 )
 content = pattern.sub('', content)
-content = re.sub(r'/\* === end iNiR playback controls fix === \*/\n?', '', content)
+content = re.sub(r'/\* === end Lunana playback controls fix === \*/\n?', '', content)
 content = content.lstrip('\n')
 content = new_block + '\n' + content
 # Removing a block from the middle leaves its blank lines behind: collapse them, or every run grows the file.
@@ -491,24 +491,24 @@ PYEOF
   log "Playback controls fix regenerated from current palette"
 }
 
-write_inir_user_css() {
+write_lunana_user_css() {
   local css_file="$1" font
   font="$(grep -s '^gtk-font-name=' "$XDG_CONFIG_HOME/gtk-3.0/settings.ini" | head -n1)"
   font="${font#gtk-font-name=}"
   font="$(sed -E 's/[[:space:]]+[0-9]+(\.[0-9]+)?$//' <<<"$font")"
   font="${font//\"/}"
   {
-    printf '/* iNiR for Spotify. Generated from the shell; edits are overwritten. */\n'
-    printf ':root { --inir-font: "%s"; }\n' "${font:-Inter}"
-    cat "$INIR_FINISH_CSS"
+    printf '/* Lunana for Spotify. Generated from the shell; edits are overwritten. */\n'
+    printf ':root { --lunana-font: "%s"; }\n' "${font:-Inter}"
+    cat "$LUNANA_FINISH_CSS"
   } > "$css_file"
 }
 
 download_text_css() {
   local css_file="$1"
-  # Older iNiR TUI revisions appended the Sleek palette bridge to text. Refresh
+  # Older Lunana TUI revisions appended the Sleek palette bridge to text. Refresh
   # those files once from upstream so the text theme owns its complete CSS again.
-  if [[ ! -f "$css_file" ]] || grep -q 'iNiR CSS variable bridge' "$css_file"; then
+  if [[ ! -f "$css_file" ]] || grep -q 'Lunana CSS variable bridge' "$css_file"; then
     log "Downloading current text theme CSS..."
     if curl -L --fail --create-dirs -o "$css_file" "$TEXT_CSS_URL" 2>/dev/null; then
       log "Downloaded current text base CSS"
@@ -524,7 +524,7 @@ regenerate_tui_color_bridge() {
   [[ -f "$css_file" ]] || return 0
 
   local color_block
-  color_block="/* === iNiR TUI color bridge - auto-generated === */
+  color_block="/* === Lunana TUI color bridge - auto-generated === */
 :root {
   --spice-accent:             #$(strip_hash "${SPICE_COLORS[accent]}");
   --spice-accent-active:      #$(strip_hash "${SPICE_COLORS[accent]}");
@@ -556,7 +556,7 @@ regenerate_tui_color_bridge() {
   --spice-rgb-subtext:            $(hex_to_rgb "${SPICE_COLORS[subtext]}");
   --spice-rgb-text:               $(hex_to_rgb "${SPICE_COLORS[text]}");
 }
-/* === end iNiR TUI color bridge === */"
+/* === end Lunana TUI color bridge === */"
 
   python3 - "$css_file" "$color_block" <<'PYEOF'
 import pathlib, re, sys
@@ -565,7 +565,7 @@ css_path = pathlib.Path(sys.argv[1])
 new_block = sys.argv[2]
 content = css_path.read_text()
 pattern = re.compile(
-    r'/\* === iNiR TUI color bridge - auto-generated === \*/.*?/\* === end iNiR TUI color bridge === \*/\n?',
+    r'/\* === Lunana TUI color bridge - auto-generated === \*/.*?/\* === end Lunana TUI color bridge === \*/\n?',
     re.DOTALL,
 )
 content = pattern.sub('', content).rstrip()
@@ -583,11 +583,11 @@ regenerate_tui_overrides() {
   [[ -f "$css_file" ]] || return 0
 
   local mono_font
-  mono_font=$(jq -r '.appearance.typography.monospaceFont // empty' "$(inir_config_dir)/config.json" 2>/dev/null) || true
+  mono_font=$(jq -r '.appearance.typography.monospaceFont // empty' "$(lunana_config_dir)/config.json" 2>/dev/null) || true
   mono_font="${mono_font:-JetBrainsMono Nerd Font}"
   local tui_block
-  tui_block="/* === iNiR TUI overrides - auto-generated === */
-:root { --inir-mono: \"${mono_font}\"; }
+  tui_block="/* === Lunana TUI overrides - auto-generated === */
+:root { --lunana-mono: \"${mono_font}\"; }
 $(cat "$TUI_FINISH_CSS" 2>/dev/null)
 
 .player-controls__buttons,
@@ -624,7 +624,7 @@ button[data-testid='control-button-repeat'][aria-checked='true'],
 button[data-testid='control-button-repeat'][aria-checked='mixed'] {
   color: var(--spice-accent-active) !important;
 }
-/* === end iNiR TUI overrides === */"
+/* === end Lunana TUI overrides === */"
 
   python3 - "$css_file" "$tui_block" <<'PYEOF'
 import pathlib, re, sys
@@ -633,7 +633,7 @@ css_path = pathlib.Path(sys.argv[1])
 new_block = sys.argv[2]
 content = css_path.read_text()
 pattern = re.compile(
-    r'/\* === iNiR TUI overrides - auto-generated === \*/.*?/\* === end iNiR TUI overrides === \*/\n?',
+    r'/\* === Lunana TUI overrides - auto-generated === \*/.*?/\* === end Lunana TUI overrides === \*/\n?',
     re.DOTALL,
 )
 content = pattern.sub('', content).rstrip()
@@ -710,7 +710,7 @@ configure_spicetify() {
   read_colors || return 1
   derive_spicetify_colors
 
-  write_inir_user_css "$user_css"
+  write_lunana_user_css "$user_css"
   # Write user.css bridge FIRST so the live xpui sync always ships the full
   # variable set in a single file copy.
   regenerate_user_css_bridge "$user_css"

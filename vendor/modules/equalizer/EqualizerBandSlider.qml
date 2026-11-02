@@ -25,16 +25,16 @@ Item {
         : Appearance.zzzEverywhere ? Appearance.zzz.accent
         : editorial ? Appearance.editorial.accent
         : Appearance.angelEverywhere ? Appearance.angel.colPrimary
-        : Appearance.inirEverywhere ? Appearance.inir.colPrimary
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colPrimary
         : Appearance.colors.colPrimary
     readonly property color trackColor: editorial ? Appearance.editorial.field
         : Appearance.angelEverywhere ? Appearance.angel.colGlassElevated
-        : Appearance.inirEverywhere ? Appearance.inir.colLayer3
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer3
         : Appearance.colors.colSurfaceContainerHighest
     readonly property color quietText: Appearance.zzzEverywhere ? Appearance.zzz.inkMuted
         : editorial ? Appearance.editorial.muted
         : Appearance.angelEverywhere ? Appearance.angel.colTextSecondary
-        : Appearance.inirEverywhere ? Appearance.inir.colTextSecondary
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colTextSecondary
         : Appearance.colors.colSubtext
     implicitWidth: 44
     implicitHeight: 214
@@ -63,7 +63,7 @@ Item {
         color: dragArea.pressed || dragArea.containsMouse
             ? (Appearance.zzzEverywhere ? Appearance.zzz.paperAlt
                 : root.editorial ? Appearance.editorial.layer(2)
-                : Appearance.inirEverywhere ? Appearance.inir.colLayer2
+                : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2
                 : Appearance.colors.colSecondaryContainer)
             : "transparent"
 

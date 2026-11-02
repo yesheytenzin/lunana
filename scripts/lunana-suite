@@ -44,7 +44,8 @@ MANAGED_PLUGINS = [
     "lunana.sidebar-left",
     "lunana.sidebar-right",
     "lunana.family",
-    "lunana.iris",
+    "lunana.family-switch",
+    "lunana.atoll",
     "lunana.overview",
     "lunana.control-center",
     "lunana.background",
@@ -60,36 +61,36 @@ MANAGED_PLUGINS = [
     "lunana.tiling",
     "lunana.closeconfirm",
     "lunana.settings",
-    "lunana.iris-background",
-    "lunana.iris-palette",
-    "lunana.iris-control",
-    "lunana.iris-orbit",
-    "lunana.iris-stage",
-    "lunana.iris-dock",
-    "lunana.iris-edit",
-    "lunana.iris-lock",
-    "lunana.iris-notifications",
-    "lunana.iris-settings",
-    "lunana.iris-osd",
-    "lunana.iris-session",
-    "lunana.iris-wallpaper",
-    "lunana.iris-sidebar-left",
-    "lunana.iris-sidebar-right",
-    "lunana.iris-reservations",
-    "lunana.iris-frame",
-    "lunana.bar-waffle",
-    "lunana.waffle-start",
-    "lunana.waffle-action",
-    "lunana.waffle-notifications",
-    "lunana.waffle-lock",
-    "lunana.waffle-osd",
-    "lunana.waffle-background",
+    "lunana.atoll-background",
+    "lunana.atoll-palette",
+    "lunana.atoll-control",
+    "lunana.atoll-orbit",
+    "lunana.atoll-stage",
+    "lunana.atoll-dock",
+    "lunana.atoll-edit",
+    "lunana.atoll-lock",
+    "lunana.atoll-notifications",
+    "lunana.atoll-settings",
+    "lunana.atoll-osd",
+    "lunana.atoll-session",
+    "lunana.atoll-wallpaper",
+    "lunana.atoll-sidebar-left",
+    "lunana.atoll-sidebar-right",
+    "lunana.atoll-reservations",
+    "lunana.atoll-frame",
+    "lunana.bar-slate",
+    "lunana.slate-start",
+    "lunana.slate-action",
+    "lunana.slate-notifications",
+    "lunana.slate-lock",
+    "lunana.slate-osd",
+    "lunana.slate-background",
 ]
 
 # One shared vendored tree for all hosts: <config>/omarchy/lunana-vendor/.
 # Every host imports it via `../../lunana-vendor/...` (relative to each
 # plugin file), so all plugins share ONE GlobalStates/Config/services universe
-# — the single-engine semantics inir's tree assumes. Per-plugin vendor/ copies
+# — the single-engine semantics lunana's tree assumes. Per-plugin vendor/ copies
 # diverge singletons, duplicate every polling service, and cost ~1GB to
 # install; the shared tree is one mechanical copy of repo vendor/.
 SHARED_VENDOR_DIRNAME = "lunana-vendor"
@@ -131,7 +132,7 @@ def hypr_source_line() -> str:
 def _load_family_table() -> tuple:
     """Import FAMILIES and SHARED from the family-cycle script.
 
-    Falls back to the ii-family set so install still converges if the
+    Falls back to the drift-family set so install still converges if the
     family script is ever missing.
     """
     cycle = plugin_src("lunana.family") / "family-cycle"
@@ -144,8 +145,8 @@ def _load_family_table() -> tuple:
         exec(code, mod.__dict__)
         return (mod.FAMILIES, mod.SHARED)
     except Exception as exc:  # noqa: BLE001
-        info(f"family-cycle unreadable ({exc}); using fallback ii set")
-        fams = [("ii", BAR_PLUGIN_ID, [p for p in MANAGED_PLUGINS
+        info(f"family-cycle unreadable ({exc}); using fallback drift set")
+        fams = [("drift", BAR_PLUGIN_ID, [p for p in MANAGED_PLUGINS
                                        if p not in ("lunana.state", "lunana.family")])]
         return (fams, {"lunana.state"})
 
@@ -197,6 +198,35 @@ def using_fixture() -> bool:
     if os.environ.get("LUNANA_FIXTURE") == "1":
         return True
     return config_home() != Path.home() / ".config"
+
+
+def prune_stale_plugins(dry: bool) -> None:
+    """Remove installed `lunana.*` plugins no longer managed (e.g. pre-rename
+    ids like `lunana.atoll`, `lunana.bar-slate`): drop their directories and
+    their shell.json entries so the shell never loads a ghost id."""
+    keep = set(MANAGED_PLUGINS) | {SHARED_VENDOR_DIRNAME}
+    stale = sorted(p.name for p in plugin_dir().iterdir()
+                   if p.is_dir() and p.name.startswith("lunana.")
+                   and p.name not in keep
+                   and not p.name.startswith("."))
+    if not stale:
+        info("no stale lunana plugins to prune")
+        return
+    tool = shutil.which("omarchy-plugin-disable")
+    fixture = using_fixture()
+    for pid in stale:
+        if dry:
+            info(f"would prune stale {pid}")
+            continue
+        if fixture:
+            set_plugin_enabled(pid, False, False)
+        elif tool:
+            subprocess.run([tool, pid], check=False,
+                             capture_output=True, text=True, timeout=60)
+        dst = plugin_dir() / pid
+        if dst.is_dir():
+            shutil.rmtree(dst)
+        info(f"pruned stale {pid}")
 
 
 def set_plugin_enabled(pid: str, enabled: bool, dry: bool) -> None:
@@ -403,6 +433,110 @@ def remove_keybinds(dry: bool) -> None:
     _reload_hypr()
 
 
+THEME_HOOK_SRC = REPO_ROOT / "scripts" / "hooks" / "theme-set.d" / "50-lunana-atoll-theme"
+THEME_HOOK_NAME = "50-lunana-atoll-theme"
+
+
+FAMILY_WIDGET_ID = "lunana.family-switch"
+
+
+def ensure_family_widget_layout(shell: dict) -> bool:
+    """Add the family-switch widget to bar.layout.left (after workspaces)
+    so it renders on the stock bar. Returns True when it changed anything."""
+    bar = shell.setdefault("bar", {})
+    if not isinstance(bar, dict):
+        fail("shell.json 'bar' is not an object; fix it before switching")
+    layout = bar.setdefault("layout", {})
+    if not isinstance(layout, dict):
+        fail("shell.json 'bar.layout' is not an object; fix it before switching")
+    left = layout.setdefault("left", [])
+    if not isinstance(left, list):
+        fail("shell.json 'bar.layout.left' is not an array; fix it before switching")
+    if any(isinstance(e, dict) and e.get("id") == FAMILY_WIDGET_ID for e in left):
+        return False
+    entry = {"id": FAMILY_WIDGET_ID}
+    insert_at = next((i + 1 for i, e in enumerate(left)
+                      if isinstance(e, dict) and e.get("id") == "omarchy.workspaces"),
+                     len(left))
+    left.insert(insert_at, entry)
+    return True
+
+
+def strip_family_widget_layout(shell: dict) -> bool:
+    """Remove every family-switch entry from bar.layout. True if changed."""
+    bar = shell.get("bar")
+    if not isinstance(bar, dict):
+        return False
+    layout = bar.get("layout")
+    if not isinstance(layout, dict):
+        return False
+    changed = False
+    for section, entries in layout.items():
+        if not isinstance(entries, list):
+            continue
+        kept = [e for e in entries
+                if not (isinstance(e, dict) and e.get("id") == FAMILY_WIDGET_ID)]
+        if len(kept) != len(entries):
+            layout[section] = kept
+            changed = True
+    return changed
+
+
+def theme_hook_dir() -> Path:
+    return omarchy_config_dir() / "hooks" / "theme-set.d"
+
+
+def install_theme_hook(dry: bool) -> None:
+    """Copy the Omarchy theme-set hook so the Atoll island, dock, panels and
+    edges follow `omarchy theme set` through lunana's followTheme path."""
+    if not THEME_HOOK_SRC.is_file():
+        info("theme hook source missing; skipping Omarchy theme sync")
+        return
+    if dry:
+        info(f"would install Omarchy theme-set hook into {theme_hook_dir()}")
+        return
+    theme_hook_dir().mkdir(parents=True, exist_ok=True)
+    dst = theme_hook_dir() / THEME_HOOK_NAME
+    shutil.copy2(THEME_HOOK_SRC, dst)
+    dst.chmod(0o755)
+    info("installed Omarchy theme-set hook for atoll")
+
+
+def remove_theme_hook(dry: bool) -> None:
+    if dry:
+        info(f"would remove Omarchy theme-set hook from {theme_hook_dir()}")
+        return
+    dst = theme_hook_dir() / THEME_HOOK_NAME
+    if dst.exists():
+        dst.unlink()
+        info("removed Omarchy theme-set hook")
+
+
+def converge_atoll_theme() -> None:
+    """Map the current Omarchy theme onto lunana's appearance.theme once, so a
+    fresh install converges without waiting for the next theme switch."""
+    hook = theme_hook_dir() / THEME_HOOK_NAME
+    omarchy = shutil.which("omarchy")
+    if omarchy is None or not hook.is_file():
+        return
+    try:
+        proc = subprocess.run([omarchy, "theme", "current"], check=False,
+                              capture_output=True, text=True, timeout=30)
+    except Exception:  # noqa: BLE001
+        return
+    name = (proc.stdout or "").strip()
+    if not name:
+        return
+    slug = re.sub(r"<[^>]+>", "", name).lower().replace(" ", "-")
+    if not slug:
+        return
+    try:
+        subprocess.run(["bash", str(hook), slug], check=False, timeout=60)
+    except Exception:  # noqa: BLE001
+        return
+    info(f"converged atoll theme to current Omarchy theme ({slug})")
+
+
 def hypr_conf_file() -> Path:
     return config_home() / "hypr" / "hyprland.conf"
 
@@ -519,8 +653,8 @@ def remove_hypr_conf(dry: bool) -> None:
 
 
 def enable_plugins(dry: bool) -> None:
-    """Enable the default (ii) family's plugin set. Family-exclusive plugins
-    (iris satellites, waffle set) join only through family-cycle, so a fresh
+    """Enable the default (drift) family's plugin set. Family-exclusive plugins
+    (atoll satellites, slate set) join only through family-cycle, so a fresh
     install never enables two locks/docks/backgrounds at once."""
     families, shared = _load_family_table()
     default = families[0][2] if families else []
@@ -597,13 +731,16 @@ def cmd_install(args: argparse.Namespace) -> int:
 
     plan = [
         f"copy {len(MANAGED_PLUGINS)} plugin(s) -> {plugin_dir()}/ + shared {SHARED_VENDOR_DIRNAME}/",
+        f"prune stale unmanaged lunana.* copies (pre-rename ids)",
         f"back up {shell_path.name} (if present)",
         f'set shell.json bar.id = "{BAR_PLUGIN_ID}" (was "{previous_bar_id or "<stock>"}")',
-        "record shell.json lunana.family = default (ii) for lunana.state",
+        "pin lunana.family-switch into bar.layout so stock offers a way back",
+        "record shell.json lunana.family = default (drift) for lunana.state",
         "stand down stock omarchy.dock + omarchy.background (restored on uninstall)",
-        "enable the default (ii) family plugin set (family-exclusive plugins join via family-cycle)",
+        "enable the default (drift) family plugin set (family-exclusive plugins join via family-cycle)",
         f"merge lunana keybinds into {hypr_bindings_file()} (backed up)",
         hypr_surface_plan(),
+        "install Omarchy theme-set hook so atoll follows the system theme",
     ]
     info("planned actions:")
     for step in plan:
@@ -630,18 +767,18 @@ def cmd_install(args: argparse.Namespace) -> int:
     shell.setdefault("bar", {})
     shell["bar"]["id"] = BAR_PLUGIN_ID
     # 3a. record the default family: lunana.state mirrors lunana.family into
-    # the vendored Config's panelFamily. A reinstall over a waffle/iris session
+    # the vendored Config's panelFamily. A reinstall over a slate/atoll session
     # would otherwise leave the vendored panels gated to a family whose
     # plugins were just stood down below.
     families, _shared = _load_family_table()
-    default_family = families[0][0] if families else "ii"
+    default_family = families[0][0] if families else "drift"
     lunana = shell.setdefault("lunana", {})
     if not isinstance(lunana, dict):
         fail("shell.json 'lunana' is not an object; fix it before running")
     lunana["family"] = default_family
     # 3b. stand down the stock dock + background while lunana's exact dock and
     # background own those layers. Every lunana family ships its own background
-    # (ii/iris/waffle), so the stock one would otherwise render a second
+    # (drift/atoll/slate), so the stock one would otherwise render a second
     # wallpaper layer underneath. Record whether each was enabled so uninstall
     # restores exactly that.
     disabled = shell.setdefault("disabledPlugins", [])
@@ -651,7 +788,17 @@ def cmd_install(args: argparse.Namespace) -> int:
     background_was_enabled = "omarchy.background" not in disabled
     if background_was_enabled:
         disabled.append("omarchy.background")
+    # 3c. pin the family-switch widget into the shared bar layout (after the
+    # workspaces) so the stock bar — which honors this layout — offers a way
+    # back into the lunana families. The same layout object serves every bar.
+    if ensure_family_widget_layout(shell):
+        info("pinned lunana.family-switch into bar.layout.left")
     write_json_atomic(shell_path, shell)
+
+    # 3d. prune pre-rename / otherwise unmanaged lunana.* copies so a re-install
+    # over an older suite never leaves ghost ids on disk or enabled. Runs after
+    # the shell.json write above so fixture-mode edits cannot be clobbered.
+    prune_stale_plugins(args.dry_run)
 
     # 4. record managed state for an exact uninstall
     write_json_atomic(state_path(), {
@@ -664,13 +811,13 @@ def cmd_install(args: argparse.Namespace) -> int:
         "installedAt": int(time.time()),
     })
 
-    # 5. enable the default (ii) family plugin set; family-exclusive plugins
-    # (iris satellites, waffle set) join only through family-cycle so a fresh
+    # 5. enable the default (drift) family plugin set; family-exclusive plugins
+    # (atoll satellites, slate set) join only through family-cycle so a fresh
     # install never enables two locks/docks/backgrounds at once.
     enable_plugins(False)
 
     # 5b. a re-install over a mixed state could leave previously-enabled
-    # family-exclusive plugins stacked over the ii family; stand them down.
+    # family-exclusive plugins stacked over the drift family; stand them down.
     families, shared = _load_family_table()
     default_ids = (set(families[0][2]) if families else set()) | set(shared)
     if using_fixture():
@@ -696,6 +843,10 @@ def cmd_install(args: argparse.Namespace) -> int:
     install_keybinds(False)
     install_hypr_conf(False)
 
+    # 6b. Omarchy theme-set hook + converge once on the current theme.
+    install_theme_hook(False)
+    converge_atoll_theme()
+
     if args.restart:
         restart_shell(False)
 
@@ -711,6 +862,7 @@ def cmd_sync(args: argparse.Namespace) -> int:
     validate_sources(args.dry_run)
     info("planned actions:")
     print(f"  - re-copy {len(MANAGED_PLUGINS)} plugin(s) -> {plugin_dir()}/")
+    print("  - refresh Omarchy theme-set hook for atoll")
     print("  - omarchy restart shell (bar changes need a full restart)")
     if args.dry_run:
         info("dry run: nothing written")
@@ -721,6 +873,7 @@ def cmd_sync(args: argparse.Namespace) -> int:
         info("aborted; nothing changed")
         return 1
     copy_plugins()
+    install_theme_hook(False)
     restart_shell(False)
     return 0
 
@@ -740,6 +893,8 @@ def cmd_uninstall(args: argparse.Namespace) -> int:
         f"remove {len(MANAGED_PLUGINS)} managed plugin(s) from {plugin_dir()}/ + shared {SHARED_VENDOR_DIRNAME}/",
         "remove lunana keybinds from bindings.lua",
         "remove Lunana Hyprland fragments + their load directives",
+        "remove Omarchy theme-set hook for atoll",
+        "remove lunana.family-switch from the bar layout",
         "restore omarchy.dock + omarchy.background if this suite stood them down",
     ]
     info("planned actions:")
@@ -775,6 +930,12 @@ def cmd_uninstall(args: argparse.Namespace) -> int:
                 write_json_atomic(shell_path, shell)
                 info(f"restored {stock_id}")
 
+    # 1c. drop the family-switch widget from the bar layout.
+    shell = read_json(shell_path)
+    if strip_family_widget_layout(shell):
+        write_json_atomic(shell_path, shell)
+        info("removed lunana.family-switch from the bar layout")
+
     # 2. remove managed plugin copies. Union state-listed + current managed:
     # the state file may predate plugins added since that install.
     for pid in dict.fromkeys(list(state.get("installedPlugins", [])) + MANAGED_PLUGINS):
@@ -799,6 +960,7 @@ def cmd_uninstall(args: argparse.Namespace) -> int:
     # 4. remove keybinds + surface styling
     remove_keybinds(False)
     remove_hypr_conf(False)
+    remove_theme_hook(False)
 
     # 5. drop managed state
     if state_path().exists() and not args.keep_settings:
@@ -818,7 +980,7 @@ def cmd_status(args: argparse.Namespace) -> int:
     active = bar_id or "omarchy.bar (stock)"
     print(f"selected bar:        {active}")
     print(f"lunana active:       {'yes' if bar_id == BAR_PLUGIN_ID else 'no'}")
-    family = {"lunana.bar": "ii", "lunana.bar-waffle": "waffle", "": "stock"}.get(bar_id, "custom")
+    family = {"lunana.bar": "drift", "lunana.bar-slate": "slate", "": "stock"}.get(bar_id, "custom")
     print(f"bar family:          {family}")
     print("installed plugins:")
     for pid in MANAGED_PLUGINS:

@@ -36,14 +36,14 @@ Singleton {
         _log("user requested restart")
         Quickshell.execDetached([
             "/usr/bin/notify-send",
-            "iNiR",
+            "Lunana",
             Translation.tr("Restarting shell..."),
             "-a", "Shell",
             "--hint=int:transient:1",
         ])
         // Small delay so notification shows
         Qt.callLater(() => {
-            Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")), "service", "restart"])
+            Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/lunana")), "service", "restart"])
         })
     }
 
@@ -91,8 +91,8 @@ Singleton {
 
         Quickshell.execDetached([
             "/usr/bin/notify-send",
-            "iNiR",
-            Translation.tr("Memory usage is high (~%1 MB accumulated). A restart would free it. Run: inir memory restart").arg(mbEstimate),
+            "Lunana",
+            Translation.tr("Memory usage is high (~%1 MB accumulated). A restart would free it. Run: lunana memory restart").arg(mbEstimate),
             "-u", "critical",
             "-a", "Shell",
         ])

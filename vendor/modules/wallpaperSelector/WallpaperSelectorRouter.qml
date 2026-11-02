@@ -114,9 +114,9 @@ Scope {
             || (Config.options?.wallpaperSelector?.targetMonitor ?? "")
         const explicitTarget = Config.options?.wallpaperSelector?.selectionTarget ?? "main"
         if (!explicitMonitor && explicitTarget === "main") {
-            if (Config.options?.panelFamily === "waffle") {
-                const useMain = Config.options?.waffles?.background?.useMainWallpaper ?? true
-                Config.setNestedValue("wallpaperSelector.selectionTarget", useMain ? "main" : "waffle")
+            if (Config.options?.panelFamily === "slate") {
+                const useMain = Config.options?.slate?.background?.useMainWallpaper ?? true
+                Config.setNestedValue("wallpaperSelector.selectionTarget", useMain ? "main" : "slate")
             } else Config.setNestedValue("wallpaperSelector.selectionTarget", "main")
         }
         if (explicitMonitor)

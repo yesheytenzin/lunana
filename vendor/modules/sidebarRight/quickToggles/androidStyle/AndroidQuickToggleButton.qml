@@ -29,7 +29,7 @@ GroupButton {
         ? Appearance.colors.colLayer2
         : Appearance.angelEverywhere
         ? ColorUtils.transparentize(Appearance.angel.colGlassCard, 0.76)
-        : Appearance.inirEverywhere ? ColorUtils.transparentize(Appearance.inir.colLayer1, 0.22)
+        : Appearance.lunanaEverywhere ? ColorUtils.transparentize(Appearance.lunana.colLayer1, 0.22)
         : Appearance.auroraEverywhere ? ColorUtils.transparentize(
             Appearance.colors.colLayer0Base,
             Math.max(0.12, Appearance.aurora.subSurfaceTransparentize - 0.14)
@@ -39,7 +39,7 @@ GroupButton {
         ? Appearance.colors.colLayer2Hover
         : Appearance.angelEverywhere
         ? Appearance.angel.colGlassCardHover
-        : Appearance.inirEverywhere ? Appearance.inir.colLayer2Hover
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2Hover
         : Appearance.auroraEverywhere ? ColorUtils.transparentize(
             Appearance.colors.colLayer1,
             Math.max(0.16, Appearance.aurora.subSurfaceTransparentize - 0.10)
@@ -49,7 +49,7 @@ GroupButton {
         ? Appearance.colors.colLayer2Active
         : Appearance.angelEverywhere
         ? Appearance.angel.colGlassCardActive
-        : Appearance.inirEverywhere ? Appearance.inir.colLayer2Active
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2Active
         : Appearance.auroraEverywhere ? ColorUtils.transparentize(
             Appearance.colors.colLayer1,
             Math.max(0.12, Appearance.aurora.subSurfaceTransparentize - 0.14)
@@ -95,42 +95,42 @@ GroupButton {
     colBackground: Appearance.regaliaEverywhere ? Appearance.regalia.controlPlate
         : Appearance.zzzEverywhere ? "transparent"
         : Appearance.angelEverywhere ? Appearance.angel.colGlassCard
-        : Appearance.inirEverywhere ? Appearance.inir.colLayer2
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2
         : root.colDarkSurface
     colBackgroundHover: Appearance.regaliaEverywhere ? Appearance.regalia.controlPlateHover
         : Appearance.zzzEverywhere ? "transparent"
         : Appearance.angelEverywhere ? Appearance.angel.colGlassCardHover
-        : Appearance.inirEverywhere ? Appearance.inir.colLayer2Hover
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2Hover
         : root.colDarkSurfaceHover
     colBackgroundToggled: Appearance.regaliaEverywhere ? Appearance.regalia.primaryPlate
         : Appearance.zzzEverywhere ? "transparent"
         : Appearance.angelEverywhere ? ColorUtils.transparentize(Appearance.angel.colPrimary, 0.45)
-        : Appearance.inirEverywhere
-        ? Appearance.inir.colPrimaryContainer
+        : Appearance.lunanaEverywhere
+        ? Appearance.lunana.colPrimaryContainer
         : Appearance.colors.colPrimary
     colBackgroundToggledHover: Appearance.regaliaEverywhere ? Appearance.regalia.primaryPlateHover
         : Appearance.zzzEverywhere ? "transparent"
         : Appearance.angelEverywhere ? ColorUtils.transparentize(Appearance.angel.colPrimaryHover, 0.35)
-        : Appearance.inirEverywhere
-        ? Appearance.inir.colPrimaryContainerHover
+        : Appearance.lunanaEverywhere
+        ? Appearance.lunana.colPrimaryContainerHover
         : Appearance.colors.colPrimaryHover
     colBackgroundToggledActive: Appearance.regaliaEverywhere ? Appearance.regalia.primaryPlateActive
         : Appearance.zzzEverywhere ? "transparent"
         : Appearance.angelEverywhere ? ColorUtils.transparentize(Appearance.angel.colPrimaryActive, 0.30)
-        : Appearance.inirEverywhere
-        ? Appearance.inir.colPrimaryContainerActive
+        : Appearance.lunanaEverywhere
+        ? Appearance.lunana.colPrimaryContainerActive
         : Appearance.colors.colPrimaryActive
     buttonRadius: Appearance.regaliaEverywhere ? Appearance.regalia.controlRadius
         : Appearance.zzzEverywhere ? Appearance.zzz.controlRadius
         : Appearance.angelEverywhere ? Appearance.angel.roundingSmall
-        : Appearance.inirEverywhere
-        ? Appearance.inir.roundingSmall
+        : Appearance.lunanaEverywhere
+        ? Appearance.lunana.roundingSmall
         : Appearance.editorialEverywhere ? Appearance.rounding.small
         : (toggled ? Appearance.rounding.large : baseHeight / 2)
     buttonRadiusPressed: Appearance.regaliaEverywhere ? Appearance.regalia.controlRadius
         : Appearance.zzzEverywhere ? Appearance.zzz.cornerRadius
         : Appearance.angelEverywhere ? Appearance.angel.roundingSmall
-        : Appearance.inirEverywhere ? Appearance.inir.roundingSmall
+        : Appearance.lunanaEverywhere ? Appearance.lunana.roundingSmall
         : Appearance.editorialEverywhere ? Appearance.rounding.small : Appearance.rounding.normal
     property color colText: Appearance.regaliaEverywhere
         ? (toggled ? Appearance.regalia.primaryPlateInk : Appearance.regalia.onMuted)
@@ -138,8 +138,8 @@ GroupButton {
         ? (toggled ? Appearance.zzz.onAccentSoft : Appearance.zzz.inkMuted)
         : Appearance.angelEverywhere
         ? (toggled ? Appearance.angel.colOnPrimary : Appearance.angel.colText)
-        : Appearance.inirEverywhere
-        ? (toggled ? Appearance.inir.colOnPrimaryContainer : Appearance.inir.colText)
+        : Appearance.lunanaEverywhere
+        ? (toggled ? Appearance.lunana.colOnPrimaryContainer : Appearance.lunana.colText)
         : Appearance.auroraEverywhere
         ? (toggled ? Appearance.colors.colOnPrimary : Appearance.colors.colOnSurface)
         : toggled ? Appearance.colors.colOnPrimary : Appearance.colors.colOnLayer2
@@ -149,8 +149,8 @@ GroupButton {
         ? (toggled ? Appearance.zzz.onAccentSoft : Appearance.zzz.ink)
         : Appearance.angelEverywhere
         ? (toggled ? Appearance.angel.colOnPrimary : Appearance.angel.colText)
-        : Appearance.inirEverywhere
-        ? (toggled ? Appearance.inir.colOnPrimaryContainer : Appearance.inir.colText)
+        : Appearance.lunanaEverywhere
+        ? (toggled ? Appearance.lunana.colOnPrimaryContainer : Appearance.lunana.colText)
         : Appearance.auroraEverywhere
         ? (toggled ? Appearance.colors.colOnPrimary : Appearance.colors.colOnSurface)
         : toggled ? Appearance.colors.colOnPrimary : Appearance.colors.colOnLayer2

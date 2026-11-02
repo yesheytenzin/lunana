@@ -9,7 +9,7 @@ import "../modules/common"
 /**
  * FontSyncService - Synchronizes shell fonts with GTK and KDE applications.
  *
- * When the user changes typography settings in iNiR, this service automatically
+ * When the user changes typography settings in Lunana, this service automatically
  * updates the system font settings for GTK (via gsettings) and KDE (via kwriteconfig6).
  */
 Singleton {
@@ -20,10 +20,10 @@ Singleton {
     }
 
     // Track the current font from config
-    readonly property string family: Config.options?.panelFamily ?? "ii"
-    readonly property string mainFont: root.family === "iris"
-        ? (String(Config.options?.iris?.appearance?.fontFamily ?? "") || "Inter")
-        : root.family === "waffle" ? (Config.options?.waffles?.theming?.font?.family ?? "Noto Sans")
+    readonly property string family: Config.options?.panelFamily ?? "drift"
+    readonly property string mainFont: root.family === "atoll"
+        ? (String(Config.options?.atoll?.appearance?.fontFamily ?? "") || "Inter")
+        : root.family === "slate" ? (Config.options?.slate?.theming?.font?.family ?? "Noto Sans")
         : (Config.options?.appearance?.typography?.mainFont ?? "Roboto Flex")
     readonly property string monoFont: Config.options?.appearance?.typography?.monospaceFont ?? "JetBrainsMono Nerd Font"
     readonly property real sizeScale: Config.options?.appearance?.typography?.sizeScale ?? 1.0

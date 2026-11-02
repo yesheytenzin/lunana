@@ -12,7 +12,7 @@ RippleButton {
     readonly property bool zzzStyle: surfaceDialect === "zzz"
     readonly property bool regaliaStyle: surfaceDialect === "regalia"
     readonly property bool angelStyle: surfaceDialect === "angel"
-    readonly property bool inirStyle: surfaceDialect === "inir"
+    readonly property bool lunanaStyle: surfaceDialect === "lunana"
     readonly property bool auroraStyle: surfaceDialect === "aurora" || angelStyle
 
     Layout.fillHeight: !vertical
@@ -28,7 +28,7 @@ RippleButton {
         : root.zzzStyle ? Appearance.zzz.controlRadius
         : root.angelStyle ? Appearance.angel.roundingSmall
         : Appearance.editorialEverywhere ? Appearance.rounding.small
-        : root.inirStyle ? Appearance.inir.roundingSmall : Appearance.rounding.normal
+        : root.lunanaStyle ? Appearance.lunana.roundingSmall : Appearance.rounding.normal
 
     colBackground: "transparent"
 
@@ -37,7 +37,7 @@ RippleButton {
         : root.regaliaStyle ? Appearance.regalia.hoverPlate
         : root.zzzStyle ? "transparent"
         : root.angelStyle ? Appearance.angel.colGlassCard
-        : root.inirStyle ? Appearance.inir.colLayer1Hover
+        : root.lunanaStyle ? Appearance.lunana.colLayer1Hover
         : root.auroraStyle ? Appearance.aurora.colSubSurface
         : Appearance.colors.colLayer0Hover
     colRipple: Appearance.editorialEverywhere
@@ -45,7 +45,7 @@ RippleButton {
         : root.regaliaStyle ? Appearance.regalia.pressPlate
         : root.zzzStyle ? ColorUtils.applyAlpha(Appearance.zzz.accent, 0.22)
         : root.angelStyle ? Appearance.angel.colGlassCardActive
-        : root.inirStyle ? Appearance.inir.colLayer1Active
+        : root.lunanaStyle ? Appearance.lunana.colLayer1Active
         : root.auroraStyle ? Appearance.aurora.colSubSurfaceActive
         : Appearance.colors.colLayer0Active
 

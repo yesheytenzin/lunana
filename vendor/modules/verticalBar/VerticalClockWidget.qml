@@ -27,7 +27,7 @@ Item {
                 font.weight: Appearance.editorialEverywhere ? Appearance.editorial.titleWeight : Font.Normal
                 font.letterSpacing: Appearance.editorialEverywhere ? Appearance.editorial.titleTracking : 0
                 font.features: { "tnum": 1 }
-                color: Appearance.editorialEverywhere ? Appearance.editorial.accent : Appearance.inirEverywhere ? Appearance.inir.colText : Appearance.colors.colOnLayer1
+                color: Appearance.editorialEverywhere ? Appearance.editorial.accent : Appearance.lunanaEverywhere ? Appearance.lunana.colText : Appearance.colors.colOnLayer1
                 text: modelData.padStart(2, "0")
             }
         }

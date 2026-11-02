@@ -240,7 +240,7 @@ Singleton {
         stdout: StdioCollector { onStreamFinished: root.refreshAuth() }
     }
 
-    // ---- auth status (reuses iNiR OAuth; re-probe when login state changes) ----
+    // ---- auth status (reuses Lunana OAuth; re-probe when login state changes) ----
     function refreshAuth(): void {
         if (!root.available) return;
         _authProc.exec([root._runner, "auth-status"]);

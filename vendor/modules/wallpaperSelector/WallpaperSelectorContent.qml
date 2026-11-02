@@ -215,7 +215,7 @@ MouseArea {
 
     StyledRectangularShadow {
         target: wallpaperGridBackground
-        visible: !root.editorial && !Appearance.inirEverywhere && !Appearance.zzzEverywhere
+        visible: !root.editorial && !Appearance.lunanaEverywhere && !Appearance.zzzEverywhere
     }
     GlassBackground {
         id: wallpaperGridBackground
@@ -225,11 +225,11 @@ MouseArea {
         }
         focus: true
         Keys.forwardTo: [root]
-        border.width: (Appearance.inirEverywhere || Appearance.auroraEverywhere) ? 1 : 1
+        border.width: (Appearance.lunanaEverywhere || Appearance.auroraEverywhere) ? 1 : 1
         border.color: Appearance.zzzEverywhere ? Appearance.zzz.hairlineStrong
             : root.editorial ? Appearance.editorial.rule
             : Appearance.angelEverywhere ? Appearance.angel.colCardBorder
-            : Appearance.inirEverywhere ? Appearance.inir.colBorder 
+            : Appearance.lunanaEverywhere ? Appearance.lunana.colBorder 
             : Appearance.auroraEverywhere ? Appearance.aurora.colTooltipBorder : Appearance.colors.colLayer0Border
         Behavior on border.color {
             enabled: Appearance.animationsEnabled
@@ -238,13 +238,13 @@ MouseArea {
         fallbackColor: Appearance.zzzEverywhere ? Appearance.zzz.paper
             : root.editorial ? Appearance.editorial.paper
             : Appearance.colors.colLayer0
-        inirColor: Appearance.inir.colLayer0
+        lunanaColor: Appearance.lunana.colLayer0
         auroraTransparency: Appearance.aurora.overlayTransparentize
         wallpaperBackdropEnabled: !root.editorial
         radius: Appearance.zzzEverywhere ? Appearance.zzz.panelRadius
             : root.editorial ? Appearance.editorial.radius
             : Appearance.angelEverywhere ? Appearance.angel.roundingLarge
-            : Appearance.inirEverywhere ? Appearance.inir.roundingLarge 
+            : Appearance.lunanaEverywhere ? Appearance.lunana.roundingLarge 
             : (Appearance.rounding.screenRounding - Appearance.sizes.hyprlandGapsOut + 1)
         Behavior on radius { enabled: Appearance.animationsEnabled; NumberAnimation { duration: Appearance.animation.elementResize.duration; easing.type: Appearance.animation.elementResize.type; easing.bezierCurve: Appearance.animation.elementResize.bezierCurve } }
 
@@ -280,7 +280,7 @@ MouseArea {
                 color: Appearance.zzzEverywhere ? Appearance.zzz.paperAlt
                     : root.editorial ? Appearance.editorial.layer(1)
                     : Appearance.angelEverywhere ? Appearance.angel.colGlassCard
-                    : Appearance.inirEverywhere ? Appearance.inir.colLayer1
+                    : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer1
                     : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurface : Appearance.colors.colLayer1
                 radius: Appearance.zzzEverywhere ? Appearance.zzz.controlRadius
                     : root.editorial ? Appearance.editorial.radius
@@ -444,16 +444,16 @@ MouseArea {
                     implicitHeight: visible ? monitorIndicatorText.implicitHeight + 16 : 0
                     color: Appearance.zzzEverywhere ? Appearance.zzz.paperAlt
                         : root.editorial ? Appearance.editorial.layer(1)
-                        : Appearance.inirEverywhere ? Appearance.inir.colLayer1
+                        : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer1
                         : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurface
                         : Appearance.colors.colLayer1
                     radius: Appearance.zzzEverywhere ? Appearance.zzz.controlRadius
                         : root.editorial ? Appearance.rounding.small
                         : wallpaperGridBackground.radius - Layout.margins
-                    border.width: Appearance.zzzEverywhere ? 1 : (root.editorial || Appearance.inirEverywhere) ? 1 : 0
+                    border.width: Appearance.zzzEverywhere ? 1 : (root.editorial || Appearance.lunanaEverywhere) ? 1 : 0
                     border.color: Appearance.zzzEverywhere ? Appearance.zzz.hairline
                         : root.editorial ? Appearance.editorial.rule
-                        : Appearance.inirEverywhere ? Appearance.inir.colBorder : "transparent"
+                        : Appearance.lunanaEverywhere ? Appearance.lunana.colBorder : "transparent"
                     Behavior on radius { enabled: Appearance.animationsEnabled; NumberAnimation { duration: Appearance.animation.elementResize.duration; easing.type: Appearance.animation.elementResize.type; easing.bezierCurve: Appearance.animation.elementResize.bezierCurve } }
                     Behavior on color { enabled: Appearance.animationsEnabled; ColorAnimation { duration: Appearance.animation.elementMoveFast.duration; easing.type: Appearance.animation.elementMoveFast.type; easing.bezierCurve: Appearance.animation.elementMoveFast.bezierCurve } }
                     Behavior on border.width { enabled: Appearance.animationsEnabled; NumberAnimation { duration: Appearance.animation.elementMoveFast.duration; easing.type: Appearance.animation.elementMoveFast.type; easing.bezierCurve: Appearance.animation.elementMoveFast.bezierCurve } }

@@ -45,14 +45,14 @@ ContentPage {
         ]
     }
 
-    readonly property var iiSurfaces: [
+    readonly property var driftSurfaces: [
         { title: Translation.tr("Bar"), description: Translation.tr("Top workspace bar, or the vertical bar when that mode is enabled"), icon: "web_asset", path: "bar.screenList" },
         { title: Translation.tr("Dock"), description: Translation.tr("Application dock and its hover reveal area"), icon: "call_to_action", path: "dock.screenList" },
         { title: Translation.tr("Sidebars"), description: Translation.tr("Feature and system sidebars on each screen edge"), icon: "side_navigation", path: "sidebar.screenList" },
         { title: Translation.tr("Media controls"), description: Translation.tr("Floating player popup opened from the bar or IPC"), selectionLabel: Translation.tr("Enabled outputs"), icon: "music_note", path: "media.screenList" }
     ]
-    readonly property var irisSurfaces: [
-        { title: Translation.tr("iRiS bar"), description: Translation.tr("Minimal iRiS bar; an empty list shows it on every connected output"), icon: "visibility", path: "iris.bar.screenList" }
+    readonly property var atollSurfaces: [
+        { title: Translation.tr("Atoll bar"), description: Translation.tr("Minimal Atoll bar; an empty list shows it on every connected output"), icon: "visibility", path: "atoll.bar.screenList" }
     ]
     readonly property var sharedSurfaces: [
         { title: Translation.tr("Notification popups"), description: Translation.tr("Transient notification toasts"), icon: "notifications", path: "notifications.screenList" },
@@ -971,7 +971,7 @@ ContentPage {
         implicitHeight: surfaceLayout.implicitHeight + Appearance.sizes.spacingLarge * 2
         radius: Appearance.rounding.small
         color: Appearance.angelEverywhere ? Appearance.angel.colGlassCard
-            : Appearance.inirEverywhere ? Appearance.inir.colLayer1
+            : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer1
             : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurface
             : Appearance.colors.colLayer1
         border.width: Appearance.angelEverywhere ? Appearance.angel.cardBorderWidth : 1
@@ -1099,7 +1099,7 @@ ContentPage {
         implicitHeight: outputColumn.implicitHeight + Appearance.sizes.spacingLarge * 2
         radius: Appearance.rounding.small
         color: Appearance.angelEverywhere ? Appearance.angel.colGlassCard
-            : Appearance.inirEverywhere ? Appearance.inir.colLayer1
+            : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer1
             : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurface
             : Appearance.colors.colLayer1
         border.width: 1
@@ -1225,7 +1225,7 @@ ContentPage {
                 implicitHeight: 292
                 radius: Appearance.rounding.normal
                 color: Appearance.angelEverywhere ? Appearance.angel.colGlassCard
-                    : Appearance.inirEverywhere ? Appearance.inir.colLayer1
+                    : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer1
                     : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurface
                     : Appearance.colors.colLayer1
                 border.width: 1
@@ -1382,7 +1382,7 @@ ContentPage {
             NoticeBox {
                 Layout.fillWidth: true
                 materialIcon: "info"
-                text: Translation.tr("Primary monitor controls iNiR's fallback output. Resolution, scale, rotation and advanced display options remain available in Compositor settings.")
+                text: Translation.tr("Primary monitor controls Lunana's fallback output. Resolution, scale, rotation and advanced display options remain available in Compositor settings.")
             }
 
             ContentSubsection {
@@ -1455,15 +1455,15 @@ ContentPage {
             NoticeBox {
                 Layout.fillWidth: true
                 materialIcon: "apps"
-                text: Translation.tr("These controls only affect the Material family: the ii bar, dock, and floating media controls.")
+                text: Translation.tr("These controls only affect the Material family: the drift bar, dock, and floating media controls.")
             }
 
             PresetActions {
-                paths: root.surfacePaths(root.iiSurfaces)
+                paths: root.surfacePaths(root.driftSurfaces)
             }
 
             Repeater {
-                model: root.iiSurfaces
+                model: root.driftSurfaces
                 SurfaceVisibilityBlock {
                     required property var modelData
                     surface: modelData
@@ -1473,15 +1473,15 @@ ContentPage {
             NoticeBox {
                 Layout.fillWidth: true
                 materialIcon: "visibility"
-                text: Translation.tr("iRiS keeps its monitor contract small: only the bar is selectable. Background remains per-output; transient iRiS surfaces follow focus.")
+                text: Translation.tr("Atoll keeps its monitor contract small: only the bar is selectable. Background remains per-output; transient Atoll surfaces follow focus.")
             }
 
             PresetActions {
-                paths: root.surfacePaths(root.irisSurfaces)
+                paths: root.surfacePaths(root.atollSurfaces)
             }
 
             Repeater {
-                model: root.irisSurfaces
+                model: root.atollSurfaces
                 SurfaceVisibilityBlock {
                     required property var modelData
                     surface: modelData
@@ -1538,7 +1538,7 @@ ContentPage {
             NoticeBox {
                 Layout.fillWidth: true
                 materialIcon: "merge"
-                text: Translation.tr("These monitor lists apply to Material and Waffle. iRiS keeps one transient popup on the focused output to reduce residency.")
+                text: Translation.tr("These monitor lists apply to Material and Slate. Atoll keeps one transient popup on the focused output to reduce residency.")
             }
 
             PresetActions {

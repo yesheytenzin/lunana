@@ -1,61 +1,61 @@
-# Uninstall command for iNiR
-# Safely removes iNiR while preserving user data and shared resources
+# Uninstall command for Lunana
+# Safely removes Lunana while preserving user data and shared resources
 # This script is meant to be sourced.
 
 # shellcheck shell=bash
 
-INIR_CONFIG_DIR="${DOTS_CORE_CONFDIR:-${XDG_CONFIG_HOME}/inir}"
+LUNANA_CONFIG_DIR="${DOTS_CORE_CONFDIR:-${XDG_CONFIG_HOME}/lunana}"
 
 ###############################################################################
-# Configuration - What iNiR installs/manages
+# Configuration - What Lunana installs/manages
 ###############################################################################
 
 # Categories of files:
-# - inir_only: Files created exclusively by iNiR, safe to remove
+# - lunana_only: Files created exclusively by Lunana, safe to remove
 # - shared: Files that may be used by other apps, ask before removing
 # - user_data: User's personal data, preserve by default
 
-# iNiR-exclusive files (safe to remove)
-declare -A INIR_ONLY_PATHS=(
-    ["${XDG_CONFIG_HOME}/quickshell/inir"]="iNiR shell configuration"
-    ["${INIR_CONFIG_DIR}"]="iNiR user preferences"
-    ["${XDG_STATE_HOME}/quickshell/user"]="iNiR state (notifications, todo)"
-    ["${XDG_CACHE_HOME}/quickshell/inir"]="iNiR cache"
-    ["${XDG_BIN_HOME}/inir"]="iNiR launcher"
-    ["${HOME}/.local/bin/inir_super_overview_daemon.py"]="iNiR super daemon"
-    ["${XDG_CONFIG_HOME}/systemd/user/inir.service"]="iNiR user service"
-    ["${XDG_CONFIG_HOME}/systemd/user/inir-super-overview.service"]="iNiR daemon service"
-    ["${XDG_CONFIG_HOME}/service/inir"]="iNiR runit user service"
-    ["${XDG_CONFIG_HOME}/service/inir-xembedsniproxy"]="iNiR XEmbed runit service"
-    ["${XDG_CONFIG_HOME}/service/inir-super-overview"]="iNiR Super-tap runit service"
-    ["${XDG_CONFIG_HOME}/vesktop/themes/system24.theme.css"]="iNiR Vesktop Material theme"
-    ["${XDG_CONFIG_HOME}/vesktop/themes/inir-tui.theme.css"]="iNiR Vesktop TUI theme"
-    ["${XDG_CONFIG_HOME}/vesktop/themes/inir-midnight.theme.css"]="iNiR Vesktop Midnight theme"
-    ["${XDG_CONFIG_HOME}/vesktop/themes/ii-colors.css"]="iNiR Vesktop colors"
-    ["${XDG_CONFIG_HOME}/Vesktop/themes/system24.theme.css"]="iNiR Vesktop Material theme (alt)"
-    ["${XDG_CONFIG_HOME}/Vesktop/themes/inir-tui.theme.css"]="iNiR Vesktop TUI theme (alt)"
-    ["${XDG_CONFIG_HOME}/Vesktop/themes/inir-midnight.theme.css"]="iNiR Vesktop Midnight theme (alt)"
-    ["${XDG_CONFIG_HOME}/Vesktop/themes/ii-colors.css"]="iNiR Vesktop colors (alt)"
-    ["${XDG_DATA_HOME}/applications/inir.desktop"]="iNiR desktop entry"
-    ["${XDG_DATA_HOME}/applications/inir-settings.desktop"]="iNiR settings desktop entry"
-    ["${XDG_DATA_HOME}/icons/hicolor/scalable/apps/inir.svg"]="iNiR launcher icon"
-    ["${HOME}/.local/bin/sync-pixel-sddm.py"]="iNiR SDDM theme sync helper"
+# Lunana-exclusive files (safe to remove)
+declare -A LUNANA_ONLY_PATHS=(
+    ["${XDG_CONFIG_HOME}/quickshell/lunana"]="Lunana shell configuration"
+    ["${LUNANA_CONFIG_DIR}"]="Lunana user preferences"
+    ["${XDG_STATE_HOME}/quickshell/user"]="Lunana state (notifications, todo)"
+    ["${XDG_CACHE_HOME}/quickshell/lunana"]="Lunana cache"
+    ["${XDG_BIN_HOME}/lunana"]="Lunana launcher"
+    ["${HOME}/.local/bin/lunana_super_overview_daemon.py"]="Lunana super daemon"
+    ["${XDG_CONFIG_HOME}/systemd/user/lunana.service"]="Lunana user service"
+    ["${XDG_CONFIG_HOME}/systemd/user/lunana-super-overview.service"]="Lunana daemon service"
+    ["${XDG_CONFIG_HOME}/service/lunana"]="Lunana runit user service"
+    ["${XDG_CONFIG_HOME}/service/lunana-xembedsniproxy"]="Lunana XEmbed runit service"
+    ["${XDG_CONFIG_HOME}/service/lunana-super-overview"]="Lunana Super-tap runit service"
+    ["${XDG_CONFIG_HOME}/vesktop/themes/system24.theme.css"]="Lunana Vesktop Material theme"
+    ["${XDG_CONFIG_HOME}/vesktop/themes/lunana-tui.theme.css"]="Lunana Vesktop TUI theme"
+    ["${XDG_CONFIG_HOME}/vesktop/themes/lunana-midnight.theme.css"]="Lunana Vesktop Midnight theme"
+    ["${XDG_CONFIG_HOME}/vesktop/themes/drift-colors.css"]="Lunana Vesktop colors"
+    ["${XDG_CONFIG_HOME}/Vesktop/themes/system24.theme.css"]="Lunana Vesktop Material theme (alt)"
+    ["${XDG_CONFIG_HOME}/Vesktop/themes/lunana-tui.theme.css"]="Lunana Vesktop TUI theme (alt)"
+    ["${XDG_CONFIG_HOME}/Vesktop/themes/lunana-midnight.theme.css"]="Lunana Vesktop Midnight theme (alt)"
+    ["${XDG_CONFIG_HOME}/Vesktop/themes/drift-colors.css"]="Lunana Vesktop colors (alt)"
+    ["${XDG_DATA_HOME}/applications/lunana.desktop"]="Lunana desktop entry"
+    ["${XDG_DATA_HOME}/applications/lunana-settings.desktop"]="Lunana settings desktop entry"
+    ["${XDG_DATA_HOME}/icons/hicolor/scalable/apps/lunana.svg"]="Lunana launcher icon"
+    ["${HOME}/.local/bin/sync-pixel-sddm.py"]="Lunana SDDM theme sync helper"
 )
 
 # Shared configs - may be used by other apps or user customizations
 # Format: path -> "description|app_command|critical_level"
-# critical_level: essential (user likely needs), optional (can remove), inir_default (iNiR created)
+# critical_level: essential (user likely needs), optional (can remove), lunana_default (Lunana created)
 declare -A SHARED_PATHS=(
     ["${XDG_CONFIG_HOME}/niri/config.kdl"]="Niri compositor config|niri|essential"
-    ["${XDG_CONFIG_HOME}/matugen"]="iNiR theming templates|python3|optional"
+    ["${XDG_CONFIG_HOME}/matugen"]="Lunana theming templates|python3|optional"
     ["${XDG_CONFIG_HOME}/fuzzel"]="Fuzzel launcher config|fuzzel|optional"
     ["${XDG_CONFIG_HOME}/Kvantum"]="Kvantum Qt theme|kvantummanager|optional"
     ["${XDG_CONFIG_HOME}/kdeglobals"]="KDE global settings||optional"
     ["${XDG_CONFIG_HOME}/dolphinrc"]="Dolphin file manager config|dolphin|optional"
     ["${XDG_CONFIG_HOME}/gtk-3.0/gtk.css"]="GTK3 custom styles||optional"
     ["${XDG_CONFIG_HOME}/gtk-4.0/gtk.css"]="GTK4 custom styles||optional"
-    ["${XDG_CONFIG_HOME}/fontconfig/conf.d/90-inir-shell.conf"]="iNiR shell font rendering||inir_default"
-    ["${XDG_DATA_HOME:-$HOME/.local/share}/color-schemes/Darkly.colors"]="Darkly color scheme||inir_default"
+    ["${XDG_CONFIG_HOME}/fontconfig/conf.d/90-lunana-shell.conf"]="Lunana shell font rendering||lunana_default"
+    ["${XDG_DATA_HOME:-$HOME/.local/share}/color-schemes/Darkly.colors"]="Darkly color scheme||lunana_default"
 )
 
 # Quickshell state that may be shared with other quickshell configs
@@ -64,7 +64,7 @@ declare -A QUICKSHELL_SHARED=(
     ["${XDG_STATE_HOME}/quickshell/themes"]="Generated themes"
 )
 
-declare -A INIR_PREINSTALL_RESTORE_FILES=(
+declare -A LUNANA_PREINSTALL_RESTORE_FILES=(
     ["${XDG_CONFIG_HOME}/starship.toml"]="Starship config"
     ["${XDG_CONFIG_HOME}/fish/config.fish"]="Fish config"
     ["${XDG_CONFIG_HOME}/fish/auto-Niri.fish"]="Fish Niri integration"
@@ -76,11 +76,11 @@ declare -A INIR_PREINSTALL_RESTORE_FILES=(
     ["${XDG_CONFIG_HOME}/mpv/mpv.conf"]="MPV config"
 )
 
-# Packages that iNiR may have installed - with usage context
+# Packages that Lunana may have installed - with usage context
 # Format: command -> "package_name|description|shared_usage"
-# shared_usage: inir_only, compositor, system_tool, optional_tool
-declare -A INIR_PACKAGES=(
-    ["qs"]="quickshell|Shell framework|inir_only"
+# shared_usage: lunana_only, compositor, system_tool, optional_tool
+declare -A LUNANA_PACKAGES=(
+    ["qs"]="quickshell|Shell framework|lunana_only"
     ["niri"]="niri|Wayland compositor|compositor"
     ["cliphist"]="cliphist|Clipboard history|system_tool"
     ["fuzzel"]="fuzzel|Application launcher|system_tool"
@@ -106,8 +106,8 @@ has_other_quickshell_configs() {
     if [[ -d "$qs_dir" ]]; then
         local other_configs
         other_configs=$(find "$qs_dir" -mindepth 2 -maxdepth 2 -type f -name "shell.qml" \
-            ! -path "${qs_dir}/inir/shell.qml" \
-            ! -path "${qs_dir}/ii/shell.qml" 2>/dev/null | wc -l)
+            ! -path "${qs_dir}/lunana/shell.qml" \
+            ! -path "${qs_dir}/drift/shell.qml" 2>/dev/null | wc -l)
         [[ "$other_configs" -gt 0 ]]
     else
         return 1
@@ -136,13 +136,13 @@ has_other_niri_usage() {
     [[ $niri_refs -gt 0 ]]
 }
 
-# Check if niri config has iNiR-specific content or is user-customized
-niri_config_is_inir_default() {
+# Check if niri config has Lunana-specific content or is user-customized
+niri_config_is_lunana_default() {
     local config="${XDG_CONFIG_HOME}/niri/config.kdl"
-    [[ -f "$config" ]] && grep -qE 'spawn-at-startup "([^"]*/)?inir" "start"|spawn-at-startup "qs" "-c" "inir"|quickshell:iiBackdrop' "$config" 2>/dev/null
+    [[ -f "$config" ]] && grep -qE 'spawn-at-startup "([^"]*/)?lunana" "start"|spawn-at-startup "qs" "-c" "lunana"|quickshell:driftBackdrop' "$config" 2>/dev/null
 }
 
-# Check if niri config has user customizations beyond iNiR defaults
+# Check if niri config has user customizations beyond Lunana defaults
 niri_config_has_user_customizations() {
     local config="${XDG_CONFIG_HOME}/niri/config.kdl"
     [[ ! -f "$config" ]] && return 1
@@ -161,8 +161,8 @@ niri_config_has_user_customizations() {
         grep -qi "$marker" "$config" 2>/dev/null && return 0
     done
     
-    # Check if file was modified after iNiR install
-    local install_marker="${INIR_CONFIG_DIR}/installed_true"
+    # Check if file was modified after Lunana install
+    local install_marker="${LUNANA_CONFIG_DIR}/installed_true"
     if [[ -f "$install_marker" && -f "$config" ]]; then
         [[ "$config" -nt "$install_marker" ]] && return 0
     fi
@@ -248,15 +248,15 @@ package_has_dependents() {
 # Determine if a package is safe to suggest removal
 get_package_removal_safety() {
     local cmd="$1"
-    local meta="${INIR_PACKAGES[$cmd]}"
+    local meta="${LUNANA_PACKAGES[$cmd]}"
     
     [[ -z "$meta" ]] && echo "unknown" && return
     
     IFS='|' read -r pkg_name pkg_desc pkg_usage <<< "$meta"
     
     case "$pkg_usage" in
-        inir_only)
-            # Only used by iNiR - safe to remove if no other qs configs
+        lunana_only)
+            # Only used by Lunana - safe to remove if no other qs configs
             if has_other_quickshell_configs; then
                 echo "keep_qs"
             else
@@ -296,43 +296,43 @@ get_package_removal_safety() {
 ###############################################################################
 
 uninstall_stop_services() {
-    tui_info "Stopping iNiR services..."
+    tui_info "Stopping Lunana services..."
 
     local user_service_root="${XDG_CONFIG_HOME:-$HOME/.config}/service"
     local service_dir
     if command -v sv >/dev/null 2>&1; then
-        for service_dir in inir inir-xembedsniproxy inir-super-overview; do
+        for service_dir in lunana lunana-xembedsniproxy lunana-super-overview; do
             [[ -d "$user_service_root/$service_dir" ]] || continue
             sv down "$user_service_root/$service_dir" >/dev/null 2>&1 || true
         done
         if [[ -f "$user_service_root/ydotool/run" ]] \
-                && grep -q '^# Managed by iNiR\.' "$user_service_root/ydotool/run"; then
+                && grep -q '^# Managed by Lunana\.' "$user_service_root/ydotool/run"; then
             sv down "$user_service_root/ydotool" >/dev/null 2>&1 || true
         fi
     fi
 
-    # Stop quickshell inir config
-    local runtime_target="${XDG_CONFIG_HOME:-$HOME/.config}/quickshell/inir"
+    # Stop quickshell lunana config
+    local runtime_target="${XDG_CONFIG_HOME:-$HOME/.config}/quickshell/lunana"
     qs -p "$runtime_target" kill 2>/dev/null || true
 
     # Stop super daemon if running
     if has_usable_systemd_user_manager; then
         # Stop the service
-        systemctl --user stop inir.service 2>/dev/null || true
+        systemctl --user stop lunana.service 2>/dev/null || true
         # Remove all wants links (compositor-specific and legacy graphical-session)
         local _sd_user="${XDG_CONFIG_HOME:-$HOME/.config}/systemd/user"
         for _wd in "$_sd_user"/*.wants; do
             [[ -d "$_wd" ]] || continue
-            rm -f "$_wd/inir.service" 2>/dev/null || true
+            rm -f "$_wd/lunana.service" 2>/dev/null || true
         done
         # Also try legacy disable in case old [Install] symlinks exist
-        systemctl --user disable inir.service 2>/dev/null || true
-        systemctl --user reset-failed inir.service 2>/dev/null || true
+        systemctl --user disable lunana.service 2>/dev/null || true
+        systemctl --user reset-failed lunana.service 2>/dev/null || true
 
-        if systemctl --user is-active inir-super-overview.service &>/dev/null; then
-            systemctl --user disable --now inir-super-overview.service 2>/dev/null || true
+        if systemctl --user is-active lunana-super-overview.service &>/dev/null; then
+            systemctl --user disable --now lunana-super-overview.service 2>/dev/null || true
         fi
-        systemctl --user reset-failed inir-super-overview.service 2>/dev/null || true
+        systemctl --user reset-failed lunana-super-overview.service 2>/dev/null || true
     fi
 
     tui_success "Services stopped"
@@ -347,7 +347,7 @@ uninstall_reload_user_systemd() {
 uninstall_backup_restorable_configs() {
     local backup_dir="$1" target candidate rel destination
 
-    for target in "${!INIR_PREINSTALL_RESTORE_FILES[@]}"; do
+    for target in "${!LUNANA_PREINSTALL_RESTORE_FILES[@]}"; do
         for candidate in "$target" "$target.old"; do
             [[ -e "$candidate" || -L "$candidate" ]] || continue
             rel="${candidate#${XDG_CONFIG_HOME}/}"
@@ -369,8 +369,8 @@ uninstall_backup_shell_integration() {
         cp -a -- "$profile" "$destination"
     done
 
-    for profile in "${XDG_CONFIG_HOME}/fish/conf.d/inir-path.fish" \
-                   "${XDG_CONFIG_HOME}/fish/conf.d/inir-env.fish"; do
+    for profile in "${XDG_CONFIG_HOME}/fish/conf.d/lunana-path.fish" \
+                   "${XDG_CONFIG_HOME}/fish/conf.d/lunana-env.fish"; do
         [[ -e "$profile" || -L "$profile" ]] || continue
         destination="$backup_dir/shell-integration/$(basename "$profile")"
         cp -a -- "$profile" "$destination"
@@ -383,15 +383,15 @@ uninstall_remove_shell_integration() {
     for profile in "$HOME/.profile" "$HOME/.bash_profile" "$HOME/.bashrc" \
                    "$HOME/.zprofile" "$HOME/.zshrc"; do
         [[ -f "$profile" ]] || continue
-        tmp="${profile}.inir-uninstall.$$"
+        tmp="${profile}.lunana-uninstall.$$"
         python3 - "$profile" > "$tmp" <<'PY'
 import re
 import sys
 
 text = open(sys.argv[1], encoding="utf-8").read()
 for start, end in (
-    ("iNiR launcher PATH", "end iNiR launcher PATH"),
-    ("iNiR environment", "end iNiR"),
+    ("Lunana launcher PATH", "end Lunana launcher PATH"),
+    ("Lunana environment", "end Lunana"),
 ):
     pattern = rf"(?ms)^[ \t]*# {re.escape(start)}[ \t]*$\n.*?^[ \t]*# {re.escape(end)}[ \t]*$\n?"
     text = re.sub(pattern, "", text)
@@ -405,8 +405,8 @@ PY
         fi
     done
 
-    for profile in "${XDG_CONFIG_HOME}/fish/conf.d/inir-path.fish" \
-                   "${XDG_CONFIG_HOME}/fish/conf.d/inir-env.fish"; do
+    for profile in "${XDG_CONFIG_HOME}/fish/conf.d/lunana-path.fish" \
+                   "${XDG_CONFIG_HOME}/fish/conf.d/lunana-env.fish"; do
         if [[ -e "$profile" || -L "$profile" ]]; then
             rm -f -- "$profile" || return 1
             ((changed++)) || true
@@ -414,7 +414,7 @@ PY
     done
 
     if [[ "$changed" -gt 0 ]]; then
-        tui_success "Removed iNiR shell profile integration"
+        tui_success "Removed Lunana shell profile integration"
     fi
 }
 
@@ -432,11 +432,11 @@ uninstall_restore_preinstall_configs() {
     local target old relative desc restored=0
 
     echo ""
-    tui_section_start "Restoring pre-iNiR configs"
-    for target in "${!INIR_PREINSTALL_RESTORE_FILES[@]}"; do
+    tui_section_start "Restoring pre-Lunana configs"
+    for target in "${!LUNANA_PREINSTALL_RESTORE_FILES[@]}"; do
         old="$target.old"
         relative="${target#${XDG_CONFIG_HOME}/}"
-        desc="${INIR_PREINSTALL_RESTORE_FILES[$target]}"
+        desc="${LUNANA_PREINSTALL_RESTORE_FILES[$target]}"
 
         if [[ -e "$old" || -L "$old" ]]; then
             mkdir -p "$(dirname "$target")"
@@ -453,7 +453,7 @@ uninstall_restore_preinstall_configs() {
 
     local kitty_theme="${XDG_CONFIG_HOME}/kitty/theme.conf"
     local kitty_link="${XDG_CONFIG_HOME}/kitty/current-theme.conf"
-    if [[ -f "$kitty_theme" ]] && grep -Fq 'Auto-generated by ii wallpaper theming system' "$kitty_theme" 2>/dev/null; then
+    if [[ -f "$kitty_theme" ]] && grep -Fq 'Auto-generated by drift wallpaper theming system' "$kitty_theme" 2>/dev/null; then
         [[ -L "$kitty_link" && "$(readlink "$kitty_link" 2>/dev/null || true)" == "theme.conf" ]] && rm -f "$kitty_link"
         rm -f "$kitty_theme"
         uninstall_restore_backup_path "kitty/theme.conf" 2>/dev/null || true
@@ -461,36 +461,36 @@ uninstall_restore_preinstall_configs() {
     fi
 
     local foot_colors foot_colors_rel
-    for foot_colors_rel in "foot/inir-colors.ini" "foot/colors.ini"; do
+    for foot_colors_rel in "foot/lunana-colors.ini" "foot/colors.ini"; do
         foot_colors="${XDG_CONFIG_HOME}/${foot_colors_rel}"
-        if [[ -f "$foot_colors" ]] && grep -Fq 'Auto-generated by ii wallpaper theming system' "$foot_colors" 2>/dev/null; then
+        if [[ -f "$foot_colors" ]] && grep -Fq 'Auto-generated by drift wallpaper theming system' "$foot_colors" 2>/dev/null; then
             rm -f "$foot_colors"
             uninstall_restore_backup_path "$foot_colors_rel" 2>/dev/null || true
         fi
     done
 
     if [[ $restored -eq 0 ]]; then
-        tui_info "No pre-iNiR exact-file backups were found"
+        tui_info "No pre-Lunana exact-file backups were found"
     else
-        tui_success "Restored $restored pre-iNiR config(s)"
+        tui_success "Restored $restored pre-Lunana config(s)"
     fi
     [[ -d "$BACKUP_DIR" ]] && echo -e "  ${STY_FAINT}Original install backup: $BACKUP_DIR${STY_RST}"
     tui_section_end
 }
 
 uninstall_create_backup() {
-    local backup_dir="${HOME}/.local/share/inir-uninstall-backup-$(date +%Y%m%d-%H%M%S)"
+    local backup_dir="${HOME}/.local/share/lunana-uninstall-backup-$(date +%Y%m%d-%H%M%S)"
 
     tui_info "Creating backup before uninstall..." >&2
     mkdir -p "$backup_dir"
 
-    # Backup iNiR-specific files
-    if [[ -d "${XDG_CONFIG_HOME}/quickshell/inir" ]]; then
-        cp -r "${XDG_CONFIG_HOME}/quickshell/inir" "$backup_dir/quickshell-inir"
+    # Backup Lunana-specific files
+    if [[ -d "${XDG_CONFIG_HOME}/quickshell/lunana" ]]; then
+        cp -r "${XDG_CONFIG_HOME}/quickshell/lunana" "$backup_dir/quickshell-lunana"
     fi
 
-    if [[ -d "${INIR_CONFIG_DIR}" ]]; then
-        cp -r "${INIR_CONFIG_DIR}" "$backup_dir/$(basename "$INIR_CONFIG_DIR")"
+    if [[ -d "${LUNANA_CONFIG_DIR}" ]]; then
+        cp -r "${LUNANA_CONFIG_DIR}" "$backup_dir/$(basename "$LUNANA_CONFIG_DIR")"
     fi
 
     # Backup niri config
@@ -510,16 +510,16 @@ uninstall_create_backup() {
     echo "$backup_dir"
 }
 
-uninstall_remove_inir_only() {
+uninstall_remove_lunana_only() {
     local removed=0
     local _start=$SECONDS
 
-    tui_info "Removing iNiR-exclusive files..."
+    tui_info "Removing Lunana-exclusive files..."
     echo ""
 
     # Pre-count existing items for N/M progress display
     local total=0
-    for path in "${!INIR_ONLY_PATHS[@]}"; do
+    for path in "${!LUNANA_ONLY_PATHS[@]}"; do
         local ep
         ep=$(eval echo "$path")
         [[ -e "$ep" ]] && ((total++))
@@ -529,10 +529,10 @@ uninstall_remove_inir_only() {
         echo -e "  ${STY_FAINT}Nothing to remove — already clean.${STY_RST}"
     else
         local idx=0
-        for path in "${!INIR_ONLY_PATHS[@]}"; do
+        for path in "${!LUNANA_ONLY_PATHS[@]}"; do
             local ep
             ep=$(eval echo "$path")
-            local desc="${INIR_ONLY_PATHS[$path]}"
+            local desc="${LUNANA_ONLY_PATHS[$path]}"
 
             if [[ -d "$ep" ]]; then
                 ((idx++))
@@ -555,7 +555,7 @@ uninstall_remove_inir_only() {
 
     echo ""
     local _elapsed=$(( SECONDS - _start ))
-    tui_success "Removed $removed iNiR-exclusive item(s)  (${_elapsed}s)"
+    tui_success "Removed $removed Lunana-exclusive item(s)  (${_elapsed}s)"
 }
 
 uninstall_handle_shared_configs() {
@@ -602,12 +602,12 @@ uninstall_handle_shared_configs() {
                     reason="has custom changes"
                 else
                     rec="remove"
-                    reason="app not found, iNiR default"
+                    reason="app not found, Lunana default"
                 fi
                 ;;
-            inir_default)
+            lunana_default)
                 rec="remove"
-                reason="created by iNiR"
+                reason="created by Lunana"
                 ;;
         esac
 
@@ -725,7 +725,7 @@ uninstall_handle_shared_configs() {
             local rec="${_rec[$ep]}"
             local reason="${_reason[$ep]}"
             local level="${_level[$ep]}"
-            if [[ "$level" == "inir_default" ]]; then
+            if [[ "$level" == "lunana_default" ]]; then
                 [[ -d "$ep" ]] && rm -rf "$ep" || rm -f "$ep"
                 echo -e "  ${STY_RED}✗${STY_RST} Removed: $desc ($reason)"
                 ((removed++))
@@ -811,14 +811,14 @@ uninstall_show_manual_steps() {
     echo -e "  ${STY_YELLOW}•${STY_RST} ydotool service"
     echo -e "    ${STY_FAINT}Used by: automation tools, some Wayland apps${STY_RST}"
     echo ""
-    echo -e "  ${STY_YELLOW}•${STY_RST} SDDM theme: /usr/share/sddm/themes/ii-pixel"
+    echo -e "  ${STY_YELLOW}•${STY_RST} SDDM theme: /usr/share/sddm/themes/drift-pixel"
     echo -e "    ${STY_FAINT}Used by: SDDM login screen${STY_RST}"
     echo ""
-    echo -e "  ${STY_YELLOW}•${STY_RST} SDDM theme drop-in: /etc/sddm.conf.d/99-inir-theme.conf"
-    echo -e "    ${STY_FAINT}Used by: sets Current=ii-pixel (legacy path: /etc/sddm.conf.d/inir-theme.conf)${STY_RST}"
-    if [[ -f /etc/sddm.conf.d/98-inir-greeter.conf ]]; then
-        echo -e "  ${STY_YELLOW}•${STY_RST} SDDM greeter drop-in: /etc/sddm.conf.d/98-inir-greeter.conf"
-        echo -e "    ${STY_FAINT}Used by: login screen on Wayland with Niri (/usr/share/inir/sddm/niri-greeter.kdl)${STY_RST}"
+    echo -e "  ${STY_YELLOW}•${STY_RST} SDDM theme drop-in: /etc/sddm.conf.d/99-lunana-theme.conf"
+    echo -e "    ${STY_FAINT}Used by: sets Current=drift-pixel (legacy path: /etc/sddm.conf.d/lunana-theme.conf)${STY_RST}"
+    if [[ -f /etc/sddm.conf.d/98-lunana-greeter.conf ]]; then
+        echo -e "  ${STY_YELLOW}•${STY_RST} SDDM greeter drop-in: /etc/sddm.conf.d/98-lunana-greeter.conf"
+        echo -e "    ${STY_FAINT}Used by: login screen on Wayland with Niri (/usr/share/lunana/sddm/niri-greeter.kdl)${STY_RST}"
     fi
     echo ""
 
@@ -839,13 +839,13 @@ uninstall_show_manual_steps() {
         fi
         echo ""
         echo -e "  ${STY_CYAN}# Remove SDDM theme${STY_RST}"
-        echo -e "  sudo rm -rf /usr/share/sddm/themes/ii-pixel"
+        echo -e "  sudo rm -rf /usr/share/sddm/themes/drift-pixel"
         echo ""
         echo -e "  ${STY_CYAN}# Remove SDDM theme config drop-in${STY_RST}"
-        echo -e "  sudo rm -f /etc/sddm.conf.d/99-inir-theme.conf /etc/sddm.conf.d/inir-theme.conf"
-        if [[ -f /etc/sddm.conf.d/98-inir-greeter.conf ]]; then
+        echo -e "  sudo rm -f /etc/sddm.conf.d/99-lunana-theme.conf /etc/sddm.conf.d/lunana-theme.conf"
+        if [[ -f /etc/sddm.conf.d/98-lunana-greeter.conf ]]; then
             echo -e "  ${STY_CYAN}# Put the login screen back on the distribution's display server${STY_RST}"
-            echo -e "  sudo rm -f /etc/sddm.conf.d/98-inir-greeter.conf && sudo rm -rf /usr/share/inir/sddm"
+            echo -e "  sudo rm -f /etc/sddm.conf.d/98-lunana-greeter.conf && sudo rm -rf /usr/share/lunana/sddm"
         fi
         echo ""
     fi
@@ -855,7 +855,7 @@ uninstall_show_packages() {
     echo ""
     tui_subtitle "Installed packages"
     echo ""
-    echo -e "${STY_FAINT}iNiR may have installed these packages. Review before removing.${STY_RST}"
+    echo -e "${STY_FAINT}Lunana may have installed these packages. Review before removing.${STY_RST}"
     echo ""
 
     # Detect distro
@@ -870,11 +870,11 @@ uninstall_show_packages() {
     echo -e "${STY_CYAN}Package analysis:${STY_RST}"
     echo ""
 
-    for cmd in "${!INIR_PACKAGES[@]}"; do
+    for cmd in "${!LUNANA_PACKAGES[@]}"; do
         # Skip if not installed
         command -v "$cmd" &>/dev/null || continue
 
-        local meta="${INIR_PACKAGES[$cmd]}"
+        local meta="${LUNANA_PACKAGES[$cmd]}"
         IFS='|' read -r pkg_name pkg_desc pkg_usage <<< "$meta"
         
         local safety=$(get_package_removal_safety "$cmd")
@@ -883,7 +883,7 @@ uninstall_show_packages() {
             safe)
                 safe_to_remove+=("$pkg_name")
                 echo -e "  ${STY_GREEN}✓${STY_RST} $pkg_name - $pkg_desc"
-                echo -e "    ${STY_FAINT}Safe to remove (only used by iNiR)${STY_RST}"
+                echo -e "    ${STY_FAINT}Safe to remove (only used by Lunana)${STY_RST}"
                 ;;
             ask)
                 ask_before_remove+=("$pkg_name")
@@ -1015,7 +1015,7 @@ run_uninstall() {
     local update_strategy
     local package_name
     echo ""
-    tui_title "iNiR Uninstaller"
+    tui_title "Lunana Uninstaller"
     echo ""
 
     # Safety: if no TTY available, force non-interactive safe mode
@@ -1028,11 +1028,11 @@ run_uninstall() {
     fi
 
     # Check if installed
-    if [[ ! -f "${INIR_CONFIG_DIR}/installed_true" ]] && \
-       [[ ! -d "${XDG_CONFIG_HOME}/quickshell/inir" ]] && \
-       [[ ! -f "${INIR_CONFIG_DIR}/version.json" ]] && \
-       [[ ! -f "${XDG_BIN_HOME}/inir" ]]; then
-        tui_warn "iNiR does not appear to be installed"
+    if [[ ! -f "${LUNANA_CONFIG_DIR}/installed_true" ]] && \
+       [[ ! -d "${XDG_CONFIG_HOME}/quickshell/lunana" ]] && \
+       [[ ! -f "${LUNANA_CONFIG_DIR}/version.json" ]] && \
+       [[ ! -f "${XDG_BIN_HOME}/lunana" ]]; then
+        tui_warn "Lunana does not appear to be installed"
         return 1
     fi
 
@@ -1064,7 +1064,7 @@ run_uninstall() {
     # Warning
     echo -e "${STY_RED}${STY_BOLD}⚠ WARNING${STY_RST}"
     echo ""
-    echo "This will remove iNiR from your system."
+    echo "This will remove Lunana from your system."
     echo ""
     
     if [[ ${#warnings[@]} -gt 0 ]]; then
@@ -1076,7 +1076,7 @@ run_uninstall() {
     fi
     
     echo -e "${STY_FAINT}What will happen:${STY_RST}"
-    echo "  • iNiR shell configuration will be removed"
+    echo "  • Lunana shell configuration will be removed"
     if is_running_niri_session; then
         echo -e "  • ${STY_YELLOW}Your Niri session will continue (without the shell UI)${STY_RST}"
         echo -e "  • ${STY_YELLOW}Niri config will be preserved (you're using it!)${STY_RST}"
@@ -1114,8 +1114,8 @@ run_uninstall() {
     # Stop services
     uninstall_stop_services
 
-    # Remove iNiR-exclusive files (always safe)
-    uninstall_remove_inir_only
+    # Remove Lunana-exclusive files (always safe)
+    uninstall_remove_lunana_only
     uninstall_reload_user_systemd
 
     uninstall_restore_preinstall_configs
@@ -1160,11 +1160,11 @@ EOF
     fi
     echo ""
     echo -e "${STY_FAINT}To restore from backup:${STY_RST}"
-    echo -e "  cp -r $backup_dir/quickshell-inir ${XDG_CONFIG_HOME}/quickshell/inir"
+    echo -e "  cp -r $backup_dir/quickshell-lunana ${XDG_CONFIG_HOME}/quickshell/lunana"
     echo ""
     local _total_elapsed=$(( SECONDS - _uninstall_start ))
-    echo -e "${STY_FAINT}To reinstall iNiR:${STY_RST}"
-    echo -e "  git clone https://github.com/snowarch/inir.git && cd inir && ./setup install"
+    echo -e "${STY_FAINT}To reinstall Lunana:${STY_RST}"
+    echo -e "  git clone https://github.com/snowarch/inir.git && cd lunana && ./setup install"
     echo ""
     echo -e "${STY_FAINT}Total time: ${_total_elapsed}s${STY_RST}"
     echo ""
@@ -1176,11 +1176,11 @@ EOF
 
 run_uninstall_quick() {
     echo ""
-    tui_title "iNiR Quick Uninstall"
+    tui_title "Lunana Quick Uninstall"
     echo ""
 
     echo -e "${STY_YELLOW}Quick uninstall will:${STY_RST}"
-    echo "  • Remove iNiR-exclusive files only"
+    echo "  • Remove Lunana-exclusive files only"
     echo "  • Keep all shared configs (Niri, themes, etc.)"
     echo "  • Keep all system packages"
     echo "  • Create a backup first"
@@ -1198,15 +1198,15 @@ run_uninstall_quick() {
     # Stop services
     uninstall_stop_services
 
-    # Remove only iNiR-exclusive files
+    # Remove only Lunana-exclusive files
     ask=false  # Disable prompts for shared configs
-    uninstall_remove_inir_only
+    uninstall_remove_lunana_only
     uninstall_reload_user_systemd
     uninstall_restore_preinstall_configs
     uninstall_remove_shell_integration || tui_warn "Could not fully remove shell profile integration"
 
     echo ""
-    tui_success "iNiR removed. All shared configs and packages preserved."
+    tui_success "Lunana removed. All shared configs and packages preserved."
     echo ""
     echo -e "${STY_CYAN}Backup:${STY_RST} $backup_dir"
     echo ""

@@ -106,7 +106,7 @@ Singleton {
                 `if [ -S "${Quickshell.env("XDG_RUNTIME_DIR") || ""}/systemd/private" ] &&
                     [ -x /usr/bin/systemd-run ] && [ -x /usr/bin/systemctl ] && [ -x /usr/bin/timeout ] &&
                     /usr/bin/timeout 3s /usr/bin/systemctl --user show-environment >/dev/null 2>&1; then
-                    exec /usr/bin/systemd-run --user --collect --unit=inir-wlsunset.service /usr/bin/wlsunset -T 6500 -t ${root.colorTemperature} -s 00:00 -S 23:59;
+                    exec /usr/bin/systemd-run --user --collect --unit=lunana-wlsunset.service /usr/bin/wlsunset -T 6500 -t ${root.colorTemperature} -s 00:00 -S 23:59;
                 fi;
                 /usr/bin/pidof wlsunset >/dev/null 2>&1 ||
                     nohup /usr/bin/wlsunset -T 6500 -t ${root.colorTemperature} -s 00:00 -S 23:59
@@ -178,7 +178,7 @@ Singleton {
             `if [ -S "${Quickshell.env("XDG_RUNTIME_DIR") || ""}/systemd/private" ] &&
                 [ -x /usr/bin/systemctl ] && [ -x /usr/bin/timeout ] &&
                 /usr/bin/timeout 3s /usr/bin/systemctl --user show-environment >/dev/null 2>&1; then
-                /usr/bin/systemctl --user stop inir-wlsunset.service >/dev/null 2>&1 || true;
+                /usr/bin/systemctl --user stop lunana-wlsunset.service >/dev/null 2>&1 || true;
             fi;
             /usr/bin/pkill -x wlsunset >/dev/null 2>&1 || true`]
         onExited: {
@@ -196,7 +196,7 @@ Singleton {
             `if [ -S "${Quickshell.env("XDG_RUNTIME_DIR") || ""}/systemd/private" ] &&
                 [ -x /usr/bin/systemctl ] && [ -x /usr/bin/timeout ] &&
                 /usr/bin/timeout 3s /usr/bin/systemctl --user show-environment >/dev/null 2>&1 &&
-                /usr/bin/systemctl --user is-active --quiet inir-wlsunset.service; then
+                /usr/bin/systemctl --user is-active --quiet lunana-wlsunset.service; then
                 exit 0;
             fi;
             /usr/bin/pidof wlsunset >/dev/null`]

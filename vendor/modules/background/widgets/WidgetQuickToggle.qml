@@ -5,8 +5,8 @@ import "../../.."
 import "../../common"
 import "../../common/functions"
 import "../../common/widgets"
-import "../../iris/style"
-import "../../iris/components"
+import "../../atoll/style"
+import "../../atoll/components"
 
 // An on/off option in a widget's quick controls: a row with its glyph, its name and a switch. The
 // whole row toggles. A choice between values is WidgetQuickChoices, never a lit capsule.
@@ -18,21 +18,21 @@ Rectangle {
     property bool checked: false
     signal toggled()
 
-    readonly property bool iris: (Config.options?.panelFamily ?? "ii") === "iris"
-    readonly property real d: root.iris ? IrisStyle.density : 1
+    readonly property bool atoll: (Config.options?.panelFamily ?? "drift") === "atoll"
+    readonly property real d: root.atoll ? AtollStyle.density : 1
 
     opacity: root.enabled ? 1 : 0.45
     implicitWidth: Math.round(200 * root.d)
     implicitHeight: Math.round(38 * root.d)
-    radius: root.iris ? IrisStyle.radiusRow
+    radius: root.atoll ? AtollStyle.radiusRow
         : Appearance.zzzEverywhere ? Appearance.zzz.controlRadius
         : Appearance.regaliaEverywhere ? Appearance.regalia.controlRadius
         : Appearance.rounding.small
-    color: root.iris ? (hover.hovered ? IrisStyle.fillHover : IrisStyle.fillQuiet)
+    color: root.atoll ? (hover.hovered ? AtollStyle.fillHover : AtollStyle.fillQuiet)
         : ColorUtils.applyAlpha(Appearance.colors.colOnLayer2, hover.hovered ? 0.09 : 0.045)
     Behavior on color {
-        enabled: root.iris ? IrisStyle.motionEnabled : Appearance.animationsEnabled
-        ColorAnimation { duration: root.iris ? IrisStyle.feedbackDuration : Appearance.animation.elementMoveFast.duration }
+        enabled: root.atoll ? AtollStyle.motionEnabled : Appearance.animationsEnabled
+        ColorAnimation { duration: root.atoll ? AtollStyle.feedbackDuration : Appearance.animation.elementMoveFast.duration }
     }
 
     MaterialSymbol {
@@ -44,7 +44,7 @@ Rectangle {
         text: root.iconName
         fill: root.checked ? 1 : 0
         iconSize: Math.round(17 * root.d)
-        color: root.iris ? (root.checked ? IrisStyle.text : IrisStyle.textSecondary)
+        color: root.atoll ? (root.checked ? AtollStyle.text : AtollStyle.textSecondary)
             : root.checked ? Appearance.colors.colOnLayer2 : Appearance.colors.colSubtext
     }
     StyledText {
@@ -55,9 +55,9 @@ Rectangle {
         anchors.verticalCenter: parent.verticalCenter
         text: root.label
         elide: Text.ElideRight
-        color: root.iris ? IrisStyle.text : Appearance.colors.colOnLayer2
-        font.family: root.iris ? IrisStyle.fontMain : Appearance.font.family.main
-        font.pixelSize: root.iris ? IrisStyle.typeLabel : Appearance.font.pixelSize.smaller
+        color: root.atoll ? AtollStyle.text : Appearance.colors.colOnLayer2
+        font.family: root.atoll ? AtollStyle.fontMain : Appearance.font.family.main
+        font.pixelSize: root.atoll ? AtollStyle.typeLabel : Appearance.font.pixelSize.smaller
     }
 
     HoverHandler { id: hover; cursorShape: Qt.PointingHandCursor }
@@ -74,12 +74,12 @@ Rectangle {
         anchors.right: parent.right
         anchors.rightMargin: Math.round(9 * root.d)
         anchors.verticalCenter: parent.verticalCenter
-        width: root.iris ? irisSwitch.width : materialSwitch.width
-        height: root.iris ? irisSwitch.height : materialSwitch.height
+        width: root.atoll ? atollSwitch.width : materialSwitch.width
+        height: root.atoll ? atollSwitch.height : materialSwitch.height
 
-        IrisSwitch {
-            id: irisSwitch
-            visible: root.iris
+        AtollSwitch {
+            id: atollSwitch
+            visible: root.atoll
             anchors.centerIn: parent
             on: root.checked
             name: root.label
@@ -87,7 +87,7 @@ Rectangle {
         }
         StyledSwitch {
             id: materialSwitch
-            visible: !root.iris
+            visible: !root.atoll
             anchors.centerIn: parent
             checked: root.checked
             onClicked: {

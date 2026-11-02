@@ -33,7 +33,7 @@ Singleton {
     property bool mediaControlsOpen: false
     property bool equalizerOpen: false
     property string equalizerTargetOutput: ""
-    readonly property bool equalizerEnabled: (Config.options?.enabledPanels ?? []).includes("iiEqualizer")
+    readonly property bool equalizerEnabled: (Config.options?.enabledPanels ?? []).includes("driftEqualizer")
 
     function openEqualizer(outputName: string): void {
         if (!root.equalizerEnabled)
@@ -60,15 +60,15 @@ Singleton {
         }
         openEqualizer(outputName)
     }
-    property real irisLevelQuietUntil: 0
-    function quietIrisLevels(): void { root.irisLevelQuietUntil = Date.now() + 700 }
+    property real atollLevelQuietUntil: 0
+    function quietIrisLevels(): void { root.atollLevelQuietUntil = Date.now() + 700 }
     property bool osdBrightnessOpen: false
     property bool osdVolumeOpen: false
     property bool osdMicOpen: false
     property bool osdMediaOpen: false
     property string osdMediaAction: "play" // "play", "pause", "next", "previous"
     signal osdMediaActionTriggered(string action)
-    readonly property bool userMediaFeedback: Config.options?.panelFamily === "iris"
+    readonly property bool userMediaFeedback: Config.options?.panelFamily === "atoll"
         || (Config.options?.osd?.mediaEnabled ?? true)
 
     function showMediaAction(action: string): void {
@@ -101,13 +101,13 @@ Singleton {
     property int activeContextMenuCount: 0
     property var activeContextMenu: null
     property bool clipboardOpen: false
-    // True only while iNiR asks Niri for internal window-preview frames.
+    // True only while Lunana asks Niri for internal window-preview frames.
     property bool windowPreviewCaptureActive: false
     property bool settingsOverlayOpen: false
     property int settingsOverlayRequestedPage: -1 // Set before opening to navigate to a specific page
     property string settingsOverlayRequestedSection: ""
     property int settingsOverlayCurrentPage: -1 // Published by whichever overlay chrome is loaded
-    // iRiS Settings as a window: open or toggle with it mapped but not focused brings it forward instead.
+    // Atoll Settings as a window: open or toggle with it mapped but not focused brings it forward instead.
     property bool settingsWindowBehind: false
     property int settingsRaiseRequest: 0
     property var _settingsNativeDialogs: ({})
@@ -116,12 +116,12 @@ Singleton {
 
     function openSettingsPage(index: int, section): void {
         const requestedSection = String(section ?? "")
-        const isWaffle = Config.options?.panelFamily === "waffle"
-            && Config.options?.waffles?.settings?.useMaterialStyle !== true
-        if (isWaffle) {
-            Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")),
-                "waffle-settings-window"])
-        } else if (Config.options?.panelFamily === "iris" || (Config.options?.settingsUi?.overlayMode ?? false)) {
+        const isSlate = Config.options?.panelFamily === "slate"
+            && Config.options?.slate?.settings?.useMaterialStyle !== true
+        if (isSlate) {
+            Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/lunana")),
+                "slate-settings-window"])
+        } else if (Config.options?.panelFamily === "atoll" || (Config.options?.settingsUi?.overlayMode ?? false)) {
             root.settingsOverlayRequestedPage = index
             root.settingsOverlayRequestedSection = requestedSection
             if (root.settingsOverlayOpen) root.settingsRaiseRequest++
@@ -130,37 +130,37 @@ Singleton {
             const args = ["/usr/bin/env", `QS_SETTINGS_PAGE=${index}`]
             if (requestedSection.length > 0)
                 args.push(`QS_SETTINGS_SECTION=${requestedSection}`)
-            args.push(((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")), "settings-window")
+            args.push(((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/lunana")), "settings-window")
             Quickshell.execDetached(args)
         }
     }
 
     function openSettings(): void {
-        const isWaffle = Config.options?.panelFamily === "waffle"
-            && Config.options?.waffles?.settings?.useMaterialStyle !== true
-        if (isWaffle) {
-            Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")),
-                "waffle-settings-window"])
-        } else if (Config.options?.panelFamily === "iris" || (Config.options?.settingsUi?.overlayMode ?? false)) {
+        const isSlate = Config.options?.panelFamily === "slate"
+            && Config.options?.slate?.settings?.useMaterialStyle !== true
+        if (isSlate) {
+            Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/lunana")),
+                "slate-settings-window"])
+        } else if (Config.options?.panelFamily === "atoll" || (Config.options?.settingsUi?.overlayMode ?? false)) {
             if (root.settingsOverlayOpen) root.settingsRaiseRequest++
             root.settingsOverlayOpen = true
         } else {
-            Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")),
+            Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/lunana")),
                 "settings-window"])
         }
     }
 
     function toggleSettings(): void {
-        const isWaffle = Config.options?.panelFamily === "waffle"
-            && Config.options?.waffles?.settings?.useMaterialStyle !== true
-        if (isWaffle) {
-            Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")),
-                "waffle-settings-window", "--toggle"])
-        } else if (Config.options?.panelFamily === "iris" || (Config.options?.settingsUi?.overlayMode ?? false)) {
+        const isSlate = Config.options?.panelFamily === "slate"
+            && Config.options?.slate?.settings?.useMaterialStyle !== true
+        if (isSlate) {
+            Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/lunana")),
+                "slate-settings-window", "--toggle"])
+        } else if (Config.options?.panelFamily === "atoll" || (Config.options?.settingsUi?.overlayMode ?? false)) {
             if (root.settingsOverlayOpen && root.settingsWindowBehind) root.settingsRaiseRequest++
             else root.settingsOverlayOpen = !root.settingsOverlayOpen
         } else {
-            Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")),
+            Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/lunana")),
                 "settings-window", "--toggle"])
         }
     }
@@ -228,18 +228,18 @@ Singleton {
     property string wallpaperSelectorSource: ""
     property string wallpaperSelectorQuery: ""
     property string wallpaperSelectorKind: ""
-    // `inir wallpaperSelector move <step>`: the gallery moves its selection as the arrow keys do.
+    // `lunana wallpaperSelector move <step>`: the gallery moves its selection as the arrow keys do.
     signal wallpaperSelectorMoveRequested(int step)
     property var wallpaperSelectorSeries: null
     property string wallpaperSelectorKindActive: "all"
     property bool wallpaperLauncherOpen: false
     property string wallpaperLauncherMode: "static"
     property bool widgetEditMode: false
-    // Finding a widget while arranging (the iRiS widget bar); `inir background widgetSearch` drives the same state.
+    // Finding a widget while arranging (the Atoll widget bar); `lunana background widgetSearch` drives the same state.
     property bool widgetSearchOpen: false
     property string widgetSearchText: ""
     signal widgetSearchCommand(string verb)
-    // Arrow keys while arranging under iRiS: the chassis owns the keyboard and hands the step to the selected widget.
+    // Arrow keys while arranging under Atoll: the chassis owns the keyboard and hands the step to the selected widget.
     signal desktopWidgetNudge(int dx, int dy)
     property string selectedDesktopWidget: ""
     property string selectedDesktopItem: ""
@@ -250,7 +250,7 @@ Singleton {
     function setWidgetEditMode(enabled: bool): void {
         if (enabled) {
             shellLayoutEditMode = false
-            irisEdit = false
+            atollEdit = false
         }
         else {
             selectedDesktopWidget = ""
@@ -306,12 +306,12 @@ Singleton {
     // Dialog requests from other panels (e.g. left sidebar → right sidebar)
     property bool requestWifiDialog: false
     property bool requestBluetoothDialog: false
-    // Selection targets: "main", "backdrop", "waffle", "waffle-backdrop"
+    // Selection targets: "main", "backdrop", "slate", "slate-backdrop"
     property string wallpaperSelectionTarget: "main"
     // Target monitor for wallpaper selector (set before opening, avoids config timing issues)
     property string wallpaperSelectorTargetMonitor: ""
     onWallpaperSelectorOpenChanged: {
-        if (wallpaperSelectorOpen) irisOrbitOpen = false
+        if (wallpaperSelectorOpen) atollOrbitOpen = false
         // Reset selection target when selector closes without selection
         if (!wallpaperSelectorOpen) {
             wallpaperSelectionTarget = "main";
@@ -327,7 +327,7 @@ Singleton {
         }
     }
     onWallpaperLauncherOpenChanged: {
-        if (wallpaperLauncherOpen) irisOrbitOpen = false
+        if (wallpaperLauncherOpen) atollOrbitOpen = false
         if (!wallpaperLauncherOpen) {
             // Restore the configured wallpaper if the user browsed away without applying.
             Wallpapers.cancelWallpaperPreview()
@@ -356,127 +356,127 @@ Singleton {
         }
     }
     property bool controlPanelOpen: false
-    // iRiS: screen-local geometry ({x, y, width, height, radius, screen}) of the
+    // Atoll: screen-local geometry ({x, y, width, height, radius, screen}) of the
     // Island part that last opened a surface, so it can morph out of and back
     // into that exact shape. Transient coordination only; null means "no origin".
-    property var irisMorphOrigin: null
+    property var atollMorphOrigin: null
     // Who published that origin when it is not the Island (e.g. "left" for a
     // side panel's button). The Island leaves a foreign origin alone on open and
     // close; the morph surface clears it once it has fully collapsed.
-    property string irisMorphOwner: ""
+    property string atollMorphOwner: ""
     // True while a surface is mid-morph out of or back into that origin; the
     // Island hides the published part so only one shape is ever on screen.
-    // iRiS intent preloading: the pointer resting on the Island (controls) or an
+    // Atoll intent preloading: the pointer resting on the Island (controls) or an
     // expanded Island (settings) instantiates those surfaces hidden, so the
     // morph starts on the click frame instead of after an async load.
-    property bool irisControlsWarm: false
+    property bool atollControlsWarm: false
     // Asks the focused Island to open a page ("media", "desktop", "activity",
     // "tray", "tools") from a surface that is not the Island (card, floating bubble).
-    property string irisIslandPageRequest: ""
+    property string atollIslandPageRequest: ""
     // A bubble's own card: { kind, x, y, width, height, radius, screen, source }
     // with the screen-local rect of the bubble it grows out of; `source` names
     // that bubble ("island-<slot>" or "float-<slot>") so it can hide meanwhile.
-    property var irisBubbleCard: null
-    // The Island's desktop page is being arranged in place (iRiS Studio).
-    property bool irisArrange: false
+    property var atollBubbleCard: null
+    // The Island's desktop page is being arranged in place (Atoll Studio).
+    property bool atollArrange: false
     // The Dock's body per output, so the chassis field draws it in the same pass
     // as the frame and the Island instead of the Dock carrying a second surface.
-    property var irisDockBody: ({})
-    // iRiS is being edited in place: every piece is grabbable, the edit bar
+    property var atollDockBody: ({})
+    // Atoll is being edited in place: every piece is grabbable, the edit bar
     // holds the pieces, the look and the sizes, and Done ends it.
     // Arranging the Control Center in place; closing the panel ends it.
-    property bool irisControlEdit: false
-    property string irisControlTab: "controls"
+    property bool atollControlEdit: false
+    property string atollControlTab: "controls"
     // The lock screen rehearsal: the same surface, editable, with no PAM behind it.
-    property bool irisLockEdit: false
-    property string irisLockSelection: ""
-    // The quick-controls tab `inir iris lock select:<key>/<tab>` asks the selected lock widget to show.
-    property string irisLockWidgetTab: ""
-    property string irisLockPage: "scene"
-    property bool irisEdit: false
+    property bool atollLockEdit: false
+    property string atollLockSelection: ""
+    // The quick-controls tab `lunana atoll lock select:<key>/<tab>` asks the selected lock widget to show.
+    property string atollLockWidgetTab: ""
+    property string atollLockPage: "scene"
+    property bool atollEdit: false
     // What the edit bar is inspecting: a piece slot ("extra:vitals", "left",
     // "app:kitty"), a surface ("island", "dock", "cards"…) or "" for the family.
-    property string irisEditSelection: ""
+    property string atollEditSelection: ""
     // A Studio target the edit bar should inspect ("" = keep what it shows).
-    property string irisEditTarget: ""
-    property int irisChassisEpoch: 0
+    property string atollEditTarget: ""
+    property int atollChassisEpoch: 0
     onIrisEditChanged: {
-        if (!irisEdit) { irisEditSelection = ""; irisEditTarget = "" }
+        if (!atollEdit) { atollEditSelection = ""; atollEditTarget = "" }
         else if (widgetEditMode) setWidgetEditMode(false)
-        if (irisEdit && irisStudioOpen) irisStudioOpen = false
+        if (atollEdit && atollStudioOpen) atollStudioOpen = false
     }
-    onIrisEditSelectionChanged: if (irisEditSelection.length > 0) irisEditTarget = ""
-    onIrisEditTargetChanged: if (irisEditTarget.length > 0) irisEditSelection = ""
-    // The in-place editors belong to iRiS: leaving the family ends them, or they are destroyed open and
+    onIrisEditSelectionChanged: if (atollEditSelection.length > 0) atollEditTarget = ""
+    onIrisEditTargetChanged: if (atollEditTarget.length > 0) atollEditSelection = ""
+    // The in-place editors belong to Atoll: leaving the family ends them, or they are destroyed open and
     // come back open when the family does.
     function endIrisEditing(): void {
-        irisLockEdit = false
-        irisEdit = false
-        irisControlEdit = false
+        atollLockEdit = false
+        atollEdit = false
+        atollControlEdit = false
     }
-    onControlPanelOpenChanged: if (!controlPanelOpen) irisControlEdit = false
-    onIrisControlEditChanged: if (!irisControlEdit) irisControlTab = "controls"
-    // iRiS Studio, the panel form of Customize, is open. It and Customize on the shell never show together.
-    property bool irisStudioOpen: false
-    onIrisStudioOpenChanged: if (irisStudioOpen && irisEdit) irisEdit = false
-    // Customize, in the form the person chose (iris.appearance.customize), on a target ("" = where it was).
+    onControlPanelOpenChanged: if (!controlPanelOpen) atollControlEdit = false
+    onIrisControlEditChanged: if (!atollControlEdit) atollControlTab = "controls"
+    // Atoll Studio, the panel form of Customize, is open. It and Customize on the shell never show together.
+    property bool atollStudioOpen: false
+    onIrisStudioOpenChanged: if (atollStudioOpen && atollEdit) atollEdit = false
+    // Customize, in the form the person chose (atoll.appearance.customize), on a target ("" = where it was).
     function openIrisCustomize(target): void {
         const wanted = String(target ?? "")
-        if (String(Config.options?.iris?.appearance?.customize ?? "shell") === "studio") {
-            irisStudioTarget = wanted
-            irisStudioOpen = true
+        if (String(Config.options?.atoll?.appearance?.customize ?? "shell") === "studio") {
+            atollStudioTarget = wanted
+            atollStudioOpen = true
         } else {
-            irisEditTarget = wanted
-            irisEdit = true
+            atollEditTarget = wanted
+            atollEdit = true
         }
     }
     // A target Studio should show when it opens or is already open ("" = keep).
-    property string irisStudioTarget: ""
+    property string atollStudioTarget: ""
     // The `source` of the card on screen (kept while it collapses), "" when none.
     // Asks whichever bubble shows this kind (floating first, then the Island)
     // to open its card; IPC and keyboard paths use it.
-    property string irisBubbleCardRequest: ""
+    property string atollBubbleCardRequest: ""
     // A floating piece asked to open its own menu, by kind (IPC).
-    property string irisBubbleMenuRequest: ""
+    property string atollBubbleMenuRequest: ""
     // A bubble being carried: { slot, kind, screen, x, y (screen-local centre),
     // size, released }. The bubble layer draws it and resolves the drop.
-    property var irisBubbleDrag: null
+    property var atollBubbleDrag: null
     // Per output name: what each bubble slot shows ({ left, right, utility }) and
     // the resting Island's screen-local geometry, published by each Island.
-    property var irisBubbleKinds: ({})
-    property var irisIslandGeometry: ({})
+    property var atollBubbleKinds: ({})
+    property var atollIslandGeometry: ({})
     // Per output: pieces an edge owner carries instead of floating over it ({ island: [...], dock: [...] }).
-    property var irisAbsorbed: ({})
-    property bool irisSettingsWarm: false
-    // iRiS side panel ("left"/"right") that was revealed by resting at its screen
+    property var atollAbsorbed: ({})
+    property bool atollSettingsWarm: false
+    // Atoll side panel ("left"/"right") that was revealed by resting at its screen
     // edge: it closes when the pointer leaves until a press inside commits it.
-    property string irisSidebarPeek: ""
-    // iRiS Dock held on screen by IPC (`inir iris dock show`) until hidden again
+    property string atollSidebarPeek: ""
+    // Atoll Dock held on screen by IPC (`lunana atoll dock show`) until hidden again
     // or an app is chosen from it.
-    property bool irisDockShown: false
+    property bool atollDockShown: false
     // Opens an app's windows or menu on the focused Dock: { appId, mode: "windows" | "menu" }.
-    property var irisDockMenuRequest: null
-    property var irisDockSlide: null
-    property var irisDockHome: null
+    property var atollDockMenuRequest: null
+    property var atollDockSlide: null
+    property var atollDockHome: null
     // A query for Spotlight to type as it opens (IPC); taken and cleared by the palette.
-    property string irisSpotlightQuery: ""
-    // Orbit (iRiS): Niri's workspaces and windows as a place to find and go. `irisOrbitQuery` is what it types as it opens.
-    property bool irisOrbitOpen: false
-    property string irisOrbitQuery: ""
+    property string atollSpotlightQuery: ""
+    // Orbit (Atoll): Niri's workspaces and windows as a place to find and go. `atollOrbitQuery` is what it types as it opens.
+    property bool atollOrbitOpen: false
+    property string atollOrbitQuery: ""
     // The output Orbit opened on when a hot corner asked for one; empty means the focused output. It stays put until the
     // next open, so a leaving Orbit is not pulled to another output.
-    property string irisOrbitOutput: ""
+    property string atollOrbitOutput: ""
     property bool _irisOrbitOutputAsked: false
     // The corner each output's Orbit hot corner is on right now ("" = none), published by the corner itself.
-    property var irisOrbitCorners: ({})
+    property var atollOrbitCorners: ({})
     function openIrisOrbit(outputName: string): void {
-        irisOrbitOutput = outputName
+        atollOrbitOutput = outputName
         _irisOrbitOutputAsked = true
-        irisOrbitOpen = true
+        atollOrbitOpen = true
     }
     onIrisOrbitOpenChanged: {
-        if (!irisOrbitOpen) return
-        if (!_irisOrbitOutputAsked) irisOrbitOutput = ""
+        if (!atollOrbitOpen) return
+        if (!_irisOrbitOutputAsked) atollOrbitOutput = ""
         _irisOrbitOutputAsked = false
         searchOpen = false
         wallpaperSelectorOpen = false
@@ -484,25 +484,25 @@ Singleton {
     }
     // Desktop widget manager toggle routed to the output that should show it.
     signal desktopWidgetManagerToggleRequested(string outputName)
-    // The iRiS desktop menu opened at a point of an output (`inir iris desktopMenu`).
-    signal irisDesktopMenuRequested(string outputName, real x, real y)
-    // Whether any output's Island is expanded, published for `inir iris status`.
-    property bool irisIslandExpanded: false
-    property string irisIslandShape: ""
-    property string irisControlPickerRequest: ""
-    property string irisIslandPage: ""
+    // The Atoll desktop menu opened at a point of an output (`lunana atoll desktopMenu`).
+    signal atollDesktopMenuRequested(string outputName, real x, real y)
+    // Whether any output's Island is expanded, published for `lunana atoll status`.
+    property bool atollIslandExpanded: false
+    property string atollIslandShape: ""
+    property string atollControlPickerRequest: ""
+    property string atollIslandPage: ""
     property bool dashboardOpen: false
     property bool workspaceShowNumbers: false
     property var activeBooruImageMenu: null  // Track which BooruImage has its menu open
     property var activeTaskViewMenu: null  // Track which WindowThumbnail has its menu open
-    // Waffle-specific states
+    // Slate-specific states
     property bool searchOpen: false
-    property bool waffleActionCenterOpen: false
-    property bool waffleNotificationCenterOpen: false
-    property bool waffleWidgetsOpen: false
-    property bool waffleAltSwitcherOpen: false
-    property bool waffleClipboardOpen: false
-    property bool waffleTaskViewOpen: false
+    property bool slateActionCenterOpen: false
+    property bool slateNotificationCenterOpen: false
+    property bool slateWidgetsOpen: false
+    property bool slateAltSwitcherOpen: false
+    property bool slateClipboardOpen: false
+    property bool slateTaskViewOpen: false
     // Panel family transition animation state
     property bool familyTransitionActive: false
     property string familyTransitionDirection: "left" // "left" = current exits left, new enters from right
@@ -564,7 +564,7 @@ Singleton {
 
     readonly property string overviewPresentationOutput:
         root.resolveOutputName(root.overviewTargetOutput, [])
-    readonly property var sidebarScreenList: (Config.options?.panelFamily ?? "ii") === "iris"
+    readonly property var sidebarScreenList: (Config.options?.panelFamily ?? "drift") === "atoll"
         ? [] : (Config.options?.sidebar?.screenList ?? [])
     readonly property string sidebarLeftPresentationOutput:
         root.resolveOutputName(root.sidebarLeftTargetOutput,
@@ -655,7 +655,7 @@ Singleton {
     function toggleTaskView(outputName): void { root.toggleOrbit(outputName) }
 
     function openSidebarLeft(outputName): void {
-        if (Config.options?.panelFamily === "iris" && !(Config.options?.iris?.sidebars?.left?.enable ?? true)) return
+        if (Config.options?.panelFamily === "atoll" && !(Config.options?.atoll?.sidebars?.left?.enable ?? true)) return
         sidebarLeftTargetOutput = root.resolveOutputName(outputName,
             root.sidebarScreenList)
         sidebarLeftOpen = true
@@ -675,7 +675,7 @@ Singleton {
     }
 
     function openSidebarRight(outputName): void {
-        if (Config.options?.panelFamily === "iris" && !(Config.options?.iris?.sidebars?.right?.enable ?? true)) return
+        if (Config.options?.panelFamily === "atoll" && !(Config.options?.atoll?.sidebars?.right?.enable ?? true)) return
         sidebarRightTargetOutput = root.resolveOutputName(outputName,
             root.sidebarScreenList)
         sidebarRightOpen = true
@@ -705,62 +705,62 @@ Singleton {
                 root.sidebarScreenList)
     }
 
-    // Close other waffle popups when one opens (unless allowMultiplePanels is enabled)
-    property bool _allowMultiple: Config.options?.waffles?.behavior?.allowMultiplePanels ?? false
+    // Close other slate popups when one opens (unless allowMultiplePanels is enabled)
+    property bool _allowMultiple: Config.options?.slate?.behavior?.allowMultiplePanels ?? false
     onSearchOpenChanged: {
-        if (searchOpen) irisOrbitOpen = false
+        if (searchOpen) atollOrbitOpen = false
         if (searchOpen && !_allowMultiple) {
-            waffleActionCenterOpen = false
-            waffleNotificationCenterOpen = false
-            waffleWidgetsOpen = false
-            waffleClipboardOpen = false
+            slateActionCenterOpen = false
+            slateNotificationCenterOpen = false
+            slateWidgetsOpen = false
+            slateClipboardOpen = false
         }
     }
-    onWaffleActionCenterOpenChanged: {
-        if (waffleActionCenterOpen && !_allowMultiple) {
+    onSlateActionCenterOpenChanged: {
+        if (slateActionCenterOpen && !_allowMultiple) {
             searchOpen = false
-            waffleNotificationCenterOpen = false
-            waffleWidgetsOpen = false
-            waffleClipboardOpen = false
+            slateNotificationCenterOpen = false
+            slateWidgetsOpen = false
+            slateClipboardOpen = false
         }
     }
-    onWaffleNotificationCenterOpenChanged: {
-        if (waffleNotificationCenterOpen) {
+    onSlateNotificationCenterOpenChanged: {
+        if (slateNotificationCenterOpen) {
             if (!_allowMultiple) {
                 searchOpen = false
-                waffleActionCenterOpen = false
-                waffleWidgetsOpen = false
-                waffleClipboardOpen = false
+                slateActionCenterOpen = false
+                slateWidgetsOpen = false
+                slateClipboardOpen = false
             }
             // Mark notifications as read when opening notification center
             Notifications.timeoutAll();
             Notifications.markAllRead();
         }
     }
-    onWaffleWidgetsOpenChanged: {
-        if (waffleWidgetsOpen && !_allowMultiple) {
+    onSlateWidgetsOpenChanged: {
+        if (slateWidgetsOpen && !_allowMultiple) {
             searchOpen = false
-            waffleActionCenterOpen = false
-            waffleNotificationCenterOpen = false
-            waffleClipboardOpen = false
+            slateActionCenterOpen = false
+            slateNotificationCenterOpen = false
+            slateClipboardOpen = false
         }
     }
-    onWaffleClipboardOpenChanged: {
-        if (waffleClipboardOpen && !_allowMultiple) {
+    onSlateClipboardOpenChanged: {
+        if (slateClipboardOpen && !_allowMultiple) {
             searchOpen = false
-            waffleActionCenterOpen = false
-            waffleNotificationCenterOpen = false
-            waffleWidgetsOpen = false
-            waffleTaskViewOpen = false
+            slateActionCenterOpen = false
+            slateNotificationCenterOpen = false
+            slateWidgetsOpen = false
+            slateTaskViewOpen = false
         }
     }
-    onWaffleTaskViewOpenChanged: {
-        if (waffleTaskViewOpen && !_allowMultiple) {
+    onSlateTaskViewOpenChanged: {
+        if (slateTaskViewOpen && !_allowMultiple) {
             searchOpen = false
-            waffleActionCenterOpen = false
-            waffleNotificationCenterOpen = false
-            waffleWidgetsOpen = false
-            waffleClipboardOpen = false
+            slateActionCenterOpen = false
+            slateNotificationCenterOpen = false
+            slateWidgetsOpen = false
+            slateClipboardOpen = false
         }
     }
 

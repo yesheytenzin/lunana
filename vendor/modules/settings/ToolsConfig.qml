@@ -336,7 +336,7 @@ ContentPage {
             visible: field.description.length > 0
             text: field.description
             color: Appearance.angelEverywhere ? Appearance.angel.colTextMuted
-                : Appearance.inirEverywhere ? Appearance.inir.colTextSecondary
+                : Appearance.lunanaEverywhere ? Appearance.lunana.colTextSecondary
                 : Appearance.colors.colSubtext
             font.pixelSize: Appearance.font.pixelSize.smallie
             wrapMode: Text.WordWrap
@@ -443,9 +443,9 @@ ContentPage {
                 onCheckedChanged: {
                     Config.setNestedValue("screenRecord.showOsd", checked)
                     let panels = [...(Config.options?.enabledPanels ?? [])]
-                    const idx = panels.indexOf("iiRecordingOsd")
+                    const idx = panels.indexOf("driftRecordingOsd")
                     if (checked && idx === -1) {
-                        panels.push("iiRecordingOsd")
+                        panels.push("driftRecordingOsd")
                         Config.setNestedValue("enabledPanels", panels)
                     } else if (!checked && idx !== -1) {
                         panels.splice(idx, 1)
@@ -556,7 +556,7 @@ ContentPage {
                     visible: root.recordingAudioMode === "both"
                     materialIcon: root.audioMixAvailable ? "instant_mix" : "warning"
                     text: root.audioMixAvailable
-                        ? Translation.tr("iNiR combines system audio and microphone automatically. The temporary audio route is removed when recording ends.")
+                        ? Translation.tr("Lunana combines system audio and microphone automatically. The temporary audio route is removed when recording ends.")
                         : Translation.tr("System and microphone audio cannot be combined on this setup. Recording will continue with whichever source is available.")
                 }
 
@@ -911,7 +911,7 @@ ContentPage {
                     checked: Config.options?.regionSelector?.japaneseLookup?.enabled ?? true
                     onCheckedChanged: Config.setNestedValue("regionSelector.japaneseLookup.enabled", checked)
                     StyledToolTip {
-                        text: Translation.tr("After Japanese OCR, iNiR finds a useful word in the captured text and opens a local dictionary card. Expand the card to inspect the full OCR text and translation.")
+                        text: Translation.tr("After Japanese OCR, Lunana finds a useful word in the captured text and opens a local dictionary card. Expand the card to inspect the full OCR text and translation.")
                     }
                 }
 
@@ -943,7 +943,7 @@ ContentPage {
                                 Layout.fillWidth: true
                                 text: JapaneseDictionary.jitendexInstalled
                                     ? Translation.tr("Jitendex is indexed locally; dictionary lookups work offline.")
-                                    : Translation.tr("Install Jitendex once. iNiR downloads and indexes it automatically; you do not need to find or import a ZIP.")
+                                    : Translation.tr("Install Jitendex once. Lunana downloads and indexes it automatically; you do not need to find or import a ZIP.")
                                 color: Appearance.colors.colSubtext
                                 font.pixelSize: Appearance.font.pixelSize.small
                                 wrapMode: Text.WordWrap
@@ -1140,7 +1140,7 @@ ContentPage {
 
                 StyledText {
                     Layout.fillWidth: true
-                    text: Translation.tr("These are optional Anki decks from their original upstream projects. iNiR downloads the latest .apkg to Downloads and opens it for import; the deck files are not bundled with iNiR.")
+                    text: Translation.tr("These are optional Anki decks from their original upstream projects. Lunana downloads the latest .apkg to Downloads and opens it for import; the deck files are not bundled with Lunana.")
                     color: Appearance.colors.colSubtext
                     wrapMode: Text.WordWrap
                 }

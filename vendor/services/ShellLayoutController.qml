@@ -9,13 +9,13 @@ import "../modules/common"
 Singleton {
     id: root
 
-    readonly property string activeFamily: Config.options?.panelFamily ?? "ii"
+    readonly property string activeFamily: Config.options?.panelFamily ?? "drift"
     readonly property int desktopWidgetOuterGap: 12
 
     readonly property var _descriptors: [
         {
             id: "featureSidebar",
-            families: ["ii"],
+            families: ["drift"],
             kind: "edge",
             labelKey: "Feature sidebar",
             icon: "left_panel_open",
@@ -27,7 +27,7 @@ Singleton {
         },
         {
             id: "systemSidebar",
-            families: ["ii"],
+            families: ["drift"],
             kind: "edge",
             labelKey: "System sidebar",
             icon: "right_panel_open",
@@ -38,8 +38,8 @@ Singleton {
             resetScopes: ["surface", "family"]
         },
         {
-            id: "iiBar",
-            families: ["ii"],
+            id: "driftBar",
+            families: ["drift"],
             kind: "edge",
             labelKey: "Bar",
             icon: "toolbar",
@@ -50,8 +50,8 @@ Singleton {
             resetScopes: ["surface", "family"]
         },
         {
-            id: "iiDock",
-            families: ["ii"],
+            id: "driftDock",
+            families: ["drift"],
             kind: "edge",
             labelKey: "Dock",
             icon: "dock_to_bottom",
@@ -62,8 +62,8 @@ Singleton {
             resetScopes: ["surface", "family"]
         },
         {
-            id: "waffleBar",
-            families: ["waffle"],
+            id: "slateBar",
+            families: ["slate"],
             kind: "edge",
             labelKey: "Taskbar",
             icon: "desktop_windows",
@@ -233,18 +233,18 @@ Singleton {
             barEdge: "",
             dockEdge: ""
         }
-        if (root.activeFamily === "iris")
+        if (root.activeFamily === "atoll")
             return root._irisDesktopInsets(outputName, result)
-        if (root.activeFamily !== "ii")
+        if (root.activeFamily !== "drift")
             return result
 
         const barVertical = Config.options?.bar?.vertical ?? false
-        const barIdentifier = barVertical ? "iiVerticalBar" : "iiBar"
+        const barIdentifier = barVertical ? "driftVerticalBar" : "driftBar"
         const barOutputs = Config.options?.bar?.screenList ?? []
         if (root._panelEnabled(barIdentifier)
                 && root._outputEnabled(barOutputs, outputName)
                 && (GlobalStates.barOpen ?? true)) {
-            const barState = root.currentState("iiBar", outputName)
+            const barState = root.currentState("driftBar", outputName)
             const appearanceStyle = Config.options?.bar?.appearanceStyle ?? "classic"
             let thickness = 0
             if (appearanceStyle === "pill" && !barVertical) {
@@ -287,10 +287,10 @@ Singleton {
         }
 
         const dockOutputs = Config.options?.dock?.screenList ?? []
-        if (root._panelEnabled("iiDock")
+        if (root._panelEnabled("driftDock")
                 && (Config.options?.dock?.enable ?? true)
                 && root._outputEnabled(dockOutputs, outputName)) {
-            const dockState = root.currentState("iiDock", outputName)
+            const dockState = root.currentState("driftDock", outputName)
             result.dockEdge = dockState.ok ? dockState.slot : ""
             root._applyInset(result, result.dockEdge,
                 (Config.options?.dock?.height ?? 70)
@@ -300,24 +300,24 @@ Singleton {
         return result
     }
 
-    // iRiS: the Island owns one horizontal edge and the Dock the opposite one.
-    // Mirrors the geometry in modules/iris/bar/IrisBar.qml and dock/IrisDock.qml.
+    // Atoll: the Island owns one horizontal edge and the Dock the opposite one.
+    // Mirrors the geometry in modules/atoll/bar/AtollBar.qml and dock/AtollDock.qml.
     function _irisDesktopInsets(outputName: string, result: var): var {
-        const iris = Config.options?.iris ?? {}
-        const density = Math.max(0.8, Math.min(1.35, Number(iris.appearance?.density ?? 1)))
-        const barEdge = String(iris.bar?.position ?? "top") === "bottom" ? "bottom" : "top"
+        const atoll = Config.options?.atoll ?? {}
+        const density = Math.max(0.8, Math.min(1.35, Number(atoll.appearance?.density ?? 1)))
+        const barEdge = String(atoll.bar?.position ?? "top") === "bottom" ? "bottom" : "top"
         result.barEdge = barEdge
-        if (root._panelEnabled("irisBar")
-                && root._outputEnabled(iris.bar?.screenList ?? [], outputName)
+        if (root._panelEnabled("atollBar")
+                && root._outputEnabled(atoll.bar?.screenList ?? [], outputName)
                 && (GlobalStates.barOpen ?? true)) {
-            const height = Math.max(32, Math.round(Number(iris.bar?.height ?? 42) * density))
-            const margin = (iris.bar?.notch ?? false) ? 0 : Math.round(Number(iris.bar?.margin ?? 8) * density)
+            const height = Math.max(32, Math.round(Number(atoll.bar?.height ?? 42) * density))
+            const margin = (atoll.bar?.notch ?? false) ? 0 : Math.round(Number(atoll.bar?.margin ?? 8) * density)
             root._applyInset(result, barEdge, height + margin * 2)
         }
-        if (iris.dock?.enable ?? true) {
+        if (atoll.dock?.enable ?? true) {
             result.dockEdge = barEdge === "bottom" ? "top" : "bottom"
-            const icon = Math.max(28, Math.min(64, Number(iris.dock?.iconSize ?? 40))) * density
-            const gap = (iris.dock?.notch ?? false) ? 0 : 10 * density
+            const icon = Math.max(28, Math.min(64, Number(atoll.dock?.iconSize ?? 40))) * density
+            const gap = (atoll.dock?.notch ?? false) ? 0 : 10 * density
             root._applyInset(result, result.dockEdge, icon + 18 * density + gap * 2)
         }
         return result
@@ -389,7 +389,7 @@ Singleton {
                 source: "sidebar.shellLayout"
             }
         }
-        case "iiBar": {
+        case "driftBar": {
             const vertical = Config.options?.bar?.vertical ?? false
             const alternateEdge = Config.options?.bar?.bottom ?? false
             return {
@@ -403,7 +403,7 @@ Singleton {
                 source: "bar.vertical+bar.bottom"
             }
         }
-        case "iiDock":
+        case "driftDock":
             return {
                 ok: true,
                 id: surfaceId,
@@ -415,15 +415,15 @@ Singleton {
                 enabledOutputs: Config.options?.dock?.screenList ?? [],
                 source: "dock.position"
             }
-        case "waffleBar":
+        case "slateBar":
             return {
                 ok: true,
                 id: surfaceId,
-                slot: (Config.options?.waffles?.bar?.bottom ?? true) ? "bottom" : "top",
+                slot: (Config.options?.slate?.bar?.bottom ?? true) ? "bottom" : "top",
                 scope: desc.layoutScope,
                 outputName: outputName,
-                enabledOutputs: Config.options?.waffles?.bar?.screenList ?? [],
-                source: "waffles.bar.bottom"
+                enabledOutputs: Config.options?.slate?.bar?.screenList ?? [],
+                source: "slate.bar.bottom"
             }
         default:
             return root._failure("unsupported-surface", "Surface state adapter is unavailable")
@@ -439,17 +439,17 @@ Singleton {
 
     function _occupiedFoundationSurface(surfaceId: string, slot: string,
             outputName: string): string {
-        if (root.activeFamily !== "ii")
+        if (root.activeFamily !== "drift")
             return ""
-        if (surfaceId === "iiBar") {
-            const dock = root.currentState("iiDock", outputName)
+        if (surfaceId === "driftBar") {
+            const dock = root.currentState("driftDock", outputName)
             if (dock.ok && dock.enabled && dock.slot === slot)
-                return "iiDock"
+                return "driftDock"
         }
-        if (surfaceId === "iiDock") {
-            const bar = root.currentState("iiBar", outputName)
+        if (surfaceId === "driftDock") {
+            const bar = root.currentState("driftBar", outputName)
             if (bar.ok && bar.slot === slot)
-                return "iiBar"
+                return "driftBar"
         }
         return ""
     }
@@ -496,7 +496,7 @@ Singleton {
             occupiedBy: occupiedBy,
             swapWith: occupiedBy,
             changed: !(current.ok && current.slot === slot),
-            requiresRebuild: surfaceId === "iiBar" || surfaceId === "iiDock" || surfaceId === "waffleBar"
+            requiresRebuild: surfaceId === "driftBar" || surfaceId === "driftDock" || surfaceId === "slateBar"
         }
     }
 
@@ -526,18 +526,18 @@ Singleton {
             Config.setNestedValues(updates)
             break
         }
-        case "iiBar": {
+        case "driftBar": {
             const updates = root._barKeyUpdates(slot)
-            if ((validation.swapWith ?? "") === "iiDock") {
-                const barState = root.currentState("iiBar", outputName)
+            if ((validation.swapWith ?? "") === "driftDock") {
+                const barState = root.currentState("driftBar", outputName)
                 updates["dock.position"] = barState.ok ? barState.slot : "bottom"
             }
             Config.setNestedValues(updates)
             break
         }
-        case "iiDock": {
-            if ((validation.swapWith ?? "") === "iiBar") {
-                const dockState = root.currentState("iiDock", outputName)
+        case "driftDock": {
+            if ((validation.swapWith ?? "") === "driftBar") {
+                const dockState = root.currentState("driftDock", outputName)
                 const updates = root._barKeyUpdates(
                     dockState.ok ? dockState.slot : "top")
                 updates["dock.position"] = slot
@@ -547,8 +547,8 @@ Singleton {
             }
             break
         }
-        case "waffleBar":
-            Config.setNestedValue("waffles.bar.bottom", slot === "bottom")
+        case "slateBar":
+            Config.setNestedValue("slate.bar.bottom", slot === "bottom")
             break
         default:
             return root._failure("mutation-not-ready",
@@ -569,7 +569,7 @@ Singleton {
         if (!desc.editableProperties.includes(key))
             return root._failure("unsupported-property", "Surface does not expose that property")
 
-        if (surfaceId === "iiDock" && key === "thickness") {
+        if (surfaceId === "driftDock" && key === "thickness") {
             const numeric = Number(value)
             if (!Number.isFinite(numeric))
                 return root._failure("invalid-value", "Invalid dock size")
@@ -654,9 +654,9 @@ Singleton {
             result.reset = true
             return result
         }
-        case "iiBar":
+        case "driftBar":
             return root.moveSurface(surfaceId, "top", outputName)
-        case "iiDock": {
+        case "driftDock": {
             const placement = root.moveSurface(surfaceId, "bottom", outputName)
             if (!placement.ok)
                 return placement
@@ -666,7 +666,7 @@ Singleton {
             result.reset = true
             return result
         }
-        case "waffleBar":
+        case "slateBar":
             return root.moveSurface(surfaceId, "bottom", outputName)
         default:
             return root._failure("reset-not-ready",

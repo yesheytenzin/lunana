@@ -79,285 +79,285 @@ generate_css_from_colors_json() {
   selection=$(read_hex 'app_selection // .secondary_container' "#404659")
 
   cat <<EOCSS
-/* iNiR — Pear Desktop (YouTube Music). Generated from the current palette; edits are overwritten. */
+/* Lunana — Pear Desktop (YouTube Music). Generated from the current palette; edits are overwritten. */
 
 html, html[dark], html:not(.style-scope) {
-  --inir-bg: ${bg};
-  --inir-surface: ${surface};
-  --inir-raised: ${raised};
-  --inir-popup: ${popup};
-  --inir-fg: ${fg};
-  --inir-subtext: ${subtext};
-  --inir-border: ${border};
-  --inir-accent: ${accent};
-  --inir-on-accent: ${on_accent};
-  --inir-accent-container: ${accent_container};
-  --inir-on-accent-container: ${on_accent_container};
-  --inir-error: ${error};
-  --inir-selection: ${selection};
-  --inir-fg-05: color-mix(in srgb, var(--inir-fg) 5%, transparent);
-  --inir-fg-10: color-mix(in srgb, var(--inir-fg) 10%, transparent);
-  --inir-fg-15: color-mix(in srgb, var(--inir-fg) 15%, transparent);
-  --inir-fg-20: color-mix(in srgb, var(--inir-fg) 20%, transparent);
-  --inir-fg-30: color-mix(in srgb, var(--inir-fg) 30%, transparent);
-  --inir-fg-50: color-mix(in srgb, var(--inir-fg) 50%, transparent);
-  --inir-fg-70: color-mix(in srgb, var(--inir-fg) 70%, transparent);
-  --inir-disabled: color-mix(in srgb, var(--inir-fg) 40%, var(--inir-bg));
+  --lunana-bg: ${bg};
+  --lunana-surface: ${surface};
+  --lunana-raised: ${raised};
+  --lunana-popup: ${popup};
+  --lunana-fg: ${fg};
+  --lunana-subtext: ${subtext};
+  --lunana-border: ${border};
+  --lunana-accent: ${accent};
+  --lunana-on-accent: ${on_accent};
+  --lunana-accent-container: ${accent_container};
+  --lunana-on-accent-container: ${on_accent_container};
+  --lunana-error: ${error};
+  --lunana-selection: ${selection};
+  --lunana-fg-05: color-mix(in srgb, var(--lunana-fg) 5%, transparent);
+  --lunana-fg-10: color-mix(in srgb, var(--lunana-fg) 10%, transparent);
+  --lunana-fg-15: color-mix(in srgb, var(--lunana-fg) 15%, transparent);
+  --lunana-fg-20: color-mix(in srgb, var(--lunana-fg) 20%, transparent);
+  --lunana-fg-30: color-mix(in srgb, var(--lunana-fg) 30%, transparent);
+  --lunana-fg-50: color-mix(in srgb, var(--lunana-fg) 50%, transparent);
+  --lunana-fg-70: color-mix(in srgb, var(--lunana-fg) 70%, transparent);
+  --lunana-disabled: color-mix(in srgb, var(--lunana-fg) 40%, var(--lunana-bg));
 
   /* YouTube's system palette */
-  --yt-sys-color-baseline--base-background: var(--inir-bg) !important;
-  --yt-sys-color-baseline--raised-background: var(--inir-raised) !important;
-  --yt-sys-color-baseline--menu-background: var(--inir-popup) !important;
-  --yt-sys-color-baseline--static-black: var(--inir-bg) !important;
-  --yt-sys-color-baseline--solid-background-inverse: var(--inir-bg) !important;
-  --yt-sys-color-baseline--frosted-glass-desktop: color-mix(in srgb, var(--inir-bg) 85%, transparent) !important;
-  --yt-sys-color-baseline--additive-background: var(--inir-fg-10) !important;
-  --yt-sys-color-baseline--tonal-background: var(--inir-fg-10) !important;
-  --yt-sys-color-baseline--tonal-wash: var(--inir-fg-05) !important;
-  --yt-sys-color-baseline--tonal-rim: var(--inir-fg-10) !important;
-  --yt-sys-color-baseline--button-chip-background-hover: var(--inir-fg-20) !important;
-  --yt-sys-color-baseline--mono-tonal-hover: var(--inir-fg-20) !important;
-  --yt-sys-color-baseline--state-mono-standard-hovered: var(--inir-fg-05) !important;
-  --yt-sys-color-baseline--state-mono-standard-pressed: var(--inir-fg-10) !important;
-  --yt-sys-color-baseline--state-overlay-standard-hovered: var(--inir-fg-05) !important;
-  --yt-sys-color-baseline--state-overlay-standard-pressed: var(--inir-fg-05) !important;
-  --yt-sys-color-baseline--text-primary: var(--inir-fg) !important;
-  --yt-sys-color-baseline--text-secondary: var(--inir-subtext) !important;
-  --yt-sys-color-baseline--text-disabled: var(--inir-disabled) !important;
-  --yt-sys-color-baseline--text-primary-inverse: var(--inir-on-accent) !important;
-  --yt-sys-color-baseline--inverted-background: var(--inir-accent) !important;
-  --yt-sys-color-baseline--inverted-background-hover: color-mix(in srgb, var(--inir-accent) 88%, var(--inir-fg)) !important;
-  --yt-sys-color-baseline--mono-filled-hover: color-mix(in srgb, var(--inir-accent) 88%, var(--inir-fg)) !important;
-  --yt-sys-color-baseline--call-to-action: var(--inir-accent) !important;
-  --yt-sys-color-baseline--call-to-action-hover: color-mix(in srgb, var(--inir-accent) 88%, var(--inir-fg)) !important;
-  --yt-sys-color-baseline--call-to-action-inverse: var(--inir-accent) !important;
-  --yt-sys-color-baseline--suggested-action: var(--inir-accent-container) !important;
-  --yt-sys-color-baseline--suggested-action-hover: color-mix(in srgb, var(--inir-accent-container) 88%, var(--inir-fg)) !important;
-  --yt-sys-color-baseline--outline: var(--inir-fg-20) !important;
-  --yt-sys-color-baseline--outline-opaque: var(--inir-border) !important;
-  --yt-sys-color-baseline--outline-rim: var(--inir-fg-15) !important;
-  --yt-sys-color-baseline--touch-response: var(--inir-fg) !important;
-  --yt-sys-color-baseline--wordmark-text: var(--inir-fg) !important;
-  --yt-sys-color-baseline--scrim-background-gradient-1: color-mix(in srgb, var(--inir-bg) 0%, transparent) !important;
-  --yt-sys-color-baseline--scrim-background-gradient-2: color-mix(in srgb, var(--inir-bg) 30%, transparent) !important;
-  --yt-sys-color-baseline--scrim-background-gradient-3: color-mix(in srgb, var(--inir-bg) 60%, transparent) !important;
-  --yt-sys-color-baseline--scrim-background-gradient-4: color-mix(in srgb, var(--inir-bg) 90%, transparent) !important;
-  --yt-sys-color-baseline--scrim-background-gradient-5: var(--inir-bg) !important;
+  --yt-sys-color-baseline--base-background: var(--lunana-bg) !important;
+  --yt-sys-color-baseline--raised-background: var(--lunana-raised) !important;
+  --yt-sys-color-baseline--menu-background: var(--lunana-popup) !important;
+  --yt-sys-color-baseline--static-black: var(--lunana-bg) !important;
+  --yt-sys-color-baseline--solid-background-inverse: var(--lunana-bg) !important;
+  --yt-sys-color-baseline--frosted-glass-desktop: color-mix(in srgb, var(--lunana-bg) 85%, transparent) !important;
+  --yt-sys-color-baseline--additive-background: var(--lunana-fg-10) !important;
+  --yt-sys-color-baseline--tonal-background: var(--lunana-fg-10) !important;
+  --yt-sys-color-baseline--tonal-wash: var(--lunana-fg-05) !important;
+  --yt-sys-color-baseline--tonal-rim: var(--lunana-fg-10) !important;
+  --yt-sys-color-baseline--button-chip-background-hover: var(--lunana-fg-20) !important;
+  --yt-sys-color-baseline--mono-tonal-hover: var(--lunana-fg-20) !important;
+  --yt-sys-color-baseline--state-mono-standard-hovered: var(--lunana-fg-05) !important;
+  --yt-sys-color-baseline--state-mono-standard-pressed: var(--lunana-fg-10) !important;
+  --yt-sys-color-baseline--state-overlay-standard-hovered: var(--lunana-fg-05) !important;
+  --yt-sys-color-baseline--state-overlay-standard-pressed: var(--lunana-fg-05) !important;
+  --yt-sys-color-baseline--text-primary: var(--lunana-fg) !important;
+  --yt-sys-color-baseline--text-secondary: var(--lunana-subtext) !important;
+  --yt-sys-color-baseline--text-disabled: var(--lunana-disabled) !important;
+  --yt-sys-color-baseline--text-primary-inverse: var(--lunana-on-accent) !important;
+  --yt-sys-color-baseline--inverted-background: var(--lunana-accent) !important;
+  --yt-sys-color-baseline--inverted-background-hover: color-mix(in srgb, var(--lunana-accent) 88%, var(--lunana-fg)) !important;
+  --yt-sys-color-baseline--mono-filled-hover: color-mix(in srgb, var(--lunana-accent) 88%, var(--lunana-fg)) !important;
+  --yt-sys-color-baseline--call-to-action: var(--lunana-accent) !important;
+  --yt-sys-color-baseline--call-to-action-hover: color-mix(in srgb, var(--lunana-accent) 88%, var(--lunana-fg)) !important;
+  --yt-sys-color-baseline--call-to-action-inverse: var(--lunana-accent) !important;
+  --yt-sys-color-baseline--suggested-action: var(--lunana-accent-container) !important;
+  --yt-sys-color-baseline--suggested-action-hover: color-mix(in srgb, var(--lunana-accent-container) 88%, var(--lunana-fg)) !important;
+  --yt-sys-color-baseline--outline: var(--lunana-fg-20) !important;
+  --yt-sys-color-baseline--outline-opaque: var(--lunana-border) !important;
+  --yt-sys-color-baseline--outline-rim: var(--lunana-fg-15) !important;
+  --yt-sys-color-baseline--touch-response: var(--lunana-fg) !important;
+  --yt-sys-color-baseline--wordmark-text: var(--lunana-fg) !important;
+  --yt-sys-color-baseline--scrim-background-gradient-1: color-mix(in srgb, var(--lunana-bg) 0%, transparent) !important;
+  --yt-sys-color-baseline--scrim-background-gradient-2: color-mix(in srgb, var(--lunana-bg) 30%, transparent) !important;
+  --yt-sys-color-baseline--scrim-background-gradient-3: color-mix(in srgb, var(--lunana-bg) 60%, transparent) !important;
+  --yt-sys-color-baseline--scrim-background-gradient-4: color-mix(in srgb, var(--lunana-bg) 90%, transparent) !important;
+  --yt-sys-color-baseline--scrim-background-gradient-5: var(--lunana-bg) !important;
 
   /* YouTube Music's own palette */
-  --ytmusic-background: var(--inir-bg) !important;
-  --ytmusic-nav-bar: var(--inir-bg) !important;
-  --ytmusic-detail-header: var(--inir-bg) !important;
-  --ytmusic-player-page-background: var(--inir-bg) !important;
-  --ytmusic-general-background-a: var(--inir-surface) !important;
-  --ytmusic-general-background-c: var(--inir-bg) !important;
-  --ytmusic-brand-background-solid: var(--inir-raised) !important;
-  --ytmusic-player-bar-background: var(--inir-raised) !important;
-  --ytmusic-search-background: var(--inir-raised) !important;
-  --ytmusic-search-border: var(--inir-border) !important;
-  --ytmusic-search-bar-background-bauhaus: var(--inir-fg-10) !important;
-  --ytmusic-search-bar-border-bauhaus: var(--inir-fg-10) !important;
-  --ytmusic-search-box-text-secondary: var(--inir-subtext) !important;
-  --ytmusic-search-suggestion-text-secondary: var(--inir-subtext) !important;
-  --ytmusic-search-suggestion-icon-color: var(--inir-subtext) !important;
-  --ytmusic-search-suggestion-focus-active: var(--inir-accent) !important;
-  --ytmusic-search-suggestion-focus-active-background: var(--inir-fg-10) !important;
-  --ytmusic-dialog-background-color: var(--inir-popup) !important;
-  --ytmusic-dropdown-background: var(--inir-popup) !important;
-  --ytmusic-dropdown-border-color: var(--inir-fg-10) !important;
-  --ytmusic-dropdown-item-hover-background: var(--inir-fg-10) !important;
-  --ytmusic-alert-with-actions-background: var(--inir-popup) !important;
-  --ytmusic-alert-with-actions-header-text: var(--inir-fg) !important;
-  --ytmusic-confirm-dialog-outline: var(--inir-border) !important;
-  --ytmusic-opalescence-dark-grey: var(--inir-popup) !important;
-  --ytmusic-horizontal-action-card-background: var(--inir-surface) !important;
-  --ytmusic-item-section-info-panel-overview-background: var(--inir-surface) !important;
-  --ytmusic-static-brand-black: var(--inir-raised) !important;
-  --ytmusic-white-5: var(--inir-border) !important;
-  --ytmusic-text-primary: var(--inir-fg) !important;
-  --ytmusic-text-secondary: var(--inir-subtext) !important;
-  --ytmusic-text-disabled: var(--inir-disabled) !important;
-  --ytmusic-text-primary-inverse: var(--inir-on-accent) !important;
-  --ytmusic-display-2_-_color: var(--inir-fg) !important;
-  --ytmusic-display-2_-_--yt-endpoint-color: var(--inir-fg) !important;
-  --ytmusic-display-2_-_--yt-endpoint-hover-color: var(--inir-fg) !important;
-  --ytmusic-display-2_-_--yt-endpoint-visited-color: var(--inir-fg) !important;
-  --ytmusic-wordmark-text: var(--inir-fg) !important;
-  --ytmusic-overlay-text-primary: var(--inir-fg) !important;
-  --ytmusic-overlay-text-secondary: var(--inir-fg-70) !important;
-  --ytmusic-overlay-text-disabled: var(--inir-fg-30) !important;
-  --ytmusic-overlay-button-primary: var(--inir-fg-30) !important;
-  --ytmusic-overlay-button-secondary: var(--inir-fg-10) !important;
-  --ytmusic-inline-badge-color: var(--inir-fg-70) !important;
-  --ytmusic-color-badge: var(--inir-subtext) !important;
-  --ytmusic-icon-inactive: var(--inir-subtext) !important;
-  --ytmusic-icon-disabled: var(--inir-disabled) !important;
-  --ytmusic-inactive-tab: var(--inir-fg-50) !important;
-  --ytmusic-divider: var(--inir-fg-10) !important;
-  --ytmusic-guide-divider: var(--inir-fg-10) !important;
-  --ytmusic-guide-hover: var(--inir-fg-10) !important;
-  --ytmusic-guide-entry-focus-border: var(--inir-accent) !important;
-  --ytmusic-guide-signin-promo-text-secondary: var(--inir-subtext) !important;
-  --ytmusic-ten-percent-layer: var(--inir-fg-10) !important;
-  --ytmusic-badge-chip-background: var(--inir-fg-10) !important;
-  --ytmusic-badge-chip-inactive-hover: var(--inir-fg-20) !important;
-  --ytmusic-explore-chip-background: var(--inir-fg-10) !important;
-  --ytmusic-toggle-button-chip-active-background: var(--inir-accent) !important;
-  --ytmusic-toggle-button-chip-border-color: var(--inir-fg-30) !important;
-  --ytmusic-inverted-background: var(--inir-accent) !important;
-  --ytmusic-menu-item-hover-background-color: var(--inir-fg-10) !important;
-  --ytmusic-menu-item-focus-background-color: var(--inir-fg-10) !important;
-  --ytmusic-multiselect-form-item-hover-background-color: var(--inir-fg-10) !important;
-  --ytmusic-multiselect-form-item-focus-background-color: var(--inir-fg-10) !important;
-  --ytmusic-responsive-list-item-checked-background-bauhaus: var(--inir-selection) !important;
-  --ytmusic-navigation-button-outline-color: var(--inir-fg-30) !important;
-  --ytmusic-immersive-carousel-button-border: var(--inir-fg-30) !important;
-  --ytmusic-shelf-bottom-button-border-color: var(--inir-fg-30) !important;
-  --ytmusic-carousel-shelf-button-disabled: var(--inir-raised) !important;
-  --ytmusic-color-close-button: var(--inir-fg-50) !important;
-  --ytmusic-color-input-border: var(--inir-border) !important;
-  --ytmusic-message-renderer-icon-color: var(--inir-subtext) !important;
-  --ytmusic-message-renderer-text-color: var(--inir-subtext) !important;
-  --ytmusic-call-to-action: var(--inir-accent) !important;
-  --ytmusic-call-to-action-disclaimer: var(--inir-fg-70) !important;
-  --ytmusic-focus-active: var(--inir-accent) !important;
-  --ytmusic-themed-blue: var(--inir-accent) !important;
-  --ytmusic-color-lightblue: var(--inir-accent) !important;
-  --ytmusic-setting-item-toggle-active: var(--inir-accent) !important;
-  --ytmusic-setting-item-toggle-inactive-bar: var(--inir-fg-30) !important;
-  --ytmusic-setting-item-toggle-inactive-button: var(--inir-subtext) !important;
-  --ytmusic-brand-link-text: var(--inir-accent) !important;
-  --ytmusic-playback-progress-color: var(--inir-accent) !important;
-  --ytmusic-progress-container: var(--inir-fg-30) !important;
-  --ytmusic-play-pause-button-background: var(--inir-accent) !important;
-  --ytmusic-play-button-disabled-icon-color: var(--inir-disabled) !important;
-  --ytmusic-player-bar-container-color: var(--inir-fg-20) !important;
-  --ytmusic-player-bar-ink-color: var(--inir-fg-70) !important;
-  --ytmusic-player-bar-disabled-secondary-color: var(--inir-fg-50) !important;
-  --ytmusic-player-bar-repeat-disabled: var(--inir-fg-30) !important;
-  --ytmusic-player-controls-button-disabled: var(--inir-fg-20) !important;
-  --ytmusic-touch-response: var(--inir-fg) !important;
-  --ytmusic-color-white1: var(--inir-fg) !important;
-  --ytmusic-color-white1-alpha10: var(--inir-fg-10) !important;
-  --ytmusic-color-white1-alpha15: var(--inir-fg-15) !important;
-  --ytmusic-color-white1-alpha20: var(--inir-fg-20) !important;
-  --ytmusic-color-white1-alpha25: var(--inir-fg-20) !important;
-  --ytmusic-color-white1-alpha30: var(--inir-fg-30) !important;
-  --ytmusic-color-white1-alpha50: var(--inir-fg-50) !important;
-  --ytmusic-color-white1-alpha70: var(--inir-fg-70) !important;
-  --ytmusic-color-white1-alpha95: var(--inir-fg) !important;
-  --ytmusic-color-white-opacity-0-05: var(--inir-fg-05) !important;
-  --ytmusic-color-white-opacity-0-5: var(--inir-fg-50) !important;
-  --ytmusic-color-grey2: var(--inir-subtext) !important;
-  --ytmusic-color-grey3: var(--inir-subtext) !important;
-  --ytmusic-color-grey4: var(--inir-disabled) !important;
-  --ytmusic-color-grey5: var(--inir-disabled) !important;
-  --ytmusic-color-grey-4: var(--inir-subtext) !important;
-  --ytmusic-color-black1: var(--inir-raised) !important;
-  --ytmusic-color-black2: var(--inir-surface) !important;
-  --ytmusic-color-black4: var(--inir-bg) !important;
-  --ytmusic-color-blackpure: var(--inir-bg) !important;
-  --ytmusic-color-navyblue: var(--inir-accent-container) !important;
+  --ytmusic-background: var(--lunana-bg) !important;
+  --ytmusic-nav-bar: var(--lunana-bg) !important;
+  --ytmusic-detail-header: var(--lunana-bg) !important;
+  --ytmusic-player-page-background: var(--lunana-bg) !important;
+  --ytmusic-general-background-a: var(--lunana-surface) !important;
+  --ytmusic-general-background-c: var(--lunana-bg) !important;
+  --ytmusic-brand-background-solid: var(--lunana-raised) !important;
+  --ytmusic-player-bar-background: var(--lunana-raised) !important;
+  --ytmusic-search-background: var(--lunana-raised) !important;
+  --ytmusic-search-border: var(--lunana-border) !important;
+  --ytmusic-search-bar-background-bauhaus: var(--lunana-fg-10) !important;
+  --ytmusic-search-bar-border-bauhaus: var(--lunana-fg-10) !important;
+  --ytmusic-search-box-text-secondary: var(--lunana-subtext) !important;
+  --ytmusic-search-suggestion-text-secondary: var(--lunana-subtext) !important;
+  --ytmusic-search-suggestion-icon-color: var(--lunana-subtext) !important;
+  --ytmusic-search-suggestion-focus-active: var(--lunana-accent) !important;
+  --ytmusic-search-suggestion-focus-active-background: var(--lunana-fg-10) !important;
+  --ytmusic-dialog-background-color: var(--lunana-popup) !important;
+  --ytmusic-dropdown-background: var(--lunana-popup) !important;
+  --ytmusic-dropdown-border-color: var(--lunana-fg-10) !important;
+  --ytmusic-dropdown-item-hover-background: var(--lunana-fg-10) !important;
+  --ytmusic-alert-with-actions-background: var(--lunana-popup) !important;
+  --ytmusic-alert-with-actions-header-text: var(--lunana-fg) !important;
+  --ytmusic-confirm-dialog-outline: var(--lunana-border) !important;
+  --ytmusic-opalescence-dark-grey: var(--lunana-popup) !important;
+  --ytmusic-horizontal-action-card-background: var(--lunana-surface) !important;
+  --ytmusic-item-section-info-panel-overview-background: var(--lunana-surface) !important;
+  --ytmusic-static-brand-black: var(--lunana-raised) !important;
+  --ytmusic-white-5: var(--lunana-border) !important;
+  --ytmusic-text-primary: var(--lunana-fg) !important;
+  --ytmusic-text-secondary: var(--lunana-subtext) !important;
+  --ytmusic-text-disabled: var(--lunana-disabled) !important;
+  --ytmusic-text-primary-inverse: var(--lunana-on-accent) !important;
+  --ytmusic-display-2_-_color: var(--lunana-fg) !important;
+  --ytmusic-display-2_-_--yt-endpoint-color: var(--lunana-fg) !important;
+  --ytmusic-display-2_-_--yt-endpoint-hover-color: var(--lunana-fg) !important;
+  --ytmusic-display-2_-_--yt-endpoint-visited-color: var(--lunana-fg) !important;
+  --ytmusic-wordmark-text: var(--lunana-fg) !important;
+  --ytmusic-overlay-text-primary: var(--lunana-fg) !important;
+  --ytmusic-overlay-text-secondary: var(--lunana-fg-70) !important;
+  --ytmusic-overlay-text-disabled: var(--lunana-fg-30) !important;
+  --ytmusic-overlay-button-primary: var(--lunana-fg-30) !important;
+  --ytmusic-overlay-button-secondary: var(--lunana-fg-10) !important;
+  --ytmusic-inline-badge-color: var(--lunana-fg-70) !important;
+  --ytmusic-color-badge: var(--lunana-subtext) !important;
+  --ytmusic-icon-inactive: var(--lunana-subtext) !important;
+  --ytmusic-icon-disabled: var(--lunana-disabled) !important;
+  --ytmusic-inactive-tab: var(--lunana-fg-50) !important;
+  --ytmusic-divider: var(--lunana-fg-10) !important;
+  --ytmusic-guide-divider: var(--lunana-fg-10) !important;
+  --ytmusic-guide-hover: var(--lunana-fg-10) !important;
+  --ytmusic-guide-entry-focus-border: var(--lunana-accent) !important;
+  --ytmusic-guide-signin-promo-text-secondary: var(--lunana-subtext) !important;
+  --ytmusic-ten-percent-layer: var(--lunana-fg-10) !important;
+  --ytmusic-badge-chip-background: var(--lunana-fg-10) !important;
+  --ytmusic-badge-chip-inactive-hover: var(--lunana-fg-20) !important;
+  --ytmusic-explore-chip-background: var(--lunana-fg-10) !important;
+  --ytmusic-toggle-button-chip-active-background: var(--lunana-accent) !important;
+  --ytmusic-toggle-button-chip-border-color: var(--lunana-fg-30) !important;
+  --ytmusic-inverted-background: var(--lunana-accent) !important;
+  --ytmusic-menu-item-hover-background-color: var(--lunana-fg-10) !important;
+  --ytmusic-menu-item-focus-background-color: var(--lunana-fg-10) !important;
+  --ytmusic-multiselect-form-item-hover-background-color: var(--lunana-fg-10) !important;
+  --ytmusic-multiselect-form-item-focus-background-color: var(--lunana-fg-10) !important;
+  --ytmusic-responsive-list-item-checked-background-bauhaus: var(--lunana-selection) !important;
+  --ytmusic-navigation-button-outline-color: var(--lunana-fg-30) !important;
+  --ytmusic-immersive-carousel-button-border: var(--lunana-fg-30) !important;
+  --ytmusic-shelf-bottom-button-border-color: var(--lunana-fg-30) !important;
+  --ytmusic-carousel-shelf-button-disabled: var(--lunana-raised) !important;
+  --ytmusic-color-close-button: var(--lunana-fg-50) !important;
+  --ytmusic-color-input-border: var(--lunana-border) !important;
+  --ytmusic-message-renderer-icon-color: var(--lunana-subtext) !important;
+  --ytmusic-message-renderer-text-color: var(--lunana-subtext) !important;
+  --ytmusic-call-to-action: var(--lunana-accent) !important;
+  --ytmusic-call-to-action-disclaimer: var(--lunana-fg-70) !important;
+  --ytmusic-focus-active: var(--lunana-accent) !important;
+  --ytmusic-themed-blue: var(--lunana-accent) !important;
+  --ytmusic-color-lightblue: var(--lunana-accent) !important;
+  --ytmusic-setting-item-toggle-active: var(--lunana-accent) !important;
+  --ytmusic-setting-item-toggle-inactive-bar: var(--lunana-fg-30) !important;
+  --ytmusic-setting-item-toggle-inactive-button: var(--lunana-subtext) !important;
+  --ytmusic-brand-link-text: var(--lunana-accent) !important;
+  --ytmusic-playback-progress-color: var(--lunana-accent) !important;
+  --ytmusic-progress-container: var(--lunana-fg-30) !important;
+  --ytmusic-play-pause-button-background: var(--lunana-accent) !important;
+  --ytmusic-play-button-disabled-icon-color: var(--lunana-disabled) !important;
+  --ytmusic-player-bar-container-color: var(--lunana-fg-20) !important;
+  --ytmusic-player-bar-ink-color: var(--lunana-fg-70) !important;
+  --ytmusic-player-bar-disabled-secondary-color: var(--lunana-fg-50) !important;
+  --ytmusic-player-bar-repeat-disabled: var(--lunana-fg-30) !important;
+  --ytmusic-player-controls-button-disabled: var(--lunana-fg-20) !important;
+  --ytmusic-touch-response: var(--lunana-fg) !important;
+  --ytmusic-color-white1: var(--lunana-fg) !important;
+  --ytmusic-color-white1-alpha10: var(--lunana-fg-10) !important;
+  --ytmusic-color-white1-alpha15: var(--lunana-fg-15) !important;
+  --ytmusic-color-white1-alpha20: var(--lunana-fg-20) !important;
+  --ytmusic-color-white1-alpha25: var(--lunana-fg-20) !important;
+  --ytmusic-color-white1-alpha30: var(--lunana-fg-30) !important;
+  --ytmusic-color-white1-alpha50: var(--lunana-fg-50) !important;
+  --ytmusic-color-white1-alpha70: var(--lunana-fg-70) !important;
+  --ytmusic-color-white1-alpha95: var(--lunana-fg) !important;
+  --ytmusic-color-white-opacity-0-05: var(--lunana-fg-05) !important;
+  --ytmusic-color-white-opacity-0-5: var(--lunana-fg-50) !important;
+  --ytmusic-color-grey2: var(--lunana-subtext) !important;
+  --ytmusic-color-grey3: var(--lunana-subtext) !important;
+  --ytmusic-color-grey4: var(--lunana-disabled) !important;
+  --ytmusic-color-grey5: var(--lunana-disabled) !important;
+  --ytmusic-color-grey-4: var(--lunana-subtext) !important;
+  --ytmusic-color-black1: var(--lunana-raised) !important;
+  --ytmusic-color-black2: var(--lunana-surface) !important;
+  --ytmusic-color-black4: var(--lunana-bg) !important;
+  --ytmusic-color-blackpure: var(--lunana-bg) !important;
+  --ytmusic-color-navyblue: var(--lunana-accent-container) !important;
 
   /* Older components still read the legacy spec names */
-  --yt-spec-general-background-a: var(--inir-surface) !important;
-  --yt-spec-general-background-b: var(--inir-bg) !important;
-  --yt-spec-general-background-c: var(--inir-bg) !important;
-  --yt-spec-base-background: var(--inir-bg) !important;
-  --yt-spec-raised-background: var(--inir-raised) !important;
-  --yt-spec-menu-background: var(--inir-popup) !important;
-  --yt-spec-text-primary: var(--inir-fg) !important;
-  --yt-spec-text-secondary: var(--inir-subtext) !important;
-  --yt-spec-10-percent-layer: var(--inir-fg-10) !important;
-  --yt-spec-call-to-action: var(--inir-accent) !important;
-  --yt-spec-themed-blue: var(--inir-accent) !important;
-  --yt-spec-commerce-filled-hover: var(--inir-accent) !important;
+  --yt-spec-general-background-a: var(--lunana-surface) !important;
+  --yt-spec-general-background-b: var(--lunana-bg) !important;
+  --yt-spec-general-background-c: var(--lunana-bg) !important;
+  --yt-spec-base-background: var(--lunana-bg) !important;
+  --yt-spec-raised-background: var(--lunana-raised) !important;
+  --yt-spec-menu-background: var(--lunana-popup) !important;
+  --yt-spec-text-primary: var(--lunana-fg) !important;
+  --yt-spec-text-secondary: var(--lunana-subtext) !important;
+  --yt-spec-10-percent-layer: var(--lunana-fg-10) !important;
+  --yt-spec-call-to-action: var(--lunana-accent) !important;
+  --yt-spec-themed-blue: var(--lunana-accent) !important;
+  --yt-spec-commerce-filled-hover: var(--lunana-accent) !important;
 
   /* Pear's own title bar */
-  --titlebar-background-color: var(--inir-bg) !important;
+  --titlebar-background-color: var(--lunana-bg) !important;
   --ytmusic-scrollbar-width: 0px !important;
   --ytd-scrollbar-width: 0px !important;
 }
 
-html, body { background: var(--inir-bg) !important; color-scheme: $([[ "$(theme_mode)" == light ]] && printf light || printf dark); }
+html, body { background: var(--lunana-bg) !important; color-scheme: $([[ "$(theme_mode)" == light ]] && printf light || printf dark); }
 * { scrollbar-width: none !important; }
-::selection { background: var(--inir-selection); color: var(--inir-fg); }
+::selection { background: var(--lunana-selection); color: var(--lunana-fg); }
 
 /* Pear's in-app menu (Plugins, Options, View...) */
 #ytmd-title-bar-main-panel {
-  background: var(--inir-bg) !important;
-  border-bottom: 1px solid var(--inir-fg-10) !important;
-  color: var(--inir-fg) !important;
+  background: var(--lunana-bg) !important;
+  border-bottom: 1px solid var(--lunana-fg-10) !important;
+  color: var(--lunana-fg) !important;
 }
 #ytmd-title-bar-main-panel li,
 #ytmd-title-bar-main-panel button,
-#ytmd-title-bar-main-panel svg { color: var(--inir-fg) !important; }
+#ytmd-title-bar-main-panel svg { color: var(--lunana-fg) !important; }
 #ytmd-title-bar-main-panel li:hover,
-#ytmd-title-bar-main-panel button:hover { background-color: var(--inir-fg-10) !important; }
-#ytmd-title-bar-main-panel [data-selected='true'] { background-color: var(--inir-fg-15) !important; }
+#ytmd-title-bar-main-panel button:hover { background-color: var(--lunana-fg-10) !important; }
+#ytmd-title-bar-main-panel [data-selected='true'] { background-color: var(--lunana-fg-15) !important; }
 
 /* The guide and the bars paint fixed colours instead of reading the palette */
 #guide-wrapper.ytmusic-app,
 #mini-guide-background.ytmusic-app-layout,
 #nav-bar-background.ytmusic-app-layout,
 ytmusic-nav-bar,
-ytmusic-tabs.stuck { background: var(--inir-bg) !important; }
+ytmusic-tabs.stuck { background: var(--lunana-bg) !important; }
 #nav-bar-divider.ytmusic-app-layout,
-#guide-wrapper.ytmusic-app { border-color: var(--inir-fg-10) !important; }
+#guide-wrapper.ytmusic-app { border-color: var(--lunana-fg-10) !important; }
 #player-bar-background.ytmusic-app-layout,
-ytmusic-player-bar { background: var(--inir-raised) !important; }
+ytmusic-player-bar { background: var(--lunana-raised) !important; }
 
 /* Pills and buttons that hardcode white */
 a.sign-in-link.app-bar-button {
-  background: var(--inir-accent) !important;
-  color: var(--inir-on-accent) !important;
+  background: var(--lunana-accent) !important;
+  color: var(--lunana-on-accent) !important;
 }
 ytmusic-chip-cloud-chip-renderer[chip-style="STYLE_DEFAULT"] a.ytmusic-chip-cloud-chip-renderer,
 ytmusic-chip-cloud-chip-renderer[chip-style="STYLE_UNKNOWN"] a.ytmusic-chip-cloud-chip-renderer {
-  background-color: var(--inir-fg-10) !important;
-  color: var(--inir-fg) !important;
+  background-color: var(--lunana-fg-10) !important;
+  color: var(--lunana-fg) !important;
 }
-.content-wrapper.ytmusic-play-button-renderer { background: var(--inir-accent) !important; }
-ytmusic-play-button-renderer { --ytmusic-play-button-icon-color: var(--inir-on-accent) !important; }
+.content-wrapper.ytmusic-play-button-renderer { background: var(--lunana-accent) !important; }
+ytmusic-play-button-renderer { --ytmusic-play-button-icon-color: var(--lunana-on-accent) !important; }
 
 /* YouTube's button shapes: "mono" is white on dark in its stylesheet, here it is the palette's text */
 .ytSpecButtonShapeNextMono.ytSpecButtonShapeNextFilled {
-  background: var(--inir-fg) !important;
-  color: var(--inir-bg) !important;
+  background: var(--lunana-fg) !important;
+  color: var(--lunana-bg) !important;
   border-color: transparent !important;
 }
-.ytSpecButtonShapeNextMono.ytSpecButtonShapeNextFilled:hover { background: color-mix(in srgb, var(--inir-fg) 88%, var(--inir-bg)) !important; }
-.ytSpecButtonShapeNextMono.ytSpecButtonShapeNextTonal { background: var(--inir-fg-10) !important; color: var(--inir-fg) !important; border-color: var(--inir-fg-20) !important; }
+.ytSpecButtonShapeNextMono.ytSpecButtonShapeNextFilled:hover { background: color-mix(in srgb, var(--lunana-fg) 88%, var(--lunana-bg)) !important; }
+.ytSpecButtonShapeNextMono.ytSpecButtonShapeNextTonal { background: var(--lunana-fg-10) !important; color: var(--lunana-fg) !important; border-color: var(--lunana-fg-20) !important; }
 .ytSpecButtonShapeNextMono.ytSpecButtonShapeNextOutline,
-.ytSpecButtonShapeNextMono.ytSpecButtonShapeNextText { color: var(--inir-fg) !important; border-color: var(--inir-fg-20) !important; }
+.ytSpecButtonShapeNextMono.ytSpecButtonShapeNextText { color: var(--lunana-fg) !important; border-color: var(--lunana-fg-20) !important; }
 .ytSpecButtonShapeNextMono.ytSpecButtonShapeNextTonal:hover,
 .ytSpecButtonShapeNextMono.ytSpecButtonShapeNextOutline:hover,
-.ytSpecButtonShapeNextMono.ytSpecButtonShapeNextText:hover { background: var(--inir-fg-20) !important; }
-.ytSpecTouchFeedbackShapeTouchResponse .ytSpecTouchFeedbackShapeFill { background-color: var(--inir-fg) !important; }
+.ytSpecButtonShapeNextMono.ytSpecButtonShapeNextText:hover { background: var(--lunana-fg-20) !important; }
+.ytSpecTouchFeedbackShapeTouchResponse .ytSpecTouchFeedbackShapeFill { background-color: var(--lunana-fg) !important; }
 
 /* Player page tabs (Up next, Lyrics, Related) */
-tp-yt-paper-tab.ytmusic-player-page { color: var(--inir-subtext) !important; }
-tp-yt-paper-tab.ytmusic-player-page.iron-selected { color: var(--inir-fg) !important; }
-tp-yt-paper-tabs.ytmusic-player-page { --paper-tabs-selection-bar-color: var(--inir-accent) !important; }
+tp-yt-paper-tab.ytmusic-player-page { color: var(--lunana-subtext) !important; }
+tp-yt-paper-tab.ytmusic-player-page.iron-selected { color: var(--lunana-fg) !important; }
+tp-yt-paper-tabs.ytmusic-player-page { --paper-tabs-selection-bar-color: var(--lunana-accent) !important; }
 
 /* Popups, menus and toasts */
 tp-yt-paper-listbox.ytmusic-menu-popup-renderer,
 ytmusic-menu-popup-renderer,
 ytd-multi-page-menu-renderer,
 tp-yt-paper-dialog,
-ytmusic-dialog { background-color: var(--inir-popup) !important; color: var(--inir-fg) !important; }
-tp-yt-paper-toast { background: var(--inir-popup) !important; color: var(--inir-fg) !important; }
+ytmusic-dialog { background-color: var(--lunana-popup) !important; color: var(--lunana-fg) !important; }
+tp-yt-paper-toast { background: var(--lunana-popup) !important; color: var(--lunana-fg) !important; }
 
 /* Progress and volume */
 #progress-bar.ytmusic-player-bar,
 #volume-slider.ytmusic-player-bar,
 #expand-volume-slider.ytmusic-player-bar {
-  --paper-slider-active-color: var(--inir-accent) !important;
-  --paper-slider-knob-color: var(--inir-accent) !important;
-  --paper-slider-knob-start-color: var(--inir-accent) !important;
-  --paper-slider-knob-start-border-color: var(--inir-accent) !important;
-  --paper-slider-container-color: var(--inir-fg-20) !important;
-  --paper-slider-secondary-color: var(--inir-fg-30) !important;
+  --paper-slider-active-color: var(--lunana-accent) !important;
+  --paper-slider-knob-color: var(--lunana-accent) !important;
+  --paper-slider-knob-start-color: var(--lunana-accent) !important;
+  --paper-slider-knob-start-border-color: var(--lunana-accent) !important;
+  --paper-slider-container-color: var(--lunana-fg-20) !important;
+  --paper-slider-secondary-color: var(--lunana-fg-30) !important;
 }
 
 /* The YouTube Music logo; the menu button stays */
@@ -369,33 +369,33 @@ EOCSS
   cat <<'EOCHIPS'
 ytmusic-chip-cloud-chip-renderer[is-selected] a.ytmusic-chip-cloud-chip-renderer,
 ytmusic-chip-cloud-chip-renderer[chip-style="STYLE_PRIMARY"] a.ytmusic-chip-cloud-chip-renderer {
-  background-color: var(--inir-accent) !important;
+  background-color: var(--lunana-accent) !important;
 }
 ytmusic-chip-cloud-chip-renderer[is-selected] a.ytmusic-chip-cloud-chip-renderer,
 ytmusic-chip-cloud-chip-renderer[is-selected] a.ytmusic-chip-cloud-chip-renderer .text.ytmusic-chip-cloud-chip-renderer,
 ytmusic-chip-cloud-chip-renderer[chip-style="STYLE_PRIMARY"] a.ytmusic-chip-cloud-chip-renderer,
 ytmusic-chip-cloud-chip-renderer[chip-style="STYLE_PRIMARY"] a.ytmusic-chip-cloud-chip-renderer .text.ytmusic-chip-cloud-chip-renderer {
-  color: var(--inir-on-accent) !important;
-  --iron-icon-fill-color: var(--inir-on-accent) !important;
-  --icon-color: var(--inir-on-accent) !important;
+  color: var(--lunana-on-accent) !important;
+  --iron-icon-fill-color: var(--lunana-on-accent) !important;
+  --icon-color: var(--lunana-on-accent) !important;
 }
 /* The white pills (Save, Add to library) read as YouTube's filled mono button */
 ytmusic-chip-cloud-chip-renderer[chip-style="STYLE_TRANSPARENT"]:not([is-selected]) a.ytmusic-chip-cloud-chip-renderer,
 ytmusic-chip-cloud-chip-renderer[chip-style="STYLE_SECONDARY"]:not([is-selected]) a.ytmusic-chip-cloud-chip-renderer {
-  background-color: var(--inir-fg) !important;
+  background-color: var(--lunana-fg) !important;
 }
 ytmusic-chip-cloud-chip-renderer[chip-style="STYLE_TRANSPARENT"]:not([is-selected]) a.ytmusic-chip-cloud-chip-renderer,
 ytmusic-chip-cloud-chip-renderer[chip-style="STYLE_TRANSPARENT"]:not([is-selected]) .text.ytmusic-chip-cloud-chip-renderer,
 ytmusic-chip-cloud-chip-renderer[chip-style="STYLE_SECONDARY"]:not([is-selected]) a.ytmusic-chip-cloud-chip-renderer,
 ytmusic-chip-cloud-chip-renderer[chip-style="STYLE_SECONDARY"]:not([is-selected]) .text.ytmusic-chip-cloud-chip-renderer {
-  color: var(--inir-bg) !important;
-  --iron-icon-fill-color: var(--inir-bg) !important;
-  --icon-color: var(--inir-bg) !important;
+  color: var(--lunana-bg) !important;
+  --iron-icon-fill-color: var(--lunana-bg) !important;
+  --icon-color: var(--lunana-bg) !important;
 }
 EOCHIPS
   local font
   font="$(shell_font_family)"
-  printf '\n:root { --inir-font: "%s"; }\n' "${font:-Roboto}"
+  printf '\n:root { --lunana-font: "%s"; }\n' "${font:-Roboto}"
   [[ -f "$PEAR_FINISH_CSS" ]] && cat "$PEAR_FINISH_CSS"
   return 0
 }

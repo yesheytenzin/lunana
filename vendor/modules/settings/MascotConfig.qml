@@ -11,8 +11,8 @@ import "../common/widgets"
 import "../common/functions"
 
 /**
- * Dedicated Mascot settings page (ii family). Waffle mirror:
- * modules/waffle/settings/pages/WMascotPage.qml — keep both in sync.
+ * Dedicated Mascot settings page (drift family). Slate mirror:
+ * modules/slate/settings/pages/SMascotPage.qml — keep both in sync.
  *
  * How this page is built:
  * - Registered in SettingsPageRegistry.qml: pages[] entry (this file's
@@ -31,7 +31,7 @@ import "../common/functions"
  *   animatedPoses, each mapped to its asset path).
  * - Adding a new event = manifest reactions entry + Config.qml/defaults
  *   events/eventPoses keys + one eventDescriptors row here and in the
- *   waffle mirror. The companion reads everything through reactEvent().
+ *   slate mirror. The companion reads everything through reactEvent().
  */
 ContentPage {
     id: root
@@ -55,7 +55,7 @@ ContentPage {
                     id: packMissingText
                     anchors.fill: parent
                     anchors.margins: 10
-                    text: Translation.tr("Kira is an optional download. Run `inir setup extras` and choose Install mascot pack. Everything below stays inert until the download finishes.")
+                    text: Translation.tr("Kira is an optional download. Run `lunana setup extras` and choose Install mascot pack. Everything below stays inert until the download finishes.")
                     font.pixelSize: Appearance.font.pixelSize.smaller
                     color: Appearance.colors.colOnSecondaryContainer
                     wrapMode: Text.Wrap
@@ -69,7 +69,7 @@ ContentPage {
                 checked: Config.options?.mascot?.enable ?? false
                 onCheckedChanged: Config.setNestedValue("mascot.enable", checked)
                 StyledToolTip {
-                    text: Translation.tr("Show the iNiR mascot in About, empty states and other shell surfaces")
+                    text: Translation.tr("Show the Lunana mascot in About, empty states and other shell surfaces")
                 }
             }
 
@@ -369,25 +369,25 @@ ContentPage {
                     materialIcon: "cyclone"
                     mainText: Translation.tr("Unleash chaos")
                     enabled: Config.options?.mascot?.chaos?.enable ?? false
-                    onClicked: Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")), "mascot", "romp"])
+                    onClicked: Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/lunana")), "mascot", "romp"])
                 }
                 RippleButtonWithIcon {
                     materialIcon: "cleaning_services"
                     mainText: Translation.tr("Tidy up")
-                    onClicked: Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")), "mascot", "tidy"])
+                    onClicked: Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/lunana")), "mascot", "tidy"])
                 }
                 RippleButtonWithIcon {
                     materialIcon: "sports_esports"
                     mainText: Translation.tr("Play chase")
                     enabled: Config.options?.mascot?.chaos?.enable ?? false
-                    onClicked: Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")), "mascot", "chase"])
+                    onClicked: Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/lunana")), "mascot", "chase"])
                     StyledToolTip { text: Translation.tr("Explicitly start the mouse chase game; it never starts on its own") }
                 }
                 RippleButtonWithIcon {
                     materialIcon: "search"
                     mainText: Translation.tr("Hide and seek")
                     enabled: Config.options?.mascot?.chaos?.enable ?? false
-                    onClicked: Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")), "mascot", "hideSeek"])
+                    onClicked: Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/lunana")), "mascot", "hideSeek"])
                     StyledToolTip { text: Translation.tr("Explicitly start hide-and-seek; find Kira before the timer expires") }
                 }
             }
@@ -402,19 +402,19 @@ ContentPage {
                 RippleButtonWithIcon {
                     materialIcon: "waving_hand"
                     mainText: Translation.tr("Peek now")
-                    onClicked: Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")), "mascot", "poke"])
+                    onClicked: Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/lunana")), "mascot", "poke"])
                 }
 
                 RippleButtonWithIcon {
                     materialIcon: "sentiment_very_satisfied"
                     mainText: Translation.tr("Say hi")
-                    onClicked: Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")), "mascot", "appear", "wave-loop", "bottom"])
+                    onClicked: Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/lunana")), "mascot", "appear", "wave-loop", "bottom"])
                 }
 
                 RippleButtonWithIcon {
                     materialIcon: "visibility_off"
                     mainText: Translation.tr("Send her away")
-                    onClicked: Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")), "mascot", "hide"])
+                    onClicked: Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/lunana")), "mascot", "hide"])
                 }
             }
 
@@ -499,7 +499,7 @@ ContentPage {
                             .concat(ordered.map(p => ({
                                 displayName: p,
                                 value: p,
-                                image: ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + (`assets/images/mascot/inir-mascot-${p}.${anim.includes(p) ? "gif" : "png"}`))
+                                image: ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + (`assets/images/mascot/lunana-mascot-${p}.${anim.includes(p) ? "gif" : "png"}`))
                             })))
                     } catch (e) {
                         console.warn("[QuickConfig] mascot manifest load failed:", e)

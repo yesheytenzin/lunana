@@ -91,7 +91,7 @@ Singleton {
             else
                 echo "none"
             fi
-        `, "inir-gpu", root._gpuVendor, root._gpuDevice]
+        `, "lunana-gpu", root._gpuVendor, root._gpuDevice]
         stdout: SplitParser {
             onRead: line => {
                 if (line.startsWith("sysfs:")) {

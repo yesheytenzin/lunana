@@ -5,7 +5,7 @@ import QtQuick.Layouts
 import "../../.."
 import "../../common"
 import "../../common/widgets"
-import "../../iris/style"
+import "../../atoll/style"
 
 // A titled group inside a widget's quick controls: one quiet caption, then its controls.
 ColumnLayout {
@@ -15,8 +15,8 @@ ColumnLayout {
     property string detail: ""
     default property alias content: body.data
 
-    readonly property bool iris: (Config.options?.panelFamily ?? "ii") === "iris"
-    readonly property real d: root.iris ? IrisStyle.density : 1
+    readonly property bool atoll: (Config.options?.panelFamily ?? "drift") === "atoll"
+    readonly property real d: root.atoll ? AtollStyle.density : 1
 
     Layout.fillWidth: true
     spacing: Math.round(7 * root.d)
@@ -30,20 +30,20 @@ ColumnLayout {
             Layout.fillWidth: true
             text: root.title
             elide: Text.ElideRight
-            color: root.iris ? IrisStyle.textSecondary : Appearance.colors.colSubtext
-            font.family: root.iris ? IrisStyle.fontMain : Appearance.font.family.main
-            font.pixelSize: root.iris ? IrisStyle.typeMeta : Appearance.font.pixelSize.smallest
-            font.weight: root.iris ? IrisStyle.weight(Font.DemiBold) : Font.DemiBold
-            font.capitalization: root.iris || Appearance.editorialEverywhere ? Font.MixedCase : Font.AllUppercase
-            font.letterSpacing: root.iris ? 0 : 1
+            color: root.atoll ? AtollStyle.textSecondary : Appearance.colors.colSubtext
+            font.family: root.atoll ? AtollStyle.fontMain : Appearance.font.family.main
+            font.pixelSize: root.atoll ? AtollStyle.typeMeta : Appearance.font.pixelSize.smallest
+            font.weight: root.atoll ? AtollStyle.weight(Font.DemiBold) : Font.DemiBold
+            font.capitalization: root.atoll || Appearance.editorialEverywhere ? Font.MixedCase : Font.AllUppercase
+            font.letterSpacing: root.atoll ? 0 : 1
         }
         StyledText {
             visible: root.detail.length > 0
             text: root.detail
-            color: root.iris ? IrisStyle.textTertiary : Appearance.colors.colSubtext
-            font.family: root.iris ? IrisStyle.fontNumbers : Appearance.font.family.numbers
+            color: root.atoll ? AtollStyle.textTertiary : Appearance.colors.colSubtext
+            font.family: root.atoll ? AtollStyle.fontNumbers : Appearance.font.family.numbers
             font.features: ({ "tnum": 1 })
-            font.pixelSize: root.iris ? IrisStyle.typeMeta : Appearance.font.pixelSize.smallest
+            font.pixelSize: root.atoll ? AtollStyle.typeMeta : Appearance.font.pixelSize.smallest
         }
     }
 

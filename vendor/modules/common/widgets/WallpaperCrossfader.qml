@@ -40,7 +40,7 @@ Item {
     readonly property var shaderTransitionTypes: [
         "circlePit", "circleSelect", "magic", "Doom", "Peel", "transition",
         "pixelate", "stripes", "crt", "dissolve", "glitch", "ripple", "shatter",
-        "inirMelt", "inirVeil", "inirFracture", "inirInk", "inirPrism"
+        "lunanaMelt", "lunanaVeil", "lunanaFracture", "lunanaInk", "lunanaPrism"
     ]
     readonly property bool shaderTransitionRequested: isShaderTransitionType(transitionType)
         || String(transitionType ?? "") === "shaderRandom"

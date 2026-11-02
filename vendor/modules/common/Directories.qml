@@ -137,13 +137,13 @@ Singleton {
             return ""
 
         const path = String(userAvatarPaths[index] ?? "").trim()
-        return path.length > 0 ? `file://${path}?inir-avatar=${root.userAvatarRevision}` : ""
+        return path.length > 0 ? `file://${path}?lunana-avatar=${root.userAvatarRevision}` : ""
     }
 
     function nextAvatarSource(currentSource: string): string {
         const normalized = String(currentSource ?? "")
             .replace(/^file:\/\//, "")
-            .replace(/\?inir-avatar=\d+$/, "")
+            .replace(/\?lunana-avatar=\d+$/, "")
 
         for (let i = 0; i < userAvatarPaths.length; ++i) {
             if (String(userAvatarPaths[i] ?? "") === normalized)

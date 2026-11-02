@@ -8,7 +8,7 @@ set -euo pipefail
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/lib/module-runtime.sh"
 COLOR_MODULE_ID="chrome"
 
-POLICY_FILE="ii-theme.json"
+POLICY_FILE="drift-theme.json"
 POLICY_DECLINED_FILE="$STATE_DIR/user/generated/chrome-policy.declined"
 
 notify_user() {
@@ -29,7 +29,7 @@ elevate() {
     return $?
   fi
 
-  # 3. Graphical session: pkexec asks through whichever polkit agent runs (iNiR's lives inside the shell, so no
+  # 3. Graphical session: pkexec asks through whichever polkit agent runs (Lunana's lives inside the shell, so no
   # process name gives it away). Without an agent it exits 127 at once; a dismissed dialog exits 126.
   if command -v pkexec >/dev/null 2>&1 && [[ -n "${DISPLAY:-}${WAYLAND_DISPLAY:-}" ]]; then
     pkexec "$@"

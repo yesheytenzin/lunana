@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "lunana.atoll-lock",
+  "name": "Lunana Atoll Lock",
+  "version": "0.4.0",
+  "author": "lunana",
+  "license": "GPL-3.0",
+  "description": "Lunana Atoll lock host (dormant unless the atoll family owns locking).",
+  "kinds": [
+    "service"
+  ],
+  "entryPoints": {
+    "service": "AtollLock.qml"
+  },
+  "x-lunana": {
+    "suiteId": "lunana",
+    "role": "atoll-lock",
+    "milestone": "parity",
+    "requires": [],
+    "recommends": []
+  }
+}

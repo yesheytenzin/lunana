@@ -10,7 +10,7 @@ import "../common"
 import "../common/widgets"
 
 // Separate Material 3 bar selected by `bar.appearanceStyle === "m3"`.
-// It replaces modules/bar/Bar.qml entirely while active (see ShellIiPanels),
+// It replaces modules/bar/Bar.qml entirely while active (see ShellDriftPanels),
 // so it deliberately registers no IPC target and no GlobalShortcut: "bar" is
 // owned by shell.qml and the shortcuts by modules/bar/Bar.qml. Toggling
 // GlobalStates.barOpen through either still drives this bar.
@@ -93,7 +93,7 @@ Scope {
                 // Upstream raised the bar to Overlay only while a Hyprland
                 // special workspace sat over a fullscreen window. Niri has no
                 // special workspace, so the bar stays on Top and fullscreen
-                // windows cover it, which is what iNiR's own bar does too.
+                // windows cover it, which is what Lunana's own bar does too.
                 WlrLayershell.layer: WlrLayer.Top
                 implicitHeight: Appearance.sizes.barHeight + Appearance.rounding.screenRounding
                     + (barRoot.autoHideEnabled ? barRoot.layerGap : 0)
@@ -147,7 +147,7 @@ Scope {
                     if (CompositorService.isNiri && NiriService.isOverviewHotCornerActive(outputName, corner))
                         reserve = Math.max(reserve, 12)
                     const orbitEnabled = CompositorService.isNiri
-                        && (Config.options?.panelFamily ?? "ii") === "ii"
+                        && (Config.options?.panelFamily ?? "drift") === "drift"
                         && (Config.options?.orbit?.enable ?? true)
                         && (Config.options?.orbit?.hotCornerEnable ?? true)
                     if (orbitEnabled && String(Config.options?.orbit?.hotCorner ?? "topRight") === corner)

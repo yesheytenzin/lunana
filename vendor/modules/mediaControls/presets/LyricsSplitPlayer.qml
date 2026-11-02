@@ -39,10 +39,10 @@ Item {
     readonly property QtObject effectiveColors: Appearance.editorialEverywhere && Appearance.colors
         ? Appearance.colors : root.blendedColors
 
-    readonly property color ink: Appearance.zzzEverywhere ? Appearance.zzz.ink : Appearance.inirEverywhere ? playerBase.inirText : (root.effectiveColors?.colOnLayer0 ?? Appearance.colors.colOnLayer0)
-    readonly property color subInk: Appearance.zzzEverywhere ? Appearance.zzz.inkMuted : Appearance.inirEverywhere ? playerBase.inirTextSecondary : (root.effectiveColors?.colSubtext ?? Appearance.colors.colSubtext)
+    readonly property color ink: Appearance.zzzEverywhere ? Appearance.zzz.ink : Appearance.lunanaEverywhere ? playerBase.lunanaText : (root.effectiveColors?.colOnLayer0 ?? Appearance.colors.colOnLayer0)
+    readonly property color subInk: Appearance.zzzEverywhere ? Appearance.zzz.inkMuted : Appearance.lunanaEverywhere ? playerBase.lunanaTextSecondary : (root.effectiveColors?.colSubtext ?? Appearance.colors.colSubtext)
     readonly property color accent: Appearance.zzzEverywhere ? Appearance.zzz.accent
-        : Appearance.inirEverywhere ? playerBase.inirPrimary
+        : Appearance.lunanaEverywhere ? playerBase.lunanaPrimary
         : root.themeSourceColor
 
     readonly property string vizType: Config.getNestedValue("background.widgets.mediaControls.visualizerType", "wave")
@@ -58,7 +58,7 @@ Item {
 
     StyledRectangularShadow {
         target: card
-        visible: !Appearance.zzzEverywhere && (Appearance.angelEverywhere || (!Appearance.inirEverywhere && !Appearance.auroraEverywhere))
+        visible: !Appearance.zzzEverywhere && (Appearance.angelEverywhere || (!Appearance.lunanaEverywhere && !Appearance.auroraEverywhere))
     }
 
     Rectangle {
@@ -66,9 +66,9 @@ Item {
         anchors.centerIn: parent
         width: parent.width - Appearance.sizes.elevationMargin
         height: parent.height - Appearance.sizes.elevationMargin
-        radius: Appearance.zzzEverywhere ? Appearance.zzz.panelRadius : Appearance.inirEverywhere ? Appearance.inir.roundingNormal : root.radius
+        radius: Appearance.zzzEverywhere ? Appearance.zzz.panelRadius : Appearance.lunanaEverywhere ? Appearance.lunana.roundingNormal : root.radius
         color: Appearance.zzzEverywhere ? Appearance.zzz.paper
-            : Appearance.inirEverywhere ? playerBase.inirLayer1
+            : Appearance.lunanaEverywhere ? playerBase.lunanaLayer1
             : ColorUtils.mix(root.effectiveColors?.colLayer0 ?? Appearance.colors.colLayer0,
                 root.accent, 0.94)
         border.width: root.vizType === "organic" && root.vizPosition !== "none"
@@ -160,8 +160,8 @@ Item {
                     transitionKey: playerBase.mediaTransitionKey
                     downloaded: playerBase.downloaded
                     slideDirection: playerBase.slideDirection
-                    artRadius: Appearance.zzzEverywhere ? Appearance.zzz.controlRadius : Appearance.inirEverywhere ? Appearance.inir.roundingSmall : Appearance.rounding.normal
-                    placeholderColor: Appearance.zzzEverywhere ? Appearance.zzz.paperAlt : Appearance.inirEverywhere ? playerBase.inirLayer2 : (root.effectiveColors?.colLayer1 ?? Appearance.colors.colLayer1)
+                    artRadius: Appearance.zzzEverywhere ? Appearance.zzz.controlRadius : Appearance.lunanaEverywhere ? Appearance.lunana.roundingSmall : Appearance.rounding.normal
+                    placeholderColor: Appearance.zzzEverywhere ? Appearance.zzz.paperAlt : Appearance.lunanaEverywhere ? playerBase.lunanaLayer2 : (root.effectiveColors?.colLayer1 ?? Appearance.colors.colLayer1)
                     iconColor: root.subInk
                     iconSize: 32
                 }
@@ -291,7 +291,7 @@ Item {
                     canSeek: playerBase.effectiveCanSeek
                     isPlaying: playerBase.effectiveIsPlaying
                     highlightColor: root.accent
-                    trackColor: Appearance.zzzEverywhere ? Appearance.zzz.metricTrack : Appearance.inirEverywhere ? playerBase.inirLayer2 : Appearance.auroraEverywhere ? Appearance.aurora.colElevatedSurface : (root.effectiveColors?.colSecondaryContainer ?? Appearance.colors.colSecondaryContainer)
+                    trackColor: Appearance.zzzEverywhere ? Appearance.zzz.metricTrack : Appearance.lunanaEverywhere ? playerBase.lunanaLayer2 : Appearance.auroraEverywhere ? Appearance.aurora.colElevatedSurface : (root.effectiveColors?.colSecondaryContainer ?? Appearance.colors.colSecondaryContainer)
                     onSeekRequested: seconds => playerBase.seek(seconds)
                 }
 
@@ -304,9 +304,9 @@ Item {
                     canGoPrevious: playerBase.effectiveCanGoPrevious
                     canGoNext: playerBase.effectiveCanGoNext
                     isPlaying: playerBase.effectiveIsPlaying
-                    buttonRadius: Appearance.zzzEverywhere ? Appearance.zzz.controlRadius : Appearance.inirEverywhere ? Appearance.inir.roundingSmall : Appearance.rounding.full
-                    buttonHoverColor: Appearance.zzzEverywhere ? Appearance.zzz.paperAlt : Appearance.inirEverywhere ? Appearance.inir.colLayer2Hover : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurface : ColorUtils.transparentize(root.effectiveColors?.colLayer1 ?? Appearance.colors.colLayer1, 0.5)
-                    buttonRippleColor: Appearance.zzzEverywhere ? ColorUtils.applyAlpha(Appearance.zzz.accent, 0.28) : Appearance.inirEverywhere ? Appearance.inir.colLayer2Active : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurfaceActive : (root.effectiveColors?.colLayer1Active ?? Appearance.colors.colLayer1Active)
+                    buttonRadius: Appearance.zzzEverywhere ? Appearance.zzz.controlRadius : Appearance.lunanaEverywhere ? Appearance.lunana.roundingSmall : Appearance.rounding.full
+                    buttonHoverColor: Appearance.zzzEverywhere ? Appearance.zzz.paperAlt : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2Hover : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurface : ColorUtils.transparentize(root.effectiveColors?.colLayer1 ?? Appearance.colors.colLayer1, 0.5)
+                    buttonRippleColor: Appearance.zzzEverywhere ? ColorUtils.applyAlpha(Appearance.zzz.accent, 0.28) : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2Active : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurfaceActive : (root.effectiveColors?.colLayer1Active ?? Appearance.colors.colLayer1Active)
                     iconColor: root.ink
                     playButtonColor: root.accent
                     playIconColor: ColorUtils.ensureReadable(

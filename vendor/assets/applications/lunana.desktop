@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Lunana Shell
+Comment=Lunana desktop shell session
+Exec=lunana service restart
+Icon=lunana
+Terminal=false
+NoDisplay=true
+Categories=System;

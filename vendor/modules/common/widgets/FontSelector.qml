@@ -78,11 +78,11 @@ Item {
         padding: 8
         
         background: Rectangle {
-            color: Appearance.inirEverywhere ? Appearance.inir.colLayer2
+            color: Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2
                  : Appearance.colors.colLayer2Base
-            radius: Appearance.inirEverywhere ? Appearance.inir.roundingNormal : Appearance.rounding.normal
+            radius: Appearance.lunanaEverywhere ? Appearance.lunana.roundingNormal : Appearance.rounding.normal
             border.width: 1
-            border.color: Appearance.inirEverywhere ? Appearance.inir.colBorder
+            border.color: Appearance.lunanaEverywhere ? Appearance.lunana.colBorder
                         : Appearance.colors.colLayer0Border
         }
 

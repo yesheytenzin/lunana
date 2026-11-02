@@ -255,7 +255,7 @@ Item {
         readonly property bool regaliaEverywhere: surfaceDialect === "regalia"
         readonly property bool angelEverywhere: surfaceDialect === "angel"
         readonly property bool auroraEverywhere: surfaceDialect === "aurora" || angelEverywhere
-        readonly property bool inirEverywhere: surfaceDialect === "inir"
+        readonly property bool lunanaEverywhere: surfaceDialect === "lunana"
         readonly property bool gameModeMinimal: Appearance.gameModeMinimal
         readonly property bool editorialGlassActive: surfaceDialect === "editorial"
             && Appearance.editorial.sidebarFullGlass
@@ -289,20 +289,20 @@ Item {
              : zzzEverywhere ? Appearance.zzz.chrome
              : regaliaEverywhere ? "transparent"
              : editorialGlassActive ? (editorialBackdropReady ? "transparent" : Appearance.editorial.paper)
-             : inirEverywhere ? (cardStyle ? Appearance.inir.colLayer1 : Appearance.inir.colLayer0)
+             : lunanaEverywhere ? (cardStyle ? Appearance.lunana.colLayer1 : Appearance.lunana.colLayer0)
              : auroraEverywhere ? ColorUtils.applyAlpha((blendedColors?.colLayer0 ?? Appearance.colors.colLayer0), 1)
              : (cardStyle ? Appearance.colors.colLayer1 : Appearance.colors.colLayer0)
         border.width: (gameModeMinimal || islandStyle || regaliaEverywhere) ? 0 : zzzEverywhere ? 1 : (angelEverywhere ? Appearance.angel.panelBorderWidth : 1)
         border.color: regaliaEverywhere ? "transparent"
             : zzzEverywhere ? Appearance.zzz.hairline
             : angelEverywhere ? Appearance.angel.colPanelBorder
-            : inirEverywhere ? Appearance.inir.colBorder
+            : lunanaEverywhere ? Appearance.lunana.colBorder
             : Appearance.colors.colLayer0Border
         radius: islandStyle ? (Config.options?.appearance?.island?.radius ?? 18)
             : zzzEverywhere ? Appearance.zzz.panelRadius
             : regaliaEverywhere ? Appearance.regalia.panelRadius
             : angelEverywhere ? Appearance.angel.roundingNormal
-            : inirEverywhere ? Appearance.inir.roundingNormal
+            : lunanaEverywhere ? Appearance.lunana.roundingNormal
             : cardStyle ? Appearance.rounding.normal : (Appearance.rounding.screenRounding - Appearance.sizes.hyprlandGapsOut + 1)
 
         Behavior on radius {
@@ -458,9 +458,9 @@ Item {
             anchors.fill: parent
             anchors.margins: sidebarPadding
             anchors.topMargin: sidebarLeftBackground.angelEverywhere ? sidebarPadding + 4
-                : sidebarLeftBackground.inirEverywhere ? sidebarPadding + 6 : sidebarPadding - 4
+                : sidebarLeftBackground.lunanaEverywhere ? sidebarPadding + 6 : sidebarPadding - 4
             spacing: sidebarLeftBackground.angelEverywhere ? sidebarPadding + 2
-                : sidebarLeftBackground.inirEverywhere ? sidebarPadding + 4 : sidebarPadding
+                : sidebarLeftBackground.lunanaEverywhere ? sidebarPadding + 4 : sidebarPadding
 
             Rectangle {
                 id: editorialHeader
@@ -517,7 +517,7 @@ Item {
                 enableShadow: false
                 padding: 6
                 implicitHeight: tabBar.implicitHeight + padding * 2
-                transparent: Appearance.zzzEverywhere || Appearance.auroraEverywhere || Appearance.inirEverywhere
+                transparent: Appearance.zzzEverywhere || Appearance.auroraEverywhere || Appearance.lunanaEverywhere
                     || (Appearance.editorialEverywhere && Appearance.editorial.glassActive)
                 visible: !root.pluginViewActive
 
@@ -573,22 +573,22 @@ Item {
                 }
                 radius: Appearance.zzzEverywhere ? Appearance.zzz.cardRadius
                     : Appearance.angelEverywhere ? Appearance.angel.roundingNormal
-                    : Appearance.inirEverywhere ? Appearance.inir.roundingNormal
+                    : Appearance.lunanaEverywhere ? Appearance.lunana.roundingNormal
                     : Appearance.editorialEverywhere ? Appearance.editorial.radius : Appearance.rounding.normal
                 color: Appearance.zzzEverywhere ? "transparent"
                     : Appearance.angelEverywhere ? Appearance.angel.colGlassCard
-                    : Appearance.inirEverywhere ? Appearance.inir.colLayer1
+                    : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer1
                      : Appearance.auroraEverywhere ? "transparent"
                      : Appearance.editorialEverywhere && Appearance.editorial.sidebarFullGlass ? Appearance.editorial.glassPaper
                      : Appearance.editorialEverywhere ? Appearance.editorial.layer(1)
                      : Appearance.colors.colLayer1
                 border.width: Appearance.zzzEverywhere ? 0
                     : Appearance.angelEverywhere ? Appearance.angel.cardBorderWidth
-                    : Appearance.inirEverywhere ? 1
+                    : Appearance.lunanaEverywhere ? 1
                     : Appearance.editorialEverywhere && Appearance.editorial.sidebarFullGlass ? 1 : 0
                 border.color: Appearance.zzzEverywhere ? "transparent"
                     : Appearance.angelEverywhere ? Appearance.angel.colCardBorder
-                    : Appearance.inirEverywhere ? Appearance.inir.colBorder
+                    : Appearance.lunanaEverywhere ? Appearance.lunana.colBorder
                     : Appearance.editorialEverywhere && Appearance.editorial.sidebarFullGlass
                         ? Qt.alpha(Appearance.editorial.edge, 0.28) : "transparent"
                 // Organic morph on style/shape switch (organic-transitions)

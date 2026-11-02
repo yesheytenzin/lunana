@@ -1,4 +1,4 @@
-# Conflict detection for iNiR
+# Conflict detection for Lunana
 # Checks for packages that might conflict with Quickshell's functionality
 
 check_conflicts() {
@@ -28,7 +28,7 @@ check_conflicts() {
     declare -A conflict_map
     
     # Notifications (Quickshell has built-in notifications). The dunst package
-    # is intentionally allowed because iNiR uses its dunstify client; a running
+    # is intentionally allowed because Lunana uses its dunstify client; a running
     # dunst daemon is handled at runtime by ConflictKiller/Doctor instead.
     conflict_map["mako"]="Notification Daemon"
     conflict_map["swaync"]="Notification Daemon"
@@ -46,7 +46,7 @@ check_conflicts() {
     conflict_map["wpaperd"]="Wallpaper Daemon"
     
     # Quickshell-based shells — these are critical because they ship their own
-    # Quickshell fork or config that directly conflicts with iNiR at runtime.
+    # Quickshell fork or config that directly conflicts with Lunana at runtime.
     # Noctalia (CachyOS default Niri shell)
     conflict_map["cachyos-niri-noctalia"]="Quickshell Shell (Noctalia/CachyOS)"
     conflict_map["noctalia-shell"]="Quickshell Shell (Noctalia)"
@@ -61,7 +61,7 @@ check_conflicts() {
     # BMS
     conflict_map["bms-shell-bin"]="Quickshell Shell (BMS)"
 
-    # Packages that are critical conflicts — they break iNiR at the package
+    # Packages that are critical conflicts — they break Lunana at the package
     # level (provide/replace quickshell, or own overlapping config paths).
     # Unlike notification daemons or bars, these cannot coexist at all.
     declare -A critical_map
@@ -129,7 +129,7 @@ check_conflicts() {
         echo ""
 
         if [ ${#critical_conflicts[@]} -gt 0 ]; then
-            echo -e "${STY_RED}${STY_BOLD}Critical:${STY_RST} ${critical_conflicts[*]} must be removed for iNiR to work."
+            echo -e "${STY_RED}${STY_BOLD}Critical:${STY_RST} ${critical_conflicts[*]} must be removed for Lunana to work."
             echo -e "These packages ship their own Quickshell runtime or configs that directly conflict."
             echo ""
 
@@ -151,7 +151,7 @@ check_conflicts() {
                     if tui_confirm "Remove conflicting packages? (${ordered_remove[*]})"; then
                         _remove_critical_conflicts "${ordered_remove[@]}"
                     else
-                        echo -e "${STY_YELLOW}Keeping conflicting packages — iNiR will NOT work correctly.${STY_RST}"
+                        echo -e "${STY_YELLOW}Keeping conflicting packages — Lunana will NOT work correctly.${STY_RST}"
                     fi
                 else
                     echo -e "${STY_CYAN}Non-interactive mode: removing conflicting packages...${STY_RST}"
@@ -163,7 +163,7 @@ check_conflicts() {
             echo ""
         fi
 
-        echo -e "${STY_BOLD}iNiR provides its own bar, notifications, wallpaper, and shell.${STY_RST}"
+        echo -e "${STY_BOLD}Lunana provides its own bar, notifications, wallpaper, and shell.${STY_RST}"
         echo -e "Running other shells/bars simultaneously causes visual glitches or double notifications."
         echo ""
         

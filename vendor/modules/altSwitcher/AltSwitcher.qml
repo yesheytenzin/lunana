@@ -541,7 +541,7 @@ Scope {
                     : Appearance.zzzEverywhere ? Appearance.zzz.panelRadius
                     : root.editorial ? Appearance.editorial.radius
                     : Appearance.angelEverywhere ? Appearance.angel.roundingLarge
-                    : Appearance.inirEverywhere ? Appearance.inir.roundingLarge
+                    : Appearance.lunanaEverywhere ? Appearance.lunana.roundingLarge
                     : (Appearance.rounding.screenRounding - Appearance.sizes.hyprlandGapsOut + 1)
                 Behavior on radius { enabled: Appearance.animationsEnabled; NumberAnimation { duration: Appearance.animation.elementResize.duration; easing.type: Appearance.animation.elementResize.type; easing.bezierCurve: Appearance.animation.elementResize.bezierCurve } }
                 color: {
@@ -551,8 +551,8 @@ Scope {
                         return Appearance.editorial.paper
                     if (Appearance.angelEverywhere)
                         return Appearance.angel.colGlassPopup
-                    if (Appearance.inirEverywhere)
-                        return Appearance.inir.colLayer0
+                    if (Appearance.lunanaEverywhere)
+                        return Appearance.lunana.colLayer0
                     if (Appearance.auroraEverywhere)
                         return Appearance.colors.colLayer0Base
                     if (root.altUseM3Layout)
@@ -564,11 +564,11 @@ Scope {
                     : Appearance.zzzEverywhere ? 0
                     : root.editorial ? 1
                     : Appearance.angelEverywhere ? Appearance.angel.panelBorderWidth
-                    : Appearance.inirEverywhere || Appearance.auroraEverywhere ? 1 : (root.altUseM3Layout ? 1 : 0)
+                    : Appearance.lunanaEverywhere || Appearance.auroraEverywhere ? 1 : (root.altUseM3Layout ? 1 : 0)
                 border.color: Appearance.zzzEverywhere ? Appearance.zzz.borderColor
                     : root.editorial ? Appearance.editorial.rule
                     : Appearance.angelEverywhere ? Appearance.angel.colPanelBorder
-                    : Appearance.inirEverywhere ? Appearance.inir.colBorder 
+                    : Appearance.lunanaEverywhere ? Appearance.lunana.colBorder 
                     : Appearance.auroraEverywhere ? Appearance.colors.colLayer0Border 
                     : Appearance.colors.colLayer0Border
                 Behavior on color { enabled: Appearance.animationsEnabled; ColorAnimation { duration: Appearance.animation.elementMoveFast.duration; easing.type: Appearance.animation.elementMoveFast.type; easing.bezierCurve: Appearance.animation.elementMoveFast.bezierCurve } }
@@ -612,11 +612,11 @@ Scope {
                     : Appearance.zzzEverywhere ? Appearance.zzz.cardRadius
                     : root.editorial ? Appearance.rounding.small
                     : Appearance.angelEverywhere ? Appearance.angel.roundingLarge
-                    : Appearance.inirEverywhere ? Appearance.inir.roundingLarge : Appearance.rounding.large
+                    : Appearance.lunanaEverywhere ? Appearance.lunana.roundingLarge : Appearance.rounding.large
                 color: Appearance.zzzEverywhere || Appearance.regaliaEverywhere ? "transparent"
                     : root.editorial ? Appearance.editorial.layer(1)
                     : Appearance.angelEverywhere ? Appearance.angel.colGlassCard
-                    : Appearance.inirEverywhere ? Appearance.inir.colLayer2 
+                    : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2 
                     : Appearance.auroraEverywhere ? Appearance.colors.colLayer1Base 
                     : Appearance.colors.colSurfaceContainerHigh
                 Behavior on radius { enabled: Appearance.animationsEnabled; NumberAnimation { duration: Appearance.animation.elementResize.duration; easing.type: Appearance.animation.elementResize.type; easing.bezierCurve: Appearance.animation.elementResize.bezierCurve } }
@@ -625,11 +625,11 @@ Scope {
                     : Appearance.zzzEverywhere ? 0
                     : root.editorial ? 1
                     : Appearance.angelEverywhere ? Appearance.angel.cardBorderWidth
-                    : Appearance.inirEverywhere || Appearance.auroraEverywhere ? 1 : 0
+                    : Appearance.lunanaEverywhere || Appearance.auroraEverywhere ? 1 : 0
                 border.color: Appearance.zzzEverywhere ? Appearance.zzz.hairlineStrong
                     : root.editorial ? Appearance.editorial.rule
                     : Appearance.angelEverywhere ? Appearance.angel.colCardBorder
-                    : Appearance.inirEverywhere ? Appearance.inir.colBorder 
+                    : Appearance.lunanaEverywhere ? Appearance.lunana.colBorder 
                     : Appearance.auroraEverywhere ? Appearance.colors.colLayer0Border 
                     : "transparent"
                 Behavior on border.width { enabled: Appearance.animationsEnabled; NumberAnimation { duration: Appearance.animation.elementMoveFast.duration; easing.type: Appearance.animation.elementMoveFast.type; easing.bezierCurve: Appearance.animation.elementMoveFast.bezierCurve } }
@@ -648,7 +648,7 @@ Scope {
 
             StyledRectangularShadow {
                 target: root.compactStyle ? compactBackground : panelBackground
-                visible: !root.editorial && !root.listStyle && !root.skewStyle && !Appearance.zzzEverywhere && (Appearance.angelEverywhere || (!Appearance.inirEverywhere && !Appearance.auroraEverywhere))
+                visible: !root.editorial && !root.listStyle && !root.skewStyle && !Appearance.zzzEverywhere && (Appearance.angelEverywhere || (!Appearance.lunanaEverywhere && !Appearance.auroraEverywhere))
             }
 
             MultiEffect {
@@ -908,14 +908,14 @@ Scope {
                                     GradientStop {
                                         position: 0.0
                                         color: Appearance.angelEverywhere ? Appearance.angel.colGlassCard
-                                            : Appearance.inirEverywhere ? Appearance.inir.colLayer1
+                                            : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer1
                                             : Appearance.auroraEverywhere ? Appearance.colors.colLayer1Base
                                             : Appearance.colors.colLayer1
                                     }
                                     GradientStop {
                                         position: 1.0
                                         color: Appearance.angelEverywhere ? Appearance.angel.colGlassPanel
-                                            : Appearance.inirEverywhere ? Appearance.inir.colLayer0
+                                            : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer0
                                             : Appearance.auroraEverywhere ? Appearance.colors.colLayer0Base
                                             : Appearance.colors.colLayer0
                                     }
@@ -1163,18 +1163,18 @@ Scope {
                             height: parent.height
                             radius: Appearance.angelEverywhere ? Appearance.angel.roundingNormal
                                 : root.editorial ? Appearance.rounding.small
-                                : Appearance.inirEverywhere ? Appearance.inir.roundingNormal 
+                                : Appearance.lunanaEverywhere ? Appearance.lunana.roundingNormal 
                                 : Appearance.auroraEverywhere ? Appearance.rounding.normal 
                                 : Appearance.rounding.normal
                             color: listView.currentIndex === index 
                                    ? (root.editorial ? Appearance.editorial.accent
                                        : Appearance.angelEverywhere ? Appearance.angel.colGlassCardActive
-                                       : Appearance.inirEverywhere ? Appearance.inir.colPrimary 
+                                       : Appearance.lunanaEverywhere ? Appearance.lunana.colPrimary 
                                        : Appearance.auroraEverywhere ? Appearance.colors.colPrimaryContainer 
                                        : Appearance.colors.colPrimaryContainer)
                                    : (root.editorial ? Appearance.editorial.layer(1)
                                        : Appearance.angelEverywhere ? Appearance.angel.colGlassCard
-                                       : Appearance.inirEverywhere ? Appearance.inir.colLayer3 
+                                       : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer3 
                                        : Appearance.auroraEverywhere ? Appearance.colors.colLayer2Base 
                                        : Appearance.colors.colSurfaceContainerHighest)
                             scale: compactMouseArea.pressed ? 0.92 : (compactMouseArea.containsMouse && !root.isHighLoad ? 1.05 : 1.0)
@@ -1218,7 +1218,7 @@ Scope {
                                     ColorOverlay {
                                         anchors.fill: desaturatedCompactIcon
                                         source: desaturatedCompactIcon
-                                        color: ColorUtils.transparentize(Appearance.inirEverywhere ? Appearance.inir.colPrimary : Appearance.colors.colPrimary, 0.9)
+                                        color: ColorUtils.transparentize(Appearance.lunanaEverywhere ? Appearance.lunana.colPrimary : Appearance.colors.colPrimary, 0.9)
                                     }
                                 }
                             }
@@ -1232,7 +1232,7 @@ Scope {
                                 radius: height / 2
                                 visible: implicitWidth > 0
                                 clip: true
-                                color: Appearance.inirEverywhere ? Appearance.inir.colPrimary : Appearance.colors.colPrimary
+                                color: Appearance.lunanaEverywhere ? Appearance.lunana.colPrimary : Appearance.colors.colPrimary
                                 Behavior on implicitWidth {
                                     enabled: Appearance.animationsEnabled
                                     NumberAnimation { duration: Appearance.animation.elementResize.duration; easing.type: Appearance.animation.elementResize.type; easing.bezierCurve: Appearance.animation.elementResize.bezierCurve }
@@ -1276,11 +1276,11 @@ Scope {
                 radius: Appearance.zzzEverywhere ? Appearance.zzz.panelRadius
                     : root.editorial ? Appearance.editorial.radius
                     : Appearance.angelEverywhere ? Appearance.angel.roundingLarge
-                    : Appearance.inirEverywhere ? Appearance.inir.roundingLarge : Appearance.rounding.large
+                    : Appearance.lunanaEverywhere ? Appearance.lunana.roundingLarge : Appearance.rounding.large
                 color: Appearance.zzzEverywhere ? "transparent"
                     : root.editorial ? Appearance.editorial.paper
                     : Appearance.angelEverywhere ? Appearance.angel.colGlassCard
-                    : Appearance.inirEverywhere ? Appearance.inir.colLayer1 
+                    : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer1 
                     : Appearance.auroraEverywhere ? Appearance.colors.colLayer1Base 
                     : Appearance.colors.colSurfaceContainer
                 Behavior on radius { enabled: Appearance.animationsEnabled; NumberAnimation { duration: Appearance.animation.elementResize.duration; easing.type: Appearance.animation.elementResize.type; easing.bezierCurve: Appearance.animation.elementResize.bezierCurve } }
@@ -1308,7 +1308,7 @@ Scope {
                     target: listContent
                     blur: 0.5 * Appearance.sizes.elevationMargin
                     spread: 0
-                    visible: !root.editorial && !Appearance.zzzEverywhere && (Appearance.angelEverywhere || (!Appearance.inirEverywhere && !Appearance.auroraEverywhere))
+                    visible: !root.editorial && !Appearance.zzzEverywhere && (Appearance.angelEverywhere || (!Appearance.lunanaEverywhere && !Appearance.auroraEverywhere))
                 }
 
                 Column {
@@ -1332,7 +1332,7 @@ Scope {
                             font.italic: Appearance.zzzEverywhere
                             color: Appearance.zzzEverywhere ? Appearance.zzz.ink
                                 : root.editorial ? Appearance.editorial.ink
-                                : Appearance.inirEverywhere ? Appearance.inir.colText 
+                                : Appearance.lunanaEverywhere ? Appearance.lunana.colText 
                                 : Appearance.auroraEverywhere ? Appearance.colors.colOnLayer1 
                                 : Appearance.colors.colOnLayer1
                             Behavior on color {
@@ -1346,7 +1346,7 @@ Scope {
                             font.pixelSize: Appearance.font.pixelSize.small
                             font.family: root.editorial ? Appearance.font.family.numbers : Appearance.font.family.main
                             font.weight: root.editorial ? Font.DemiBold : Font.Normal
-                            color: Appearance.inirEverywhere ? Appearance.inir.colTextSecondary 
+                            color: Appearance.lunanaEverywhere ? Appearance.lunana.colTextSecondary 
                                 : root.editorial ? Appearance.editorial.muted
                                 : Appearance.auroraEverywhere ? Appearance.colors.colSubtext 
                                 : Appearance.colors.colSubtext
@@ -1358,7 +1358,7 @@ Scope {
                         id: listSeparator
                         width: parent.width
                         height: 1
-                        color: Appearance.inirEverywhere ? Appearance.inir.colBorderSubtle 
+                        color: Appearance.lunanaEverywhere ? Appearance.lunana.colBorderSubtle 
                             : root.editorial ? Appearance.editorial.rule
                             : Appearance.auroraEverywhere ? Appearance.colors.colLayer0Border 
                             : Appearance.colors.colLayer0Border
@@ -1385,25 +1385,25 @@ Scope {
                                 implicitHeight: 52
                                 buttonRadius: Appearance.angelEverywhere ? Appearance.angel.roundingNormal
                                     : root.editorial ? Appearance.rounding.small
-                                    : Appearance.inirEverywhere ? Appearance.inir.roundingNormal : Appearance.rounding.normal
+                                    : Appearance.lunanaEverywhere ? Appearance.lunana.roundingNormal : Appearance.rounding.normal
                                 toggled: listView.currentIndex === index
 
                                 colBackground: "transparent"
                                 colBackgroundHover: root.editorial ? Appearance.colors.colLayer1Hover
-                                    : Appearance.inirEverywhere ? Appearance.inir.colLayer2Hover
+                                    : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2Hover
                                     : Appearance.auroraEverywhere ? Appearance.colors.colLayer2Hover
                                     : ColorUtils.transparentize(Appearance.colors.colPrimary, 0.88)
                                 colBackgroundToggled: root.editorial ? Appearance.editorial.accent
-                                    : Appearance.inirEverywhere ? Appearance.inir.colPrimary
+                                    : Appearance.lunanaEverywhere ? Appearance.lunana.colPrimary
                                     : Appearance.auroraEverywhere ? Appearance.colors.colPrimaryContainer
                                     : Appearance.colors.colPrimaryContainer
-                                colBackgroundToggledHover: Appearance.inirEverywhere ? Appearance.inir.colPrimaryHover 
+                                colBackgroundToggledHover: Appearance.lunanaEverywhere ? Appearance.lunana.colPrimaryHover 
                                     : Appearance.auroraEverywhere ? Appearance.colors.colPrimaryContainerHover 
                                     : ColorUtils.mix(Appearance.colors.colPrimaryContainer, Appearance.colors.colPrimary, 0.9)
-                                colRipple: Appearance.inirEverywhere ? Appearance.inir.colLayer2Active 
+                                colRipple: Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2Active 
                                     : Appearance.auroraEverywhere ? Appearance.colors.colLayer2Active 
                                     : ColorUtils.transparentize(Appearance.colors.colPrimary, 0.7)
-                                colRippleToggled: Appearance.inirEverywhere ? Appearance.inir.colPrimaryActive 
+                                colRippleToggled: Appearance.lunanaEverywhere ? Appearance.lunana.colPrimaryActive 
                                     : Appearance.auroraEverywhere ? Appearance.colors.colPrimaryContainerActive 
                                     : ColorUtils.transparentize(Appearance.colors.colOnPrimaryContainer, 0.7)
 
@@ -1425,7 +1425,7 @@ Scope {
                                         width: 6
                                         height: 6
                                         radius: 3
-                                        color: Appearance.inirEverywhere ? Appearance.inir.colOnPrimary 
+                                        color: Appearance.lunanaEverywhere ? Appearance.lunana.colOnPrimary 
                                             : Appearance.auroraEverywhere ? Appearance.colors.colOnPrimaryContainer 
                                             : Appearance.colors.colOnPrimaryContainer
                                         visible: listTile.toggled
@@ -1451,11 +1451,11 @@ Scope {
                                             font.weight: listTile.toggled ? Font.DemiBold : Font.Normal
                                             color: listTile.toggled 
                                                 ? (root.editorial ? Appearance.editorial.accentInk
-                                                    : Appearance.inirEverywhere ? Appearance.inir.colOnPrimary
+                                                    : Appearance.lunanaEverywhere ? Appearance.lunana.colOnPrimary
                                                     : Appearance.auroraEverywhere ? Appearance.colors.colOnPrimaryContainer
                                                     : Appearance.colors.colOnPrimaryContainer)
                                                 : (root.editorial ? Appearance.editorial.ink
-                                                    : Appearance.inirEverywhere ? Appearance.inir.colText
+                                                    : Appearance.lunanaEverywhere ? Appearance.lunana.colText
                                                     : Appearance.auroraEverywhere ? Appearance.colors.colOnLayer1
                                                     : Appearance.colors.colOnLayer1)
                                             elide: Text.ElideRight
@@ -1479,11 +1479,11 @@ Scope {
                                             color: listTile.toggled 
                                                 ? ColorUtils.transparentize(
                                                     root.editorial ? Appearance.editorial.accentInk
-                                                        : Appearance.inirEverywhere ? Appearance.inir.colOnPrimary
+                                                        : Appearance.lunanaEverywhere ? Appearance.lunana.colOnPrimary
                                                         : Appearance.auroraEverywhere ? Appearance.colors.colOnPrimaryContainer
                                                         : Appearance.colors.colOnPrimaryContainer, 0.3)
                                                 : (root.editorial ? Appearance.editorial.muted
-                                                    : Appearance.inirEverywhere ? Appearance.inir.colTextSecondary
+                                                    : Appearance.lunanaEverywhere ? Appearance.lunana.colTextSecondary
                                                     : Appearance.auroraEverywhere ? Appearance.colors.colSubtext
                                                     : Appearance.colors.colSubtext)
                                             elide: Text.ElideRight
@@ -1495,13 +1495,13 @@ Scope {
                                         visible: (listTile.modelData?.workspaceIdx ?? 0) > 0
                                         width: wsText.implicitWidth + 12
                                         height: 22
-                                        radius: Appearance.inirEverywhere ? Appearance.inir.roundingSmall : Appearance.rounding.small
+                                        radius: Appearance.lunanaEverywhere ? Appearance.lunana.roundingSmall : Appearance.rounding.small
                                         color: listTile.toggled 
                                             ? ColorUtils.transparentize(
-                                                Appearance.inirEverywhere ? Appearance.inir.colOnPrimary 
+                                                Appearance.lunanaEverywhere ? Appearance.lunana.colOnPrimary 
                                                     : Appearance.auroraEverywhere ? Appearance.colors.colOnPrimaryContainer 
                                                     : Appearance.colors.colOnPrimaryContainer, 0.85)
-                                            : (Appearance.inirEverywhere ? Appearance.inir.colLayer3 
+                                            : (Appearance.lunanaEverywhere ? Appearance.lunana.colLayer3 
                                                 : Appearance.auroraEverywhere ? Appearance.colors.colLayer2 
                                                 : Appearance.colors.colLayer2)
 
@@ -1514,11 +1514,11 @@ Scope {
                                             font.weight: Font.DemiBold
                                             color: listTile.toggled 
                                                 ? (root.editorial ? Appearance.editorial.accentInk
-                                                    : Appearance.inirEverywhere ? Appearance.inir.colOnPrimary
+                                                    : Appearance.lunanaEverywhere ? Appearance.lunana.colOnPrimary
                                                     : Appearance.auroraEverywhere ? Appearance.colors.colOnPrimaryContainer
                                                     : Appearance.colors.colOnPrimaryContainer)
                                                 : (root.editorial ? Appearance.editorial.muted
-                                                    : Appearance.inirEverywhere ? Appearance.inir.colTextSecondary
+                                                    : Appearance.lunanaEverywhere ? Appearance.lunana.colTextSecondary
                                                     : Appearance.auroraEverywhere ? Appearance.colors.colSubtext
                                                     : Appearance.colors.colSubtext)
                                         }

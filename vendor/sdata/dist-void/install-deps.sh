@@ -1,4 +1,4 @@
-# Install dependencies for iNiR on Void Linux
+# Install dependencies for Lunana on Void Linux
 # This script is meant to be sourced, not run directly.
 
 # shellcheck shell=bash
@@ -287,7 +287,7 @@ check_void_install_space() {
 install_void_ocr_models() {
   local data_home tessdata_dir lang expected_sha target tmp url
   data_home="${XDG_DATA_HOME:-$HOME/.local/share}"
-  tessdata_dir="${INIR_TESSDATA_DIR:-$data_home/inir/tessdata}"
+  tessdata_dir="${LUNANA_TESSDATA_DIR:-$data_home/lunana/tessdata}"
 
   mkdir -p "$tessdata_dir" || {
     log_warning "Could not create OCR model directory: $tessdata_dir"
@@ -353,7 +353,7 @@ install_void_adw_gtk3() {
   local data_home theme_dir marker_dir marker temp_dir archive
   data_home="${XDG_DATA_HOME:-$HOME/.local/share}"
   theme_dir="$data_home/themes"
-  marker_dir="$data_home/inir/providers"
+  marker_dir="$data_home/lunana/providers"
   marker="$marker_dir/adw-gtk3"
 
   if [[ -d "$theme_dir/adw-gtk3" && -d "$theme_dir/adw-gtk3-dark" ]] \
@@ -387,7 +387,7 @@ install_void_whitesur_icons() {
   local data_home icon_dir marker_dir marker temp_dir archive source_dir stage
   data_home="${XDG_DATA_HOME:-$HOME/.local/share}"
   icon_dir="$data_home/icons"
-  marker_dir="$data_home/inir/providers"
+  marker_dir="$data_home/lunana/providers"
   marker="$marker_dir/whitesur-icons"
 
   if [[ -d "$icon_dir/WhiteSur-dark" ]] \
@@ -425,7 +425,7 @@ install_void_capitaine_cursors() {
   local data_home icon_dir marker_dir marker temp_dir archive extract_dir dark light
   data_home="${XDG_DATA_HOME:-$HOME/.local/share}"
   icon_dir="$data_home/icons"
-  marker_dir="$data_home/inir/providers"
+  marker_dir="$data_home/lunana/providers"
   marker="$marker_dir/capitaine-cursors"
   dark="Capitaine Cursors"
   light="Capitaine Cursors - White"
@@ -543,7 +543,7 @@ install_void_font_providers() {
   config_home="${XDG_CONFIG_HOME:-$HOME/.config}"
   font_dir="$data_home/fonts"
   fontconfig_dir="$config_home/fontconfig/conf.d"
-  alias_file="$fontconfig_dir/60-inir-void-font-aliases.conf"
+  alias_file="$fontconfig_dir/60-lunana-void-font-aliases.conf"
   mkdir -p "$font_dir"
 
   install_void_verified_font_file \
@@ -638,7 +638,7 @@ void_darkly_kcm_path() {
 install_void_darkly() {
   local data_home marker_dir marker plugin kcm temp_dir archive source_dir build_dir jobs verify_output
   data_home="${XDG_DATA_HOME:-$HOME/.local/share}"
-  marker_dir="$data_home/inir/providers"
+  marker_dir="$data_home/lunana/providers"
   marker="$marker_dir/darkly"
   plugin="$(void_darkly_plugin_path || true)"
   kcm="$(void_darkly_kcm_path || true)"
@@ -1049,7 +1049,7 @@ if command -v qs >/dev/null 2>&1; then
   qs_abi_output="$(timeout 5 env QT_QPA_PLATFORM=offscreen qs --version 2>&1 || true)"
   if echo "$qs_abi_output" | grep -qiE "built against Qt|Qt.*mismatch|incompatible Qt"; then
     log_warning "Quickshell was built for another Qt version. Until it is rebuilt it can crash."
-    log_warning "Void rebuilds quickshell with Qt updates. To reinstall it now: inir doctor --fix-abi"
+    log_warning "Void rebuilds quickshell with Qt updates. To reinstall it now: lunana doctor --fix-abi"
   fi
 fi
 

@@ -2,7 +2,7 @@
 """Validate, extract and fingerprint optional Kira art packs.
 
 This helper is intentionally independent from QML. The art release owns only
-flat inir-mascot-*.png|gif files; iNiR owns manifest.json and behavior.
+flat lunana-mascot-*.png|gif files; Lunana owns manifest.json and behavior.
 """
 
 from __future__ import annotations
@@ -20,8 +20,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-ASSET_RE = re.compile(r"^inir-mascot-[a-z0-9]+(?:-[a-z0-9]+)*\.(png|gif)$")
-REQUIRED_ASSETS = {"inir-mascot-presence-idle-loop.gif"}
+ASSET_RE = re.compile(r"^lunana-mascot-[a-z0-9]+(?:-[a-z0-9]+)*\.(png|gif)$")
+REQUIRED_ASSETS = {"lunana-mascot-presence-idle-loop.gif"}
 
 
 def file_sha256(path: Path) -> str:

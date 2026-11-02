@@ -141,7 +141,7 @@ Item {
                      : (Appearance.zzzEverywhere ? 0
                      : (Appearance.cookieEverywhere ? 0
                      : (Appearance.editorialEverywhere ? 0
-                     : (Appearance.inirEverywhere ? 1
+                     : (Appearance.lunanaEverywhere ? 1
                      : (Appearance.auroraEverywhere ? 1 : 1))))))
         border.color: Appearance.angelEverywhere ? "transparent" : SettingsMaterialPreset.cardBorderColor
 

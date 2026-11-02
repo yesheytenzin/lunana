@@ -1,0 +1,74 @@
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
+import Quickshell
+import "../../.."
+import "../../../services"
+import "../../../services/deferred"
+import "../../common"
+import "../../common/functions"
+import "../looks"
+
+// TODO: Replace the icon with QMLized svg (with /usr/lib/qt6/bin/svgtoqml) for proper micro-animation
+AppButton {
+    id: root
+
+    leftInset: (Config.options?.slate?.bar?.leftAlignApps ?? false) ? 12 : 0
+    // Absolute path to the bundled glyph, not the freedesktop name. As a plain
+    // name this resolved against the user's icon theme, and any non-Windows set
+    // answers "start-here" with its own launcher mark — WhiteSur returns the
+    // Apple logo. The Start button is slate's identity, not a themed app icon.
+    iconName: SIcons.pathForName(down ? "start-here-pressed" : "start-here")
+
+    checked: GlobalStates.searchOpen && LauncherSearch.query === ""
+    onClicked: {
+        GlobalStates.searchOpen = !GlobalStates.searchOpen;
+    }
+
+    BarToolTip {
+        id: tooltip
+        text: Translation.tr("Start")
+        barExtraVisibleCondition: root.shouldShowTooltip
+    }
+
+    altAction: () => {
+        contextMenu.active = true;
+    }
+
+    BarMenu {
+        id: contextMenu
+
+        model: [
+            {
+                text: Translation.tr("Terminal"),
+                action: () => {
+                    AppLauncher.launch("terminal")
+                }
+            },
+            {
+                text: Translation.tr("Task Manager"),
+                action: () => {
+                    AppLauncher.launch("taskManager")
+                }
+            },
+            {
+                text: Translation.tr("Settings"),
+                action: () => {
+                    ShellExec.execDetachedArgs([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/lunana")), "settings"], "Open Lunana settings");
+                }
+            },
+            {
+                text: Translation.tr("File Explorer"),
+                action: () => {
+                    Qt.openUrlExternally(Directories.home);
+                }
+            },
+            {
+                text: Translation.tr("Search"),
+                action: () => {
+                    Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/lunana")), "overview", "toggle"]);
+                }
+            },
+        ]
+    }
+}

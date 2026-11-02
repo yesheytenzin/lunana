@@ -137,7 +137,7 @@ Item {
             _log("[SidebarRight] Checking for existing settings window among", wins.length, "windows");
             for (let i = 0; i < wins.length; i++) {
                 const w = wins[i]
-                if (w.title === "Settings — iNiR" && w.app_id === "org.quickshell") {
+                if (w.title === "Settings — Lunana" && w.app_id === "org.quickshell") {
                     _log("[SidebarRight] Found existing settings window, focusing it");
                     GlobalStates.sidebarRightOpen = false;
                     Qt.callLater(() => {
@@ -152,7 +152,7 @@ Item {
         _log("[SidebarRight] Opening new settings window via IPC");
         GlobalStates.sidebarRightOpen = false;
         Qt.callLater(() => {
-            Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")), "settings"]);
+            Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/lunana")), "settings"]);
         })
     }
 
@@ -467,7 +467,7 @@ Item {
         readonly property bool regaliaEverywhere: surfaceDialect === "regalia"
         readonly property bool angelEverywhere: surfaceDialect === "angel"
         readonly property bool auroraEverywhere: surfaceDialect === "aurora" || angelEverywhere
-        readonly property bool inirEverywhere: surfaceDialect === "inir"
+        readonly property bool lunanaEverywhere: surfaceDialect === "lunana"
         readonly property bool gameModeMinimal: Appearance.gameModeMinimal
         readonly property bool editorialGlassActive: surfaceDialect === "editorial"
             && Appearance.editorial.sidebarFullGlass
@@ -480,7 +480,7 @@ Item {
         }
         readonly property bool useWallpaperBackdrop: root.panelVisible
             && (auroraEverywhere || editorialGlassActive)
-            && !inirEverywhere
+            && !lunanaEverywhere
             && !gameModeMinimal
             && wallpaperUrl.length > 0
         readonly property bool editorialBackdropReady: editorialGlassActive
@@ -502,20 +502,20 @@ Item {
             : zzzEverywhere ? Appearance.zzz.chrome
             : regaliaEverywhere ? "transparent"
             : editorialGlassActive ? (editorialBackdropReady ? "transparent" : Appearance.editorial.paper)
-            : inirEverywhere ? (cardStyle ? Appearance.inir.colLayer1 : Appearance.inir.colLayer0)
+            : lunanaEverywhere ? (cardStyle ? Appearance.lunana.colLayer1 : Appearance.lunana.colLayer0)
             : auroraEverywhere ? ColorUtils.applyAlpha((blendedColors?.colLayer0 ?? Appearance.colors.colLayer0), 1)
             : (cardStyle ? Appearance.colors.colLayer1 : Appearance.colors.colLayer0)
         border.width: (gameModeMinimal || islandStyle || regaliaEverywhere) ? 0 : (zzzEverywhere ? 1 : (angelEverywhere ? Appearance.angel.panelBorderWidth : 1))
         border.color: regaliaEverywhere ? "transparent"
             : zzzEverywhere ? Appearance.zzz.hairline
             : angelEverywhere ? Appearance.angel.colPanelBorder
-            : inirEverywhere ? Appearance.inir.colBorder
+            : lunanaEverywhere ? Appearance.lunana.colBorder
             : Appearance.colors.colLayer0Border
         radius: islandStyle ? (Config.options?.appearance?.island?.radius ?? 18)
             : zzzEverywhere ? Appearance.zzz.panelRadius
             : regaliaEverywhere ? Appearance.regalia.panelRadius
             : angelEverywhere ? Appearance.angel.roundingNormal
-            : inirEverywhere ? (cardStyle ? Appearance.inir.roundingLarge : Appearance.inir.roundingNormal)
+            : lunanaEverywhere ? (cardStyle ? Appearance.lunana.roundingLarge : Appearance.lunana.roundingNormal)
             : cardStyle ? Appearance.rounding.normal : (Appearance.rounding.screenRounding - Appearance.sizes.hyprlandGapsOut + 1)
 
         Behavior on radius {
@@ -738,7 +738,7 @@ Item {
                         anchors.rightMargin: 12
                         height: 3
                         radius: 1.5
-                        color: Appearance.inirEverywhere ? Appearance.inir.colPrimary : Appearance.colors.colPrimary
+                        color: Appearance.lunanaEverywhere ? Appearance.lunana.colPrimary : Appearance.colors.colPrimary
                         opacity: sectionLoader.isDropTarget && root.sectionHoverIndex < root.sectionDragIndex ? 0.85 : 0
                         visible: opacity > 0
                         z: 10
@@ -751,7 +751,7 @@ Item {
                         anchors.rightMargin: 12
                         height: 3
                         radius: 1.5
-                        color: Appearance.inirEverywhere ? Appearance.inir.colPrimary : Appearance.colors.colPrimary
+                        color: Appearance.lunanaEverywhere ? Appearance.lunana.colPrimary : Appearance.colors.colPrimary
                         opacity: sectionLoader.isDropTarget && root.sectionHoverIndex > root.sectionDragIndex ? 0.85 : 0
                         visible: opacity > 0
                         z: 10
@@ -768,18 +768,18 @@ Item {
                         width: 30
                         height: 22
                         z: 20
-                        radius: Appearance.inirEverywhere ? Appearance.inir.roundingSmall : Appearance.rounding.verysmall
+                        radius: Appearance.lunanaEverywhere ? Appearance.lunana.roundingSmall : Appearance.rounding.verysmall
                         color: sectionHandleArea.containsMouse || sectionLoader.isBeingDragged
-                            ? (Appearance.inirEverywhere ? Appearance.inir.colLayer1Hover : Appearance.colLayer1Hover)
-                            : (Appearance.inirEverywhere ? Appearance.inir.colLayer1 : Appearance.colors.colLayer1)
-                        border.width: Appearance.inirEverywhere ? 1 : 0
-                        border.color: Appearance.inirEverywhere ? Appearance.inir.colBorder : "transparent"
+                            ? (Appearance.lunanaEverywhere ? Appearance.lunana.colLayer1Hover : Appearance.colLayer1Hover)
+                            : (Appearance.lunanaEverywhere ? Appearance.lunana.colLayer1 : Appearance.colors.colLayer1)
+                        border.width: Appearance.lunanaEverywhere ? 1 : 0
+                        border.color: Appearance.lunanaEverywhere ? Appearance.lunana.colBorder : "transparent"
 
                         MaterialSymbol {
                             anchors.centerIn: parent
                             text: "drag_indicator"
                             iconSize: 14
-                            color: Appearance.inirEverywhere ? Appearance.inir.colText : Appearance.colors.colOnLayer1
+                            color: Appearance.lunanaEverywhere ? Appearance.lunana.colText : Appearance.colors.colOnLayer1
                         }
 
                         MouseArea {
@@ -822,12 +822,12 @@ Item {
                         z: 22
                         radius: height / 2
                         color: resizeHandleArea.containsMouse || sectionLoader.isBeingResized
-                            ? (Appearance.inirEverywhere ? Appearance.inir.colPrimary : Appearance.colors.colPrimaryContainer)
-                            : (Appearance.inirEverywhere ? Appearance.inir.colLayer1 : Appearance.colors.colLayer2)
+                            ? (Appearance.lunanaEverywhere ? Appearance.lunana.colPrimary : Appearance.colors.colPrimaryContainer)
+                            : (Appearance.lunanaEverywhere ? Appearance.lunana.colLayer1 : Appearance.colors.colLayer2)
                         border.width: 1
                         border.color: sectionLoader.isBeingResized
-                            ? (Appearance.inirEverywhere ? Appearance.inir.colBorderAccent : Appearance.colors.colPrimary)
-                            : (Appearance.inirEverywhere ? Appearance.inir.colBorder : Appearance.colors.colOutlineVariant)
+                            ? (Appearance.lunanaEverywhere ? Appearance.lunana.colBorderAccent : Appearance.colors.colPrimary)
+                            : (Appearance.lunanaEverywhere ? Appearance.lunana.colBorder : Appearance.colors.colOutlineVariant)
 
                         Row {
                             anchors.centerIn: parent
@@ -836,13 +836,13 @@ Item {
                                 anchors.verticalCenter: parent.verticalCenter
                                 text: "height"
                                 iconSize: 12
-                                color: Appearance.inirEverywhere ? Appearance.inir.colText : Appearance.colors.colOnLayer2
+                                color: Appearance.lunanaEverywhere ? Appearance.lunana.colText : Appearance.colors.colOnLayer2
                             }
                             StyledText {
                                 anchors.verticalCenter: parent.verticalCenter
                                 text: Math.round(root.sectionWeight(sectionLoader.modelData) * 50) + "%"
                                 font.pixelSize: Appearance.font.pixelSize.smallest
-                                color: Appearance.inirEverywhere ? Appearance.inir.colText : Appearance.colors.colOnLayer2
+                                color: Appearance.lunanaEverywhere ? Appearance.lunana.colText : Appearance.colors.colOnLayer2
                             }
                         }
 
@@ -995,14 +995,14 @@ Item {
         visible: root.detailOpen
         radius: Appearance.zzzEverywhere ? Appearance.zzz.panelRadius
             : Appearance.angelEverywhere ? Appearance.angel.roundingNormal
-            : Appearance.inirEverywhere ? Appearance.inir.roundingNormal
+            : Appearance.lunanaEverywhere ? Appearance.lunana.roundingNormal
             : Appearance.rounding.normal
         color: Appearance.zzzEverywhere ? Appearance.zzz.paper
             : Appearance.angelEverywhere ? Appearance.angel.colGlassCard
-            : Appearance.inirEverywhere ? Appearance.inir.colLayer1
+            : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer1
             : Appearance.colors.colLayer1
-        border.width: Appearance.inirEverywhere ? 1 : 0
-        border.color: Appearance.inirEverywhere ? Appearance.inir.colBorder : "transparent"
+        border.width: Appearance.lunanaEverywhere ? 1 : 0
+        border.color: Appearance.lunanaEverywhere ? Appearance.lunana.colBorder : "transparent"
         clip: true
         focus: visible
         Keys.onPressed: event => {
@@ -1033,7 +1033,7 @@ Item {
                     text: root.detailMeta[root.expandedWidgetType]?.title ?? ""
                     font.pixelSize: Appearance.font.pixelSize.large
                     font.weight: Font.DemiBold
-                    color: Appearance.inirEverywhere ? Appearance.inir.colText : Appearance.colors.colOnLayer1
+                    color: Appearance.lunanaEverywhere ? Appearance.lunana.colText : Appearance.colors.colOnLayer1
                 }
                 RippleButton {
                     implicitWidth: 34

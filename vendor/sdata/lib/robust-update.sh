@@ -1,4 +1,4 @@
-# Robust update system for iNiR
+# Robust update system for Lunana
 # This script is meant to be sourced.
 
 # shellcheck shell=bash
@@ -6,9 +6,9 @@
 #####################################################################################
 # Configuration
 #####################################################################################
-II_TARGET="${XDG_CONFIG_HOME}/quickshell/inir"
+II_TARGET="${XDG_CONFIG_HOME}/quickshell/lunana"
 II_BACKUP_DIR="${XDG_STATE_HOME}/quickshell/backups"
-II_MANIFEST_FILE="${II_TARGET}/.inir-manifest"
+II_MANIFEST_FILE="${II_TARGET}/.lunana-manifest"
 
 #####################################################################################
 # Manifest Management
@@ -28,7 +28,7 @@ generate_manifest() {
         return 1
     fi
     {
-        echo "# inir-manifest v2"
+        echo "# lunana-manifest v2"
         echo "# generated: $(date -Iseconds)"
         echo "# commit: $commit"
         cat "$entries"
@@ -105,7 +105,7 @@ create_update_backup() {
     mkdir -p "$backup_path"
 
     # Only backup QML code, not user configs
-    rsync -a --exclude='.inir-manifest' "$target_dir/" "$backup_path/" 2>/dev/null
+    rsync -a --exclude='.lunana-manifest' "$target_dir/" "$backup_path/" 2>/dev/null
 
     echo "$backup_path" > "${II_BACKUP_DIR}/.last-backup"
     cleanup_old_backups "$II_BACKUP_DIR" 5
@@ -127,18 +127,18 @@ cleanup_old_backups() {
 # Verification
 #####################################################################################
 
-# Restart inir.service and confirm from its own log that the new files loaded: 0 loaded, 1 failed (errors printed), 2 not confirmed.
+# Restart lunana.service and confirm from its own log that the new files loaded: 0 loaded, 1 failed (errors printed), 2 not confirmed.
 # Quickshell 0.3 logs "Configuration Loaded", or "Failed to load configuration" followed by "error in …" / "caused by …" lines.
 # The service owns the shell: it is never killed by hand or started twice (KillMode=process keeps this script alive).
 restart_shell_and_verify() {
     local timeout="${1:-30}" since out deadline
-    command -v systemctl >/dev/null 2>&1 && systemctl --user cat inir.service >/dev/null 2>&1 || return 2
+    command -v systemctl >/dev/null 2>&1 && systemctl --user cat lunana.service >/dev/null 2>&1 || return 2
     since=$(date +%s)
-    systemctl --user restart inir.service >/dev/null 2>&1 || return 2
+    systemctl --user restart lunana.service >/dev/null 2>&1 || return 2
     command -v journalctl >/dev/null 2>&1 || return 2
     deadline=$((SECONDS + timeout))
     while (( SECONDS < deadline )); do
-        out=$(journalctl --user -u inir.service --since "@${since}" -o cat --no-pager 2>/dev/null | sed 's/\x1b\[[0-9;]*m//g')
+        out=$(journalctl --user -u lunana.service --since "@${since}" -o cat --no-pager 2>/dev/null | sed 's/\x1b\[[0-9;]*m//g')
         if grep -q "Failed to load configuration" <<<"$out"; then
             grep -E "(error in|caused by) " <<<"$out" | sed 's/^[[:space:]]*[A-Z]*:[[:space:]]*/  /' | head -5
             return 1

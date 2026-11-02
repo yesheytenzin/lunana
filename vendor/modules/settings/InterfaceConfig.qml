@@ -19,7 +19,7 @@ ContentPage {
     settingsPageIndex: 5
     settingsPageName: Translation.tr("Panels")
 
-    property bool isIiActive: (Config.options?.panelFamily ?? "ii") === "ii"
+    property bool isDriftActive: (Config.options?.panelFamily ?? "drift") === "drift"
     property string activeSection: "control"
 
     function activateSettingsSearchSection(section: string): bool {
@@ -27,7 +27,7 @@ ContentPage {
         const sections = {
             "floating tools (super+g)": "tools",
             "visual effects": "tools",
-            "alt-tab switcher (material ii)": "tools",
+            "alt-tab switcher (material drift)": "tools",
             "notifications": "notifications",
             "control panel": "control",
             "widgets": "widgets",
@@ -57,14 +57,14 @@ ContentPage {
     }
 
     function floatingToolsEnabled(): bool {
-        return (Config.options?.enabledPanels ?? []).includes("iiOverlay")
+        return (Config.options?.enabledPanels ?? []).includes("driftOverlay")
     }
 
     function setFloatingToolsEnabled(enabled: bool): void {
         const panels = [...(Config.options?.enabledPanels ?? [])]
-        const index = panels.indexOf("iiOverlay")
+        const index = panels.indexOf("driftOverlay")
         if (enabled && index === -1)
-            panels.push("iiOverlay")
+            panels.push("driftOverlay")
         else if (!enabled && index !== -1)
             panels.splice(index, 1)
         Config.setNestedValue("enabledPanels", panels)
@@ -95,7 +95,7 @@ ContentPage {
             ConfigSelectionArray {
                 options: [
                     { displayName: Translation.tr("Niri's Recent Windows"), icon: "view_carousel", value: "niri" },
-                    { displayName: Translation.tr("iNiR switcher"), icon: "keyboard_tab", value: "inir" }
+                    { displayName: Translation.tr("Lunana switcher"), icon: "keyboard_tab", value: "lunana" }
                 ]
                 currentValue: NiriKeybinds.altTabSource
                 onSelected: newValue => NiriKeybinds.setAltTabSource(newValue)
@@ -105,7 +105,7 @@ ContentPage {
                 materialIcon: "info"
                 text: NiriKeybinds.altTabSource === "custom"
                     ? Translation.tr("Alt+Tab is bound in your own Niri binds. Choosing here takes it over; your line stays as it is.")
-                    : Translation.tr("Which window switcher Alt+Tab opens. Niri's shows live previews of every window; iNiR's follows your panel style.")
+                    : Translation.tr("Which window switcher Alt+Tab opens. Niri's shows live previews of every window; Lunana's follows your panel style.")
             }
         }
     }
@@ -397,13 +397,13 @@ ContentPage {
     }
 
     SettingsTaskLoader {
-        requested: root.activeSection === "tools" && root.isIiActive && !(Config.options?.settingsUi?.easyMode ?? false)
+        requested: root.activeSection === "tools" && root.isDriftActive && !(Config.options?.settingsUi?.easyMode ?? false)
         sourceComponent: Component {
     SettingsCardSection {
         settingsTaskSection: "tools"
         expanded: false
         icon: "keyboard_tab"
-        title: Translation.tr("Alt-Tab switcher (Material ii)")
+        title: Translation.tr("Alt-Tab switcher (Material drift)")
 
         SettingsGroup {
             SettingsSwitch {
@@ -583,7 +583,7 @@ ContentPage {
     }
 
     SettingsTaskLoader {
-        requested: root.activeSection === "notifications" && root.isIiActive
+        requested: root.activeSection === "notifications" && root.isDriftActive
         sourceComponent: Component {
     SettingsCardSection {
         settingsTaskSection: "notifications"
@@ -639,7 +639,7 @@ ContentPage {
                 StyledText {
                     text: Translation.tr("From")
                     color: Appearance.zzzEverywhere ? Appearance.zzz.ink
-                        : Appearance.inirEverywhere ? Appearance.inir.colText : Appearance.colors.colOnSurface
+                        : Appearance.lunanaEverywhere ? Appearance.lunana.colText : Appearance.colors.colOnSurface
                 }
                 MaterialTextField {
                     Layout.preferredWidth: 90
@@ -656,7 +656,7 @@ ContentPage {
                 StyledText {
                     text: Translation.tr("to")
                     color: Appearance.zzzEverywhere ? Appearance.zzz.ink
-                        : Appearance.inirEverywhere ? Appearance.inir.colText : Appearance.colors.colOnSurface
+                        : Appearance.lunanaEverywhere ? Appearance.lunana.colText : Appearance.colors.colOnSurface
                 }
                 MaterialTextField {
                     Layout.preferredWidth: 90
@@ -720,7 +720,7 @@ ContentPage {
     }
 
     SettingsTaskLoader {
-        requested: root.activeSection === "control" && root.isIiActive
+        requested: root.activeSection === "control" && root.isDriftActive
         sourceComponent: Component {
     SettingsCardSection {
         settingsTaskSection: "control"
@@ -814,7 +814,7 @@ ContentPage {
     }
 
     SettingsTaskLoader {
-        requested: root.activeSection === "widgets" && root.isIiActive && !(Config.options?.settingsUi?.easyMode ?? false)
+        requested: root.activeSection === "widgets" && root.isDriftActive && !(Config.options?.settingsUi?.easyMode ?? false)
         sourceComponent: Component {
     SettingsCardSection {
         settingsTaskSection: "widgets"
@@ -1210,11 +1210,11 @@ ContentPage {
                         visible: coinInput.text.length > 0 && cryptoSection.filteredCoins().length > 0
 
                         background: Rectangle {
-                            color: Appearance.inirEverywhere ? Appearance.inir.colLayer2
+                            color: Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2
                                  : Appearance.colors.colLayer2Base
-                            radius: Appearance.inirEverywhere ? Appearance.inir.roundingSmall : Appearance.rounding.small
+                            radius: Appearance.lunanaEverywhere ? Appearance.lunana.roundingSmall : Appearance.rounding.small
                             border.width: 1
-                            border.color: Appearance.inirEverywhere ? Appearance.inir.colBorder
+                            border.color: Appearance.lunanaEverywhere ? Appearance.lunana.colBorder
                                         : Appearance.colors.colLayer0Border
                         }
 
@@ -1589,11 +1589,11 @@ ContentPage {
                         visible: tzInput.text.length > 0 && worldClockSection.filteredTimezones().length > 0
 
                         background: Rectangle {
-                            color: Appearance.inirEverywhere ? Appearance.inir.colLayer2
+                            color: Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2
                                  : Appearance.colors.colLayer2Base
-                            radius: Appearance.inirEverywhere ? Appearance.inir.roundingSmall : Appearance.rounding.small
+                            radius: Appearance.lunanaEverywhere ? Appearance.lunana.roundingSmall : Appearance.rounding.small
                             border.width: 1
-                            border.color: Appearance.inirEverywhere ? Appearance.inir.colBorder
+                            border.color: Appearance.lunanaEverywhere ? Appearance.lunana.colBorder
                                         : Appearance.colors.colLayer0Border
                         }
 
@@ -1689,10 +1689,10 @@ ContentPage {
 
                             Layout.fillWidth: true
                             implicitHeight: 44
-                            radius: Appearance.inirEverywhere ? Appearance.inir.roundingSmall : Appearance.rounding.small
+                            radius: Appearance.lunanaEverywhere ? Appearance.lunana.roundingSmall : Appearance.rounding.small
                             color: tzRowHover.containsMouse
-                                ? (Appearance.inirEverywhere ? Appearance.inir.colLayer2Hover : Appearance.colors.colLayer2Hover)
-                                : (Appearance.inirEverywhere ? Appearance.inir.colLayer2 : Appearance.colors.colLayer2)
+                                ? (Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2Hover : Appearance.colors.colLayer2Hover)
+                                : (Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2 : Appearance.colors.colLayer2)
 
                             Behavior on color {
                                 enabled: Appearance.animationsEnabled
@@ -1820,8 +1820,8 @@ ContentPage {
                     Layout.fillWidth: true
                     visible: (Config.options?.sidebar?.widgets?.worldClock_settings?.timezones ?? []).length === 0
                     implicitHeight: emptyCol.implicitHeight + 20
-                    radius: Appearance.inirEverywhere ? Appearance.inir.roundingSmall : Appearance.rounding.small
-                    color: Appearance.inirEverywhere ? Appearance.inir.colLayer2 : Appearance.colors.colLayer2
+                    radius: Appearance.lunanaEverywhere ? Appearance.lunana.roundingSmall : Appearance.rounding.small
+                    color: Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2 : Appearance.colors.colLayer2
 
                     ColumnLayout {
                         id: emptyCol
@@ -2052,7 +2052,7 @@ ContentPage {
     }
 
     SettingsTaskLoader {
-        requested: root.activeSection === "overview" && root.isIiActive && !(Config.options?.settingsUi?.easyMode ?? false)
+        requested: root.activeSection === "overview" && root.isDriftActive && !(Config.options?.settingsUi?.easyMode ?? false)
         sourceComponent: Component {
     SettingsCardSection {
         settingsTaskSection: "overview"

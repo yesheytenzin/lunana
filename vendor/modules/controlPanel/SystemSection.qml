@@ -16,7 +16,7 @@ PanelSurface {
     Layout.fillWidth: true
     implicitHeight: statsRow.implicitHeight + 12
     elevation: 1
-    radiusOverride: islandSkin ? -1 : (Appearance.inirEverywhere ? Appearance.inir.roundingSmall : Appearance.rounding.small)
+    radiusOverride: islandSkin ? -1 : (Appearance.lunanaEverywhere ? Appearance.lunana.roundingSmall : Appearance.rounding.small)
 
     readonly property bool compactMode: Config.options?.controlPanel?.compactMode ?? true
     // zzz: el placa tiene esquinas redondeadas (panelRadius); el contenido debe
@@ -27,7 +27,7 @@ PanelSurface {
         ? Appearance.zzz.panelRadius : (root.compactMode ? 5 : 6)
     readonly property real _contentVPad: root.compactMode ? 5 : 6
 
-    readonly property bool inirEverywhere: Appearance.inirEverywhere
+    readonly property bool lunanaEverywhere: Appearance.lunanaEverywhere
     readonly property bool auroraEverywhere: Appearance.auroraEverywhere
 
     AngelPartialBorder { targetRadius: root.radiusOverride; coverage: 0.45; visible: Appearance.angelEverywhere && !root.islandSkin }
@@ -48,7 +48,7 @@ PanelSurface {
             value: (ResourceUsage.cpuUsage ?? 0) * 100
             barColor: ((ResourceUsage.cpuUsage ?? 0) * 100) > 80 ? Appearance.colors.colError
                     : (Appearance.angelEverywhere ? Appearance.angel.colPrimary
-                    : root.inirEverywhere ? Appearance.inir.colPrimary : Appearance.colors.colPrimary)
+                    : root.lunanaEverywhere ? Appearance.lunana.colPrimary : Appearance.colors.colPrimary)
         }
 
         // RAM
@@ -58,7 +58,7 @@ PanelSurface {
             value: (ResourceUsage.memoryUsedPercentage ?? 0) * 100
             barColor: (ResourceUsage.memoryUsedPercentage ?? 0) > 0.85 ? Appearance.colors.colError
                     : (Appearance.angelEverywhere ? Appearance.angel.colPrimary
-                    : root.inirEverywhere ? Appearance.inir.colPrimary : Appearance.colors.colPrimary)
+                    : root.lunanaEverywhere ? Appearance.lunana.colPrimary : Appearance.colors.colPrimary)
         }
 
         // Battery (if available)
@@ -72,7 +72,7 @@ PanelSurface {
                 barColor: (Battery.percentage ?? 0) * 100 < 20 ? Appearance.colors.colError
                         : Battery.charging ? Appearance.colors.colSuccess
                         : (Appearance.angelEverywhere ? Appearance.angel.colPrimary
-                        : root.inirEverywhere ? Appearance.inir.colPrimary : Appearance.colors.colPrimary)
+                        : root.lunanaEverywhere ? Appearance.lunana.colPrimary : Appearance.colors.colPrimary)
             }
         }
     }
@@ -82,7 +82,7 @@ PanelSurface {
         property string label
         property real value: 0
         property color barColor: Appearance.angelEverywhere ? Appearance.angel.colPrimary
-            : root.inirEverywhere ? Appearance.inir.colPrimary : Appearance.colors.colPrimary
+            : root.lunanaEverywhere ? Appearance.lunana.colPrimary : Appearance.colors.colPrimary
 
         spacing: 2
 
@@ -94,7 +94,7 @@ PanelSurface {
                 font.weight: Appearance.editorialEverywhere ? Font.DemiBold : Font.Normal
                 font.letterSpacing: Appearance.editorialEverywhere ? 0.8 : 0
                 color: Appearance.angelEverywhere ? Appearance.angel.colTextSecondary
-                     : root.inirEverywhere ? Appearance.inir.colTextSecondary
+                     : root.lunanaEverywhere ? Appearance.lunana.colTextSecondary
                      : root.auroraEverywhere ? Appearance.colors.colOnSurfaceVariant
                      : Appearance.colors.colSubtext
             }
@@ -107,7 +107,7 @@ PanelSurface {
                 font.family: Appearance.font.family.numbers
                 font.weight: Appearance.editorialEverywhere ? Font.DemiBold : Font.Normal
                 color: Appearance.angelEverywhere ? Appearance.angel.colText
-                     : root.inirEverywhere ? Appearance.inir.colText
+                     : root.lunanaEverywhere ? Appearance.lunana.colText
                      : root.auroraEverywhere ? Appearance.colors.colOnSurface
                      : Appearance.colors.colOnLayer1
             }
@@ -123,7 +123,7 @@ PanelSurface {
                 visible: !Appearance.zzzEverywhere
                 radius: Appearance.angelEverywhere ? Appearance.angel.roundingSmall : 2
                 color: Appearance.angelEverywhere ? Appearance.angel.colGlassCard
-                     : root.inirEverywhere ? Appearance.inir.colLayer2
+                     : root.lunanaEverywhere ? Appearance.lunana.colLayer2
                      : root.auroraEverywhere ? ColorUtils.transparentize(Appearance.aurora.colSubSurface, 0.5)
                      : Appearance.colors.colLayer2
 

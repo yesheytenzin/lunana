@@ -1,4 +1,4 @@
-# System setup for iNiR
+# System setup for Lunana
 # This script is meant to be sourced.
 
 # shellcheck shell=bash
@@ -40,9 +40,9 @@ function setup_user_groups(){
 
   if [[ "$group_changed" == true ]]; then
     if [[ "${OS_GROUP_ID:-}" == void ]]; then
-      INIR_REBOOT_REASONS+=("Your user joined ${required_groups//,/, }: Void session, network, Bluetooth and input access need the new group membership")
+      LUNANA_REBOOT_REASONS+=("Your user joined ${required_groups//,/, }: Void session, network, Bluetooth and input access need the new group membership")
     else
-      INIR_REBOOT_REASONS+=("Your user joined video, i2c and input: brightness, keyboard lights and the on-screen keyboard need it")
+      LUNANA_REBOOT_REASONS+=("Your user joined video, i2c and input: brightness, keyboard lights and the on-screen keyboard need it")
     fi
   fi
 
@@ -206,7 +206,7 @@ function setup_systemd_services(){
         fi
       done
       elevate systemctl enable sddm.service 2>/dev/null && log_success "SDDM service enabled" \
-        && INIR_REBOOT_REASONS+=("SDDM is your login screen now${current_dm:+, instead of ${current_dm%.service}}")
+        && LUNANA_REBOOT_REASONS+=("SDDM is your login screen now${current_dm:+, instead of ${current_dm%.service}}")
     fi
   fi
 
@@ -219,13 +219,13 @@ function setup_systemd_services(){
 function setup_super_daemon(){
   tui_info "Setting up Super-tap daemon..."
   
-  local daemon_src="${REPO_ROOT}/scripts/daemon/inir_super_overview_daemon.py"
-  local service_src="${REPO_ROOT}/scripts/systemd/inir-super-overview.service"
-  local daemon_dst="${HOME}/.local/bin/inir_super_overview_daemon.py"
+  local daemon_src="${REPO_ROOT}/scripts/daemon/lunana_super_overview_daemon.py"
+  local service_src="${REPO_ROOT}/scripts/systemd/lunana-super-overview.service"
+  local daemon_dst="${HOME}/.local/bin/lunana_super_overview_daemon.py"
   local config_dir="${XDG_CONFIG_HOME:-${HOME}/.config}"
-  local service_dst="${config_dir}/systemd/user/inir-super-overview.service"
-  local service_wants="${config_dir}/systemd/user/default.target.wants/inir-super-overview.service"
-  local runit_dir="${config_dir}/service/inir-super-overview"
+  local service_dst="${config_dir}/systemd/user/lunana-super-overview.service"
+  local service_wants="${config_dir}/systemd/user/default.target.wants/lunana-super-overview.service"
+  local runit_dir="${config_dir}/service/lunana-super-overview"
   local runit_run="${runit_dir}/run"
   local supervisor
   
@@ -239,25 +239,25 @@ function setup_super_daemon(){
   x cp "$daemon_src" "$daemon_dst"
   x chmod +x "$daemon_dst"
   
-  supervisor="$(inir_supervisor)"
+  supervisor="$(lunana_supervisor)"
   if [[ "$supervisor" == systemd ]]; then
-    if [[ -f "$runit_run" ]] && grep -q '^# Managed by iNiR\.' "$runit_run"; then
+    if [[ -f "$runit_run" ]] && grep -q '^# Managed by Lunana\.' "$runit_run"; then
       command -v sv >/dev/null 2>&1 && sv down "$runit_dir" >/dev/null 2>&1 || true
       rm -rf "$runit_dir"
     fi
     x mkdir -p "$(dirname "$service_dst")"
     x cp "$service_src" "$service_dst"
     v systemctl --user daemon-reload
-    v systemctl --user enable inir-super-overview.service --now
+    v systemctl --user enable lunana-super-overview.service --now
   else
     rm -f "$service_dst" "$service_wants"
     x mkdir -p "$runit_dir"
     local daemon_quoted
     daemon_quoted="$(printf '%s' "$daemon_dst" | sed "s/'/'\\\\''/g")"
     if [[ "$supervisor" == turnstile ]]; then
-      printf '#!/bin/sh\n# Managed by iNiR.\nexec chpst -e "$TURNSTILE_ENV_DIR" /usr/bin/env python3 '\''%s'\''\n' "$daemon_quoted" > "$runit_run"
+      printf '#!/bin/sh\n# Managed by Lunana.\nexec chpst -e "$TURNSTILE_ENV_DIR" /usr/bin/env python3 '\''%s'\''\n' "$daemon_quoted" > "$runit_run"
     else
-      printf '#!/bin/sh\n# Managed by iNiR.\nexec /usr/bin/env python3 '\''%s'\''\n' "$daemon_quoted" > "$runit_run"
+      printf '#!/bin/sh\n# Managed by Lunana.\nexec /usr/bin/env python3 '\''%s'\''\n' "$daemon_quoted" > "$runit_run"
     fi
     chmod +x "$runit_run"
     if command -v sv >/dev/null 2>&1 && sv status "$runit_dir" 2>/dev/null | grep -q '^run:'; then
@@ -273,10 +273,10 @@ function disable_super_daemon_if_present(){
 
   local config_dir="${XDG_CONFIG_HOME:-${HOME}/.config}"
   local systemd_user_dir="${config_dir}/systemd/user"
-  local runit_dir="${config_dir}/service/inir-super-overview"
+  local runit_dir="${config_dir}/service/lunana-super-overview"
   local service_name service_dst
 
-  for service_name in ii-super-overview inir-super-overview; do
+  for service_name in drift-super-overview lunana-super-overview; do
     service_dst="${systemd_user_dir}/${service_name}.service"
     if has_usable_systemd_user_manager && [[ -f "$service_dst" ]]; then
       systemctl --user disable --now "${service_name}.service" 2>/dev/null || true
@@ -285,13 +285,13 @@ function disable_super_daemon_if_present(){
   done
   has_usable_systemd_user_manager && systemctl --user daemon-reload 2>/dev/null || true
 
-  if [[ -f "${runit_dir}/run" ]] && grep -q '^# Managed by iNiR\.' "${runit_dir}/run"; then
+  if [[ -f "${runit_dir}/run" ]] && grep -q '^# Managed by Lunana\.' "${runit_dir}/run"; then
     command -v sv >/dev/null 2>&1 && sv down "$runit_dir" >/dev/null 2>&1 || true
     rm -rf "$runit_dir"
   fi
 
   rm -f "${HOME}/.local/bin/ii_super_overview_daemon.py"
-  rm -f "${HOME}/.local/bin/inir_super_overview_daemon.py"
+  rm -f "${HOME}/.local/bin/lunana_super_overview_daemon.py"
 
   log_success "Legacy Super-tap daemon disabled/removed (if it was installed)"
 }
@@ -319,7 +319,7 @@ function setup_desktop_settings(){
   fi
   
   # gsettings for GNOME/GTK apps (Nautilus, etc.)
-  # Keep default icon theme aligned with iNiR defaults/config and installer payload.
+  # Keep default icon theme aligned with Lunana defaults/config and installer payload.
   # If preferred theme is not installed, fall back to Adwaita.
   # If user later changes icon theme in Settings, IconThemeService persists and syncs it.
   if command -v gsettings &>/dev/null; then
@@ -404,7 +404,7 @@ showfun setup_desktop_settings
 v setup_desktop_settings
 
 # Super-tap daemon (legacy - optional)
-# Disabled by default in favor of Mod+Space ii overview.
+# Disabled by default in favor of Mod+Space drift overview.
 # To install anyway, set II_ENABLE_SUPER_DAEMON=1 in the environment.
 if [[ "${II_ENABLE_SUPER_DAEMON:-0}" == "1" ]]; then
   showfun setup_super_daemon

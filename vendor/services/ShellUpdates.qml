@@ -9,11 +9,11 @@ import Quickshell.Io
 import Quickshell.Services.Notifications
 
 /*
- * iNiR shell update checker service.
+ * Lunana shell update checker service.
  * Periodically checks the git repo for new commits and exposes
  * update state to UI widgets. Separate from system Updates service.
  *
- * NOTE: The config directory (~/.config/quickshell/ii) is NOT a git repo.
+ * NOTE: The config directory (~/.config/quickshell/drift) is NOT a git repo.
  * Users clone the repo elsewhere, run ./setup install, which copies files.
  * The actual repo location is stored in version.json during installation.
  */
@@ -53,10 +53,10 @@ Singleton {
             root.commitsBehind = 3
             root.remoteCommit = "simulated"
             root.remoteVersion = root.localVersion.length > 0 ? root.localVersion + "+1" : ""
-            root.commitLog = ["a1b2c3d|feat(iris): a pending update to look at|1 hour ago|iNiR",
-                "e4f5a6b|fix(bar): a fix that comes with it|2 hours ago|iNiR",
-                "c7d8e9f|chore: one more commit|3 hours ago|iNiR"].join("\n")
-            root.latestMessage = "a1b2c3d feat(iris): a pending update to look at"
+            root.commitLog = ["a1b2c3d|feat(atoll): a pending update to look at|1 hour ago|Lunana",
+                "e4f5a6b|fix(bar): a fix that comes with it|2 hours ago|Lunana",
+                "c7d8e9f|chore: one more commit|3 hours ago|Lunana"].join("\n")
+            root.latestMessage = "a1b2c3d feat(atoll): a pending update to look at"
             root.hasUpdate = true
         }
         return root.simulated ? "on: " + root.commitsBehind + " commits behind" : "off"
@@ -155,7 +155,7 @@ Singleton {
     property string repoPath: configDir  // Will be updated after reading version.json
     property string pendingRepoPath: ""
     property bool repoPathLoaded: false
-    readonly property string manifestPath: configDir + "/.inir-manifest"
+    readonly property string manifestPath: configDir + "/.lunana-manifest"
     property string installMode: "unknown"
     property string updateStrategy: "unknown"
     property string installSource: "unknown"
@@ -165,8 +165,8 @@ Singleton {
         ? "Updates Managed Externally"
         : "Updates Unavailable"
     readonly property string unavailableMessage: managedExternally
-        ? "This iNiR installation is managed outside the runtime copy. Use your package manager or installation workflow to update it."
-        : "Repository not found. The update system cannot locate the iNiR git repository."
+        ? "This Lunana installation is managed outside the runtime copy. Use your package manager or installation workflow to update it."
+        : "Repository not found. The update system cannot locate the Lunana git repository."
     readonly property string unavailableHint: managedExternally
         ? "Runtime diagnostics are still available, but in-shell self-update is disabled for this installation mode."
         : "Run './setup doctor' in your terminal to diagnose the issue, or use the diagnose command below."
@@ -193,7 +193,7 @@ Singleton {
         if (!hasUpdate || !available || !initialUpdateCheckDone || isDismissed) return
         if (remoteCommit.length === 0) return
         if (root.simulated) {
-            root.postUpdateNotice("iNiR Update Available (simulated)", "3 commits behind.")
+            root.postUpdateNotice("Lunana Update Available (simulated)", "3 commits behind.")
             return
         }
         const now = Date.now()
@@ -204,10 +204,10 @@ Singleton {
 
         const version = root.remoteVersion.length > 0 ? (" v" + root.remoteVersion) : ""
         const commits = root.repoDiverged
-            ? "Repository history changed upstream. iNiR will preserve local work and recover clean published checkouts automatically."
+            ? "Repository history changed upstream. Lunana will preserve local work and recover clean published checkouts automatically."
             : (root.commitsBehind > 0 ? (root.commitsBehind + " commits behind") : "New version available")
-        root.postUpdateNotice("iNiR Update Available" + version,
-            commits + ". Run `inir update`, or open it from the shell's own updater.")
+        root.postUpdateNotice("Lunana Update Available" + version,
+            commits + ". Run `lunana update`, or open it from the shell's own updater.")
         Config.setNestedValues({
             "shellUpdates.lastNotifiedCommit": remoteCommit,
             "shellUpdates.lastNotifiedAt": now
@@ -217,7 +217,7 @@ Singleton {
 
     function postUpdateNotice(summary: string, body: string): void {
         updateNotice.running = false
-        updateNotice.command = ["/usr/bin/notify-send", "-a", "iNiR", "-u", "normal", "-t", "15000", "-w",
+        updateNotice.command = ["/usr/bin/notify-send", "-a", "Lunana", "-u", "normal", "-t", "15000", "-w",
             "-A", "open=" + Translation.tr("What changed"), "--", summary, body]
         updateNotice.running = true
     }
@@ -263,8 +263,8 @@ Singleton {
 
     function openOverlay(): void {
         const panels = Config.options?.enabledPanels ?? []
-        if (!panels.includes("iiShellUpdate")) {
-            Config.setNestedValue("enabledPanels", [...panels, "iiShellUpdate"])
+        if (!panels.includes("driftShellUpdate")) {
+            Config.setNestedValue("enabledPanels", [...panels, "driftShellUpdate"])
         }
         const panelWasOpen = GlobalStates.controlPanelOpen
         const settingsWasOpen = GlobalStates.settingsOverlayOpen ?? false
@@ -299,9 +299,9 @@ Singleton {
             if (Config.options?.shellUpdates?.openTerminalOnUpdate ?? true) {
                 const slot = (AppLauncher && typeof AppLauncher.commandFor === "function") ? AppLauncher.commandFor("terminal") : ""
                 ShellExec.execDetachedArgs([(slot.length > 0 ? slot : "kitty").trim().split(/\s+/)[0], "-e", "/usr/bin/bash", "-c",
-                    "echo 'Simulated iNiR update: nothing is downloaded or changed.'; echo; "
+                    "echo 'Simulated Lunana update: nothing is downloaded or changed.'; echo; "
                     + "for s in Fetching Applying 'Restarting the shell'; do echo \"==> $s\"; sleep 1; done; "
-                    + "echo; echo 'All good. You can close this window whenever you want.'; read -r _"], "Update iNiR", root.repoPath)
+                    + "echo; echo 'All good. You can close this window whenever you want.'; read -r _"], "Update Lunana", root.repoPath)
             }
             return
         }
@@ -335,7 +335,7 @@ Singleton {
             "echo; " +
             preserveFailureStatus +
             "if (( rc == 0 )); then " +
-                "echo 'All good — iNiR updated successfully. The shell will restart on its own.'; " +
+                "echo 'All good — Lunana updated successfully. The shell will restart on its own.'; " +
                 "echo 'You can close this window whenever you want.'; " +
             "else " +
                 "echo \"Something went wrong (exit $rc). Check the output above for details.\"; " +
@@ -357,7 +357,7 @@ Singleton {
             const termBin = (termSlot.length > 0 ? termSlot : "kitty").trim().split(/\s+/)[0]
             ShellExec.execDetachedArgs(
                 [termBin, "-e", "/usr/bin/bash", "-c", bashCmd],
-                "Update iNiR", repoDir)
+                "Update Lunana", repoDir)
             print("[ShellUpdates] Update launched in terminal (" + termBin + ") from: " + repoDir)
         } else {
             // Detached background — same path as before the terminal toggle existed.
@@ -435,7 +435,7 @@ Singleton {
     // ─────────────────────────────────────────────────────────────────────────
     // Resume update display after shell restart
     // ─────────────────────────────────────────────────────────────────────────
-    // `setup update` triggers `systemctl --user restart inir.service` as its
+    // `setup update` triggers `systemctl --user restart lunana.service` as its
     // last step, killing the shell mid-flow. The new shell instance must
     // detect the prior state from the status file and either clean up
     // (if the final step was reached) or resume polling so the bar indicator
@@ -681,14 +681,14 @@ Singleton {
             "if [[ -e \"" + root.configDir + "/.git\" ]]; then echo \"" + root.configDir + "\"; exit 0; fi; " +
             // Search for a git repo containing setup + shell.qml (our repo signature)
             // Check common locations first, then broader search
-            "for dir in ~/illogical-impulse ~/inir ~/iNiR " +
-            "~/.local/src/illogical-impulse ~/.local/src/inir " +
-            "~/Projects/illogical-impulse ~/Projects/inir " +
-            "~/Downloads/illogical-impulse ~/Downloads/inir " +
-            "~/src/illogical-impulse ~/src/inir; do " +
+            "for dir in ~/illogical-impulse ~/lunana ~/Lunana " +
+            "~/.local/src/illogical-impulse ~/.local/src/lunana " +
+            "~/Projects/illogical-impulse ~/Projects/lunana " +
+            "~/Downloads/illogical-impulse ~/Downloads/lunana " +
+            "~/src/illogical-impulse ~/src/lunana; do " +
             "if [[ -e \"$dir/.git\" && -f \"$dir/setup\" && -f \"$dir/shell.qml\" ]]; then echo \"$dir\"; exit 0; fi; done; " +
             // Last resort: find in home (max depth 3, timeout 2s)
-            "timeout 2 find \"$HOME\" -maxdepth 3 -name setup \\( -path '*/inir/setup' -o -path '*/illogical-impulse/setup' -o -path '*/ii/setup' \\) 2>/dev/null | while read -r f; do [[ -f \"$(dirname \"$f\")/shell.qml\" ]] && dirname \"$f\" && break; done; "
+            "timeout 2 find \"$HOME\" -maxdepth 3 -name setup \\( -path '*/lunana/setup' -o -path '*/illogical-impulse/setup' -o -path '*/drift/setup' \\) 2>/dev/null | while read -r f; do [[ -f \"$(dirname \"$f\")/shell.qml\" ]] && dirname \"$f\" && break; done; "
         ]
         stdout: StdioCollector {
             onStreamFinished: {
@@ -894,7 +894,7 @@ Singleton {
                 // Notify after 3 consecutive failures (persistent problem)
                 if (root.consecutiveFetchErrors >= 3 && !root.fetchErrorNotificationShown) {
                     root.fetchErrorNotificationShown = true
-                    const title = "iNiR Update Check Failed"
+                    const title = "Lunana Update Check Failed"
                     const body = "Cannot reach remote repository. Check your internet connection or run './setup doctor'."
                     Notifications.send(title, body, "low", 8000)
                     print("[ShellUpdates] Notification sent: Persistent fetch errors")

@@ -20,7 +20,7 @@ ContentPage {
     settingsPageIndex: 23
     settingsPageName: Translation.tr("Sidebars")
 
-    property bool isIiActive: (Config.options?.panelFamily ?? "ii") === "ii"
+    property bool isDriftActive: (Config.options?.panelFamily ?? "drift") === "drift"
 
     property string activeSection: "general"
     property string pendingProfileAvatarPath: ""
@@ -73,7 +73,7 @@ ContentPage {
     }
 
     SettingsTaskLoader {
-        requested: root.isIiActive && !(Config.options?.settingsUi?.easyMode ?? false) && root.activeSection === "general"
+        requested: root.isDriftActive && !(Config.options?.settingsUi?.easyMode ?? false) && root.activeSection === "general"
         sourceComponent: Component {
     SettingsCardSection {
         settingsTaskSection: "general"
@@ -108,7 +108,7 @@ ContentPage {
                     buttonIcon: "branding_watermark"
                     text: Translation.tr("Use Card style")
                     enabled: Appearance.globalStyle === "material"
-                        || Appearance.globalStyle === "inir"
+                        || Appearance.globalStyle === "lunana"
                         || Appearance.editorialEverywhere
                     checked: Config.options.sidebar?.cardStyle ?? false
                     onCheckedChanged: {
@@ -116,10 +116,10 @@ ContentPage {
                     }
                     StyledToolTip {
                         text: (Appearance.globalStyle === "material"
-                            || Appearance.globalStyle === "inir"
+                            || Appearance.globalStyle === "lunana"
                             || Appearance.editorialEverywhere)
                             ? Translation.tr("Apply rounded card styling to sidebars")
-                            : Translation.tr("Only available with Material, Editorial, or Inir global style")
+                            : Translation.tr("Only available with Material, Editorial, or Lunana global style")
                     }
                 }
 
@@ -236,7 +236,7 @@ ContentPage {
     }
 
     SettingsTaskLoader {
-        requested: root.isIiActive && !(Config.options?.settingsUi?.easyMode ?? false) && root.activeSection === "left"
+        requested: root.isDriftActive && !(Config.options?.settingsUi?.easyMode ?? false) && root.activeSection === "left"
         sourceComponent: Component {
     SettingsCardSection {
         settingsTaskSection: "left"
@@ -377,7 +377,7 @@ ContentPage {
     }
 
     SettingsTaskLoader {
-        requested: root.isIiActive && !(Config.options?.settingsUi?.easyMode ?? false) && root.activeSection === "right"
+        requested: root.isDriftActive && !(Config.options?.settingsUi?.easyMode ?? false) && root.activeSection === "right"
         sourceComponent: Component {
     SettingsCardSection {
         settingsTaskSection: "right"
@@ -775,7 +775,7 @@ ContentPage {
     }
 
     SettingsTaskLoader {
-        requested: root.isIiActive && !(Config.options?.settingsUi?.easyMode ?? false) && root.activeSection === "media"
+        requested: root.isDriftActive && !(Config.options?.settingsUi?.easyMode ?? false) && root.activeSection === "media"
         sourceComponent: Component {
     SettingsCardSection {
         settingsTaskSection: "media"
@@ -1009,7 +1009,7 @@ ContentPage {
     }
 
     SettingsTaskLoader {
-        requested: root.isIiActive && !(Config.options?.settingsUi?.easyMode ?? false) && root.activeSection === "open"
+        requested: root.isDriftActive && !(Config.options?.settingsUi?.easyMode ?? false) && root.activeSection === "open"
         sourceComponent: Component {
     SettingsCardSection {
         settingsTaskSection: "open"

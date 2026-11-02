@@ -8,7 +8,7 @@ import "../../../common/functions"
 import "../../../common/widgets"
 import ".."
 import "../instrument"
-import "../../../iris/widgets"
+import "../../../atoll/widgets"
 
 AbstractBackgroundWidget {
     id: root
@@ -43,10 +43,10 @@ AbstractBackgroundWidget {
     readonly property int rowWidth: Math.round(Number(root._readConfigKey("contentWidth") ?? 250) * scaleFactor)
     readonly property int rowHeight: Math.round(Number(root._readConfigKey("contentHeight") ?? 96) * scaleFactor)
     // Preserve the saved row dimensions when switching presentation.
-    implicitWidth: root.irisFaced ? root.irisFaceWidth : root.instrument ? Math.max(root.rowWidth, Math.round(260 * scaleFactor)) : root.rowWidth
-    implicitHeight: root.irisFaced ? root.irisFaceHeight : root.instrument ? Math.max(root.rowHeight, Math.round(130 * scaleFactor)) : root.rowHeight
-    irisFace: Component { IrisUptimeFace { widget: root } }
-    irisOptions: [
+    implicitWidth: root.atollFaced ? root.atollFaceWidth : root.instrument ? Math.max(root.rowWidth, Math.round(260 * scaleFactor)) : root.rowWidth
+    implicitHeight: root.atollFaced ? root.atollFaceHeight : root.instrument ? Math.max(root.rowHeight, Math.round(130 * scaleFactor)) : root.rowHeight
+    atollFace: Component { AtollUptimeFace { widget: root } }
+    atollOptions: [
         { key: "showSince", raw: true, label: Translation.tr("Start time"), icon: "login", fallback: true }
     ]
     resizableAxes: ({ width: "contentWidth", height: "contentHeight" })
@@ -64,10 +64,10 @@ AbstractBackgroundWidget {
     readonly property string bootLabel: Qt.locale().toString(root.bootDate, "HH:mm")
 
     WidgetSurface {
-        irisPresentation: root.widgetIris
+        atollPresentation: root.widgetAtoll
         regionBrightness: root.regionBrightness
         anchors.fill: parent
-        shown: !root.irisFaced && !root.instrument
+        shown: !root.atollFaced && !root.instrument
             && (root.backgroundOpacity > 0 || root.borderWidth > 0 || root.effectiveBlur)
         surfaceRadius: root.cornerRadiusOverride >= 0 ? root.cornerRadiusOverride : root.widgetCardRadius
         surfaceOpacity: root.backgroundOpacity
@@ -87,7 +87,7 @@ AbstractBackgroundWidget {
     // ── Row style (default) ──
     RowLayout {
         opacity: root.instrument ? 0 : 1
-        visible: !root.irisFaced && opacity > 0
+        visible: !root.atollFaced && opacity > 0
         enabled: !root.instrument
         Behavior on opacity {
             enabled: root.animationsActive
@@ -135,7 +135,7 @@ AbstractBackgroundWidget {
         anchors.fill: parent
         anchors.margins: Math.round(13 * root.scaleFactor)
         opacity: root.instrument ? 1 : 0
-        visible: !root.irisFaced && opacity > 0
+        visible: !root.atollFaced && opacity > 0
         enabled: root.instrument
 
         Behavior on opacity {

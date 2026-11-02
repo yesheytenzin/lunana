@@ -1,21 +1,27 @@
 #!/usr/bin/env python3
-"""vendor.py — the vendoring lever for porting inir's GPL UI into lunana.
+"""vendor.py — the vendoring lever for porting the upstream GPL UI into lunana.
 
-inir's QML imports its own code as fixed named modules (`import qs.modules.common`,
-`import qs.services`, …) that Quickshell resolves against inir's config root. Inside
+The upstream tree imports its own code as fixed named modules (`import qs.*`)
+that Quickshell resolves against the upstream config root. Inside
 Omarchy's shell process the `qs` prefix is already claimed by Omarchy
-(`qs.Commons`, `qs.Ui`), so vendored inir files cannot keep those imports. This tool
-copies selected inir paths into lunana's `vendor/` tree (preserving inir's directory
-structure, so its qmldir type sets stay intact) and rewrites every `import qs[.x]`
+(`qs.Commons`, `qs.Ui`), so vendored files cannot keep those imports. This tool
+copies selected upstream paths into lunana's `vendor/` tree (preserving the directory
+structure, so qmldir type sets stay intact) and rewrites every `import qs[.x]`
 into the correct *relative-path* import for each file's depth — the pattern Omarchy
 plugins use for their own modules (`import "subdir" as X`).
 
-It is re-runnable: pointed at an updated inir checkout it re-vendors and re-rewrites,
-so lunana can track inir changes. inir is GPL-3.0 and so is lunana; this is a
-legitimate derivative — `vendor/INIR-LICENSE` preserves inir's license/attribution.
+It is re-runnable: pointed at an updated upstream checkout it re-vendors and
+re-rewrites, so lunana can track upstream changes. Both trees are GPL-3.0;
+this is a legitimate derivative — `vendor/LUNANA-LICENSE` preserves the upstream
+license/attribution.
+
+Full refresh cycle (three steps, in order):
+    LUNANA_UPSTREAM_SRC=... python3 scripts/vendor.py <paths>
+    python3 scripts/vendor.py --patch        # lunana-local patches (pre-rename text)
+    python3 scripts/vendor_rename.py          # rebrand to Lunana's family names
 
 Usage:
-    vendor.py <path> [<path> ...]      # inir paths (files or dirs), repo-relative
+    vendor.py <path> [<path> ...]      # upstream paths (files or dirs), repo-relative
     vendor.py --list                   # show what's currently vendored
     vendor.py --patch                  # apply vendor-patches/*.patch onto vendor/
 
@@ -37,13 +43,15 @@ import shutil
 import sys
 from pathlib import Path
 
-INIR = Path(os.environ.get("INIR_SRC", "/home/tenzin/development/inir")).resolve()
 LUNANA = Path(__file__).resolve().parent.parent
+# Upstream checkout the vendor tree is copied from. Overridable for
+# re-vendoring against another clone; no legacy alias (set it explicitly).
+UPSTREAM = Path(os.environ.get("LUNANA_UPSTREAM_SRC", "/home/tenzin/development/inir")).resolve()
 VENDOR = LUNANA / "vendor"
 
 # `import qs[.a.b][ as Alias]` on its own line.
 IMPORT_RE = re.compile(r'^(?P<indent>\s*)import\s+qs(?P<sub>(?:\.[A-Za-z0-9_]+)*)(?P<alias>\s+as\s+[A-Za-z0-9_]+)?\s*$')
-# inir's Quickshell `import "root:[sub/path]"` (config-root-relative) on its own line.
+# lunana's Quickshell `import "root:[sub/path]"` (config-root-relative) on its own line.
 ROOT_RE = re.compile(r'^(?P<indent>\s*)import\s+"root:(?P<sub>[^"]*)"(?P<alias>\s+as\s+[A-Za-z0-9_]+)?\s*$')
 
 
@@ -64,7 +72,7 @@ def rewrite_imports(text: str, file_dir: Path) -> str:
             if not m:
                 out.append(line)
                 continue
-            # `root:` is inir's config root == our vendor/ root.
+            # `root:` is lunana's config root == our vendor/ root.
             target = VENDOR / m.group("sub") if m.group("sub") else VENDOR
         rel = os.path.relpath(target, file_dir)
         if rel == ".":
@@ -75,10 +83,10 @@ def rewrite_imports(text: str, file_dir: Path) -> str:
     return "\n".join(out) + trailing
 
 
-# inir resolves its own assets/scripts with `Quickshell.shellPath("x")`, which
+# lunana resolves its own assets/scripts with `Quickshell.shellPath("x")`, which
 # returns a path relative to the *shell root*. Re-hosted inside Omarchy's shell
 # that root is omarchy-shell's own dir, not the vendored tree, so every such
-# call (fonts, mascot assets, translations, the scripts/inir runtime + color/
+# call (fonts, mascot assets, translations, the scripts/lunana runtime + color/
 # capture scripts — ~186 sites) resolves into Omarchy's tree where the file is
 # absent. Rewrite each call to resolve against the installed shared vendored
 # tree instead: <XDG_CONFIG_HOME|~/.config>/omarchy/lunana-vendor/<x>. The arg
@@ -141,14 +149,14 @@ def strip_module_line(qmldir_text: str) -> str:
 
 
 def vendor_path(rel_path: str) -> int:
-    src = (INIR / rel_path).resolve()
+    src = (UPSTREAM / rel_path).resolve()
     if not src.exists():
-        print(f"vendor: not found in inir: {rel_path}", file=sys.stderr)
+        print(f"vendor: not found upstream: {rel_path}", file=sys.stderr)
         return 0
     files = [src] if src.is_file() else [p for p in src.rglob("*") if p.is_file()]
     count = 0
     for f in files:
-        rel = f.relative_to(INIR)
+        rel = f.relative_to(LUNANA)
         dst = VENDOR / rel
         dst.parent.mkdir(parents=True, exist_ok=True)
         if f.name == "qmldir":
@@ -170,7 +178,7 @@ def is_singleton(path: Path) -> bool:
 
 
 def regenerate_qmldirs() -> None:
-    """inir relies on Quickshell's directory auto-registration (often no qmldir),
+    """lunana relies on Quickshell's directory auto-registration (often no qmldir),
     but standard Qt relative-path imports need an explicit qmldir declaring each
     type — and `singleton` for pragma-Singleton files. Regenerate one per vendored
     directory from the files actually present, so the tree is self-consistent."""
@@ -186,15 +194,16 @@ def regenerate_qmldirs() -> None:
 
 def write_attribution() -> None:
     VENDOR.mkdir(parents=True, exist_ok=True)
-    lic = INIR / "LICENSE"
-    if lic.is_file() and not (VENDOR / "INIR-LICENSE").exists():
-        shutil.copy2(lic, VENDOR / "INIR-LICENSE")
+    lic = LUNANA / "LICENSE"
+    if lic.is_file() and not (VENDOR / "LUNANA-LICENSE").exists():
+        shutil.copy2(lic, VENDOR / "LUNANA-LICENSE")
     (VENDOR / "README.md").write_text(
         "# vendor/\n\n"
-        "QML vendored from inir (https://github.com/snowarch/inir), GPL-3.0, with\n"
-        "`import qs.*` rewritten to relative paths by `scripts/vendor.py`. Do not edit\n"
-        "these files by hand — re-run the vendoring tool against an inir checkout.\n"
-        "inir's license is preserved in `INIR-LICENSE`.\n",
+        "QML vendored from the upstream GPL shell (see `vendor/LUNANA-LICENSE`), with\n"
+        "`import qs.*` rewritten to relative paths by `scripts/vendor.py`, lunana-local\n"
+        "behavior in `vendor-patches/`, and branding mapped to Lunana's family names\n"
+        "by `scripts/vendor_rename.py`. Do not edit these files by hand — re-run the\n"
+        "three-step refresh documented in `scripts/vendor.py`'s header.\n",
         encoding="utf-8",
     )
 
@@ -250,9 +259,18 @@ def apply_patch_file(patch_path: Path) -> str:
     idempotency: hunks whose new text is already present are skipped; the
     rest must match their old text exactly or the patch fails loudly
     (vendor drift). This also tolerates editing a patch after a partial
-    apply: only the missing hunks are applied."""
+    apply: only the missing hunks are applied.
+
+    Patch paths mirror the PRE-rename upstream tree; the target is mapped
+    through the rename table so re-vendoring keeps working after the
+    rebrand (the hunks themselves still match pre-rename vendor text)."""
     rel = patch_path.relative_to(PATCHES)
     target_rel = str(rel)[:-len(".patch")]
+    try:
+        from vendor_rename import rename_name as _rename_name
+        target_rel = "/".join(_rename_name(part) for part in target_rel.split("/"))
+    except ImportError:
+        pass
     target = VENDOR / target_rel
     _header, hunks = _parse_hunks(patch_path.read_text(encoding="utf-8"))
     if not hunks:
@@ -327,7 +345,7 @@ def main(argv: list[str]) -> int:
         return 0
     if argv[0] == "--shellpath":
         # Apply the shellPath rewrite to the already-vendored tree in place,
-        # without re-pulling from inir (no drift risk). Idempotent.
+        # without re-pulling from lunana (no drift risk). Idempotent.
         changed = 0
         for f in sorted(list(VENDOR.rglob("*.qml")) + list(VENDOR.rglob("*.js"))):
             before = f.read_text(encoding="utf-8")
@@ -339,8 +357,8 @@ def main(argv: list[str]) -> int:
         return 0
     if argv[0] == "--patch":
         return cmd_patch()
-    if not INIR.is_dir():
-        print(f"vendor: inir checkout not found at {INIR} (set INIR_SRC)", file=sys.stderr)
+    if not UPSTREAM.is_dir():
+        print(f"vendor: upstream checkout not found at {UPSTREAM} (set LUNANA_UPSTREAM_SRC)", file=sys.stderr)
         return 1
     write_attribution()
     total = sum(vendor_path(p) for p in argv)

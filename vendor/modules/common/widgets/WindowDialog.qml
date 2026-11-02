@@ -62,7 +62,7 @@ Rectangle {
             : Appearance.zzzEverywhere ? Appearance.zzz.panelRadius
             : Appearance.editorialEverywhere ? Appearance.editorial.radius
             : Appearance.angelEverywhere ? Appearance.angel.roundingLarge
-            : Appearance.inirEverywhere ? Appearance.inir.roundingLarge
+            : Appearance.lunanaEverywhere ? Appearance.lunana.roundingLarge
             : Appearance.rounding.large
         Behavior on radius {
             enabled: Appearance.animationsEnabled
@@ -72,7 +72,7 @@ Rectangle {
             : Appearance.zzzEverywhere ? Appearance.zzz.paper
             : Appearance.editorialEverywhere ? Appearance.editorial.paper
             : Appearance.colors.colSurfaceContainerHigh
-        inirColor: Appearance.inir.colLayer2
+        lunanaColor: Appearance.lunana.colLayer2
         auroraTransparency: Appearance.aurora.popupTransparentize * 0.85
         // ZZZ owns its wallpaper wash through ZzzPanelBackdrop. Letting both
         // layers blur the same wallpaper softens compact dialog text and chrome.
@@ -82,7 +82,7 @@ Rectangle {
         border.width: Appearance.regaliaEverywhere ? 0
             : Appearance.zzzEverywhere ? Appearance.zzz.borderThick
             : Appearance.editorialEverywhere ? 1
-            : (Appearance.angelEverywhere || Appearance.inirEverywhere || Appearance.auroraEverywhere) ? 1 : 0
+            : (Appearance.angelEverywhere || Appearance.lunanaEverywhere || Appearance.auroraEverywhere) ? 1 : 0
         Behavior on border.width {
             enabled: Appearance.animationsEnabled
             NumberAnimation { duration: Appearance.animation.elementMoveFast.duration; easing.type: Appearance.animation.elementMoveFast.type; easing.bezierCurve: Appearance.animation.elementMoveFast.bezierCurve }
@@ -90,7 +90,7 @@ Rectangle {
         border.color: Appearance.zzzEverywhere ? Appearance.zzz.hairlineStrong
             : Appearance.editorialEverywhere ? Appearance.editorial.rule
             : Appearance.angelEverywhere ? Appearance.angel.colBorder
-            : Appearance.inirEverywhere ? Appearance.inir.colBorder 
+            : Appearance.lunanaEverywhere ? Appearance.lunana.colBorder 
             : Appearance.auroraEverywhere ? Appearance.aurora.colTooltipBorder : "transparent"
         Behavior on border.color {
             enabled: Appearance.animationsEnabled

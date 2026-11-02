@@ -19,14 +19,14 @@ ContentPage {
     property string confirmationSlot: ""
     readonly property string activeFamily: ShellLayoutController.activeFamily
     readonly property bool standaloneSettings:
-        Quickshell.env("INIR_STANDALONE_WINDOW") === "1"
+        Quickshell.env("LUNANA_STANDALONE_WINDOW") === "1"
     readonly property var surfaces: ShellLayoutController.surfacesForFamily(
         root.activeFamily)
 
     function toggleLiveEditor(): void {
         if (root.standaloneSettings) {
             Quickshell.execDetached([
-                ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")),
+                ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/lunana")),
                 "shellLayout",
                 "open"
             ])

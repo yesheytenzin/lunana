@@ -165,7 +165,7 @@ ContentPage {
 
         Drag.active: rowDrag.drag.active
         Drag.source: rowRoot
-        Drag.keys: ["inir-settings-page"]
+        Drag.keys: ["lunana-settings-page"]
         Drag.hotSpot.x: width / 2
         Drag.hotSpot.y: height / 2
         states: State {
@@ -263,7 +263,7 @@ ContentPage {
         readonly property bool noOp: root.groupDragging
             && (root.dragInfo.index === groupSlot.insertIndex || root.dragInfo.index + 1 === groupSlot.insertIndex)
 
-        keys: ["inir-settings-group"]
+        keys: ["lunana-settings-group"]
         Layout.fillWidth: true
         implicitHeight: root.groupDragging ? (groupSlot.noOp ? 6 : 20) : 4
         enabled: root.groupDragging && !groupSlot.noOp
@@ -333,7 +333,7 @@ ContentPage {
 
         Drag.active: groupDrag.drag.active
         Drag.source: cardRoot
-        Drag.keys: ["inir-settings-group"]
+        Drag.keys: ["lunana-settings-group"]
         Drag.hotSpot.x: width / 2
         Drag.hotSpot.y: 22
         states: State {
@@ -444,7 +444,7 @@ ContentPage {
                 id: pageDrop
                 Layout.fillWidth: true
                 implicitHeight: Math.max(pageRows.implicitHeight, root.pageRowHeight)
-                keys: ["inir-settings-page"]
+                keys: ["lunana-settings-page"]
                 readonly property int liveCount: cardRoot.category.pages.length
                     - ((root.pageDragging && root.dragInfo.ci === cardRoot.categoryIndex) ? 1 : 0)
 
@@ -657,7 +657,7 @@ ContentPage {
             DropArea {
                 id: hiddenDrop
                 anchors.fill: parent
-                keys: ["inir-settings-page"]
+                keys: ["lunana-settings-page"]
                 onDropped: root._hideDraggedPage()
             }
 

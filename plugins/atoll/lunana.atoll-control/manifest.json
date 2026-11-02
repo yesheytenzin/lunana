@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "lunana.atoll-control",
+  "name": "Lunana Atoll Control",
+  "version": "0.4.0",
+  "author": "lunana",
+  "license": "GPL-3.0",
+  "description": "Lunana AtollControlCenter grid host.",
+  "kinds": [
+    "overlay"
+  ],
+  "entryPoints": {
+    "overlay": "AtollControl.qml"
+  },
+  "x-lunana": {
+    "suiteId": "lunana",
+    "role": "atoll-control",
+    "milestone": "parity",
+    "requires": [],
+    "recommends": []
+  }
+}

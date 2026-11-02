@@ -2,7 +2,7 @@
 pkgname=lunana-shell
 pkgver=0.4.0
 pkgrel=1
-pkgdesc="Lunana — an inir-inspired native plugin suite for the Omarchy Quattro shell"
+pkgdesc="Lunana — an lunana-inspired native plugin suite for the Omarchy Quattro shell"
 arch=('any')
 url="https://github.com/yesheytenzin/lunana"
 license=('GPL3')

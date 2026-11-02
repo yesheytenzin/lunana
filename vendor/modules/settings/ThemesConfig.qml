@@ -746,7 +746,7 @@ ContentPage {
 
     // Motion Section
     SettingsTaskLoader {
-        requested: root.activeSection === "motion" && (Config.options?.panelFamily ?? "ii") === "ii"
+        requested: root.activeSection === "motion" && (Config.options?.panelFamily ?? "drift") === "drift"
         sourceComponent: Component {
     SettingsCardSection {
         settingsTaskSection: "motion"
@@ -843,8 +843,8 @@ ContentPage {
 
         SettingsGroup {
             ConfigSelectionArray {
-                currentValue: Config.options?.appearance?.iiMotionProfile ?? "classic"
-                onSelected: newValue => Config.setNestedValue("appearance.iiMotionProfile", newValue)
+                currentValue: Config.options?.appearance?.driftMotionProfile ?? "classic"
+                onSelected: newValue => Config.setNestedValue("appearance.driftMotionProfile", newValue)
                 options: [
                     { displayName: Translation.tr("Classic"), icon: "motion_photos_paused", value: "classic" },
                     { displayName: Translation.tr("Contextual"), icon: "gesture", value: "contextual" }
@@ -1267,7 +1267,7 @@ ContentPage {
                     onCheckedChanged: Config.setNestedValue("appearance.wallpaperTheming.terminals.starship", checked)
                     opacity: terminalColorsSection.detectionDone && !(terminalColorsSection.installedTerminals["starship"] ?? false) ? 0.5 : 1
                     StyledToolTip {
-                        text: Translation.tr("Starship prompt palette - use 'palette = \"ii\"' in starship.toml")
+                        text: Translation.tr("Starship prompt palette - use 'palette = \"drift\"' in starship.toml")
                     }
                 }
             }
@@ -1637,7 +1637,7 @@ ContentPage {
                         { displayName: Translation.tr("Material"), icon: "tune", value: "material" },
                         { displayName: Translation.tr("Cards"), icon: "branding_watermark", value: "cards" },
                         { displayName: Translation.tr("Aurora"), icon: "blur_on", value: "aurora" },
-                        { displayName: Translation.tr("Inir"), icon: "terminal", value: "inir" },
+                        { displayName: Translation.tr("Lunana"), icon: "terminal", value: "lunana" },
                         { displayName: Translation.tr("Angel"), icon: "raven", value: "angel" },
                         { displayName: Translation.tr("Regalia"), icon: "event_seat", value: "regalia" },
                         { displayName: Translation.tr("ZZZ"), icon: "bolt", value: "zzz" },

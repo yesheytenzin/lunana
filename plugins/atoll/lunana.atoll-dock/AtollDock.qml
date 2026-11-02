@@ -1,0 +1,99 @@
+import QtQuick
+import Quickshell
+import Quickshell.Wayland
+import qs.Commons
+import "../../lunana-vendor/" as Lunana
+import "../../lunana-vendor/modules/atoll/dock" as LnMod
+import "../../lunana-vendor/modules/atoll/field" as LnField
+
+// lunana.atoll-dock — Lunana Atoll dock host (atoll family only; drift dock yields while enabled). (kind: service).
+//
+// Resident host for lunana's exact AtollDock. AtollDock is an embeddable item
+// (in lunana it lives inside the AtollBar chassis window), so this host provides
+// the per-output layershell surface plus a per-output AtollField behind it.
+// The dock paints no body itself: the chassis field paints its published
+// bodyShape, and this host feeds a dedicated field exactly that (no
+// cross-surface fusion with the island satellite — separate pills).
+Item {
+  id: root
+
+  property var shell: null
+  property var manifest: null
+  property bool opened: true
+
+  function open() { root.opened = true }
+  function close() { root.opened = false }
+  function toggle() { root.opened = !root.opened }
+
+  ShellIpc {
+    target: "lunana.atoll-dock"
+    function toggle(): void { root.toggle() }
+    function open(): void { root.open() }
+    function close(): void { root.close() }
+  }
+
+  Variants {
+    model: Quickshell.screens
+    delegate: Component {
+      PanelWindow {
+        required property var modelData
+        screen: modelData
+        visible: root.opened
+        color: "transparent"
+        exclusionMode: ExclusionMode.Ignore
+        exclusiveZone: 0
+        WlrLayershell.namespace: "lunana-atoll-dock"
+        WlrLayershell.layer: WlrLayer.Top
+        anchors { top: true; bottom: true; left: true; right: true }
+        // Fullscreen transparent surface: only the dock body takes input.
+        // The shape list is published by the dock itself per screen.
+        readonly property var bodyRects: Lunana.GlobalStates.atollDockBody?.[modelData.name] ?? []
+        // Union of the dock body and its open menu, with margin for hover
+        // magnification. Empty (auto-hidden dock) masks everything out.
+        readonly property var dockRect: {
+          const list = Array.isArray(bodyRects) ? bodyRects.filter(s => s && s.width > 1 && s.height > 1) : []
+          if (list.length === 0)
+            return { x: 0, y: 0, width: 0, height: 0 }
+          let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity
+          for (const s of list) {
+            x0 = Math.min(x0, s.x); y0 = Math.min(y0, s.y)
+            x1 = Math.max(x1, s.x + s.width); y1 = Math.max(y1, s.y + s.height)
+          }
+          const m = 24
+          return { x: x0 - m, y: y0 - m, width: x1 - x0 + m * 2, height: y1 - y0 + m * 2 }
+        }
+        mask: Region {
+          x: dockRect.x
+          y: dockRect.y
+          width: dockRect.width
+          height: dockRect.height
+        }
+
+        LnField.AtollField {
+          anchors.fill: parent
+          compositorAllowed: true
+          providesBackdrop: true
+          shapes: dockItem.bodyShape ?? []
+        }
+
+        LnMod.AtollDock {
+          id: dockItem
+          anchors.fill: parent
+          screen: modelData
+        }
+      }
+    }
+  }
+
+  // Shell-entry handshake against the shared lunana-vendor/ tree (one
+  // GlobalStates universe for all hosts): the vendored tree gates first paint on
+  // shellEntryReady/deferredPanelsReady, which only lunana's shell.qml boot
+  // sets. Mirror the minimal sequence here.
+  Timer {
+    interval: 200; repeat: false; running: true
+    onTriggered: {
+      Lunana.GlobalStates.shellEntryReady = true;
+      Lunana.GlobalStates.deferredPanelsReady = true;
+    }
+  }
+}

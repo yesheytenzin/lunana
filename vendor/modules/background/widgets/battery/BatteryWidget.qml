@@ -11,7 +11,7 @@ import "../../../common/widgets"
 import "../../../common/widgets/widgetCanvas"
 import ".."
 import "../instrument"
-import "../../../iris/widgets"
+import "../../../atoll/widgets"
 
 AbstractBackgroundWidget {
     id: root
@@ -27,11 +27,11 @@ AbstractBackgroundWidget {
         cornerRadius: -1, x: 50, y: 50
     })
 
-    implicitWidth: root.irisFaced ? root.irisFaceWidth : Math.round((root.displayMode === "instrument" ? 220 : 160) * scaleFactor)
-    implicitHeight: root.irisFaced ? root.irisFaceHeight : Math.round((root.displayMode === "instrument" ? 140 : 104) * scaleFactor)
-    irisFace: Component { IrisBatteryFace { widget: root } }
-    irisSizes: ["small", "medium"]
-    irisOptions: [
+    implicitWidth: root.atollFaced ? root.atollFaceWidth : Math.round((root.displayMode === "instrument" ? 220 : 160) * scaleFactor)
+    implicitHeight: root.atollFaced ? root.atollFaceHeight : Math.round((root.displayMode === "instrument" ? 140 : 104) * scaleFactor)
+    atollFace: Component { AtollBatteryFace { widget: root } }
+    atollSizes: ["small", "medium"]
+    atollOptions: [
         { key: "showTime", raw: true, label: Translation.tr("Time remaining"), icon: "timer", fallback: true }
     ]
     widgetSurfaceEnabled: root.displayMode !== "instrument"
@@ -117,7 +117,7 @@ AbstractBackgroundWidget {
 
     // ── Card background ───────────────────────────────────────
     WidgetSurface {
-        irisPresentation: root.widgetIris
+        atollPresentation: root.widgetAtoll
         regionBrightness: root.regionBrightness
         anchors.fill: parent
         surfaceRadius: root.cornerRadiusOverride >= 0 ? root.cornerRadiusOverride : root.cardRadius
@@ -133,7 +133,7 @@ AbstractBackgroundWidget {
         screenY: root.y
         screenWidth: root.scaledScreenWidth
         screenHeight: root.scaledScreenHeight
-        shown: !root.irisFaced && root.displayMode !== "instrument"
+        shown: !root.atollFaced && root.displayMode !== "instrument"
             && (root.backgroundOpacity > 0 || root.borderWidth > 0 || root.effectiveBlur)
     }
 
@@ -142,7 +142,7 @@ AbstractBackgroundWidget {
         id: instrumentArea
         anchors.fill: parent
         opacity: root.displayMode === "instrument" ? 1 : 0
-        visible: !root.irisFaced && opacity > 0
+        visible: !root.atollFaced && opacity > 0
         enabled: root.displayMode === "instrument"
         Behavior on opacity {
             enabled: root.animationsActive
@@ -163,7 +163,7 @@ AbstractBackgroundWidget {
                     font.family: root.widgetBodyFamily
                     font.pixelSize: Math.round(11 * root.scaleFactor)
                     font.weight: Font.DemiBold
-                    font.capitalization: root.widgetIris ? Font.MixedCase : Font.AllUppercase
+                    font.capitalization: root.widgetAtoll ? Font.MixedCase : Font.AllUppercase
                     font.letterSpacing: root.scaleFactor
                 }
                 MaterialSymbol {
@@ -230,9 +230,9 @@ AbstractBackgroundWidget {
     // ── Ring mode ─────────────────────────────────────────────
     Item {
         anchors.fill: parent
-        anchors.margins: Appearance.angelEverywhere || Appearance.inirEverywhere ? 4 : 0
+        anchors.margins: Appearance.angelEverywhere || Appearance.lunanaEverywhere ? 4 : 0
         opacity: root.displayMode === "ring" ? 1 : 0
-        visible: !root.irisFaced && opacity > 0
+        visible: !root.atollFaced && opacity > 0
         enabled: root.displayMode === "ring"
         Behavior on opacity {
             enabled: root.animationsActive
@@ -281,9 +281,9 @@ AbstractBackgroundWidget {
     // ── Bars mode (VU meter style) ────────────────────────────
     Item {
         anchors.fill: parent
-        anchors.margins: Appearance.angelEverywhere || Appearance.inirEverywhere ? 4 : 0
+        anchors.margins: Appearance.angelEverywhere || Appearance.lunanaEverywhere ? 4 : 0
         opacity: root.displayMode === "bars" ? 1 : 0
-        visible: !root.irisFaced && opacity > 0
+        visible: !root.atollFaced && opacity > 0
         enabled: root.displayMode === "bars"
         Behavior on opacity {
             enabled: root.animationsActive
@@ -365,9 +365,9 @@ AbstractBackgroundWidget {
     // ── Pill mode (minimal horizontal bar) ────────────────────
     Item {
         anchors.fill: parent
-        anchors.margins: Appearance.angelEverywhere || Appearance.inirEverywhere ? 8 : 4
+        anchors.margins: Appearance.angelEverywhere || Appearance.lunanaEverywhere ? 8 : 4
         opacity: root.displayMode === "pill" ? 1 : 0
-        visible: !root.irisFaced && opacity > 0
+        visible: !root.atollFaced && opacity > 0
         enabled: root.displayMode === "pill"
         Behavior on opacity {
             enabled: root.animationsActive

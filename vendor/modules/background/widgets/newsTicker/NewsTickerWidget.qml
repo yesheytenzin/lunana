@@ -9,7 +9,7 @@ import "../../../common"
 import "../../../common/functions"
 import "../../../common/widgets"
 import ".."
-import "../../../iris/widgets"
+import "../../../atoll/widgets"
 
 // Compact desktop headline surface backed by the shared NewsService. Articles
 // only open from an explicit action, never from an incidental card click.
@@ -32,14 +32,14 @@ AbstractBackgroundWidget {
         { label: Translation.tr("5 min"), value: 300 }
     ]
 
-    implicitWidth: root.irisFaced ? root.irisFaceWidth : Math.round(Number(root._readConfigKey("contentWidth") ?? 320)
+    implicitWidth: root.atollFaced ? root.atollFaceWidth : Math.round(Number(root._readConfigKey("contentWidth") ?? 320)
         * root.scaleFactor)
-    implicitHeight: root.irisFaced ? root.irisFaceHeight : Math.round(Number(root._readConfigKey("contentHeight") ?? 92)
+    implicitHeight: root.atollFaced ? root.atollFaceHeight : Math.round(Number(root._readConfigKey("contentHeight") ?? 92)
         * root.scaleFactor)
-    irisFace: Component { IrisNewsFace { widget: root } }
-    irisSizes: ["small", "medium", "large"]
-    irisDefaultSize: "medium"
-    irisOptions: [
+    atollFace: Component { AtollNewsFace { widget: root } }
+    atollSizes: ["small", "medium", "large"]
+    atollDefaultSize: "medium"
+    atollOptions: [
         { key: "showMeta", raw: true, label: Translation.tr("Source and time"), icon: "info", fallback: true },
         { key: "rotateSeconds", raw: true, label: Translation.tr("Change every"), fallback: 45,
             choices: root.rotateChoices }
@@ -196,7 +196,7 @@ AbstractBackgroundWidget {
     }
 
     WidgetSurface {
-        irisPresentation: root.widgetIris
+        atollPresentation: root.widgetAtoll
         regionBrightness: root.regionBrightness
         anchors.fill: parent
         surfaceRadius: root.cornerRadiusOverride >= 0
@@ -213,14 +213,14 @@ AbstractBackgroundWidget {
         screenY: root.y
         screenWidth: root.scaledScreenWidth
         screenHeight: root.scaledScreenHeight
-        shown: !root.irisFaced && !root.instrument && (root.backgroundOpacity > 0 || root.borderWidth > 0
+        shown: !root.atollFaced && !root.instrument && (root.backgroundOpacity > 0 || root.borderWidth > 0
             || root.effectiveBlur)
     }
 
     HoverHandler { id: newsHover }
 
     RowLayout {
-        visible: !root.irisFaced
+        visible: !root.atollFaced
         anchors.fill: parent
         anchors.margins: Math.round(10 * root.scaleFactor)
         spacing: Math.round(9 * root.scaleFactor)

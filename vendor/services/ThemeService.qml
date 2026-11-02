@@ -17,28 +17,28 @@ Singleton {
     property bool ready: false
     readonly property string currentTheme: Config.options?.appearance?.theme ?? "auto"
     readonly property bool isAutoTheme: currentTheme === "auto"
-    readonly property bool isStandaloneSettingsWindow: (Quickshell.env("INIR_STANDALONE_WINDOW") ?? "") === "1"
+    readonly property bool isStandaloneSettingsWindow: (Quickshell.env("LUNANA_STANDALONE_WINDOW") ?? "") === "1"
     readonly property bool defaultApplyExternal: !isStandaloneSettingsWindow
     readonly property bool vesktopEnabled: (Config.options?.appearance?.wallpaperTheming?.enableVesktop ?? true) !== false
     readonly property var wallpaperThemingCfg: Config.options?.appearance?.wallpaperTheming ?? null
     readonly property var terminalAdjCfg: wallpaperThemingCfg?.terminalColorAdjustments ?? null
-    readonly property string panelFamily: Config.options?.panelFamily ?? "ii"
-    readonly property bool waffleUsesMainWallpaper: Config.options?.waffles?.background?.useMainWallpaper ?? true
-    // What iRiS asks of the system's mode and of the apps' surfaces: both are read by switchwall.sh, so a change regenerates.
-    readonly property string irisSchemeChoice: panelFamily === "iris" ? String(Config.options?.iris?.appearance?.scheme ?? "auto") : "auto"
-    readonly property bool irisMaterialApps: panelFamily === "iris" && (Config.options?.iris?.appearance?.materialForApps ?? true)
+    readonly property string panelFamily: Config.options?.panelFamily ?? "drift"
+    readonly property bool slateUsesMainWallpaper: Config.options?.slate?.background?.useMainWallpaper ?? true
+    // What Atoll asks of the system's mode and of the apps' surfaces: both are read by switchwall.sh, so a change regenerates.
+    readonly property string atollSchemeChoice: panelFamily === "atoll" ? String(Config.options?.atoll?.appearance?.scheme ?? "auto") : "auto"
+    readonly property bool atollMaterialApps: panelFamily === "atoll" && (Config.options?.atoll?.appearance?.materialForApps ?? true)
     property string appsSurfaceSeed: ""
     // A scheme the person picks is also their saved preference, so Auto keeps what they last saw instead of an older toggle.
     onIrisSchemeChoiceChanged: {
-        if (!Config.ready || irisSchemeChoice === "auto") return
-        const wantDark = irisSchemeChoice === "dark"
+        if (!Config.ready || atollSchemeChoice === "auto") return
+        const wantDark = atollSchemeChoice === "dark"
         if ((Config.options?.appearance?.customTheme?.darkmode ?? true) !== wantDark)
             Config.setNestedValue("appearance.customTheme.darkmode", wantDark)
     }
     readonly property string liveRegenSignature: JSON.stringify({
         theme: currentTheme,
         panelFamily: root.panelFamily,
-        waffleUsesMainWallpaper: root.waffleUsesMainWallpaper,
+        slateUsesMainWallpaper: root.slateUsesMainWallpaper,
         paletteType: Config.options?.appearance?.palette?.type ?? "auto",
         themingWallpaperPath: Wallpapers.effectiveWallpaperPath ?? "",
         enableAppsAndShell: wallpaperThemingCfg?.enableAppsAndShell ?? true,
@@ -57,8 +57,8 @@ Singleton {
         termBackgroundBrightness: terminalAdjCfg?.backgroundBrightness ?? 0.5,
         softenColors: Config.options?.appearance?.softenColors ?? true,
         autoDarkLightMode: wallpaperThemingCfg?.autoDarkLightMode ?? false,
-        irisScheme: root.irisSchemeChoice === "ink" ? "light" : root.irisSchemeChoice,
-        irisMaterialApps: root.irisMaterialApps,
+        atollScheme: root.atollSchemeChoice === "ink" ? "light" : root.atollSchemeChoice,
+        atollMaterialApps: root.atollMaterialApps,
     })
     property string _lastLiveRegenSignature: ""
     property string _lastPanelFamily: ""
@@ -115,7 +115,7 @@ Singleton {
     // ── Global style ────────────────────────────────────────────────────
     // Single owner of "what does selecting style X write to config". This
     // lived in three places (both settings families and the action registry)
-    // that had already drifted: waffle ignored the per-style corner defaults
+    // that had already drifted: slate ignored the per-style corner defaults
     // entirely, and the action registry had no cookie branch at all, so cookie
     // silently inherited material's corner style.
 
@@ -124,7 +124,7 @@ Singleton {
         switch (styleId) {
         case "cards": return styles?.cards ?? 3
         case "aurora": return styles?.aurora ?? 1
-        case "inir": return styles?.inir ?? 1
+        case "lunana": return styles?.lunana ?? 1
         case "angel": return styles?.angel ?? 1
         case "regalia": return styles?.regalia ?? 1
         case "zzz": return styles?.zzz ?? 0
@@ -149,7 +149,7 @@ Singleton {
         })
     }
 
-    readonly property var globalStyles: ["material", "cards", "aurora", "inir", "angel", "regalia", "zzz", "cookie", "editorial"]
+    readonly property var globalStyles: ["material", "cards", "aurora", "lunana", "angel", "regalia", "zzz", "cookie", "editorial"]
 
     IpcHandler {
         target: "globalStyle"
@@ -180,7 +180,7 @@ Singleton {
                 colourTheme: root.currentTheme,
                 saved: (Config.options?.appearance?.customTheme?.darkmode ?? true) ? "dark" : "light",
                 fromWallpaper: wallpaperThemingCfg?.autoDarkLightMode ?? false,
-                irisScheme: root.irisSchemeChoice
+                atollScheme: root.atollSchemeChoice
             })
         }
     }

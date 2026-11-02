@@ -1,4 +1,4 @@
-# Greeting for iNiR installer
+# Greeting for Lunana installer
 # This script is meant to be sourced.
 
 # shellcheck shell=bash
@@ -94,7 +94,7 @@ local_visual_mode="plain"
 $HAS_GUM && local_visual_mode="gum"
 
 tui_hero_card \
-    "Set up iNiR" \
+    "Set up Lunana" \
     "Preparing ${DETECTED_VERSION} for ${DETECTED_DISTRO}." \
     "We'll install what this system needs, wire the session, keep backups, and leave the shell ready to start."
 

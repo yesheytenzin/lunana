@@ -1450,7 +1450,7 @@ ContentPage {
                     onSelected: value => Config.setNestedValue("orbit.backdropBlurMode", value)
                     options: [
                         { displayName: Translation.tr("Off"), icon: "blur_off", value: "off" },
-                        { displayName: Translation.tr("iNiR glass"), icon: "blur_on", value: "shell" }
+                        { displayName: Translation.tr("Lunana glass"), icon: "blur_on", value: "shell" }
                     ]
                 }
 

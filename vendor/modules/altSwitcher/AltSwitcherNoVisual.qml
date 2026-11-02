@@ -8,8 +8,8 @@ import QtQuick
 import Quickshell
 import Quickshell.Io
 
-// Stable Alt+Tab IPC router plus lightweight no-visual controller. Visual ii
-// commands are delivered internally to AltSwitcher.qml; visual Waffle commands
+// Stable Alt+Tab IPC router plus lightweight no-visual controller. Visual drift
+// commands are delivered internally to AltSwitcher.qml; visual Slate commands
 // stay family-local. No-UI modes preserve MRU cycling without constructing the
 // full switcher windows, preview delegates, shaders or icon cache.
 Scope {
@@ -19,27 +19,27 @@ Scope {
     property var snapshot: []
     property int currentIndex: 0
 
-    readonly property bool waffleFamilyActive:
-        (Config.options?.panelFamily ?? "ii") === "waffle"
-    readonly property bool iiFamilyActive:
-        (Config.options?.panelFamily ?? "ii") === "ii"
-    readonly property string iiPreset:
+    readonly property bool slateFamilyActive:
+        (Config.options?.panelFamily ?? "drift") === "slate"
+    readonly property bool driftFamilyActive:
+        (Config.options?.panelFamily ?? "drift") === "drift"
+    readonly property string driftPreset:
         Config.options?.altSwitcher?.preset ?? "default"
-    readonly property bool iiNoVisual:
+    readonly property bool driftNoVisual:
         (Config.options?.altSwitcher?.noVisualUi ?? false)
-        && root.iiPreset !== "skew"
+        && root.driftPreset !== "skew"
     readonly property bool routeToVisualIi:
-        root.iiFamilyActive && !root.iiNoVisual
-    readonly property var waffleOptions:
-        Config.options?.waffles?.altSwitcher ?? ({})
-    readonly property string wafflePreset: waffleOptions.preset ?? "thumbnails"
-    readonly property bool waffleNoVisual:
-        wafflePreset === "none"
-        || ((waffleOptions.noVisualUi ?? false) && wafflePreset !== "skew")
-    readonly property bool routeToVisualWaffle:
-        waffleFamilyActive && !waffleNoVisual
-    readonly property bool useMostRecentFirst: waffleFamilyActive
-        ? (waffleOptions.useMostRecentFirst ?? true)
+        root.driftFamilyActive && !root.driftNoVisual
+    readonly property var slateOptions:
+        Config.options?.slate?.altSwitcher ?? ({})
+    readonly property string slatePreset: slateOptions.preset ?? "thumbnails"
+    readonly property bool slateNoVisual:
+        slatePreset === "none"
+        || ((slateOptions.noVisualUi ?? false) && slatePreset !== "skew")
+    readonly property bool routeToVisualSlate:
+        slateFamilyActive && !slateNoVisual
+    readonly property bool useMostRecentFirst: slateFamilyActive
+        ? (slateOptions.useMostRecentFirst ?? true)
         : (Config.options?.altSwitcher?.useMostRecentFirst ?? true)
 
     Timer {
@@ -60,10 +60,10 @@ Scope {
         GlobalStates.altSwitcherCommand(functionName)
     }
 
-    function routeToWaffle(functionName: string): void {
+    function routeToSlate(functionName: string): void {
         Quickshell.execDetached([
-            ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")),
-            "waffleAltSwitcher",
+            ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/lunana")),
+            "slateAltSwitcher",
             functionName
         ])
     }
@@ -156,14 +156,14 @@ Scope {
     }
 
     Component.onCompleted: GlobalStates.altSwitcherOpen = false
-    onRouteToVisualIiChanged: root.resetSession()
-    onRouteToVisualWaffleChanged: root.resetSession()
+    onRouteToVisualDriftChanged: root.resetSession()
+    onRouteToVisualSlateChanged: root.resetSession()
 
     IpcHandler {
         target: "altSwitcher"
 
         function opens(which: string): string {
-            if (which === "inir" || which === "niri") {
+            if (which === "lunana" || which === "niri") {
                 NiriKeybinds.setAltTabSource(which)
                 return which
             }
@@ -172,8 +172,8 @@ Scope {
         }
 
         function open(): void {
-            if (root.routeToVisualWaffle) {
-                root.routeToWaffle("open")
+            if (root.routeToVisualSlate) {
+                root.routeToSlate("open")
                 return
             }
             if (root.routeToVisualIi) {
@@ -184,8 +184,8 @@ Scope {
         }
 
         function close(): void {
-            if (root.routeToVisualWaffle) {
-                root.routeToWaffle("close")
+            if (root.routeToVisualSlate) {
+                root.routeToSlate("close")
                 return
             }
             if (root.routeToVisualIi) {
@@ -196,8 +196,8 @@ Scope {
         }
 
         function toggle(): void {
-            if (root.routeToVisualWaffle) {
-                root.routeToWaffle("toggle")
+            if (root.routeToVisualSlate) {
+                root.routeToSlate("toggle")
                 return
             }
             if (root.routeToVisualIi) {
@@ -208,8 +208,8 @@ Scope {
         }
 
         function next(): void {
-            if (root.routeToVisualWaffle) {
-                root.routeToWaffle("next")
+            if (root.routeToVisualSlate) {
+                root.routeToSlate("next")
                 return
             }
             if (root.routeToVisualIi) {
@@ -220,8 +220,8 @@ Scope {
         }
 
         function previous(): void {
-            if (root.routeToVisualWaffle) {
-                root.routeToWaffle("previous")
+            if (root.routeToVisualSlate) {
+                root.routeToSlate("previous")
                 return
             }
             if (root.routeToVisualIi) {

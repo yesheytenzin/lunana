@@ -1,4 +1,4 @@
-# Install dependencies for iNiR on Fedora-based systems
+# Install dependencies for Lunana on Fedora-based systems
 # This script is meant to be sourced, not run directly.
 
 # shellcheck shell=bash
@@ -62,7 +62,7 @@ version_at_least() {
 }
 
 fedora_quickshell_compatible() {
-  # iNiR imports Quickshell.Networking and uses 0.3-era pragmas, so Fedora's
+  # Lunana imports Quickshell.Networking and uses 0.3-era pragmas, so Fedora's
   # current 0.2.1 package is not sufficient even though the package name exists.
   local version=""
   if command -v qs &>/dev/null; then
@@ -123,7 +123,7 @@ install_awww_fedora() {
   sudo dnf install -y lz4-devel libxkbcommon-devel wayland-devel wayland-protocols-devel >/dev/null 2>&1 || return 1
 
   local temp_root
-  temp_root="$(mktemp -d /tmp/inir-awww.XXXXXX)" || return 1
+  temp_root="$(mktemp -d /tmp/lunana-awww.XXXXXX)" || return 1
   if cargo install --root "$temp_root" --git https://codeberg.org/LGFae/awww.git awww >/dev/null 2>&1 \
       && [[ -x "$temp_root/bin/awww" && -x "$temp_root/bin/awww-daemon" ]]; then
     sudo install -m 0755 "$temp_root/bin/awww" "$temp_root/bin/awww-daemon" /usr/local/bin/
@@ -147,7 +147,7 @@ install_gowall_fedora() {
 
   sudo dnf install -y golang >/dev/null 2>&1 || return 1
   local build_dir
-  build_dir="$(mktemp -d /tmp/inir-gowall.XXXXXX)" || return 1
+  build_dir="$(mktemp -d /tmp/lunana-gowall.XXXXXX)" || return 1
   if git clone --depth 1 https://github.com/Achno/gowall.git "$build_dir/src" >/dev/null 2>&1 \
       && (cd "$build_dir/src" && go build -o "$build_dir/gowall" . >/dev/null 2>&1); then
     sudo install -m 0755 "$build_dir/gowall" /usr/local/bin/gowall
@@ -163,7 +163,7 @@ install_missioncenter_fedora() {
   flatpak install -y --user flathub io.missioncenter.MissionCenter >/dev/null 2>&1 || return 1
 
   local wrapper
-  wrapper="$(mktemp /tmp/inir-missioncenter.XXXXXX)" || return 1
+  wrapper="$(mktemp /tmp/lunana-missioncenter.XXXXXX)" || return 1
   printf '%s\n' '#!/bin/sh' 'exec flatpak run io.missioncenter.MissionCenter "$@"' > "$wrapper"
   sudo install -m 0755 "$wrapper" /usr/local/bin/missioncenter
   rm -f "$wrapper"
@@ -179,7 +179,7 @@ install_songrec_fedora() {
     >/dev/null 2>&1 || return 1
 
   local temp_root
-  temp_root="$(mktemp -d /tmp/inir-songrec.XXXXXX)" || return 1
+  temp_root="$(mktemp -d /tmp/lunana-songrec.XXXXXX)" || return 1
   if cargo install --root "$temp_root" songrec --no-default-features -F gui,ffmpeg,pulse,mpris >/dev/null 2>&1 \
       && [[ -x "$temp_root/bin/songrec" ]]; then
     sudo install -m 0755 "$temp_root/bin/songrec" /usr/local/bin/songrec
@@ -231,7 +231,7 @@ if [[ -n "${ONLY_MISSING_DEPS:-}" ]]; then
         [[ " ${_fed_special_cmds[*]} " == *" ${cmd} "* ]] || _fed_special_cmds+=("$cmd")
         ;;
       checkupdates|go)
-        # Legacy Doctor output from older iNiR versions. Neither is a Fedora
+        # Legacy Doctor output from older Lunana versions. Neither is a Fedora
         # runtime dependency: checkupdates is Arch-only and Go is only a build fallback.
         ;;
       *)
@@ -311,7 +311,7 @@ esac
 #####################################################################################
 tui_info "Checking Fedora package sources..."
 
-# Fedora 44+ has a quickshell package, but iNiR currently needs Quickshell 0.3+.
+# Fedora 44+ has a quickshell package, but Lunana currently needs Quickshell 0.3+.
 # Prefer an official package as soon as Fedora catches up; until then use the
 # release COPR rather than silently installing an incompatible 0.2.x runtime.
 if fedora_quickshell_compatible; then
@@ -355,7 +355,7 @@ FEDORA_CORE_PKGS=(
   quickshell
   niri
 
-  # Login manager required by the shipped ii-pixel login theme.
+  # Login manager required by the shipped drift-pixel login theme.
   sddm
   
   # Build tools (needed for Python packages like dbus-python, pycairo, pygobject)
@@ -597,7 +597,7 @@ fi
 unset FEDORA_REPO_PKGS FEDORA_INSTALLABLE_PKGS
 
 if ! fedora_quickshell_compatible; then
-  log_error "Quickshell 0.3+ is required by iNiR but is unavailable from the configured Fedora repositories"
+  log_error "Quickshell 0.3+ is required by Lunana but is unavailable from the configured Fedora repositories"
   log_warning "Fedora's current official quickshell package is 0.2.x; enable a compatible Quickshell repository and rerun setup"
   return 1
 fi
@@ -720,7 +720,7 @@ if ${INSTALL_TOOLKIT:-true} && ! command -v hyprpicker &>/dev/null; then
   unset HYPRPICKER_BUILD_DEPS HYPRPICKER_BUILD_DIR
 fi
 
-# Non-repository runtime providers. These are required by exposed iNiR
+# Non-repository runtime providers. These are required by exposed Lunana
 # features, so a successful fresh install must leave their host commands usable.
 if ! install_awww_fedora; then
   log_warning "awww/awww-daemon are still missing — the internal wallpaper renderer will be used"
@@ -778,7 +778,7 @@ tui_info "Installing critical fonts..."
 FONT_DIR="$HOME/.local/share/fonts"
 mkdir -p "$FONT_DIR"
 
-# Material Symbols Rounded (icons) - this is the font iNiR actually uses
+# Material Symbols Rounded (icons) - this is the font Lunana actually uses
 if ! fc-list | grep -qi "Material Symbols Rounded"; then
   log_info "Downloading Material Symbols Rounded font..."
   
@@ -932,7 +932,7 @@ if ! fc-list | grep -qi "Rubik"; then
     log_success "Rubik installed"
 fi
 
-# Geist (used by default in iNiR)
+# Geist (used by default in Lunana)
 if ! fc-list | grep -qi "Geist"; then
   log_info "Downloading Geist font..."
   TEMP_DIR="/tmp/geist-font-$$"

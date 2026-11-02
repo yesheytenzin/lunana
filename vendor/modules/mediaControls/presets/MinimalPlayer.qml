@@ -47,7 +47,7 @@ Item {
     StyledRectangularShadow {
         target: card
         visible: !Appearance.zzzEverywhere
-            && (Appearance.angelEverywhere || (!Appearance.inirEverywhere && !Appearance.auroraEverywhere))
+            && (Appearance.angelEverywhere || (!Appearance.lunanaEverywhere && !Appearance.auroraEverywhere))
     }
 
     Rectangle {
@@ -56,18 +56,18 @@ Item {
         width: parent.width - Appearance.sizes.elevationMargin
         height: parent.height - Appearance.sizes.elevationMargin
         radius: Appearance.zzzEverywhere ? Appearance.zzz.panelRadius
-            : Appearance.inirEverywhere ? Appearance.inir.roundingNormal : root.radius
+            : Appearance.lunanaEverywhere ? Appearance.lunana.roundingNormal : root.radius
         color: Appearance.zzzEverywhere ? Appearance.zzz.paper
-             : Appearance.inirEverywhere ? playerBase.inirLayer1
+             : Appearance.lunanaEverywhere ? playerBase.lunanaLayer1
              : Appearance.auroraEverywhere ? ColorUtils.transparentize(
                  effectiveColors?.colLayer0 ?? Appearance.colors.colLayer0, 0.7
                )
              : (effectiveColors?.colLayer0 ?? Appearance.colors.colLayer0)
         border.width: root.vizType === "organic" && root.vizPosition !== "none"
             ? 0 : (Appearance.zzzEverywhere ? Appearance.zzz.borderThick
-                : Appearance.inirEverywhere ? 1 : 0)
+                : Appearance.lunanaEverywhere ? 1 : 0)
         border.color: Appearance.zzzEverywhere ? Appearance.zzz.hairlineStrong
-            : Appearance.inirEverywhere ? Appearance.inir.colBorder : "transparent"
+            : Appearance.lunanaEverywhere ? Appearance.lunana.colBorder : "transparent"
         // Organic morph on style/shape switch (organic-transitions)
         Behavior on radius { enabled: Appearance.animationsEnabled; NumberAnimation { duration: Appearance.animation.elementResize.duration; easing.type: Appearance.animation.elementResize.type; easing.bezierCurve: Appearance.animation.elementResize.bezierCurve } }
         Behavior on color { enabled: Appearance.animationsEnabled; ColorAnimation { duration: Appearance.animation.elementMoveFast.duration; easing.type: Appearance.animation.elementMoveFast.type; easing.bezierCurve: Appearance.animation.elementMoveFast.bezierCurve } }
@@ -109,16 +109,16 @@ Item {
                 downloaded: playerBase.downloaded
                 slideDirection: playerBase.slideDirection
                 artRadius: Appearance.zzzEverywhere ? Appearance.zzz.controlRadius
-                    : Appearance.inirEverywhere
-                    ? Appearance.inir.roundingSmall
+                    : Appearance.lunanaEverywhere
+                    ? Appearance.lunana.roundingSmall
                     : Appearance.rounding.small
                 placeholderColor: Appearance.zzzEverywhere ? Appearance.zzz.paperAlt
-                    : Appearance.inirEverywhere
-                    ? playerBase.inirLayer2
+                    : Appearance.lunanaEverywhere
+                    ? playerBase.lunanaLayer2
                     : (effectiveColors?.colLayer1 ?? Appearance.colors.colLayer1)
                 iconColor: Appearance.zzzEverywhere ? Appearance.zzz.inkMuted
-                    : Appearance.inirEverywhere
-                    ? playerBase.inirTextSecondary
+                    : Appearance.lunanaEverywhere
+                    ? playerBase.lunanaTextSecondary
                     : (effectiveColors?.colSubtext ?? Appearance.colors.colSubtext)
                 iconSize: 26
                 enableBlurTransition: false
@@ -139,8 +139,8 @@ Item {
                     font.weight: Appearance.zzzEverywhere ? Font.Black : Font.Medium
                     font.italic: Appearance.zzzEverywhere
                     color: Appearance.zzzEverywhere ? Appearance.zzz.ink
-                        : Appearance.inirEverywhere
-                        ? playerBase.inirText
+                        : Appearance.lunanaEverywhere
+                        ? playerBase.lunanaText
                         : (effectiveColors?.colOnLayer0 ?? Appearance.colors.colOnLayer0)
                     Behavior on color {
                         enabled: Appearance.animationsEnabled
@@ -157,8 +157,8 @@ Item {
                     text: playerBase.effectiveArtist || ""
                     font.pixelSize: Appearance.font.pixelSize.smaller
                     color: Appearance.zzzEverywhere ? Appearance.zzz.inkMuted
-                        : Appearance.inirEverywhere
-                        ? playerBase.inirTextSecondary
+                        : Appearance.lunanaEverywhere
+                        ? playerBase.lunanaTextSecondary
                         : (effectiveColors?.colSubtext ?? Appearance.colors.colSubtext)
                     Behavior on color {
                         enabled: Appearance.animationsEnabled
@@ -179,14 +179,14 @@ Item {
                     canSeek: playerBase.effectiveCanSeek
                     isPlaying: playerBase.effectiveIsPlaying
                     highlightColor: Appearance.zzzEverywhere ? (effectiveColors?.colPrimary ?? Appearance.zzz.accent)
-                        : Appearance.inirEverywhere
-                        ? playerBase.inirPrimary
+                        : Appearance.lunanaEverywhere
+                        ? playerBase.lunanaPrimary
                         : Appearance.auroraEverywhere
                             ? Appearance.colors.colPrimary
                             : (effectiveColors?.colPrimary ?? Appearance.colors.colPrimary)
                     trackColor: Appearance.zzzEverywhere ? Appearance.zzz.metricTrack
-                        : Appearance.inirEverywhere
-                        ? playerBase.inirLayer2
+                        : Appearance.lunanaEverywhere
+                        ? playerBase.lunanaLayer2
                         : Appearance.auroraEverywhere
                             ? Appearance.aurora.colElevatedSurface
                             : (effectiveColors?.colSecondaryContainer ?? Appearance.colors.colSecondaryContainer)
@@ -202,8 +202,8 @@ Item {
                     font.pixelSize: Appearance.font.pixelSize.smallest
                     font.family: Appearance.font.family.numbers
                     color: Appearance.zzzEverywhere ? Appearance.zzz.inkMuted
-                        : Appearance.inirEverywhere
-                        ? playerBase.inirTextSecondary
+                        : Appearance.lunanaEverywhere
+                        ? playerBase.lunanaTextSecondary
                         : (effectiveColors?.colSubtext ?? Appearance.colors.colSubtext)
                     Behavior on color {
                         enabled: Appearance.animationsEnabled
@@ -224,32 +224,32 @@ Item {
                 playIconSize: 20
                 isPlaying: playerBase.effectiveIsPlaying
                 buttonRadius: Appearance.zzzEverywhere ? Appearance.zzz.controlRadius
-                    : Appearance.inirEverywhere
-                    ? Appearance.inir.roundingSmall
+                    : Appearance.lunanaEverywhere
+                    ? Appearance.lunana.roundingSmall
                     : Appearance.rounding.full
                 buttonHoverColor: Appearance.zzzEverywhere ? Appearance.zzz.paperAlt
-                    : Appearance.inirEverywhere
-                    ? Appearance.inir.colLayer2Hover
+                    : Appearance.lunanaEverywhere
+                    ? Appearance.lunana.colLayer2Hover
                     : Appearance.auroraEverywhere
                         ? Appearance.aurora.colSubSurface
                         : ColorUtils.transparentize(
                             effectiveColors?.colLayer1 ?? Appearance.colors.colLayer1, 0.5
                           )
                 buttonRippleColor: Appearance.zzzEverywhere ? ColorUtils.applyAlpha(Appearance.zzz.accent, 0.28)
-                    : Appearance.inirEverywhere
-                    ? Appearance.inir.colLayer2Active
+                    : Appearance.lunanaEverywhere
+                    ? Appearance.lunana.colLayer2Active
                     : Appearance.auroraEverywhere
                         ? Appearance.aurora.colSubSurfaceActive
                         : (effectiveColors?.colLayer1Active ?? Appearance.colors.colLayer1Active)
                 iconColor: Appearance.zzzEverywhere ? Appearance.zzz.ink
-                    : Appearance.inirEverywhere
-                    ? playerBase.inirText
+                    : Appearance.lunanaEverywhere
+                    ? playerBase.lunanaText
                     : Appearance.auroraEverywhere
                         ? Appearance.colors.colOnLayer0
                         : (effectiveColors?.colOnLayer0 ?? Appearance.colors.colOnLayer0)
                 playIconColor: Appearance.zzzEverywhere ? (effectiveColors?.colPrimary ?? Appearance.zzz.accent)
-                    : Appearance.inirEverywhere
-                    ? playerBase.inirPrimary
+                    : Appearance.lunanaEverywhere
+                    ? playerBase.lunanaPrimary
                     : Appearance.auroraEverywhere
                         ? Appearance.colors.colOnLayer0
                         : Appearance.colors.colOnLayer1

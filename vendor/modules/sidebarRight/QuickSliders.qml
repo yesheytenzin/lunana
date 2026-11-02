@@ -54,7 +54,7 @@ Rectangle {
     implicitHeight: contentItem.implicitHeight + root.verticalPadding * 2
     radius: Appearance.zzzEverywhere ? Appearance.zzz.cardRadius
         : Appearance.angelEverywhere ? Appearance.angel.roundingNormal
-        : Appearance.inirEverywhere ? Appearance.inir.roundingNormal
+        : Appearance.lunanaEverywhere ? Appearance.lunana.roundingNormal
         : Appearance.rounding.normal
     Behavior on radius {
         enabled: Appearance.animationsEnabled
@@ -62,7 +62,7 @@ Rectangle {
     }
     color: Appearance.zzzEverywhere ? "transparent"
          : Appearance.angelEverywhere ? Appearance.angel.colGlassCard
-         : Appearance.inirEverywhere ? Appearance.inir.colLayer1
+         : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer1
          : Appearance.auroraEverywhere ? "transparent"
          : Appearance.editorialEverywhere && Appearance.editorial.sidebarFullGlass ? Appearance.editorial.glassPaper
          : Appearance.colors.colLayer1
@@ -72,7 +72,7 @@ Rectangle {
     }
     border.width: Appearance.zzzEverywhere ? 0 : (root.compactSurface ? 0
         : (Appearance.angelEverywhere ? 0
-            : (Appearance.inirEverywhere ? 1
+            : (Appearance.lunanaEverywhere ? 1
                 : Appearance.editorialEverywhere && Appearance.editorial.sidebarFullGlass ? 1 : 0)))
     Behavior on border.width {
         enabled: Appearance.animationsEnabled
@@ -80,7 +80,7 @@ Rectangle {
     }
     border.color: Appearance.zzzEverywhere ? "transparent"
         : Appearance.angelEverywhere ? "transparent"
-        : Appearance.inirEverywhere ? Appearance.inir.colBorder
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colBorder
         : Appearance.editorialEverywhere && Appearance.editorial.sidebarFullGlass
             ? Qt.alpha(Appearance.editorial.edge, 0.28) : "transparent"
     Behavior on border.color {

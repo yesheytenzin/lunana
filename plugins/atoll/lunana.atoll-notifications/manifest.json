@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "lunana.atoll-notifications",
+  "name": "Lunana Atoll Notifications",
+  "version": "0.4.0",
+  "author": "lunana",
+  "license": "GPL-3.0",
+  "description": "Lunana Atoll banners host.",
+  "kinds": [
+    "service"
+  ],
+  "entryPoints": {
+    "service": "AtollNotifications.qml"
+  },
+  "x-lunana": {
+    "suiteId": "lunana",
+    "role": "atoll-notifications",
+    "milestone": "parity",
+    "requires": [],
+    "recommends": []
+  }
+}

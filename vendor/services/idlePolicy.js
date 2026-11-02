@@ -1,22 +1,22 @@
 .pragma library
 
-function niriOffCommand(quotedInir) {
-    return "'" + quotedInir + "' brightness sleepBegin"
+function niriOffCommand(quotedLunana) {
+    return "'" + quotedLunana + "' brightness sleepBegin"
 }
 
-function niriResumeCommand(quotedInir) {
-    return "'" + quotedInir + "' brightness restoreAfterWake"
+function niriResumeCommand(quotedLunana) {
+    return "'" + quotedLunana + "' brightness restoreAfterWake"
 }
 
 // Hyprland has no Niri-style output-sleep IPC; dpms off/on is the nearest
-// analog. Brightness save/restore still runs through the inir launcher so the
+// analog. Brightness save/restore still runs through the lunana launcher so the
 // panel-level state stays consistent across compositors.
-function hyprOffCommand(quotedInir) {
-    return "/usr/bin/sh -c \"'\" + quotedInir + \"' brightness sleepBegin; /usr/bin/hyprctl dispatch dpms off\""
+function hyprOffCommand(quotedLunana) {
+    return "/usr/bin/sh -c \"'\" + quotedLunana + \"' brightness sleepBegin; /usr/bin/hyprctl dispatch dpms off\""
 }
 
-function hyprResumeCommand(quotedInir) {
-    return "/usr/bin/sh -c \"/usr/bin/hyprctl dispatch dpms on; '\" + quotedInir + \"' brightness restoreAfterWake\""
+function hyprResumeCommand(quotedLunana) {
+    return "/usr/bin/sh -c \"/usr/bin/hyprctl dispatch dpms on; '\" + quotedLunana + \"' brightness restoreAfterWake\""
 }
 
 function commandUsesDrmPowerOff(command) {

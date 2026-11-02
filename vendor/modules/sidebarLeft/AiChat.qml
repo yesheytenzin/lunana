@@ -356,7 +356,7 @@ Inline w/ backslash and round brackets \\(e^{i\\pi} + 1 = 0\\)
                 // eliding is what keeps the row inside.
                 radius: Appearance.editorialEverywhere ? Appearance.rounding.small : Appearance.rounding.normal - root.padding
                 color: Appearance.angelEverywhere ? Appearance.angel.colGlassCard
-                    : Appearance.inirEverywhere ? Appearance.inir.colLayer2
+                    : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2
                     : Appearance.auroraEverywhere ? Appearance.aurora.colElevatedSurface : Appearance.colors.colLayer2
                 RowLayout {
                     id: statusRowLayout
@@ -942,11 +942,11 @@ Inline w/ backslash and round brackets \\(e^{i\\pi} + 1 = 0\\)
                     toggled: enabled
                     // Active send = accent, not the default dark chrome plate.
                     colBackgroundToggled: Appearance.zzzEverywhere ? Appearance.zzz.accent
-                        : Appearance.inirEverywhere ? Appearance.inir.colPrimary
+                        : Appearance.lunanaEverywhere ? Appearance.lunana.colPrimary
                         : Appearance.angelEverywhere ? Appearance.angel.colPrimary
                         : Appearance.colors.colPrimary
                     colBackgroundToggledHover: Appearance.zzzEverywhere ? Appearance.zzz.sticker
-                        : Appearance.inirEverywhere ? Appearance.inir.colPrimaryHover
+                        : Appearance.lunanaEverywhere ? Appearance.lunana.colPrimaryHover
                         : Appearance.colors.colPrimaryHover
 
                     MouseArea {

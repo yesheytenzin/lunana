@@ -137,7 +137,7 @@ Singleton {
                 cmd = "pacman -Qq 2>/dev/null"
                 break
             case "xbps":
-                cmd = "xbps-query -l 2>/dev/null | awk '$1 == \"ii\" {print $2}' | while IFS= read -r pkgver; do xbps-uhelper getpkgname \"$pkgver\"; done"
+                cmd = "xbps-query -l 2>/dev/null | awk '$1 == \"drift\" {print $2}' | while IFS= read -r pkgver; do xbps-uhelper getpkgname \"$pkgver\"; done"
                 break
             case "apt":
                 cmd = "dpkg --get-selections 2>/dev/null | grep -v deinstall | awk '{print $1}'"
@@ -250,7 +250,7 @@ Singleton {
             Quickshell.execDetached(["/usr/bin/notify-send",
                 Translation.tr("Software"),
                 Translation.tr("No package available for your system"),
-                "-a", "iNiR"])
+                "-a", "Lunana"])
             return false
         }
 
@@ -281,7 +281,7 @@ Singleton {
                 Quickshell.execDetached(["/usr/bin/notify-send",
                     Translation.tr("Software"),
                     Translation.tr("This package requires an AUR helper (yay or paru)"),
-                    "-a", "iNiR"])
+                    "-a", "Lunana"])
                 return false
             default:
                 return false

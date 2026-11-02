@@ -14,7 +14,7 @@ import "../common/functions"
  * Only the hovered or held action shows its label.
  *
  * Upstream dispatched through a Hyprland-Lua binding; here every action goes
- * through iNiR's Session singleton, so the surface works on both compositors.
+ * through Lunana's Session singleton, so the surface works on both compositors.
  */
 PillSurface {
     id: root

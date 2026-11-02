@@ -9,9 +9,9 @@ import "../modules/common/functions"
 import "."
 
 /**
- * Niri animation presets. Shipped ones are read from the running iNiR
+ * Niri animation presets. Shipped ones are read from the running Lunana
  * (defaults/niri-animation-presets.json), extra ones from
- * ~/.config/inir/niri-animation-presets.json. The truth is the animations block
+ * ~/.config/lunana/niri-animation-presets.json. The truth is the animations block
  * of config.d/60-animations.kdl, which niri-config.py rewrites and matches back
  * to a preset ("" = custom).
  */

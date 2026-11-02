@@ -1,19 +1,19 @@
-# iNiR Widget SDK
+# Lunana Widget SDK
 
-Custom desktop widgets that run on the iNiR shell. Full QML access to 100+ services,
+Custom desktop widgets that run on the Lunana shell. Full QML access to 100+ services,
 190+ UI components, and the entire Appearance token system.
 
-Widgets live in `~/.config/inir/widgets/<name>/` and are loaded automatically.
+Widgets live in `~/.config/lunana/widgets/<name>/` and are loaded automatically.
 
-Widgets may also expose a compact iRiS module, which sits on the Island's Desktop page. See
+Widgets may also expose a compact Atoll module, which sits on the Island's Desktop page. See
 `IRIS-SDK.md` for its manifest and tokens.
 
 ## Quick Start
 
 ```bash
-inir customWidgets create my-widget    # generates scaffold
-# edit ~/.config/inir/widgets/my-widget/MyWidget.qml
-inir customWidgets reload              # hot-reload without restart
+lunana customWidgets create my-widget    # generates scaffold
+# edit ~/.config/lunana/widgets/my-widget/MyWidget.qml
+lunana customWidgets reload              # hot-reload without restart
 ```
 
 Or copy the reference widget from `defaults/widgets/example-widget/`.
@@ -21,7 +21,7 @@ Or copy the reference widget from `defaults/widgets/example-widget/`.
 ## File Structure
 
 ```
-~/.config/inir/widgets/my-widget/
+~/.config/lunana/widgets/my-widget/
   widget.json       # manifest (name, icon, configKeys, resize behavior)
   MyWidget.qml      # main component — extends AbstractBackgroundWidget
   (any other .qml files, images, scripts)
@@ -327,7 +327,7 @@ StyledSpinBox {
 
 ## Config System
 
-Widget config persists in `~/.config/inir/config.json` under
+Widget config persists in `~/.config/lunana/config.json` under
 `background.widgets.custom.<widget-id>`.
 
 ### Reading
@@ -530,5 +530,5 @@ editPopoverContent: Component {
 - For ResourceUsage, call `ensureRunning()` or the data will be stale/zero
 - Use `FadeLoader { shown: condition }` for smooth show/hide of optional sections
 - The widget runs in the same QML engine as the shell — same trust model as a shell extension
-- Test with `inir customWidgets reload` (no restart needed)
-- Check for errors: `inir logs | grep -i error`
+- Test with `lunana customWidgets reload` (no restart needed)
+- Check for errors: `lunana logs | grep -i error`

@@ -28,7 +28,7 @@ Singleton {
         || copyProc.running || extractProc.running || compressProc.running
 
     // Single reusable preview file — never spams new images
-    readonly property string previewFile: "/tmp/inir-gowall-preview"
+    readonly property string previewFile: "/tmp/lunana-gowall-preview"
     readonly property string previewUrl: _previewReady ? `file://${_currentPreviewPath}?rev=${previewRevision}` : ""
 
     // --- Internal state ---
@@ -49,7 +49,7 @@ Singleton {
     readonly property string _generatedThemePath: Directories.generatedMaterialThemePath
 
     // Shim dir with no-op kitty/xdg-open to prevent gowall from opening image viewers
-    readonly property string _shimDir: "/tmp/inir-gowall-shim"
+    readonly property string _shimDir: "/tmp/lunana-gowall-shim"
     readonly property var _gowallEnv: ({
         PATH: `${_shimDir}:${Quickshell.env("PATH") ?? "/usr/bin:/usr/local/bin"}`
     })
@@ -123,8 +123,8 @@ Singleton {
         const src = _norm(sourcePath)
         if (!_guardReady(src)) return
         const palette = _buildPalette(currentThemeColors)
-        if (palette.length === 0) { error = "Current iNiR theme palette is unavailable"; return }
-        const json = JSON.stringify({ name: "inir-current", colors: palette }, null, 2)
+        if (palette.length === 0) { error = "Current Lunana theme palette is unavailable"; return }
+        const json = JSON.stringify({ name: "lunana-current", colors: palette }, null, 2)
         const fmt = _ext(format)
         _runOperation([root._gowallBin, "convert", src, "--theme", _customThemePath, "--output", _previewPathFor(fmt), "--format", fmt], fmt, json, true, _basenameWithoutExt(src))
     }
@@ -441,13 +441,13 @@ Singleton {
             if (exitCode !== 0) { root.error = "Failed to copy result to wallpapers"; return }
             // Route by active family — each family owns its own wallpaper surface.
             // Mirrors what the wallpaper selector does via currentSelectionTarget().
-            const isWaffle = (Config.options?.panelFamily ?? "ii") === "waffle"
-            const waffleOwnWallpaper = isWaffle && !(Config.options?.waffles?.background?.useMainWallpaper ?? true)
-            if (waffleOwnWallpaper) {
-                // Waffle has its own wallpaper — apply only to waffle surface + regen colors
-                Wallpapers.applySelectionTarget(_destPath, "waffle", Appearance.m3colors.darkmode)
+            const isSlate = (Config.options?.panelFamily ?? "drift") === "slate"
+            const slateOwnWallpaper = isSlate && !(Config.options?.slate?.background?.useMainWallpaper ?? true)
+            if (slateOwnWallpaper) {
+                // Slate has its own wallpaper — apply only to slate surface + regen colors
+                Wallpapers.applySelectionTarget(_destPath, "slate", Appearance.m3colors.darkmode)
             } else {
-                // ii, or waffle following main → full pipeline on main wallpaper
+                // drift, or slate following main → full pipeline on main wallpaper
                 Wallpapers.apply(_destPath, Appearance.m3colors.darkmode)
             }
         }

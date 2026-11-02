@@ -233,7 +233,7 @@ Singleton {
                     property bool paused: false
                     property int start: 0
                     property int duration: 60
-                    // Minutes on the iRiS Timers dials, adjusted in place.
+                    // Minutes on the Atoll Timers dials, adjusted in place.
                     property list<int> presets: [5, 15, 30]
                 }
             }
@@ -242,8 +242,8 @@ Singleton {
             // here lets page delegates unload while navigation and active editor
             // context survive page switches and standalone-window recreation.
             property JsonObject settings: JsonObject {
-                property int iiPage: 0
-                property int wafflePage: 0
+                property int driftPage: 0
+                property int slatePage: 0
                 property int themeTab: 0
                 property string themeTag: ""
                 property string gowallFormat: "png"

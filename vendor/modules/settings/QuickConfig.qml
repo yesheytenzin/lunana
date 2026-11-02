@@ -213,13 +213,13 @@ ContentPage {
                 Layout.preferredHeight: 220
                 radius: Appearance.rounding.normal
                 color: Appearance.angelEverywhere ? Appearance.angel.colGlassCard
-                     : Appearance.inirEverywhere ? Appearance.inir.colLayer0
+                     : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer0
                      : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurface
                      : Appearance.colors.colLayer0
                 border.width: Appearance.angelEverywhere ? Appearance.angel.cardBorderWidth
-                    : Appearance.inirEverywhere ? 1 : (Appearance.auroraEverywhere ? 0 : 1)
+                    : Appearance.lunanaEverywhere ? 1 : (Appearance.auroraEverywhere ? 0 : 1)
                 border.color: Appearance.angelEverywhere ? Appearance.angel.colCardBorder
-                           : Appearance.inirEverywhere ? Appearance.inir.colBorder
+                           : Appearance.lunanaEverywhere ? Appearance.lunana.colBorder
                            : Appearance.colors.colLayer0Border
                 layer.enabled: true
                 layer.smooth: true
@@ -557,7 +557,7 @@ ContentPage {
                                 if (Config.options?.background?.multiMonitor?.enable && multiMonitorPanel.selectedMonitor) {
                                     Config.setNestedValue("wallpaperSelector.targetMonitor", multiMonitorPanel.selectedMonitor)
                                 }
-                                Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")), "wallpaperSelector", "toggle"]);
+                                Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/lunana")), "wallpaperSelector", "toggle"]);
                             }
                             StyledToolTip {
                                 text: Translation.tr("Open the full wallpaper selector overlay")
@@ -571,12 +571,12 @@ ContentPage {
                         Layout.preferredHeight: visible ? bdModeRow.implicitHeight + 12 : 0
                         visible: multiMonitorPanel.visible && multiMonitorPanel.backdropViewActive
                         radius: Appearance.rounding.small
-                        color: Appearance.inirEverywhere
-                            ? Qt.rgba(Appearance.inir.colAccent.r, Appearance.inir.colAccent.g, Appearance.inir.colAccent.b, 0.15)
+                        color: Appearance.lunanaEverywhere
+                            ? Qt.rgba(Appearance.lunana.colAccent.r, Appearance.lunana.colAccent.g, Appearance.lunana.colAccent.b, 0.15)
                             : Qt.rgba(Appearance.colors.colTertiary.r, Appearance.colors.colTertiary.g, Appearance.colors.colTertiary.b, 0.15)
                         border.width: 1
-                        border.color: Appearance.inirEverywhere
-                            ? Qt.rgba(Appearance.inir.colAccent.r, Appearance.inir.colAccent.g, Appearance.inir.colAccent.b, 0.3)
+                        border.color: Appearance.lunanaEverywhere
+                            ? Qt.rgba(Appearance.lunana.colAccent.r, Appearance.lunana.colAccent.g, Appearance.lunana.colAccent.b, 0.3)
                             : Qt.rgba(Appearance.colors.colTertiary.r, Appearance.colors.colTertiary.g, Appearance.colors.colTertiary.b, 0.3)
 
                         RowLayout {
@@ -587,13 +587,13 @@ ContentPage {
                             MaterialSymbol {
                                 text: "blur_on"
                                 font.pixelSize: Appearance.font.pixelSize.normal
-                                color: Appearance.inirEverywhere ? Appearance.inir.colAccent : Appearance.colors.colTertiary
+                                color: Appearance.lunanaEverywhere ? Appearance.lunana.colAccent : Appearance.colors.colTertiary
                             }
                             StyledText {
                                 Layout.fillWidth: true
                                 text: Translation.tr("Selecting backdrop wallpaper")
                                 font.pixelSize: Appearance.font.pixelSize.small
-                                color: Appearance.inirEverywhere ? Appearance.inir.colOnLayer1 : Appearance.colors.colOnLayer1
+                                color: Appearance.lunanaEverywhere ? Appearance.lunana.colOnLayer1 : Appearance.colors.colOnLayer1
                             }
                             MaterialSymbol {
                                 text: "close"
@@ -625,13 +625,13 @@ ContentPage {
                         Behavior on opacity { enabled: Appearance.animationsEnabled; NumberAnimation { duration: Appearance.animation.elementMoveExit.duration; easing.type: Appearance.animation.elementMoveExit.type; easing.bezierCurve: Appearance.animation.elementMoveExit.bezierCurve } }
                         Behavior on scale { enabled: Appearance.animationsEnabled; NumberAnimation { duration: Appearance.animation.elementMoveExit.duration; easing.type: Appearance.animation.elementMoveExit.type; easing.bezierCurve: Appearance.animation.elementMoveExit.bezierCurve } }
                         color: Appearance.angelEverywhere ? Appearance.angel.colGlassCard
-                             : Appearance.inirEverywhere ? Appearance.inir.colLayer0
+                             : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer0
                              : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurface
                              : Appearance.colors.colLayer0
                         border.width: Appearance.angelEverywhere ? Appearance.angel.cardBorderWidth
-                            : Appearance.inirEverywhere ? 1 : (Appearance.auroraEverywhere ? 0 : 1)
+                            : Appearance.lunanaEverywhere ? 1 : (Appearance.auroraEverywhere ? 0 : 1)
                         border.color: Appearance.angelEverywhere ? Appearance.angel.colCardBorder
-                                   : Appearance.inirEverywhere ? Appearance.inir.colBorder
+                                   : Appearance.lunanaEverywhere ? Appearance.lunana.colBorder
                                    : Appearance.colors.colLayer0Border
 
                         ColumnLayout {
@@ -697,13 +697,13 @@ ContentPage {
                                 }
                                 radius: Appearance.rounding.normal
                                 color: Appearance.angelEverywhere ? Appearance.angel.colGlassCard
-                                     : Appearance.inirEverywhere ? Appearance.inir.colLayer0
+                                     : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer0
                                      : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurface
                                      : Appearance.colors.colLayer0
                                 border.width: Appearance.angelEverywhere ? Appearance.angel.cardBorderWidth
-                                    : Appearance.inirEverywhere ? 1 : (Appearance.auroraEverywhere ? 0 : 1)
+                                    : Appearance.lunanaEverywhere ? 1 : (Appearance.auroraEverywhere ? 0 : 1)
                                 border.color: Appearance.angelEverywhere ? Appearance.angel.colCardBorder
-                                           : Appearance.inirEverywhere ? Appearance.inir.colBorder
+                                           : Appearance.lunanaEverywhere ? Appearance.lunana.colBorder
                                            : Appearance.colors.colLayer0Border
                                 clip: true
 
@@ -857,16 +857,16 @@ ContentPage {
                 property bool backdropViewActive: false
 
                 // Backdrop wallpaper data for stacked preview
-                readonly property var iiBackdrop: Config.options?.background?.backdrop ?? {}
-                readonly property bool backdropEnabled: iiBackdrop.enable ?? false
+                readonly property var driftBackdrop: Config.options?.background?.backdrop ?? {}
+                readonly property bool backdropEnabled: driftBackdrop.enable ?? false
                 readonly property string backdropPath: {
-                    const useMain = iiBackdrop.useMainWallpaper ?? true;
+                    const useMain = driftBackdrop.useMainWallpaper ?? true;
                     if (!useMain) {
                         // Per-monitor backdrop takes priority
                         const perMonBd = selMonData.backdropPath ?? ""
                         if (perMonBd) return perMonBd
                         // Fall back to global backdrop
-                        const globalBd = iiBackdrop.wallpaperPath || ""
+                        const globalBd = driftBackdrop.wallpaperPath || ""
                         if (globalBd) return globalBd
                     }
                     return selMonPath;
@@ -890,13 +890,13 @@ ContentPage {
                     Layout.preferredHeight: 220
                     radius: Appearance.rounding.normal
                     color: Appearance.angelEverywhere ? Appearance.angel.colGlassCard
-                         : Appearance.inirEverywhere ? Appearance.inir.colLayer0
+                         : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer0
                          : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurface
                          : Appearance.colors.colLayer0
                     border.width: Appearance.angelEverywhere ? Appearance.angel.cardBorderWidth
-                        : Appearance.inirEverywhere ? 1 : (Appearance.auroraEverywhere ? 0 : 1)
+                        : Appearance.lunanaEverywhere ? 1 : (Appearance.auroraEverywhere ? 0 : 1)
                     border.color: Appearance.angelEverywhere ? Appearance.angel.colCardBorder
-                               : Appearance.inirEverywhere ? Appearance.inir.colBorder
+                               : Appearance.lunanaEverywhere ? Appearance.lunana.colBorder
                                : Appearance.colors.colLayer0Border
 
                     RowLayout {
@@ -953,14 +953,14 @@ ContentPage {
                                     height: monitorCard.height
                                     radius: Appearance.rounding.small
                                     color: Appearance.angelEverywhere ? Appearance.angel.colGlassCard
-                                         : Appearance.inirEverywhere ? Appearance.inir.colLayer1
+                                         : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer1
                                          : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurface
                                          : Appearance.colors.colLayer1
                                     border.width: Appearance.angelEverywhere ? Appearance.angel.cardBorderWidth
-                                        : Appearance.inirEverywhere ? 1 : (monitorStack.showingBackdrop ? 2 : 1)
+                                        : Appearance.lunanaEverywhere ? 1 : (monitorStack.showingBackdrop ? 2 : 1)
                                     border.color: monitorStack.showingBackdrop
-                                        ? (Appearance.angelEverywhere ? (Appearance.angel?.colPrimary ?? Appearance.colors.colPrimary) : Appearance.inirEverywhere ? (Appearance.inir?.colAccent ?? Appearance.colors.colPrimary) : Appearance.colors.colPrimary)
-                                        : (Appearance.angelEverywhere ? (Appearance.angel?.colCardBorder ?? Appearance.colors.colLayer0Border) : Appearance.inirEverywhere ? (Appearance.inir?.colBorder ?? Appearance.colors.colLayer0Border) : Appearance.colors.colLayer0Border)
+                                        ? (Appearance.angelEverywhere ? (Appearance.angel?.colPrimary ?? Appearance.colors.colPrimary) : Appearance.lunanaEverywhere ? (Appearance.lunana?.colAccent ?? Appearance.colors.colPrimary) : Appearance.colors.colPrimary)
+                                        : (Appearance.angelEverywhere ? (Appearance.angel?.colCardBorder ?? Appearance.colors.colLayer0Border) : Appearance.lunanaEverywhere ? (Appearance.lunana?.colBorder ?? Appearance.colors.colLayer0Border) : Appearance.colors.colLayer0Border)
                                     clip: true
                                     z: monitorStack.showingBackdrop ? 2 : 0
                                     opacity: monitorStack.showingBackdrop ? 1.0 : 0.6
@@ -1061,7 +1061,7 @@ ContentPage {
                                         color: "transparent"
                                         visible: monitorStack.showingBackdrop && monitorStack.isSelected
                                         border.width: 2
-                                        border.color: Appearance.inirEverywhere ? Appearance.inir.colAccent : Appearance.colors.colPrimary
+                                        border.color: Appearance.lunanaEverywhere ? Appearance.lunana.colAccent : Appearance.colors.colPrimary
                                     }
                                 }
 
@@ -1076,14 +1076,14 @@ ContentPage {
 
                                     radius: Appearance.rounding.small
                                     color: Appearance.angelEverywhere ? Appearance.angel.colGlassCard
-                                         : Appearance.inirEverywhere ? Appearance.inir.colLayer1
+                                         : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer1
                                          : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurface
                                          : Appearance.colors.colLayer1
                                     border.width: monitorStack.isSelected && !monitorStack.showingBackdrop
-                                        ? (Appearance.angelEverywhere ? Appearance.angel.cardBorderWidth : Appearance.inirEverywhere ? 1 : 2) : (Appearance.angelEverywhere ? Appearance.angel.cardBorderWidth : Appearance.inirEverywhere ? 1 : 0)
+                                        ? (Appearance.angelEverywhere ? Appearance.angel.cardBorderWidth : Appearance.lunanaEverywhere ? 1 : 2) : (Appearance.angelEverywhere ? Appearance.angel.cardBorderWidth : Appearance.lunanaEverywhere ? 1 : 0)
                                     border.color: monitorStack.isSelected && !monitorStack.showingBackdrop
-                                        ? (Appearance.angelEverywhere ? Appearance.angel.colPrimary : Appearance.inirEverywhere ? Appearance.inir.colAccent : Appearance.colors.colPrimary)
-                                        : (Appearance.angelEverywhere ? Appearance.angel.colCardBorder : Appearance.inirEverywhere ? Appearance.inir.colBorder : "transparent")
+                                        ? (Appearance.angelEverywhere ? Appearance.angel.colPrimary : Appearance.lunanaEverywhere ? Appearance.lunana.colAccent : Appearance.colors.colPrimary)
+                                        : (Appearance.angelEverywhere ? Appearance.angel.colCardBorder : Appearance.lunanaEverywhere ? Appearance.lunana.colBorder : "transparent")
                                     clip: true
 
                                     layer.enabled: true
@@ -1235,12 +1235,12 @@ ContentPage {
                                         width: Appearance.font.pixelSize.normal + 2
                                         height: width
                                         radius: width / 2
-                                        color: Appearance.inirEverywhere ? Appearance.inir.colAccent : Appearance.colors.colPrimary
+                                        color: Appearance.lunanaEverywhere ? Appearance.lunana.colAccent : Appearance.colors.colPrimary
                                         MaterialSymbol {
                                             anchors.centerIn: parent
                                             text: "check"
                                             font.pixelSize: Appearance.font.pixelSize.small
-                                            color: Appearance.inirEverywhere ? Appearance.inir.colOnPrimary : Appearance.colors.colOnPrimary
+                                            color: Appearance.lunanaEverywhere ? Appearance.lunana.colOnPrimary : Appearance.colors.colOnPrimary
                                         }
                                     }
 
@@ -1280,13 +1280,13 @@ ContentPage {
                     implicitHeight: splitPreviewCol.implicitHeight
                     radius: Appearance.rounding.normal
                     color: Appearance.angelEverywhere ? Appearance.angel.colGlassCard
-                         : Appearance.inirEverywhere ? Appearance.inir.colLayer1
+                         : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer1
                          : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurface
                          : Appearance.colors.colLayer1
                     border.width: Appearance.angelEverywhere ? Appearance.angel.cardBorderWidth
-                        : Appearance.inirEverywhere ? 1 : (Appearance.auroraEverywhere ? 0 : 1)
+                        : Appearance.lunanaEverywhere ? 1 : (Appearance.auroraEverywhere ? 0 : 1)
                     border.color: Appearance.angelEverywhere ? (Appearance.angel?.colCardBorder ?? Appearance.colors.colLayer0Border)
-                               : Appearance.inirEverywhere ? (Appearance.inir?.colBorder ?? Appearance.colors.colLayer0Border)
+                               : Appearance.lunanaEverywhere ? (Appearance.lunana?.colBorder ?? Appearance.colors.colLayer0Border)
                                : Appearance.colors.colLayer0Border
                     clip: true
 
@@ -1330,14 +1330,14 @@ ContentPage {
 
                                         radius: Appearance.rounding.small
                                         color: Appearance.angelEverywhere ? Appearance.angel.colGlassCard
-                                             : Appearance.inirEverywhere ? Appearance.inir.colLayer1
+                                             : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer1
                                              : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurface
                                              : Appearance.colors.colLayer1
                                         border.width: splitMonCard.isSelected
-                                            ? (Appearance.angelEverywhere ? Appearance.angel.cardBorderWidth : Appearance.inirEverywhere ? 1 : 2) : (Appearance.angelEverywhere ? Appearance.angel.cardBorderWidth : Appearance.inirEverywhere ? 1 : 0)
+                                            ? (Appearance.angelEverywhere ? Appearance.angel.cardBorderWidth : Appearance.lunanaEverywhere ? 1 : 2) : (Appearance.angelEverywhere ? Appearance.angel.cardBorderWidth : Appearance.lunanaEverywhere ? 1 : 0)
                                         border.color: splitMonCard.isSelected
-                                            ? (Appearance.angelEverywhere ? Appearance.angel.colPrimary : Appearance.inirEverywhere ? Appearance.inir.colAccent : Appearance.colors.colPrimary)
-                                            : (Appearance.angelEverywhere ? Appearance.angel.colCardBorder : Appearance.inirEverywhere ? Appearance.inir.colBorder : "transparent")
+                                            ? (Appearance.angelEverywhere ? Appearance.angel.colPrimary : Appearance.lunanaEverywhere ? Appearance.lunana.colAccent : Appearance.colors.colPrimary)
+                                            : (Appearance.angelEverywhere ? Appearance.angel.colCardBorder : Appearance.lunanaEverywhere ? Appearance.lunana.colBorder : "transparent")
                                         clip: true
 
                                         scale: splitMonCard.isSelected ? 1.0 : 0.95
@@ -1470,12 +1470,12 @@ ContentPage {
                                             width: Appearance.font.pixelSize.normal + 2
                                             height: width
                                             radius: width / 2
-                                            color: Appearance.inirEverywhere ? Appearance.inir.colAccent : Appearance.colors.colPrimary
+                                            color: Appearance.lunanaEverywhere ? Appearance.lunana.colAccent : Appearance.colors.colPrimary
                                             MaterialSymbol {
                                                 anchors.centerIn: parent
                                                 text: "check"
                                                 font.pixelSize: Appearance.font.pixelSize.small
-                                                color: Appearance.inirEverywhere ? Appearance.inir.colOnPrimary : Appearance.colors.colOnPrimary
+                                                color: Appearance.lunanaEverywhere ? Appearance.lunana.colOnPrimary : Appearance.colors.colOnPrimary
                                             }
                                         }
 
@@ -1573,7 +1573,7 @@ ContentPage {
                                         if (mon) {
                                             Config.setNestedValue("wallpaperSelector.selectionTarget", "main")
                                             Config.setNestedValue("wallpaperSelector.targetMonitor", mon)
-                                            Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")), "wallpaperSelector", "toggle"])
+                                            Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/lunana")), "wallpaperSelector", "toggle"])
                                         }
                                     }
                                 }
@@ -1643,7 +1643,7 @@ ContentPage {
                                     visible: multiMonitorPanel.backdropEnabled
                                     onClicked: {
                                         Config.setNestedValue("wallpaperSelector.selectionTarget", "backdrop")
-                                        Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")), "wallpaperSelector", "toggle"])
+                                        Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/lunana")), "wallpaperSelector", "toggle"])
                                     }
                                     StyledToolTip {
                                         text: Translation.tr("Change the backdrop wallpaper (used for overview/blur)")
@@ -1962,7 +1962,7 @@ ContentPage {
             NoticeBox {
                 Layout.fillWidth: true
                 materialIcon: "folder"
-                text: Translation.tr("Recordings and iNiR screenshots can use different folders. These paths are also available in Tools for detailed capture settings.")
+                text: Translation.tr("Recordings and Lunana screenshots can use different folders. These paths are also available in Tools for detailed capture settings.")
             }
 
             ContentSubsection {
@@ -2067,7 +2067,7 @@ ContentPage {
                         }
                         StyledText {
                             Layout.fillWidth: true
-                            text: Translation.tr("iNiR learns senders from notification history. Block an app here and it is rejected before history, sound, counters and popups.")
+                            text: Translation.tr("Lunana learns senders from notification history. Block an app here and it is rejected before history, sound, counters and popups.")
                             color: M3Palette.surfaceVariantForeground
                             font.pixelSize: Appearance.font.pixelSize.smaller
                             wrapMode: Text.WordWrap
@@ -2283,7 +2283,7 @@ ContentPage {
                         }
                         StyledText {
                             Layout.fillWidth: true
-                            text: Translation.tr("Audio apps are detected live from PipeWire. Enable a filter to exclude that app from visualizers; with no filters enabled, iNiR follows the active player automatically.")
+                            text: Translation.tr("Audio apps are detected live from PipeWire. Enable a filter to exclude that app from visualizers; with no filters enabled, Lunana follows the active player automatically.")
                             color: M3Palette.surfaceVariantForeground
                             font.pixelSize: Appearance.font.pixelSize.smaller
                             wrapMode: Text.WordWrap
@@ -2527,7 +2527,7 @@ ContentPage {
                     buttonRadius: Appearance.zzzEverywhere ? Appearance.zzz.controlRadius : Appearance.rounding.small
                     materialIcon: "keyboard"
                     mainText: Translation.tr("Shortcuts")
-                    onClicked: Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")), "cheatsheet", "toggle"])
+                    onClicked: Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/lunana")), "cheatsheet", "toggle"])
                 }
             }
 

@@ -43,38 +43,38 @@ Item {
     readonly property real filmstripHeight: Math.max(112, Math.min(height * 0.18, 164))
     readonly property real panelRadius: root.editorial ? Appearance.rounding.small
         : Appearance.angelEverywhere ? Appearance.angel.roundingNormal
-        : Appearance.inirEverywhere ? Appearance.inir.roundingNormal
+        : Appearance.lunanaEverywhere ? Appearance.lunana.roundingNormal
         : Appearance.rounding.normal
     readonly property real cardRadius: root.editorial ? Appearance.editorial.radius
         : Appearance.angelEverywhere ? Appearance.angel.roundingLarge
-        : Appearance.inirEverywhere ? Appearance.inir.roundingLarge
+        : Appearance.lunanaEverywhere ? Appearance.lunana.roundingLarge
         : Appearance.rounding.large
     readonly property color surfaceColor: root.editorial ? Appearance.editorial.layer(1)
         : Appearance.angelEverywhere ? Appearance.angel.colGlassCard
-        : Appearance.inirEverywhere ? Appearance.inir.colLayer1
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer1
         : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurface
         : Appearance.colors.colLayer1
     readonly property color elevatedColor: root.editorial ? Appearance.editorial.layer(2)
         : Appearance.angelEverywhere ? Appearance.angel.colGlassPanel
-        : Appearance.inirEverywhere ? Appearance.inir.colLayer2
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2
         : Appearance.auroraEverywhere ? Appearance.aurora.colOverlay
         : Appearance.colors.colLayer2
     readonly property color baseColor: root.editorial ? Appearance.editorial.paper
         : Appearance.angelEverywhere ? Appearance.angel.colGlassPanel
-        : Appearance.inirEverywhere ? Appearance.inir.colLayer0
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer0
         : Appearance.auroraEverywhere ? Appearance.aurora.colOverlay
         : Appearance.colors.colLayer0
     readonly property color textColor: root.editorial ? Appearance.editorial.ink
         : Appearance.angelEverywhere ? Appearance.angel.colText
-        : Appearance.inirEverywhere ? Appearance.inir.colText
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colText
         : Appearance.colors.colOnLayer1
     readonly property color subtleTextColor: root.editorial ? Appearance.editorial.muted
         : Appearance.angelEverywhere ? Appearance.angel.colTextMuted
-        : Appearance.inirEverywhere ? Appearance.inir.colTextMuted
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colTextMuted
         : Appearance.colors.colSubtext
     readonly property color borderColor: root.editorial ? Appearance.editorial.rule
         : Appearance.angelEverywhere ? Appearance.angel.colBorderSubtle
-        : Appearance.inirEverywhere ? Appearance.inir.colBorderSubtle
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colBorderSubtle
         : ColorUtils.applyAlpha(Appearance.colors.colOutlineVariant, 0.55)
     readonly property string helperText: searchField.activeFocus
         ? Translation.tr("Type to filter this folder")
@@ -548,10 +548,10 @@ Item {
         screenY: { const p = topPill.mapToGlobal(0, 0); return p.y }
         radius: root.editorial ? Appearance.rounding.small : Appearance.rounding.full
         fallbackColor: root.surfaceColor
-        inirColor: Appearance.inir.colLayer1
+        lunanaColor: Appearance.lunana.colLayer1
         auroraTransparency: Appearance.aurora.popupTransparentize
         wallpaperBackdropEnabled: !root.editorial
-        border.width: root.editorial || Appearance.inirEverywhere || Appearance.angelEverywhere ? 1 : 0
+        border.width: root.editorial || Appearance.lunanaEverywhere || Appearance.angelEverywhere ? 1 : 0
         border.color: root.borderColor
         Behavior on opacity { enabled: Appearance.animationsEnabled; animation: NumberAnimation { duration: Appearance.animation.elementMoveFast.duration; easing.type: Appearance.animation.elementMoveFast.type; easing.bezierCurve: Appearance.animation.elementMoveFast.bezierCurve } }
 
@@ -636,10 +636,10 @@ Item {
             screenY: { const p = leftInfoPanel.mapToGlobal(0, 0); return p.y }
             radius: root.panelRadius
             fallbackColor: root.surfaceColor
-            inirColor: Appearance.inir.colLayer1
+            lunanaColor: Appearance.lunana.colLayer1
             auroraTransparency: Appearance.aurora.popupTransparentize
             wallpaperBackdropEnabled: !root.editorial
-            border.width: root.editorial || Appearance.inirEverywhere || Appearance.angelEverywhere ? 1 : 0
+            border.width: root.editorial || Appearance.lunanaEverywhere || Appearance.angelEverywhere ? 1 : 0
             border.color: root.borderColor
             Behavior on opacity { enabled: Appearance.animationsEnabled; animation: NumberAnimation { duration: Appearance.animation.elementMoveFast.duration; easing.type: Appearance.animation.elementMoveFast.type; easing.bezierCurve: Appearance.animation.elementMoveFast.bezierCurve } }
 
@@ -732,10 +732,10 @@ Item {
             screenY: { const p = rightActionsPanel.mapToGlobal(0, 0); return p.y }
             radius: root.panelRadius
             fallbackColor: root.surfaceColor
-            inirColor: Appearance.inir.colLayer1
+            lunanaColor: Appearance.lunana.colLayer1
             auroraTransparency: Appearance.aurora.popupTransparentize
             wallpaperBackdropEnabled: !root.editorial
-            border.width: root.editorial || Appearance.inirEverywhere || Appearance.angelEverywhere ? 1 : 0
+            border.width: root.editorial || Appearance.lunanaEverywhere || Appearance.angelEverywhere ? 1 : 0
             border.color: root.borderColor
             Behavior on opacity { enabled: Appearance.animationsEnabled; animation: NumberAnimation { duration: Appearance.animation.elementMoveFast.duration; easing.type: Appearance.animation.elementMoveFast.type; easing.bezierCurve: Appearance.animation.elementMoveFast.bezierCurve } }
 
@@ -1226,10 +1226,10 @@ Item {
         screenY: { const p = filmstripPanel.mapToGlobal(0, 0); return p.y }
         radius: root.panelRadius
         fallbackColor: root.surfaceColor
-        inirColor: Appearance.inir.colLayer1
+        lunanaColor: Appearance.lunana.colLayer1
         auroraTransparency: Appearance.aurora.popupTransparentize
         wallpaperBackdropEnabled: !root.editorial
-        border.width: root.editorial || Appearance.inirEverywhere || Appearance.angelEverywhere ? 1 : 0
+        border.width: root.editorial || Appearance.lunanaEverywhere || Appearance.angelEverywhere ? 1 : 0
         border.color: root.borderColor
         Behavior on height { enabled: Appearance.animationsEnabled; animation: NumberAnimation { duration: Appearance.animation.elementMoveEnter.duration; easing.type: Appearance.animation.elementMoveEnter.type; easing.bezierCurve: Appearance.animation.elementMoveEnter.bezierCurve } }
 

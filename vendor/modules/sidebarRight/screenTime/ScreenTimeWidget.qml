@@ -55,18 +55,18 @@ Item {
     }
 
     readonly property color colText: Appearance.angelEverywhere ? Appearance.angel.colText
-        : Appearance.inirEverywhere ? Appearance.inir.colText : Appearance.colors.colOnLayer1
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colText : Appearance.colors.colOnLayer1
     readonly property color colTextSecondary: Appearance.angelEverywhere ? Appearance.angel.colTextSecondary
-        : Appearance.inirEverywhere ? Appearance.inir.colTextSecondary : Appearance.colors.colSubtext
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colTextSecondary : Appearance.colors.colSubtext
     readonly property color colBg: Appearance.angelEverywhere ? Appearance.angel.colGlassCard
-        : Appearance.inirEverywhere ? Appearance.inir.colLayer0
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer0
         : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurface
         : Appearance.colors.colLayer0
     readonly property color colBorder: Appearance.angelEverywhere ? Appearance.angel.colBorder
-        : Appearance.inirEverywhere ? Appearance.inir.colBorder : Appearance.colors.colLayer0Border
-    readonly property int borderWidth: (Appearance.angelEverywhere || Appearance.inirEverywhere) ? 1 : (Appearance.auroraEverywhere ? 0 : 1)
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colBorder : Appearance.colors.colLayer0Border
+    readonly property int borderWidth: (Appearance.angelEverywhere || Appearance.lunanaEverywhere) ? 1 : (Appearance.auroraEverywhere ? 0 : 1)
     readonly property real radius: Appearance.angelEverywhere ? Appearance.angel.roundingNormal
-        : Appearance.inirEverywhere ? Appearance.inir.roundingNormal : Appearance.rounding.normal
+        : Appearance.lunanaEverywhere ? Appearance.lunana.roundingNormal : Appearance.rounding.normal
 
     readonly property real maxAppSeconds: {
         let m = 0

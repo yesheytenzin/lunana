@@ -17,13 +17,13 @@ spawn-at-startup "bash" "-c" "systemctl --user import-environment XDG_MENU_PREFI
 // rich content out of an editor like ChatGPT's), wl-paste matches that and the
 // raw <meta http-equiv=...> markup is what would land in the history. Asking
 // for text/plain instead would drop those entries entirely.
-// Access via iNiR's clipboard overlay (Mod+V).
-spawn-at-startup "bash" "-c" "wl-paste --no-newline --type text --watch ~/.config/quickshell/inir/scripts/clipboard-store.py &"
-spawn-at-startup "bash" "-c" "wl-paste --type image --watch ~/.config/quickshell/inir/scripts/clipboard-image-store.sh &"
+// Access via Lunana's clipboard overlay (Mod+V).
+spawn-at-startup "bash" "-c" "wl-paste --no-newline --type text --watch ~/.config/quickshell/lunana/scripts/clipboard-store.py &"
+spawn-at-startup "bash" "-c" "wl-paste --type image --watch ~/.config/quickshell/lunana/scripts/clipboard-image-store.sh &"
 
-// Polkit: the iNiR shell is the authentication agent (its dialogs follow the
+// Polkit: the Lunana shell is the authentication agent (its dialogs follow the
 // family you use). Spawning another agent here would take its place.
 
-// ── iNiR shell ──────────────────────────────────────────────────────────────
-// iNiR is managed by the user systemd service (inir.service).
+// ── Lunana shell ──────────────────────────────────────────────────────────────
+// Lunana is managed by the user systemd service (lunana.service).
 // Do not add a compositor startup entry here or you'll get two shells.

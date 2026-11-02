@@ -190,12 +190,12 @@ PopupWindow {
 
             fallbackColor: Appearance.regaliaEverywhere ? "transparent"
                 : Appearance.zzzEverywhere ? Appearance.zzz.bg1 : Appearance.colors.colSurfaceContainer
-            inirColor: Appearance.inir?.colLayer2 ?? Appearance.colors.colSurfaceContainer
+            lunanaColor: Appearance.lunana?.colLayer2 ?? Appearance.colors.colSurfaceContainer
             auroraTransparency: Appearance.aurora?.popupTransparentize ?? 0.1
             radius: Appearance.regaliaEverywhere ? Appearance.regalia.roundLarge
                 : Appearance.zzzEverywhere ? Appearance.zzz.panelRadius
                 : Appearance.angelEverywhere ? Appearance.angel.roundingNormal
-                : Appearance.inirEverywhere ? (Appearance.inir?.roundingNormal ?? 12) : Appearance.rounding.normal
+                : Appearance.lunanaEverywhere ? (Appearance.lunana?.roundingNormal ?? 12) : Appearance.rounding.normal
             Behavior on radius {
                 enabled: Appearance.animationsEnabled
                 NumberAnimation { duration: Appearance.animation.elementMoveFast.duration; easing.type: Appearance.animation.elementMoveFast.type; easing.bezierCurve: Appearance.animation.elementMoveFast.bezierCurve }
@@ -204,8 +204,8 @@ PopupWindow {
             border.color: Appearance.regaliaEverywhere ? "transparent"
                 : Appearance.zzzEverywhere ? Appearance.zzz.borderColor
                 : Appearance.angelEverywhere ? Appearance.angel.colBorder
-                : Appearance.inirEverywhere
-                ? (Appearance.inir?.colBorder ?? "transparent")
+                : Appearance.lunanaEverywhere
+                ? (Appearance.lunana?.colBorder ?? "transparent")
                 : Appearance.auroraEverywhere
                     ? (Appearance.aurora?.colTooltipBorder ?? "transparent")
                     : Appearance.colors.colSurfaceContainerHighest

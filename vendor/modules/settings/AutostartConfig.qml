@@ -20,7 +20,7 @@ ContentPage {
         visible: Autostart.isNiri
         icon: "rocket_launch"
         title: Translation.tr("Autostart")
-        description: Translation.tr("Manage applications and custom startup commands separately; the guide explains exactly what iNiR writes to niri.")
+        description: Translation.tr("Manage applications and custom startup commands separately; the guide explains exactly what Lunana writes to niri.")
         summary: Translation.tr("Applications · commands · guide")
         currentValue: root.activeSection
         onSelected: value => root.activeSection = value
@@ -94,8 +94,8 @@ ContentPage {
             Layout.fillWidth: true
             wrapMode: Text.Wrap
             text: Autostart.startupFilePath.length > 0
-                ? Translation.tr("iNiR couldn't find %1. Re-run the installer to restore it.").arg(Autostart.startupFilePath)
-                : Translation.tr("iNiR couldn't locate your niri startup config.")
+                ? Translation.tr("Lunana couldn't find %1. Re-run the installer to restore it.").arg(Autostart.startupFilePath)
+                : Translation.tr("Lunana couldn't locate your niri startup config.")
             font.pixelSize: Appearance.font.pixelSize.small
             color: Appearance.colors.colOnSurface
         }
@@ -119,7 +119,7 @@ ContentPage {
             StyledText {
                 Layout.fillWidth: true
                 wrapMode: Text.Wrap
-                text: Translation.tr("Apps and commands here are written to niri's startup file and launched by niri at login — iNiR doesn't start them itself, so they keep running even if the shell restarts.")
+                text: Translation.tr("Apps and commands here are written to niri's startup file and launched by niri at login — Lunana doesn't start them itself, so they keep running even if the shell restarts.")
                 font.pixelSize: Appearance.font.pixelSize.small
                 color: Appearance.colors.colOnSurface
             }
@@ -193,7 +193,7 @@ ContentPage {
             StyledText {
                 Layout.fillWidth: true
                 wrapMode: Text.Wrap
-                text: Translation.tr("Toggle an app to launch it at login via niri's spawn-at-startup. Apps already in your startup file outside iNiR's control are shown as \"External\" — edit the file below to change those.")
+                text: Translation.tr("Toggle an app to launch it at login via niri's spawn-at-startup. Apps already in your startup file outside Lunana's control are shown as \"External\" — edit the file below to change those.")
                 font.pixelSize: Appearance.font.pixelSize.smaller
                 color: Appearance.colors.colSubtext
             }
@@ -243,7 +243,7 @@ ContentPage {
                         radius: Appearance.rounding.small
                         color: rowHover.hovered
                             ? (Appearance.angelEverywhere ? Appearance.angel.colGlassCardHover
-                               : Appearance.inirEverywhere ? Appearance.inir.colLayer1Hover
+                               : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer1Hover
                                : Appearance.zzzEverywhere ? Appearance.zzz.bg1
                                : Appearance.colors.colLayer1Hover)
                             : "transparent"
@@ -308,7 +308,7 @@ ContentPage {
                         }
 
                         // External badge: app is launched by a hand-written /
-                        // default line outside iNiR's managed section. No switch —
+                        // default line outside Lunana's managed section. No switch —
                         // a disabled toggle looks broken, and the badge already
                         // communicates "not managed here".
                         Rectangle {
@@ -436,7 +436,7 @@ ContentPage {
                         radius: Appearance.rounding.small
                         color: cmdHover.hovered
                             ? (Appearance.angelEverywhere ? Appearance.angel.colGlassCardHover
-                               : Appearance.inirEverywhere ? Appearance.inir.colLayer1Hover
+                               : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer1Hover
                                : Appearance.zzzEverywhere ? Appearance.zzz.bg1
                                : Appearance.colors.colLayer1Hover)
                             : "transparent"

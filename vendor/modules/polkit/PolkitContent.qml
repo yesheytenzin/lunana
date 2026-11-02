@@ -18,7 +18,7 @@ Item {
         : Appearance.zzzEverywhere ? Appearance.zzz.paperAlt
         : editorial ? Appearance.editorial.layer(1)
         : Appearance.angelEverywhere ? Appearance.angel.colGlassCard
-        : Appearance.inirEverywhere ? Appearance.inir.colLayer1
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer1
         : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurface
         : Appearance.colors.colLayer2
     readonly property color authBorder: Appearance.cookieEverywhere
@@ -26,7 +26,7 @@ Item {
         : Appearance.zzzEverywhere ? Appearance.zzz.hairlineStrong
         : editorial ? Appearance.editorial.rule
         : Appearance.angelEverywhere ? Appearance.angel.colCardBorder
-        : Appearance.inirEverywhere ? Appearance.inir.colBorderSubtle
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colBorderSubtle
         : Appearance.auroraEverywhere ? Appearance.aurora.colPopupBorder
         : Appearance.colors.colOutlineVariant
     readonly property int authRadius: Appearance.cookieEverywhere
@@ -34,7 +34,7 @@ Item {
         : Appearance.zzzEverywhere ? Appearance.zzz.controlRadius
         : editorial ? Appearance.rounding.small
         : Appearance.angelEverywhere ? Appearance.angel.roundingSmall
-        : Appearance.inirEverywhere ? Appearance.inir.roundingSmall
+        : Appearance.lunanaEverywhere ? Appearance.lunana.roundingSmall
         : Appearance.rounding.small
 
     Keys.onPressed: event => {

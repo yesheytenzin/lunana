@@ -1,10 +1,10 @@
 {
   "preserve": [
-    "iNiR",
+    "Lunana",
     "Niri",
     "Quickshell",
-    "Material ii",
-    "Waffle",
+    "Material drift",
+    "Slate",
     "Kira",
     "Ricelin",
     "Cookie",
@@ -37,7 +37,7 @@
     "AWWW"
   ],
   "patterns": [
-    "^inir(?:\\s|$)",
+    "^lunana(?:\\s|$)",
     "^/[^ ]*",
     "^~/[^ ]*",
     "^https?://",
@@ -46,7 +46,7 @@
     "^[a-z0-9_-]+\\.[a-z0-9]+$"
   ],
   "terms": {
-    "shell": "Keep as a technical noun when it names iNiR or the desktop-shell layer. Translate only when the target language has an established concise UI term.",
+    "shell": "Keep as a technical noun when it names Lunana or the desktop-shell layer. Translate only when the target language has an established concise UI term.",
     "workspace": "Use the normal desktop/compositor term in the target language, not a literal office-work translation.",
     "sidebar": "Use the established UI term for a side panel or sidebar.",
     "system tray": "Use the established desktop-environment term.",

@@ -12,7 +12,7 @@ Rectangle {
     property string sectionTitle
     property string sectionKey: ""
     property string orderHint: Translation.tr("Top to bottom")
-    property string dragKey: "inir-m3-layout-item"
+    property string dragKey: "lunana-m3-layout-item"
     property var layout: []
     property var availableWidgets: []
     property var getWidgetName: (id) => id

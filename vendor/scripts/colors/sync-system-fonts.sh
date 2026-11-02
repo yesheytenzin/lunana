@@ -26,7 +26,7 @@ fi
 
 status=0
 bundled_fonts="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)/assets/fonts"
-user_fonts="${XDG_DATA_HOME:-$HOME/.local/share}/fonts/inir"
+user_fonts="${XDG_DATA_HOME:-$HOME/.local/share}/fonts/lunana"
 if [[ -d "$bundled_fonts" && "$(readlink "$user_fonts" 2>/dev/null)" != "$bundled_fonts" ]]; then
     mkdir -p "$(dirname "$user_fonts")"
     if [[ ! -e "$user_fonts" || -L "$user_fonts" ]]; then

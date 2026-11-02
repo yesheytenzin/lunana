@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "lunana.slate-lock",
+  "name": "Lunana Slate Lock",
+  "version": "0.4.0",
+  "author": "lunana",
+  "license": "GPL-3.0",
+  "description": "Lunana Slate lock host (dormant unless the slate family owns locking).",
+  "kinds": [
+    "service"
+  ],
+  "entryPoints": {
+    "service": "SLock.qml"
+  },
+  "x-lunana": {
+    "suiteId": "lunana",
+    "role": "slate-lock",
+    "milestone": "parity",
+    "requires": [],
+    "recommends": []
+  }
+}

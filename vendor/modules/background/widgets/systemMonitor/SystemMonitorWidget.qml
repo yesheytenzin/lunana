@@ -6,13 +6,13 @@ import Quickshell
 import "../../../.."
 import "../../../../services"
 import "../../../common"
-import "../../../iris/style"
+import "../../../atoll/style"
 import "../../../common/functions"
 import "../../../common/widgets"
 import "../../../common/widgets/widgetCanvas"
 import ".."
 import "../instrument"
-import "../../../iris/widgets"
+import "../../../atoll/widgets"
 
 AbstractBackgroundWidget {
     id: root
@@ -35,10 +35,10 @@ AbstractBackgroundWidget {
     readonly property int meterColumns: Math.max(1, Math.min(root._resourceModel.length,
         Math.floor((root.implicitWidth + 10 * root.scaleFactor) / (110 * root.scaleFactor))))
     readonly property int meterRows: Math.ceil(root._resourceModel.length / root.meterColumns)
-    implicitWidth: root.irisFaced ? root.irisFaceWidth : Math.round(Number(root._readConfigKey("contentWidth") ?? 320) * scaleFactor)
+    implicitWidth: root.atollFaced ? root.atollFaceWidth : Math.round(Number(root._readConfigKey("contentWidth") ?? 320) * scaleFactor)
     implicitHeight: {
-        if (root.irisFaced)
-            return root.irisFaceHeight;
+        if (root.atollFaced)
+            return root.atollFaceHeight;
         const stored = Math.round(Number(root._readConfigKey("contentHeight") ?? 120) * scaleFactor);
         if (root.displayMode === "tiles")
             return Math.max(stored, root._tilesMinHeight);
@@ -49,10 +49,10 @@ AbstractBackgroundWidget {
 
     visibleWhenLocked: false
     needsColText: true
-    irisFace: Component { IrisVitalsFace { widget: root } }
-    irisSizes: ["small", "medium", "large"]
-    irisDefaultSize: "medium"
-    irisOptions: [
+    atollFace: Component { AtollVitalsFace { widget: root } }
+    atollSizes: ["small", "medium", "large"]
+    atollDefaultSize: "medium"
+    atollOptions: [
         { key: "showCpu", raw: true, label: Translation.tr("CPU"), icon: "memory", fallback: true },
         { key: "showMemory", raw: true, label: Translation.tr("Memory"), icon: "storage", fallback: true },
         { key: "showGpu", raw: true, label: Translation.tr("GPU"), icon: "developer_board", fallback: true },
@@ -158,7 +158,7 @@ AbstractBackgroundWidget {
     }
 
     // What the widget shows: the live readings while the desktop is seen, the last ones behind windows.
-    // Another consumer (ii's bar) can keep ResourceUsage polling; a covered widget must not redraw for it.
+    // Another consumer (drift's bar) can keep ResourceUsage polling; a covered widget must not redraw for it.
     function _readingNow(): var {
         return {
             cpu: ResourceUsage.cpuUsage, mem: ResourceUsage.memoryUsedPercentage, gpu: ResourceUsage.gpuUsage,
@@ -207,8 +207,8 @@ AbstractBackgroundWidget {
     }
 
     function _tileShape(key: string): int {
-        // iRiS keeps glyph badges plain round; expressive shapes are Material's.
-        if (root.widgetIris) return MaterialShape.Shape.Circle
+        // Atoll keeps glyph badges plain round; expressive shapes are Material's.
+        if (root.widgetAtoll) return MaterialShape.Shape.Circle
         switch (key) {
             case "cpu": return MaterialShape.Shape.Gem;
             case "mem": return MaterialShape.Shape.Cookie4Sided;
@@ -256,7 +256,7 @@ AbstractBackgroundWidget {
 
     // ── Style tokens ──
     readonly property real cardRadius: root.widgetCardRadius
-    readonly property int _innerMargin: Appearance.angelEverywhere || Appearance.inirEverywhere ? 6 : 2
+    readonly property int _innerMargin: Appearance.angelEverywhere || Appearance.lunanaEverywhere ? 6 : 2
 
     // Rings/bars/text reuse the same categorical palette as Tiles. The wallpaper
     // already generated these semantic roles, so position analysis must not invent
@@ -336,7 +336,7 @@ AbstractBackgroundWidget {
     // Animation duration for smooth value transitions
     readonly property int _animDuration: Appearance.animation.elementMove.duration
     // Values tick every second: easing them behind windows repaints the desktop for nothing. Every mode's body
-    // exists at once (they crossfade) and iRiS draws its own face over all of them: each body eases only while
+    // exists at once (they crossfade) and Atoll draws its own face over all of them: each body eases only while
     // it is the one shown, or a hidden one repaints the whole desktop window on every reading.
     readonly property bool animatesValues: Appearance.animationsEnabled && root.motionActive
 
@@ -362,7 +362,7 @@ AbstractBackgroundWidget {
     }
 
     WidgetSurface {
-        irisPresentation: root.widgetIris
+        atollPresentation: root.widgetAtoll
         regionBrightness: root.regionBrightness
         anchors.fill: parent
         surfaceRadius: root.cornerRadiusOverride >= 0 ? root.cornerRadiusOverride : root.cardRadius
@@ -378,7 +378,7 @@ AbstractBackgroundWidget {
         screenY: root.y
         screenWidth: root.scaledScreenWidth
         screenHeight: root.scaledScreenHeight
-        shown: !root.irisFaced && root.displayMode !== "tiles" && root.displayMode !== "instrument"
+        shown: !root.atollFaced && root.displayMode !== "tiles" && root.displayMode !== "instrument"
             && (root.backgroundOpacity > 0 || root.borderWidth > 0 || root.effectiveBlur)
     }
 
@@ -390,7 +390,7 @@ AbstractBackgroundWidget {
         id: instrumentBody
         anchors.centerIn: parent
         opacity: root.displayMode === "instrument" ? 1 : 0
-        visible: !root.irisFaced && opacity > 0
+        visible: !root.atollFaced && opacity > 0
         enabled: root.displayMode === "instrument"
         Behavior on opacity {
             enabled: root.animationsActive
@@ -461,7 +461,7 @@ AbstractBackgroundWidget {
                         text: root._getDisplayText(resourceMeter.modelData.key)
                         color: root.widgetInk
                         font {
-                            family: root.widgetIris ? IrisStyle.fontMain : root.widgetNumbersFamily
+                            family: root.widgetAtoll ? AtollStyle.fontMain : root.widgetNumbersFamily
                             pixelSize: Math.round(resourceMeter.side * 0.29)
                             weight: Font.Bold
                             features: ({ "tnum": 1 })
@@ -482,7 +482,7 @@ AbstractBackgroundWidget {
                             pixelSize: Math.max(10, Math.round(resourceMeter.side * 0.075))
                             weight: Font.DemiBold
                             letterSpacing: Math.round(1.4 * root.scaleFactor)
-                            capitalization: root.widgetIris ? Font.MixedCase : Font.AllUppercase
+                            capitalization: root.widgetAtoll ? Font.MixedCase : Font.AllUppercase
                         }
                     }
                 }
@@ -499,7 +499,7 @@ AbstractBackgroundWidget {
         anchors.margins: root._innerMargin
         spacing: Appearance.sizes.spacingSmall ?? 4
         opacity: root.displayMode === "bars" ? 1 : 0
-        visible: !root.irisFaced && opacity > 0
+        visible: !root.atollFaced && opacity > 0
         enabled: root.displayMode === "bars"
         Behavior on opacity {
             enabled: root.animationsActive
@@ -559,7 +559,7 @@ AbstractBackgroundWidget {
                     color: barRow._liveColor
                     font {
                         pixelSize: Appearance.font.pixelSize.smaller
-                        family: root.widgetIris ? IrisStyle.fontMain : root.widgetNumbersFamily
+                        family: root.widgetAtoll ? AtollStyle.fontMain : root.widgetNumbersFamily
                     }
                     horizontalAlignment: Text.AlignRight
                     Layout.preferredWidth: barRow.modelData.key === "temp" ? 40 : 32
@@ -575,7 +575,7 @@ AbstractBackgroundWidget {
         anchors.fill: parent
         anchors.margins: root._innerMargin
         opacity: root.displayMode === "graph" ? 1 : 0
-        visible: !root.irisFaced && opacity > 0
+        visible: !root.atollFaced && opacity > 0
         enabled: root.displayMode === "graph"
         Behavior on opacity {
             enabled: root.animationsActive
@@ -604,7 +604,7 @@ AbstractBackgroundWidget {
                     StyledText {
                         text: root._getDisplayText(modelData.key)
                         color: root._graphColor(modelData.key)
-                        font { pixelSize: Appearance.font.pixelSize.smaller; family: root.widgetIris ? IrisStyle.fontMain : root.widgetNumbersFamily }
+                        font { pixelSize: Appearance.font.pixelSize.smaller; family: root.widgetAtoll ? AtollStyle.fontMain : root.widgetNumbersFamily }
                         anchors.verticalCenter: parent.verticalCenter
                     }
                 }
@@ -622,7 +622,7 @@ AbstractBackgroundWidget {
                 required property var modelData
                 text: modelData.label
                 color: root._metricSubtext
-                font { pixelSize: Appearance.font.pixelSize.smaller - 2; family: root.widgetIris ? IrisStyle.fontMain : root.widgetNumbersFamily }
+                font { pixelSize: Appearance.font.pixelSize.smaller - 2; family: root.widgetAtoll ? AtollStyle.fontMain : root.widgetNumbersFamily }
                 anchors.right: parent.right
                 anchors.rightMargin: 2
                 y: parent._legendH + (parent.height - parent._legendH) * (1.0 - modelData.pct) - height / 2
@@ -690,7 +690,7 @@ AbstractBackgroundWidget {
         anchors.centerIn: parent
         spacing: Appearance.sizes.spacingNormal ?? 8
         opacity: root.displayMode === "rings" ? 1 : 0
-        visible: !root.irisFaced && opacity > 0
+        visible: !root.atollFaced && opacity > 0
         enabled: root.displayMode === "rings"
         Behavior on opacity {
             enabled: root.animationsActive
@@ -747,7 +747,7 @@ AbstractBackgroundWidget {
                         color: ringCol._liveColor
                         font {
                             pixelSize: Math.max(10, Math.round(ringCol._ringSize * 0.26))
-                            family: root.widgetIris ? IrisStyle.fontMain : root.widgetNumbersFamily
+                            family: root.widgetAtoll ? AtollStyle.fontMain : root.widgetNumbersFamily
                             weight: Font.DemiBold
                         }
                     }
@@ -789,7 +789,7 @@ AbstractBackgroundWidget {
         anchors.centerIn: parent
         spacing: Appearance.sizes.spacingSmall ?? 4
         opacity: root.displayMode === "text" ? 1 : 0
-        visible: !root.irisFaced && opacity > 0
+        visible: !root.atollFaced && opacity > 0
         enabled: root.displayMode === "text"
         Behavior on opacity {
             enabled: root.animationsActive
@@ -837,7 +837,7 @@ AbstractBackgroundWidget {
                         color: textChip._liveColor
                         font {
                             pixelSize: Math.round(Appearance.font.pixelSize.normal * root.scaleFactor)
-                            family: root.widgetIris ? IrisStyle.fontMain : root.widgetNumbersFamily
+                            family: root.widgetAtoll ? AtollStyle.fontMain : root.widgetNumbersFamily
                             weight: Font.DemiBold
                         }
                         anchors.verticalCenter: parent.verticalCenter
@@ -852,7 +852,7 @@ AbstractBackgroundWidget {
         anchors.fill: parent
         anchors.margins: root._innerMargin
         opacity: root.displayMode === "tiles" && root._resourceModel.length > 0 ? 1 : 0
-        visible: !root.irisFaced && opacity > 0
+        visible: !root.atollFaced && opacity > 0
         enabled: root.displayMode === "tiles"
         Behavior on opacity {
             enabled: root.animationsActive
@@ -897,7 +897,7 @@ AbstractBackgroundWidget {
                 StyledRectangularShadow {
                     target: tile
                     z: -2
-                    visible: !root.widgetIris && !Appearance.zzzEverywhere && !Appearance.inirEverywhere
+                    visible: !root.widgetAtoll && !Appearance.zzzEverywhere && !Appearance.lunanaEverywhere
                         && !Appearance.regaliaEverywhere
                 }
 
@@ -930,7 +930,7 @@ AbstractBackgroundWidget {
                                 Math.round(Appearance.font.pixelSize.hugeass * root.scaleFactor),
                                 Math.round(tile.height * 0.30),
                                 Math.round(tile.width * 0.34)))
-                            family: root.widgetIris ? IrisStyle.fontMain : root.widgetNumbersFamily
+                            family: root.widgetAtoll ? AtollStyle.fontMain : root.widgetNumbersFamily
                             weight: Font.Bold
                         }
                     }
@@ -953,7 +953,7 @@ AbstractBackgroundWidget {
     }
 
     Column {
-        visible: !root.irisFaced && root._resourceModel.length === 0
+        visible: !root.atollFaced && root._resourceModel.length === 0
         anchors.centerIn: parent
         spacing: Math.round((Appearance.sizes.spacingSmall ?? 8) / 2)
 

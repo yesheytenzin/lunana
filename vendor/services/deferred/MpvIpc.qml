@@ -180,7 +180,7 @@ Item {
     }
 
     // The wrapper refuses to play when ani-cli resolved a different show than
-    // iNiR expected, and can only say so on disk: there is no mpv to talk to.
+    // Lunana expected, and can only say so on disk: there is no mpv to talk to.
     // This waits for the reject file or for a socket that really accepts
     // connections, so the first QML connect succeeds instead of logging errors.
     Process {

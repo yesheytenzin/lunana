@@ -125,11 +125,11 @@ Scope {
     // standalone process, so the panel must close before the window appears.
     function setLayout(mode: string): void {
         if (mode === "window") {
-            Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")),
+            Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/lunana")),
                 "ipc", "settings", "openWindowAt", String(root.currentPage)]);
             return;
         }
-        Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")),
+        Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/lunana")),
             "ipc", "settings", "setOverlayStyle", mode, String(root.currentPage)]);
     }
 
@@ -229,19 +229,19 @@ Scope {
             return;
         }
 
-        var activeFamily = Config.options?.panelFamily ?? "ii";
-        var wafflePage = SettingsPageRegistry.pages.findIndex(
-            p => String(p.component || "").indexOf("WaffleConfig.qml") >= 0);
-        var irisPage = SettingsPageRegistry.pages.findIndex(
-            p => String(p.component || "").indexOf("IrisConfig.qml") >= 0);
+        var activeFamily = Config.options?.panelFamily ?? "drift";
+        var slatePage = SettingsPageRegistry.pages.findIndex(
+            p => String(p.component || "").indexOf("SlateConfig.qml") >= 0);
+        var atollPage = SettingsPageRegistry.pages.findIndex(
+            p => String(p.component || "").indexOf("AtollConfig.qml") >= 0);
         var results = [];
 
         function allowed(pageIndex) {
             if (pageIndex < 0 || pageIndex >= root.pages.length)
                 return false;
-            if (wafflePage >= 0 && pageIndex === wafflePage && activeFamily !== "waffle")
+            if (slatePage >= 0 && pageIndex === slatePage && activeFamily !== "slate")
                 return false;
-            if (irisPage >= 0 && pageIndex === irisPage && activeFamily !== "iris")
+            if (atollPage >= 0 && pageIndex === atollPage && activeFamily !== "atoll")
                 return false;
             if (root.easyMode && root.pages[pageIndex].essential !== true)
                 return false;
@@ -622,14 +622,14 @@ Scope {
                 radius: Appearance.zzzEverywhere ? Appearance.zzz.panelRadius
                       : Appearance.regaliaEverywhere ? Appearance.regalia.panelRadius
                       : Appearance.angelEverywhere ? Appearance.angel.roundingLarge
-                      : Appearance.inirEverywhere ? Appearance.inir.roundingLarge
+                      : Appearance.lunanaEverywhere ? Appearance.lunana.roundingLarge
                       : Appearance.rounding.windowRounding
                 // Same contract as the rail overlay: backgroundOpacity lands on
                 // the fill alpha (solid) or the blur transparentize (glass),
                 // never on Item opacity, which children inherit.
                 color: Appearance.auroraEverywhere || Appearance.regaliaEverywhere ? "transparent"
                      : CF.ColorUtils.applyAlpha(
-                         Appearance.inirEverywhere ? Appearance.inir.colLayer0
+                         Appearance.lunanaEverywhere ? Appearance.lunana.colLayer0
                        : Appearance.zzzEverywhere ? Appearance.zzz.chrome
                        : Appearance.colors.colLayer0Base,
                          card.panelBgOpacity)
@@ -638,10 +638,10 @@ Scope {
                 // rail host draws the equivalent surface the same way.
                 border.width: Appearance.angelEverywhere ? Appearance.angel.panelBorderWidth
                             : Appearance.zzzEverywhere ? Appearance.zzz.borderThick
-                            : Appearance.inirEverywhere ? 1 : 0
+                            : Appearance.lunanaEverywhere ? 1 : 0
                 border.color: Appearance.angelEverywhere ? Appearance.angel.colPanelBorder
                             : Appearance.zzzEverywhere ? Appearance.zzz.hairline
-                            : Appearance.inirEverywhere ? Appearance.inir.colBorderSubtle
+                            : Appearance.lunanaEverywhere ? Appearance.lunana.colBorderSubtle
                             : "transparent"
                 clip: true
 
@@ -690,7 +690,7 @@ Scope {
                     anchors.fill: parent
                     z: -1
                     radius: card.radius
-                    visible: Appearance.auroraEverywhere && !Appearance.inirEverywhere
+                    visible: Appearance.auroraEverywhere && !Appearance.lunanaEverywhere
                     screenX: card.x
                     screenY: card.y
                     screenWidth: settingsPanel.width
@@ -701,7 +701,7 @@ Scope {
                     // the whole panel vanish over a fullscreen window.
                     fallbackColor: Appearance.effectsEnabled
                         ? "transparent" : Appearance.colors.colLayer0Base
-                    inirColor: Appearance.inir.colLayer0
+                    lunanaColor: Appearance.lunana.colLayer0
                     auroraTransparency: {
                         const base = Appearance.angelEverywhere
                             ? Appearance.angel.panelTransparentize
@@ -804,7 +804,7 @@ Scope {
                         visible: height > 0
                         radius: header.radius
                         color: Appearance.zzzEverywhere ? Appearance.zzz.tile
-                             : Appearance.inirEverywhere ? Qt.alpha(Appearance.inir.colLayer1, 1)
+                             : Appearance.lunanaEverywhere ? Qt.alpha(Appearance.lunana.colLayer1, 1)
                              : Qt.alpha(Appearance.colors.colLayer0Base, 1)
 
                         Image {
@@ -868,7 +868,7 @@ Scope {
                             radius: Appearance.zzzEverywhere
                                 ? Appearance.zzz.controlRadius : width / 2
                             color: Appearance.zzzEverywhere ? Appearance.zzz.chrome
-                                 : Appearance.inirEverywhere ? Qt.alpha(Appearance.inir.colLayer1, 1)
+                                 : Appearance.lunanaEverywhere ? Qt.alpha(Appearance.lunana.colLayer1, 1)
                                  : Qt.alpha(Appearance.colors.colLayer1, 1)
                             border.width: 2
                             border.color: SettingsMaterialPreset.accentColor
@@ -986,7 +986,7 @@ Scope {
                             text: root.currentMeta.icon ?? ""
                             rotation: root.currentMeta.iconRotation ?? 0
                             iconSize: 20
-                            color: Appearance.inirEverywhere ? Appearance.inir.colAccent
+                            color: Appearance.lunanaEverywhere ? Appearance.lunana.colAccent
                                  : Appearance.colors.colPrimary
                         }
 
@@ -1050,8 +1050,8 @@ Scope {
                             Layout.alignment: Qt.AlignVCenter
                             radius: Appearance.editorialEverywhere ? Appearance.rounding.small : Appearance.rounding.full
                             color: Appearance.angelEverywhere ? Appearance.angel.colGlassCard
-                                 : Appearance.inirEverywhere
-                                    ? (focusSearchField.activeFocus ? Appearance.inir.colLayer1 : Appearance.inir.colLayer0)
+                                 : Appearance.lunanaEverywhere
+                                    ? (focusSearchField.activeFocus ? Appearance.lunana.colLayer1 : Appearance.lunana.colLayer0)
                                  : Appearance.editorialEverywhere
                                     ? (focusSearchField.activeFocus ? Appearance.editorial.field : Appearance.editorial.layer(1))
                                     : (focusSearchField.activeFocus ? Appearance.colors.colLayer1 : Appearance.colors.colLayer0)
@@ -1060,7 +1060,7 @@ Scope {
                             border.color: focusSearchField.activeFocus
                                 ? Appearance.colors.colPrimary
                                 : (Appearance.angelEverywhere ? Appearance.angel.colCardBorder
-                                  : Appearance.inirEverywhere ? Appearance.inir.colBorderMuted
+                                  : Appearance.lunanaEverywhere ? Appearance.lunana.colBorderMuted
                                   : Appearance.editorialEverywhere ? Appearance.editorial.rule
                                   : Appearance.m3colors.m3outlineVariant)
 
@@ -1475,7 +1475,7 @@ Scope {
                                                         buttonRadius: Appearance.zzzEverywhere
                                                             ? Appearance.zzz.controlRadius
                                                             : Appearance.angelEverywhere ? Appearance.angel.roundingSmall
-                                                            : Appearance.inirEverywhere ? Appearance.inir.roundingSmall
+                                                            : Appearance.lunanaEverywhere ? Appearance.lunana.roundingSmall
                                                             : Appearance.rounding.small
 
                                                         // Rows inside a card, not cards
@@ -1509,10 +1509,10 @@ Scope {
                                                                 color: Appearance.zzzEverywhere
                                                                         ? CF.ColorUtils.transparentize(Appearance.zzz.paperAlt, 0.10)
                                                                     : Appearance.angelEverywhere ? Appearance.angel.colGlassCard
-                                                                    : Appearance.inirEverywhere ? Appearance.inir.colLayer2
+                                                                    : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2
                                                                     : CF.ColorUtils.applyAlpha(Appearance.colors.colPrimary, 0.20)
                                                                 colSymbol: Appearance.zzzEverywhere ? Appearance.zzz.accent
-                                                                    : Appearance.inirEverywhere ? Appearance.inir.colAccent
+                                                                    : Appearance.lunanaEverywhere ? Appearance.lunana.colAccent
                                                                     : Appearance.angelEverywhere ? Appearance.angel.colText
                                                                     : Appearance.colors.colPrimary
                                                                 // Rotation rides the whole medallion: the wrapper
@@ -2196,12 +2196,12 @@ Scope {
                     width: noResultsRow.implicitWidth + 26
                     height: 36
                     radius: Appearance.rounding.full
-                    color: Appearance.inirEverywhere ? Appearance.inir.colLayer2
+                    color: Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2
                          : Appearance.zzzEverywhere ? Appearance.zzz.bg2
                          : Appearance.colors.colLayer1
                     border.width: 1
                     border.color: Appearance.angelEverywhere ? Appearance.angel.colCardBorder
-                        : Appearance.inirEverywhere ? Appearance.inir.colBorder
+                        : Appearance.lunanaEverywhere ? Appearance.lunana.colBorder
                         : Appearance.m3colors.m3outlineVariant
 
                     RowLayout {
@@ -2234,14 +2234,14 @@ Scope {
                     anchors.right: parent.right
                     anchors.rightMargin: 14
                     radius: Appearance.angelEverywhere ? Appearance.angel.roundingNormal
-                          : Appearance.inirEverywhere ? Appearance.inir.roundingNormal
+                          : Appearance.lunanaEverywhere ? Appearance.lunana.roundingNormal
                           : Appearance.rounding.normal
-                    color: Appearance.inirEverywhere ? Appearance.inir.colLayer2
+                    color: Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2
                          : Appearance.zzzEverywhere ? Appearance.zzz.bg2
                          : Appearance.colors.colLayer1
                     border.width: 1
                     border.color: Appearance.angelEverywhere ? Appearance.angel.colCardBorder
-                        : Appearance.inirEverywhere ? Appearance.inir.colBorder
+                        : Appearance.lunanaEverywhere ? Appearance.lunana.colBorder
                         : Appearance.m3colors.m3outlineVariant
 
                     ListView {
@@ -2279,7 +2279,7 @@ Scope {
 
                             width: resultsList.width
                             implicitHeight: 46
-                            buttonRadius: Appearance.inirEverywhere ? Appearance.inir.roundingSmall
+                            buttonRadius: Appearance.lunanaEverywhere ? Appearance.lunana.roundingSmall
                                         : Appearance.rounding.small
                             // A wash of the accent, not the accent container. The
                             // container pairs with an on-container ink this row

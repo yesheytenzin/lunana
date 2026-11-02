@@ -25,7 +25,7 @@ Rectangle {
     readonly property bool zzzEverywhere: surfaceDialect === "zzz"
     readonly property bool angelEverywhere: surfaceDialect === "angel"
     readonly property bool auroraEverywhere: surfaceDialect === "aurora" || angelEverywhere
-    readonly property bool inirEverywhere: surfaceDialect === "inir"
+    readonly property bool lunanaEverywhere: surfaceDialect === "lunana"
     readonly property bool gameModeMinimal:  Appearance.gameModeMinimal
     readonly property bool editorialGlassActive: Appearance.editorialEverywhere
         && Appearance.editorial.glassActive && !gameModeMinimal
@@ -35,7 +35,7 @@ Rectangle {
     // ─── Shape ───────────────────────────────────────────────────────
     radius: zzzEverywhere   ? Appearance.zzz.panelRadius
           : angelEverywhere ? Appearance.angel.roundingNormal
-          : inirEverywhere  ? Appearance.inir.roundingNormal
+          : lunanaEverywhere  ? Appearance.lunana.roundingNormal
           :                   Appearance.rounding.large
     Behavior on radius { enabled: Appearance.animationsEnabled; NumberAnimation { duration: Appearance.animation.elementResize.duration; easing.type: Appearance.animation.elementResize.type; easing.bezierCurve: Appearance.animation.elementResize.bezierCurve } }
 
@@ -48,8 +48,8 @@ Rectangle {
         ? Appearance.zzz.bg0
         : auroraEverywhere
         ? ColorUtils.transparentize(blendedLayer0, 0.18)
-        : inirEverywhere
-            ? ColorUtils.transparentize(Appearance.inir.colLayer1, 0.28)
+        : lunanaEverywhere
+            ? ColorUtils.transparentize(Appearance.lunana.colLayer1, 0.28)
             : ColorUtils.transparentize(Appearance.colors.colLayer0, 0.22)
 
     Behavior on color {
@@ -67,8 +67,8 @@ Rectangle {
         ? Appearance.zzz.borderColor
         : angelEverywhere
         ? Appearance.angel.colPanelBorder
-        : inirEverywhere
-            ? ColorUtils.transparentize(Appearance.inir.colBorder, 0.4)
+        : lunanaEverywhere
+            ? ColorUtils.transparentize(Appearance.lunana.colBorder, 0.4)
             : ColorUtils.transparentize(Appearance.colors.colLayer0Border, 0.5)
 
     Behavior on border.color {

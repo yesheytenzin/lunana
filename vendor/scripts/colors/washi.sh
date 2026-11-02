@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
-# Runs inir-washi (scripts/colors/washi), building it first when its sources are newer than the binary.
+# Runs lunana-washi (scripts/colors/washi), building it first when its sources are newer than the binary.
 # Usage: washi.sh --request '<json>' --out <file>  |  washi.sh --default
 set -uo pipefail
 
 here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 root="$(cd "$here/../.." && pwd)"
 bin_dir="${XDG_STATE_HOME:-$HOME/.local/state}/quickshell/user/generated/bin"
-bin="$bin_dir/inir-washi"
+bin="$bin_dir/lunana-washi"
 
 stale() {
   [[ -x "$bin" ]] || return 0
@@ -21,10 +21,10 @@ stale() {
 if stale; then
   go_bin="$(command -v go || true)"
   if [[ -z "$go_bin" ]]; then
-    [[ -x "$bin" ]] || { echo "washi: Go is not installed; iRiS keeps its default palette" >&2; exit 3; }
+    [[ -x "$bin" ]] || { echo "washi: Go is not installed; Atoll keeps its default palette" >&2; exit 3; }
   else
     mkdir -p "$bin_dir"
-    tmp="$bin_dir/.inir-washi.$$"
+    tmp="$bin_dir/.lunana-washi.$$"
     if (cd "$root" && "$go_bin" build -trimpath -o "$tmp" ./scripts/colors/washi) >&2; then
       mv -f "$tmp" "$bin"
     else

@@ -10,28 +10,28 @@ ContentPage {
     settingsPageIndex: 10
     settingsPageName: Translation.tr("Modules")
 
-    readonly property string activeFamily: Config.options?.panelFamily ?? "ii"
-    readonly property bool isIi: modulesPage.activeFamily === "ii"
-    readonly property bool isWaffle: modulesPage.activeFamily === "waffle"
-    readonly property bool isIris: modulesPage.activeFamily === "iris"
+    readonly property string activeFamily: Config.options?.panelFamily ?? "drift"
+    readonly property bool isIi: modulesPage.activeFamily === "drift"
+    readonly property bool isSlate: modulesPage.activeFamily === "slate"
+    readonly property bool isAtoll: modulesPage.activeFamily === "atoll"
 
     readonly property var defaultPanels: ({
-        "ii": [
-            "iiBar", "iiBackground", "iiBackdrop", "iiCheatsheet", "iiControlPanel", "iiDock", "iiLock", 
-            "iiMediaControls", "iiNotificationPopup", "iiOnScreenDisplay", "iiOnScreenKeyboard", 
-            "iiOverlay", "iiOverview", "iiPolkit", "iiRegionSelector", "iiScreenCorners", 
-            "iiSessionScreen", "iiSidebarLeft", "iiSidebarRight", "iiTilingOverlay", "iiVerticalBar", 
-            "iiWallpaperSelector", "iiWallpaperLauncher", "iiCoverflowSelector", "iiClipboard", "iiShellUpdate"
+        "drift": [
+            "driftBar", "driftBackground", "driftBackdrop", "driftCheatsheet", "driftControlPanel", "driftDock", "driftLock", 
+            "driftMediaControls", "driftNotificationPopup", "driftOnScreenDisplay", "driftOnScreenKeyboard", 
+            "driftOverlay", "driftOverview", "driftPolkit", "driftRegionSelector", "driftScreenCorners", 
+            "driftSessionScreen", "driftSidebarLeft", "driftSidebarRight", "driftTilingOverlay", "driftVerticalBar", 
+            "driftWallpaperSelector", "driftWallpaperLauncher", "driftCoverflowSelector", "driftClipboard", "driftShellUpdate"
         ],
-        "waffle": [
-            "wBar", "wBackground", "wBackdrop", "wStartMenu", "wActionCenter", "wNotificationCenter", "wNotificationPopup", "wOnScreenDisplay", "wWidgets", "wTaskView", "wLock", "wPolkit", "wSessionScreen",
-            "iiCheatsheet", "iiOnScreenKeyboard", "iiOverlay", "iiOverview",
-            "iiRegionSelector", "iiScreenCorners", "iiWallpaperSelector", "iiWallpaperLauncher", "iiCoverflowSelector", "iiClipboard"
+        "slate": [
+            "slateBar", "slateBackground", "slateBackdrop", "slateStartMenu", "slateActionCenter", "slateNotificationCenter", "slateNotificationPopup", "slateOnScreenDisplay", "slateWidgets", "slateTaskView", "slateLock", "slatePolkit", "slateSessionScreen",
+            "driftCheatsheet", "driftOnScreenKeyboard", "driftOverlay", "driftOverview",
+            "driftRegionSelector", "driftScreenCorners", "driftWallpaperSelector", "driftWallpaperLauncher", "driftCoverflowSelector", "driftClipboard"
         ],
-        "iris": [
-            "irisBar", "irisBackground", "irisPalette", "irisControlCenter",
-            "irisNotificationPopup", "irisOnScreenDisplay", "irisSessionScreen",
-            "irisLock", "irisPolkit"
+        "atoll": [
+            "atollBar", "atollBackground", "atollPalette", "atollControlCenter",
+            "atollNotificationPopup", "atollOnScreenDisplay", "atollSessionScreen",
+            "atollLock", "atollPolkit"
         ]
     })
 
@@ -52,29 +52,29 @@ ContentPage {
         Config.setNestedValue("enabledPanels", panels)
     }
 
-    function isIiBarEnabled(): bool {
+    function isDriftBarEnabled(): bool {
         const panels = Config.options?.enabledPanels ?? []
-        return panels.includes("iiBar") || panels.includes("iiVerticalBar")
+        return panels.includes("driftBar") || panels.includes("driftVerticalBar")
     }
 
-    function setIiBarEnabled(enabled: bool) {
+    function setDriftBarEnabled(enabled: bool) {
         let panels = [...(Config.options?.enabledPanels ?? [])]
 
-        const hasBar = panels.includes("iiBar")
-        const hasVerticalBar = panels.includes("iiVerticalBar")
+        const hasBar = panels.includes("driftBar")
+        const hasVerticalBar = panels.includes("driftVerticalBar")
 
         if (enabled) {
-            if (!hasBar) panels.push("iiBar")
-            if (!hasVerticalBar) panels.push("iiVerticalBar")
+            if (!hasBar) panels.push("driftBar")
+            if (!hasVerticalBar) panels.push("driftVerticalBar")
         } else {
-            panels = panels.filter(panel => panel !== "iiBar" && panel !== "iiVerticalBar")
+            panels = panels.filter(panel => panel !== "driftBar" && panel !== "driftVerticalBar")
         }
 
         Config.setNestedValue("enabledPanels", panels)
     }
 
     function resetToDefaults() {
-        const family = Config.options?.panelFamily ?? "ii"
+        const family = Config.options?.panelFamily ?? "drift"
         Config.setNestedValue("enabledPanels", [...(defaultPanels[family] ?? [])])
     }
 
@@ -91,7 +91,7 @@ ContentPage {
             "feedback": "modules",
             "utilities": "modules",
             "optional": "modules",
-            "waffle core": "modules",
+            "slate core": "modules",
             "shared modules": "modules",
             "display scaling": "interface",
             "wallpaper selector": "interface",
@@ -212,7 +212,7 @@ ContentPage {
                         }
                         StyledText {
                             Layout.alignment: Qt.AlignHCenter
-                            text: "Material (ii)"
+                            text: "Material (drift)"
                             font.pixelSize: Appearance.font.pixelSize.small
                             color: modulesPage.isIi
                                 ? (Appearance.zzzEverywhere ? Appearance.zzz.onSticker : Appearance.colors.colOnPrimaryContainer)
@@ -220,16 +220,16 @@ ContentPage {
                         }
                     }
 
-                    onClicked: Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")), "panelFamily", "set", "ii"])
+                    onClicked: Quickshell.execDetached(["omarchy-shell", "lunana.family", "set", "drift"])
                 }
 
                 RippleButton {
                     Layout.fillWidth: true
                     implicitHeight: 64
                     buttonRadius: Appearance.zzzEverywhere ? Appearance.zzz.controlRadius : Appearance.rounding.small
-                    colBackground: modulesPage.isWaffle ? Appearance.colors.colPrimaryContainer : Appearance.colors.colLayer1
-                    colBackgroundHover: modulesPage.isWaffle ? Appearance.colors.colPrimaryContainerHover : Appearance.colors.colLayer1Hover
-                    colRipple: modulesPage.isWaffle ? Appearance.colors.colPrimaryContainerActive : Appearance.colors.colLayer1Active
+                    colBackground: modulesPage.isSlate ? Appearance.colors.colPrimaryContainer : Appearance.colors.colLayer1
+                    colBackgroundHover: modulesPage.isSlate ? Appearance.colors.colPrimaryContainerHover : Appearance.colors.colLayer1Hover
+                    colRipple: modulesPage.isSlate ? Appearance.colors.colPrimaryContainerActive : Appearance.colors.colLayer1Active
 
                     ColumnLayout {
                         anchors.centerIn: parent
@@ -238,26 +238,26 @@ ContentPage {
                             Layout.alignment: Qt.AlignHCenter
                             text: "window"
                             iconSize: Appearance.font.pixelSize.larger
-                            color: modulesPage.isWaffle ? Appearance.colors.colOnPrimaryContainer : Appearance.colors.colOnSurface
+                            color: modulesPage.isSlate ? Appearance.colors.colOnPrimaryContainer : Appearance.colors.colOnSurface
                         }
                         StyledText {
                             Layout.alignment: Qt.AlignHCenter
-                            text: "Windows 11 (Waffle)"
+                            text: "Slate (Slate)"
                             font.pixelSize: Appearance.font.pixelSize.small
-                            color: modulesPage.isWaffle ? Appearance.colors.colOnPrimaryContainer : Appearance.colors.colOnSurface
+                            color: modulesPage.isSlate ? Appearance.colors.colOnPrimaryContainer : Appearance.colors.colOnSurface
                         }
                     }
 
-                    onClicked: Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")), "panelFamily", "set", "waffle"])
+                    onClicked: Quickshell.execDetached(["omarchy-shell", "lunana.family", "set", "slate"])
                 }
 
                 RippleButton {
                     Layout.fillWidth: true
                     implicitHeight: 64
                     buttonRadius: Appearance.zzzEverywhere ? Appearance.zzz.controlRadius : Appearance.rounding.small
-                    colBackground: modulesPage.isIris ? Appearance.colors.colPrimaryContainer : Appearance.colors.colLayer1
-                    colBackgroundHover: modulesPage.isIris ? Appearance.colors.colPrimaryContainerHover : Appearance.colors.colLayer1Hover
-                    colRipple: modulesPage.isIris ? Appearance.colors.colPrimaryContainerActive : Appearance.colors.colLayer1Active
+                    colBackground: modulesPage.isAtoll ? Appearance.colors.colPrimaryContainer : Appearance.colors.colLayer1
+                    colBackgroundHover: modulesPage.isAtoll ? Appearance.colors.colPrimaryContainerHover : Appearance.colors.colLayer1Hover
+                    colRipple: modulesPage.isAtoll ? Appearance.colors.colPrimaryContainerActive : Appearance.colors.colLayer1Active
 
                     ColumnLayout {
                         anchors.centerIn: parent
@@ -266,17 +266,17 @@ ContentPage {
                             Layout.alignment: Qt.AlignHCenter
                             text: "visibility"
                             iconSize: Appearance.font.pixelSize.larger
-                            color: modulesPage.isIris ? Appearance.colors.colOnPrimaryContainer : Appearance.colors.colOnSurface
+                            color: modulesPage.isAtoll ? Appearance.colors.colOnPrimaryContainer : Appearance.colors.colOnSurface
                         }
                         StyledText {
                             Layout.alignment: Qt.AlignHCenter
-                            text: "iRiS"
+                            text: "Atoll"
                             font.pixelSize: Appearance.font.pixelSize.small
-                            color: modulesPage.isIris ? Appearance.colors.colOnPrimaryContainer : Appearance.colors.colOnSurface
+                            color: modulesPage.isAtoll ? Appearance.colors.colOnPrimaryContainer : Appearance.colors.colOnSurface
                         }
                     }
 
-                    onClicked: Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")), "panelFamily", "set", "iris"])
+                    onClicked: Quickshell.execDetached(["omarchy-shell", "lunana.family", "set", "atoll"])
                 }
             }
 
@@ -300,13 +300,13 @@ ContentPage {
                 spacing: 6
                 Repeater {
                     model: [
-                        { value: "ii", label: "Material", icon: "dashboard" },
-                        { value: "waffle", label: "Windows 11", icon: "window" },
-                        { value: "iris", label: "iRiS", icon: "visibility" }
+                        { value: "drift", label: "Material", icon: "dashboard" },
+                        { value: "slate", label: "Slate", icon: "window" },
+                        { value: "atoll", label: "Atoll", icon: "visibility" }
                     ]
                     FilterChip {
                         required property var modelData
-                        readonly property var cycle: Array.from(Config.options?.familyCycle ?? ["ii", "waffle", "iris"])
+                        readonly property var cycle: Array.from(Config.options?.familyCycle ?? ["drift", "slate", "atoll"])
                         chipIcon: modelData.icon
                         text: cycle.includes(modelData.value)
                             ? `${cycle.indexOf(modelData.value) + 1}  ${modelData.label}` : modelData.label
@@ -614,64 +614,64 @@ ContentPage {
             SettingsSwitch {
                 buttonIcon: "toolbar"
                 text: Translation.tr("Bar")
-                checked: modulesPage.isIiBarEnabled()
-                onCheckedChanged: modulesPage.setIiBarEnabled(checked)
+                checked: modulesPage.isDriftBarEnabled()
+                onCheckedChanged: modulesPage.setDriftBarEnabled(checked)
                 StyledToolTip { text: Translation.tr("Main bar module. Orientation (horizontal/vertical) is configured in Bar settings.") }
             }
 
             SettingsSwitch {
                 buttonIcon: "wallpaper"
                 text: Translation.tr("Background")
-                checked: modulesPage.isPanelEnabled("iiBackground")
-                onCheckedChanged: modulesPage.setPanelEnabled("iiBackground", checked)
+                checked: modulesPage.isPanelEnabled("driftBackground")
+                onCheckedChanged: modulesPage.setPanelEnabled("driftBackground", checked)
                 StyledToolTip { text: Translation.tr("Desktop wallpaper with parallax effect and widgets") }
             }
 
             SettingsSwitch {
                 buttonIcon: "blur_on"
                 text: Translation.tr("Niri Overview Backdrop")
-                checked: modulesPage.isPanelEnabled("iiBackdrop")
-                onCheckedChanged: modulesPage.setPanelEnabled("iiBackdrop", checked)
+                checked: modulesPage.isPanelEnabled("driftBackdrop")
+                onCheckedChanged: modulesPage.setPanelEnabled("driftBackdrop", checked)
                 StyledToolTip { text: Translation.tr("Blurred wallpaper shown in Niri's native overview (Mod+Tab)") }
             }
 
             SettingsSwitch {
                 buttonIcon: "search"
                 text: Translation.tr("Overview")
-                checked: modulesPage.isPanelEnabled("iiOverview")
-                onCheckedChanged: modulesPage.setPanelEnabled("iiOverview", checked)
+                checked: modulesPage.isPanelEnabled("driftOverview")
+                onCheckedChanged: modulesPage.setPanelEnabled("driftOverview", checked)
                 StyledToolTip { text: Translation.tr("App launcher, search and workspace grid (Super+Space)") }
             }
 
             SettingsSwitch {
                 buttonIcon: "view_sidebar"
                 text: Translation.tr("Workspace Strip")
-                checked: modulesPage.isPanelEnabled("iiWorkspaceStrip")
-                onCheckedChanged: modulesPage.setPanelEnabled("iiWorkspaceStrip", checked)
+                checked: modulesPage.isPanelEnabled("driftWorkspaceStrip")
+                onCheckedChanged: modulesPage.setPanelEnabled("driftWorkspaceStrip", checked)
                 StyledToolTip { text: Translation.tr("Hover a screen edge for visual workspace navigation") }
             }
 
             SettingsSwitch {
                 buttonIcon: "widgets"
                 text: Translation.tr("Floating tools (Super+G)")
-                checked: modulesPage.isPanelEnabled("iiOverlay")
-                onCheckedChanged: modulesPage.setPanelEnabled("iiOverlay", checked)
+                checked: modulesPage.isPanelEnabled("driftOverlay")
+                onCheckedChanged: modulesPage.setPanelEnabled("driftOverlay", checked)
                 StyledToolTip { text: Translation.tr("Floating image and widgets panel (Super+G)") }
             }
 
             SettingsSwitch {
                 buttonIcon: "left_panel_open"
                 text: Translation.tr("Left Sidebar")
-                checked: modulesPage.isPanelEnabled("iiSidebarLeft")
-                onCheckedChanged: modulesPage.setPanelEnabled("iiSidebarLeft", checked)
+                checked: modulesPage.isPanelEnabled("driftSidebarLeft")
+                onCheckedChanged: modulesPage.setPanelEnabled("driftSidebarLeft", checked)
                 StyledToolTip { text: Translation.tr("AI assistant, translator, image browser") }
             }
 
             SettingsSwitch {
                 buttonIcon: "right_panel_open"
                 text: Translation.tr("Right Sidebar")
-                checked: modulesPage.isPanelEnabled("iiSidebarRight")
-                onCheckedChanged: modulesPage.setPanelEnabled("iiSidebarRight", checked)
+                checked: modulesPage.isPanelEnabled("driftSidebarRight")
+                onCheckedChanged: modulesPage.setPanelEnabled("driftSidebarRight", checked)
                 StyledToolTip { text: Translation.tr("Quick settings, notifications, calendar, system info") }
             }
         }
@@ -692,24 +692,24 @@ ContentPage {
             SettingsSwitch {
                 buttonIcon: "notifications"
                 text: Translation.tr("Notification Popups")
-                checked: modulesPage.isPanelEnabled("iiNotificationPopup")
-                onCheckedChanged: modulesPage.setPanelEnabled("iiNotificationPopup", checked)
+                checked: modulesPage.isPanelEnabled("driftNotificationPopup")
+                onCheckedChanged: modulesPage.setPanelEnabled("driftNotificationPopup", checked)
                 StyledToolTip { text: Translation.tr("Toast notifications that appear on screen") }
             }
 
             SettingsSwitch {
                 buttonIcon: "volume_up"
                 text: Translation.tr("OSD")
-                checked: modulesPage.isPanelEnabled("iiOnScreenDisplay")
-                onCheckedChanged: modulesPage.setPanelEnabled("iiOnScreenDisplay", checked)
+                checked: modulesPage.isPanelEnabled("driftOnScreenDisplay")
+                onCheckedChanged: modulesPage.setPanelEnabled("driftOnScreenDisplay", checked)
                 StyledToolTip { text: Translation.tr("On-screen display for volume and brightness changes") }
             }
 
             SettingsSwitch {
                 buttonIcon: "music_note"
                 text: Translation.tr("Media Controls")
-                checked: modulesPage.isPanelEnabled("iiMediaControls")
-                onCheckedChanged: modulesPage.setPanelEnabled("iiMediaControls", checked)
+                checked: modulesPage.isPanelEnabled("driftMediaControls")
+                onCheckedChanged: modulesPage.setPanelEnabled("driftMediaControls", checked)
                 StyledToolTip { text: Translation.tr("Floating media player controls") }
             }
         }
@@ -730,56 +730,56 @@ ContentPage {
             SettingsSwitch {
                 buttonIcon: "lock"
                 text: Translation.tr("Lock Screen")
-                checked: modulesPage.isPanelEnabled("iiLock")
-                onCheckedChanged: modulesPage.setPanelEnabled("iiLock", checked)
+                checked: modulesPage.isPanelEnabled("driftLock")
+                onCheckedChanged: modulesPage.setPanelEnabled("driftLock", checked)
                 StyledToolTip { text: Translation.tr("Custom lock screen with clock and password input") }
             }
 
             SettingsSwitch {
                 buttonIcon: "power_settings_new"
                 text: Translation.tr("Session Screen")
-                checked: modulesPage.isPanelEnabled("iiSessionScreen")
-                onCheckedChanged: modulesPage.setPanelEnabled("iiSessionScreen", checked)
+                checked: modulesPage.isPanelEnabled("driftSessionScreen")
+                onCheckedChanged: modulesPage.setPanelEnabled("driftSessionScreen", checked)
                 StyledToolTip { text: Translation.tr("Power menu: lock, logout, suspend, reboot, shutdown") }
             }
 
             SettingsSwitch {
                 buttonIcon: "admin_panel_settings"
                 text: Translation.tr("Polkit Agent")
-                checked: modulesPage.isPanelEnabled("iiPolkit")
-                onCheckedChanged: modulesPage.setPanelEnabled("iiPolkit", checked)
+                checked: modulesPage.isPanelEnabled("driftPolkit")
+                onCheckedChanged: modulesPage.setPanelEnabled("driftPolkit", checked)
                 StyledToolTip { text: Translation.tr("Password prompt for administrative actions") }
             }
 
             SettingsSwitch {
                 buttonIcon: "screenshot_region"
                 text: Translation.tr("Region Selector")
-                checked: modulesPage.isPanelEnabled("iiRegionSelector")
-                onCheckedChanged: modulesPage.setPanelEnabled("iiRegionSelector", checked)
+                checked: modulesPage.isPanelEnabled("driftRegionSelector")
+                onCheckedChanged: modulesPage.setPanelEnabled("driftRegionSelector", checked)
                 StyledToolTip { text: Translation.tr("Screen capture, OCR text extraction, color picker") }
             }
 
             SettingsSwitch {
                 buttonIcon: "image"
                 text: Translation.tr("Wallpaper Selector")
-                checked: modulesPage.isPanelEnabled("iiWallpaperSelector")
-                onCheckedChanged: modulesPage.setPanelEnabled("iiWallpaperSelector", checked)
+                checked: modulesPage.isPanelEnabled("driftWallpaperSelector")
+                onCheckedChanged: modulesPage.setPanelEnabled("driftWallpaperSelector", checked)
                 StyledToolTip { text: Translation.tr("File picker for changing wallpaper") }
             }
 
             SettingsSwitch {
                 buttonIcon: "keyboard"
                 text: Translation.tr("Cheatsheet")
-                checked: modulesPage.isPanelEnabled("iiCheatsheet")
-                onCheckedChanged: modulesPage.setPanelEnabled("iiCheatsheet", checked)
+                checked: modulesPage.isPanelEnabled("driftCheatsheet")
+                onCheckedChanged: modulesPage.setPanelEnabled("driftCheatsheet", checked)
                 StyledToolTip { text: Translation.tr("Keyboard shortcuts reference overlay") }
             }
 
             SettingsSwitch {
                 buttonIcon: "keyboard_alt"
                 text: Translation.tr("On-Screen Keyboard")
-                checked: modulesPage.isPanelEnabled("iiOnScreenKeyboard")
-                onCheckedChanged: modulesPage.setPanelEnabled("iiOnScreenKeyboard", checked)
+                checked: modulesPage.isPanelEnabled("driftOnScreenKeyboard")
+                onCheckedChanged: modulesPage.setPanelEnabled("driftOnScreenKeyboard", checked)
                 StyledToolTip { text: Translation.tr("Virtual keyboard for touch input") }
             }
 
@@ -794,8 +794,8 @@ ContentPage {
             SettingsSwitch {
                 buttonIcon: "content_paste"
                 text: Translation.tr("Clipboard History")
-                checked: modulesPage.isPanelEnabled("iiClipboard")
-                onCheckedChanged: modulesPage.setPanelEnabled("iiClipboard", checked)
+                checked: modulesPage.isPanelEnabled("driftClipboard")
+                onCheckedChanged: modulesPage.setPanelEnabled("driftClipboard", checked)
                 StyledToolTip { text: Translation.tr("Clipboard manager with history") }
             }
         }
@@ -816,16 +816,16 @@ ContentPage {
             SettingsSwitch {
                 buttonIcon: "dock_to_bottom"
                 text: Translation.tr("Dock")
-                checked: modulesPage.isPanelEnabled("iiDock")
-                onCheckedChanged: modulesPage.setPanelEnabled("iiDock", checked)
+                checked: modulesPage.isPanelEnabled("driftDock")
+                onCheckedChanged: modulesPage.setPanelEnabled("driftDock", checked)
                 StyledToolTip { text: Translation.tr("macOS-style dock with pinned and running apps") }
             }
 
             SettingsSwitch {
                 buttonIcon: "rounded_corner"
                 text: Translation.tr("Screen Corners")
-                checked: modulesPage.isPanelEnabled("iiScreenCorners")
-                onCheckedChanged: modulesPage.setPanelEnabled("iiScreenCorners", checked)
+                checked: modulesPage.isPanelEnabled("driftScreenCorners")
+                onCheckedChanged: modulesPage.setPanelEnabled("driftScreenCorners", checked)
                 StyledToolTip { text: Translation.tr("Rounded corner overlays for screens without hardware rounding") }
             }
 
@@ -840,8 +840,8 @@ ContentPage {
             SettingsSwitch {
                 buttonIcon: "graphic_eq"
                 text: Translation.tr("EasyEffects Equalizer")
-                checked: modulesPage.isPanelEnabled("iiEqualizer")
-                onCheckedChanged: modulesPage.setPanelEnabled("iiEqualizer", checked)
+                checked: modulesPage.isPanelEnabled("driftEqualizer")
+                onCheckedChanged: modulesPage.setPanelEnabled("driftEqualizer", checked)
                 StyledToolTip { text: Translation.tr("Load the native 10-band EasyEffects equalizer and its shell integration. Disabled means the equalizer panel and IPC owner are not constructed.") }
             }
         }
@@ -849,79 +849,79 @@ ContentPage {
         }
     }
 
-    // ==================== WAFFLE ====================
+    // ==================== SLATE ====================
     SettingsTaskLoader {
-        requested: modulesPage.isWaffle && modulesPage.activeSection === "modules"
+        requested: modulesPage.isSlate && modulesPage.activeSection === "modules"
         sourceComponent: Component {
     SettingsCardSection {
         settingsTaskSection: "modules"
         expanded: false
         icon: "window"
-        title: Translation.tr("Waffle Core")
+        title: Translation.tr("Slate Core")
 
         SettingsGroup {
             SettingsSwitch {
                 buttonIcon: "toolbar"
                 text: Translation.tr("Taskbar")
-                checked: modulesPage.isPanelEnabled("wBar")
-                onCheckedChanged: modulesPage.setPanelEnabled("wBar", checked)
-                StyledToolTip { text: Translation.tr("Windows 11 style taskbar with app icons and system tray") }
+                checked: modulesPage.isPanelEnabled("slateBar")
+                onCheckedChanged: modulesPage.setPanelEnabled("slateBar", checked)
+                StyledToolTip { text: Translation.tr("Slate style taskbar with app icons and system tray") }
             }
 
             SettingsSwitch {
                 buttonIcon: "wallpaper"
                 text: Translation.tr("Background")
-                checked: modulesPage.isPanelEnabled("wBackground")
-                onCheckedChanged: modulesPage.setPanelEnabled("wBackground", checked)
+                checked: modulesPage.isPanelEnabled("slateBackground")
+                onCheckedChanged: modulesPage.setPanelEnabled("slateBackground", checked)
                 StyledToolTip { text: Translation.tr("Desktop wallpaper") }
             }
 
             SettingsSwitch {
                 buttonIcon: "grid_view"
                 text: Translation.tr("Start Menu")
-                checked: modulesPage.isPanelEnabled("wStartMenu")
-                onCheckedChanged: modulesPage.setPanelEnabled("wStartMenu", checked)
-                StyledToolTip { text: Translation.tr("Windows 11 style start menu with search and pinned apps (Super+Space)") }
+                checked: modulesPage.isPanelEnabled("slateStartMenu")
+                onCheckedChanged: modulesPage.setPanelEnabled("slateStartMenu", checked)
+                StyledToolTip { text: Translation.tr("Slate style start menu with search and pinned apps (Super+Space)") }
             }
 
             SettingsSwitch {
                 buttonIcon: "toggle_on"
                 text: Translation.tr("Action Center")
-                checked: modulesPage.isPanelEnabled("wActionCenter")
-                onCheckedChanged: modulesPage.setPanelEnabled("wActionCenter", checked)
+                checked: modulesPage.isPanelEnabled("slateActionCenter")
+                onCheckedChanged: modulesPage.setPanelEnabled("slateActionCenter", checked)
                 StyledToolTip { text: Translation.tr("Quick settings panel with toggles and sliders") }
             }
 
             SettingsSwitch {
                 buttonIcon: "notifications"
                 text: Translation.tr("Notification Center")
-                checked: modulesPage.isPanelEnabled("wNotificationCenter")
-                onCheckedChanged: modulesPage.setPanelEnabled("wNotificationCenter", checked)
+                checked: modulesPage.isPanelEnabled("slateNotificationCenter")
+                onCheckedChanged: modulesPage.setPanelEnabled("slateNotificationCenter", checked)
                 StyledToolTip { text: Translation.tr("Notification panel with calendar") }
             }
 
             SettingsSwitch {
                 buttonIcon: "notifications_active"
                 text: Translation.tr("Notification Popups")
-                checked: modulesPage.isPanelEnabled("wNotificationPopup")
-                onCheckedChanged: modulesPage.setPanelEnabled("wNotificationPopup", checked)
-                StyledToolTip { text: Translation.tr("Toast notifications that appear on screen (Windows 11 style)") }
+                checked: modulesPage.isPanelEnabled("slateNotificationPopup")
+                onCheckedChanged: modulesPage.setPanelEnabled("slateNotificationPopup", checked)
+                StyledToolTip { text: Translation.tr("Toast notifications that appear on screen (Slate style)") }
             }
 
             SettingsSwitch {
                 buttonIcon: "volume_up"
                 text: Translation.tr("OSD")
-                checked: modulesPage.isPanelEnabled("wOnScreenDisplay")
-                onCheckedChanged: modulesPage.setPanelEnabled("wOnScreenDisplay", checked)
+                checked: modulesPage.isPanelEnabled("slateOnScreenDisplay")
+                onCheckedChanged: modulesPage.setPanelEnabled("slateOnScreenDisplay", checked)
                 StyledToolTip { text: Translation.tr("On-screen display for volume and brightness") }
             }
 
             SettingsSwitch {
                 buttonIcon: "widgets"
                 text: Translation.tr("Widgets Panel")
-                checked: modulesPage.isPanelEnabled("wWidgets")
-                onCheckedChanged: modulesPage.setPanelEnabled("wWidgets", checked)
-                StyledToolTip { text: Translation.tr("Windows 11 style widgets sidebar") }
+                checked: modulesPage.isPanelEnabled("slateWidgets")
+                onCheckedChanged: modulesPage.setPanelEnabled("slateWidgets", checked)
+                StyledToolTip { text: Translation.tr("Slate style widgets sidebar") }
             }
         }
     }
@@ -929,7 +929,7 @@ ContentPage {
     }
 
     SettingsTaskLoader {
-        requested: modulesPage.isWaffle && modulesPage.activeSection === "modules"
+        requested: modulesPage.isSlate && modulesPage.activeSection === "modules"
         sourceComponent: Component {
     SettingsCardSection {
         settingsTaskSection: "modules"
@@ -940,7 +940,7 @@ ContentPage {
         SettingsGroup {
             StyledText {
                 Layout.fillWidth: true
-                text: Translation.tr("Supporting modules used alongside Waffle")
+                text: Translation.tr("Supporting modules used alongside Slate")
                 color: Appearance.colors.colSubtext
                 font.pixelSize: Appearance.font.pixelSize.smaller
                 wrapMode: Text.WordWrap
@@ -949,80 +949,80 @@ ContentPage {
             SettingsSwitch {
                 buttonIcon: "blur_on"
                 text: Translation.tr("Niri Overview Backdrop")
-                checked: modulesPage.isPanelEnabled("iiBackdrop")
-                onCheckedChanged: modulesPage.setPanelEnabled("iiBackdrop", checked)
+                checked: modulesPage.isPanelEnabled("driftBackdrop")
+                onCheckedChanged: modulesPage.setPanelEnabled("driftBackdrop", checked)
                 StyledToolTip { text: Translation.tr("Blurred wallpaper shown in Niri's native overview (Mod+Tab)") }
             }
 
             SettingsSwitch {
                 buttonIcon: "search"
                 text: Translation.tr("Overview")
-                checked: modulesPage.isPanelEnabled("iiOverview")
-                onCheckedChanged: modulesPage.setPanelEnabled("iiOverview", checked)
+                checked: modulesPage.isPanelEnabled("driftOverview")
+                onCheckedChanged: modulesPage.setPanelEnabled("driftOverview", checked)
                 StyledToolTip { text: Translation.tr("Workspace grid (used by Start Menu)") }
             }
 
             SettingsSwitch {
                 buttonIcon: "widgets"
                 text: Translation.tr("Floating tools (Super+G)")
-                checked: modulesPage.isPanelEnabled("iiOverlay")
-                onCheckedChanged: modulesPage.setPanelEnabled("iiOverlay", checked)
+                checked: modulesPage.isPanelEnabled("driftOverlay")
+                onCheckedChanged: modulesPage.setPanelEnabled("driftOverlay", checked)
                 StyledToolTip { text: Translation.tr("Floating image and widgets panel (Super+G)") }
             }
 
             SettingsSwitch {
                 buttonIcon: "lock"
                 text: Translation.tr("Lock Screen")
-                checked: modulesPage.isPanelEnabled("wLock")
-                onCheckedChanged: modulesPage.setPanelEnabled("wLock", checked)
+                checked: modulesPage.isPanelEnabled("slateLock")
+                onCheckedChanged: modulesPage.setPanelEnabled("slateLock", checked)
                 StyledToolTip { text: Translation.tr("Custom lock screen with clock and password input") }
             }
 
             SettingsSwitch {
                 buttonIcon: "power_settings_new"
                 text: Translation.tr("Session Screen")
-                checked: modulesPage.isPanelEnabled("wSessionScreen")
-                onCheckedChanged: modulesPage.setPanelEnabled("wSessionScreen", checked)
+                checked: modulesPage.isPanelEnabled("slateSessionScreen")
+                onCheckedChanged: modulesPage.setPanelEnabled("slateSessionScreen", checked)
                 StyledToolTip { text: Translation.tr("Power menu: lock, logout, suspend, reboot, shutdown") }
             }
 
             SettingsSwitch {
                 buttonIcon: "admin_panel_settings"
                 text: Translation.tr("Polkit Agent")
-                checked: modulesPage.isPanelEnabled("wPolkit")
-                onCheckedChanged: modulesPage.setPanelEnabled("wPolkit", checked)
+                checked: modulesPage.isPanelEnabled("slatePolkit")
+                onCheckedChanged: modulesPage.setPanelEnabled("slatePolkit", checked)
                 StyledToolTip { text: Translation.tr("Password prompt for administrative actions") }
             }
 
             SettingsSwitch {
                 buttonIcon: "screenshot_region"
                 text: Translation.tr("Region Selector")
-                checked: modulesPage.isPanelEnabled("iiRegionSelector")
-                onCheckedChanged: modulesPage.setPanelEnabled("iiRegionSelector", checked)
+                checked: modulesPage.isPanelEnabled("driftRegionSelector")
+                onCheckedChanged: modulesPage.setPanelEnabled("driftRegionSelector", checked)
                 StyledToolTip { text: Translation.tr("Screen capture, OCR text extraction, color picker") }
             }
 
             SettingsSwitch {
                 buttonIcon: "image"
                 text: Translation.tr("Wallpaper Selector")
-                checked: modulesPage.isPanelEnabled("iiWallpaperSelector")
-                onCheckedChanged: modulesPage.setPanelEnabled("iiWallpaperSelector", checked)
+                checked: modulesPage.isPanelEnabled("driftWallpaperSelector")
+                onCheckedChanged: modulesPage.setPanelEnabled("driftWallpaperSelector", checked)
                 StyledToolTip { text: Translation.tr("File picker for changing wallpaper") }
             }
 
             SettingsSwitch {
                 buttonIcon: "keyboard"
                 text: Translation.tr("Cheatsheet")
-                checked: modulesPage.isPanelEnabled("iiCheatsheet")
-                onCheckedChanged: modulesPage.setPanelEnabled("iiCheatsheet", checked)
+                checked: modulesPage.isPanelEnabled("driftCheatsheet")
+                onCheckedChanged: modulesPage.setPanelEnabled("driftCheatsheet", checked)
                 StyledToolTip { text: Translation.tr("Keyboard shortcuts reference overlay") }
             }
 
             SettingsSwitch {
                 buttonIcon: "keyboard_alt"
                 text: Translation.tr("On-Screen Keyboard")
-                checked: modulesPage.isPanelEnabled("iiOnScreenKeyboard")
-                onCheckedChanged: modulesPage.setPanelEnabled("iiOnScreenKeyboard", checked)
+                checked: modulesPage.isPanelEnabled("driftOnScreenKeyboard")
+                onCheckedChanged: modulesPage.setPanelEnabled("driftOnScreenKeyboard", checked)
                 StyledToolTip { text: Translation.tr("Virtual keyboard for touch input") }
             }
 
@@ -1037,8 +1037,8 @@ ContentPage {
             SettingsSwitch {
                 buttonIcon: "content_paste"
                 text: Translation.tr("Clipboard History")
-                checked: modulesPage.isPanelEnabled("iiClipboard")
-                onCheckedChanged: modulesPage.setPanelEnabled("iiClipboard", checked)
+                checked: modulesPage.isPanelEnabled("driftClipboard")
+                onCheckedChanged: modulesPage.setPanelEnabled("driftClipboard", checked)
                 StyledToolTip { text: Translation.tr("Clipboard manager with history") }
             }
 
@@ -1195,7 +1195,7 @@ ContentPage {
                 autoToggle: false
                 onToggledByUser: enabled => {
                     const action = enabled ? "openOverlayAt" : "openWindowAt"
-                    Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")),
+                    Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/lunana")),
                         "ipc", "settings", action, String(modulesPage.settingsPageIndex)])
                     if (enabled && !GlobalStates.settingsOverlayOpen)
                         Qt.quit()
@@ -1217,7 +1217,7 @@ ContentPage {
                         { displayName: Translation.tr("Unified"), icon: "side_navigation", value: "unified" },
                         { displayName: Translation.tr("Editorial"), icon: "auto_stories", value: "editorial" }
                     ]
-                    onSelected: value => Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")),
+                    onSelected: value => Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/lunana")),
                         "ipc", "settings", "setOverlayStyle", value, String(modulesPage.settingsPageIndex)])
                 }
 

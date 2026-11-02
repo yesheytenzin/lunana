@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Inject CSS into Pear Desktop (YouTube Music) via Chrome DevTools Protocol.
 
-Pear Desktop must be launched with a --remote-debugging-port (iNiR uses 9223).
+Pear Desktop must be launched with a --remote-debugging-port (Lunana uses 9223).
 The script reads a CSS file and injects it as a <style> element into every
 open page context, producing an instant live theme update.
 
@@ -15,7 +15,7 @@ import asyncio
 import argparse
 
 DEFAULT_PORT = 9223
-STYLE_ID = "inir-pear-theme"
+STYLE_ID = "lunana-pear-theme"
 
 
 async def inject_into_page(ws_url: str, css: str) -> bool:

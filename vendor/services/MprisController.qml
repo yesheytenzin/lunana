@@ -190,7 +190,7 @@ Singleton {
 	Timer {
 		interval: 3000
 		repeat: true
-		running: (root.activePlayer?.isPlaying ?? false) && !(root.activePlayer?.dbusName ?? "").includes("inir")
+		running: (root.activePlayer?.isPlaying ?? false) && !(root.activePlayer?.dbusName ?? "").includes("lunana")
 		onTriggered: {
 			if (positionProbe.running || !root.activePlayer) return
 			positionProbe.player = root.activePlayer

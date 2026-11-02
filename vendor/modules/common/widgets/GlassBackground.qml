@@ -12,7 +12,7 @@ Rectangle {
     id: root
     
     property color fallbackColor: Appearance.colors.colLayer1
-    property color inirColor: Appearance.inir.colLayer1
+    property color lunanaColor: Appearance.lunana.colLayer1
     property color overlayColor: Appearance.colors.colLayer0Base
     property real auroraTransparency: Appearance.editorialEverywhere && Appearance.editorial.glassActive
         ? 1 - Appearance.editorial.glassOpacity : Appearance.aurora.popupTransparentize
@@ -27,7 +27,7 @@ Rectangle {
     
     readonly property bool angelEverywhere: Appearance.angelEverywhere
     readonly property bool auroraEverywhere: Appearance.auroraEverywhere
-    readonly property bool inirEverywhere: Appearance.inirEverywhere
+    readonly property bool lunanaEverywhere: Appearance.lunanaEverywhere
     // Bypasses the style gate, which is what its callers always documented it as
     // doing. It used to be AND-ed inside the backend check, so a surface asking
     // for a backdrop outside aurora — island glass, or a backdrop the user turned
@@ -50,7 +50,7 @@ Rectangle {
     // unavailable. Consumers can provide a solid style base as fallback; once
     // the backdrop is ready this becomes transparent and the glass stack takes over.
     color: root.useWallpaperBackdrop && root.backdropReady ? "transparent"
-        : root.inirEverywhere ? root.inirColor
+        : root.lunanaEverywhere ? root.lunanaColor
         : root.fallbackColor
     
     property bool hovered: false

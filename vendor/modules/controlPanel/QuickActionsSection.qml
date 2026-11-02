@@ -15,12 +15,12 @@ PanelSurface {
     implicitHeight: actionsGrid.implicitHeight + 16
     readonly property bool compactMode: Config.options?.controlPanel?.compactMode ?? true
     
-    readonly property bool inirEverywhere: Appearance.inirEverywhere
+    readonly property bool lunanaEverywhere: Appearance.lunanaEverywhere
     readonly property bool auroraEverywhere: Appearance.auroraEverywhere
     readonly property bool regaliaEverywhere: Appearance.regaliaEverywhere
 
     elevation: 1
-    radiusOverride: islandSkin ? -1 : (inirEverywhere ? Appearance.inir.roundingNormal : Appearance.rounding.normal)
+    radiusOverride: islandSkin ? -1 : (lunanaEverywhere ? Appearance.lunana.roundingNormal : Appearance.rounding.normal)
 
     AngelPartialBorder { targetRadius: root.radiusOverride; coverage: 0.45; visible: Appearance.angelEverywhere && !root.islandSkin }
 
@@ -119,7 +119,7 @@ PanelSurface {
             icon: "settings"
             onClicked: {
                 GlobalStates.controlPanelOpen = false
-                Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")), "settings"])
+                Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/lunana")), "settings"])
             }
         }
 
@@ -127,14 +127,14 @@ PanelSurface {
             icon: "lock"
             onClicked: {
                 GlobalStates.controlPanelOpen = false
-                Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")), "lock", "activate"])
+                Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/lunana")), "lock", "activate"])
             }
         }
 
         ActionTile {
             icon: "power_settings_new"
             iconColor: Appearance.angelEverywhere ? Appearance.colors.colError
-                     : root.inirEverywhere ? Appearance.inir.colError
+                     : root.lunanaEverywhere ? Appearance.lunana.colError
                      : root.auroraEverywhere ? Appearance.colors.colError
                      : Appearance.colors.colError
             onClicked: {
@@ -152,12 +152,12 @@ PanelSurface {
             ? (root.regaliaEverywhere ? Appearance.regalia.primaryPlateInk
              : Appearance.cookieEverywhere ? Appearance.colors.colOnPrimaryContainer
              : Appearance.angelEverywhere ? Appearance.angel.colOnPrimary
-             : root.inirEverywhere ? Appearance.inir.colOnPrimary
+             : root.lunanaEverywhere ? Appearance.lunana.colOnPrimary
              : root.auroraEverywhere ? Appearance.colors.colOnPrimary
              : Appearance.colors.colOnPrimary)
             : (root.regaliaEverywhere ? Appearance.regalia.onColor
              : Appearance.angelEverywhere ? Appearance.angel.colText
-             : root.inirEverywhere ? Appearance.inir.colText
+             : root.lunanaEverywhere ? Appearance.lunana.colText
              : root.auroraEverywhere ? Appearance.colors.colOnSurface
              : Appearance.colors.colOnLayer1)
         signal clicked()
@@ -166,7 +166,7 @@ PanelSurface {
         implicitHeight: root.compactMode ? 30 : 36
         radius: root.regaliaEverywhere ? Appearance.regalia.controlRadius
             : Appearance.angelEverywhere ? Appearance.angel.roundingSmall
-            : root.inirEverywhere ? Appearance.inir.roundingSmall
+            : root.lunanaEverywhere ? Appearance.lunana.roundingSmall
             : Appearance.zzzEverywhere ? Appearance.zzz.controlRadius
             : Appearance.rounding.small
         
@@ -174,26 +174,26 @@ PanelSurface {
             : tileMouseArea.containsMouse
                 ? (active
                     ? (Appearance.angelEverywhere ? ColorUtils.transparentize(Appearance.angel.colPrimaryHover, 0.35)
-                     : root.inirEverywhere ? Appearance.inir.colPrimaryHover
+                     : root.lunanaEverywhere ? Appearance.lunana.colPrimaryHover
                      : root.auroraEverywhere ? Appearance.colors.colPrimaryHover
                      : Appearance.colors.colPrimaryHover)
                     : (Appearance.angelEverywhere ? Appearance.angel.colGlassCardHover
-                     : root.inirEverywhere ? Appearance.inir.colLayer2Hover
+                     : root.lunanaEverywhere ? Appearance.lunana.colLayer2Hover
                      : root.auroraEverywhere ? Appearance.aurora.colSubSurfaceHover
                      : Appearance.colors.colLayer2Hover))
                 : (active
                     ? (Appearance.angelEverywhere ? ColorUtils.transparentize(Appearance.angel.colPrimary, 0.45)
-                     : root.inirEverywhere ? Appearance.inir.colPrimary
+                     : root.lunanaEverywhere ? Appearance.lunana.colPrimary
                      : root.auroraEverywhere ? Appearance.colors.colPrimary
                      : Appearance.colors.colPrimary)
                     : (Appearance.angelEverywhere ? Appearance.angel.colGlassCard
-                     : root.inirEverywhere ? Appearance.inir.colLayer2
+                     : root.lunanaEverywhere ? Appearance.lunana.colLayer2
                      : root.auroraEverywhere ? Appearance.aurora.colSubSurface
                      : Appearance.colors.colLayer2))
 
-        border.width: Appearance.angelEverywhere ? 0 : (root.inirEverywhere ? 1 : Appearance.zzzEverywhere ? 1 : 0)
+        border.width: Appearance.angelEverywhere ? 0 : (root.lunanaEverywhere ? 1 : Appearance.zzzEverywhere ? 1 : 0)
         border.color: Appearance.angelEverywhere ? "transparent"
-            : root.inirEverywhere ? (active ? Appearance.inir.colPrimary : Appearance.inir.colBorderSubtle)
+            : root.lunanaEverywhere ? (active ? Appearance.lunana.colPrimary : Appearance.lunana.colBorderSubtle)
             : Appearance.zzzEverywhere ? Appearance.zzz.hairline : "transparent"
 
         Behavior on border.width {

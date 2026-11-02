@@ -6,7 +6,7 @@ import "../common"
 import "../common/widgets"
 
 // Compact tooltip shape: subtle outline, very small radius, and the plate grows
-// from nothing instead of scaling. Colours come from iNiR's generated palette.
+// from nothing instead of scaling. Colours come from Lunana's generated palette.
 PopupToolTip {
     id: root
 

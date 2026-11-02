@@ -20,7 +20,7 @@ import Qt5Compat.GraphicalEffects as GE
  *   • Center card is dominant (~38% screen width, 16:10 landscape)
  *   • Side cards peek from behind, progressively smaller and dimmer
  *   • Clean gaps — cards breathe, no tight packing
- *   • All 5 styles supported (material/cards/aurora/inir/angel)
+ *   • All 5 styles supported (material/cards/aurora/lunana/angel)
  */
 Item {
     id: root
@@ -87,38 +87,38 @@ Item {
             : Translation.tr("Arrows, wheel or click to navigate")
     readonly property color surfaceColor: root.editorial ? Appearance.editorial.layer(1)
         : Appearance.angelEverywhere ? Appearance.angel.colGlassCard
-        : Appearance.inirEverywhere ? Appearance.inir.colLayer1
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer1
         : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurface
         : Appearance.colors.colLayer1
     readonly property color elevatedColor: root.editorial ? Appearance.editorial.layer(2)
         : Appearance.angelEverywhere ? Appearance.angel.colGlassPanel
-        : Appearance.inirEverywhere ? Appearance.inir.colLayer2
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2
         : Appearance.auroraEverywhere ? Appearance.aurora.colOverlay
         : Appearance.colors.colLayer2
     readonly property color baseColor: root.editorial ? Appearance.editorial.paper
         : Appearance.angelEverywhere ? Appearance.angel.colGlassPanel
-        : Appearance.inirEverywhere ? Appearance.inir.colLayer0
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer0
         : Appearance.auroraEverywhere ? Appearance.aurora.colOverlay
         : Appearance.colors.colLayer0
     readonly property color textColor: root.editorial ? Appearance.editorial.ink
         : Appearance.angelEverywhere ? Appearance.angel.colText
-        : Appearance.inirEverywhere ? Appearance.inir.colText
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colText
         : Appearance.colors.colOnLayer1
     readonly property color subtleTextColor: root.editorial ? Appearance.editorial.muted
         : Appearance.angelEverywhere ? Appearance.angel.colTextMuted
-        : Appearance.inirEverywhere ? Appearance.inir.colTextMuted
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colTextMuted
         : Appearance.colors.colSubtext
     readonly property color borderColor: root.editorial ? Appearance.editorial.rule
         : Appearance.angelEverywhere ? Appearance.angel.colBorderSubtle
-        : Appearance.inirEverywhere ? Appearance.inir.colBorderSubtle
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colBorderSubtle
         : ColorUtils.applyAlpha(Appearance.colors.colOutlineVariant, 0.45)
     readonly property real cardRadius: root.editorial ? Appearance.editorial.radius
         : Appearance.angelEverywhere ? Appearance.angel.roundingLarge
-        : Appearance.inirEverywhere ? Appearance.inir.roundingLarge
+        : Appearance.lunanaEverywhere ? Appearance.lunana.roundingLarge
         : Appearance.rounding.large
     readonly property real panelRadius: root.editorial ? Appearance.rounding.small
         : Appearance.angelEverywhere ? Appearance.angel.roundingNormal
-        : Appearance.inirEverywhere ? Appearance.inir.roundingNormal
+        : Appearance.lunanaEverywhere ? Appearance.lunana.roundingNormal
         : Appearance.rounding.normal
 
     readonly property string _sideThumbnailSizeName: Images.thumbnailSizeNameForDimensions(
@@ -464,9 +464,9 @@ Item {
                     radius: root.editorial ? Appearance.rounding.small : Appearance.rounding.full
                     fallbackColor: root.surfaceColor
                     wallpaperBackdropEnabled: !root.editorial
-                    inirColor: Appearance.inir.colLayer1
+                    lunanaColor: Appearance.lunana.colLayer1
                     auroraTransparency: Appearance.aurora.popupTransparentize
-                    border.width: Appearance.inirEverywhere || Appearance.angelEverywhere ? 1 : 0
+                    border.width: Appearance.lunanaEverywhere || Appearance.angelEverywhere ? 1 : 0
                     border.color: root.borderColor
 
                     RowLayout {
@@ -934,9 +934,9 @@ Item {
             radius: root.panelRadius
             fallbackColor: root.surfaceColor
             wallpaperBackdropEnabled: !root.editorial
-            inirColor: Appearance.inir.colLayer1
+            lunanaColor: Appearance.lunana.colLayer1
             auroraTransparency: Appearance.aurora.popupTransparentize
-            border.width: Appearance.inirEverywhere || Appearance.angelEverywhere ? 1 : 0
+            border.width: Appearance.lunanaEverywhere || Appearance.angelEverywhere ? 1 : 0
             border.color: root.borderColor
 
             ColumnLayout {
@@ -1040,9 +1040,9 @@ Item {
             radius: root.panelRadius
             fallbackColor: root.surfaceColor
             wallpaperBackdropEnabled: !root.editorial
-            inirColor: Appearance.inir.colLayer1
+            lunanaColor: Appearance.lunana.colLayer1
             auroraTransparency: Appearance.aurora.popupTransparentize
-            border.width: Appearance.inirEverywhere || Appearance.angelEverywhere ? 1 : 0
+            border.width: Appearance.lunanaEverywhere || Appearance.angelEverywhere ? 1 : 0
             border.color: root.borderColor
 
             ColumnLayout {
@@ -1150,9 +1150,9 @@ Item {
             radius: root.panelRadius
             fallbackColor: root.surfaceColor
             wallpaperBackdropEnabled: !root.editorial
-            inirColor: Appearance.inir.colLayer1
+            lunanaColor: Appearance.lunana.colLayer1
             auroraTransparency: Appearance.aurora.popupTransparentize
-            border.width: Appearance.inirEverywhere || Appearance.angelEverywhere ? 1 : 0
+            border.width: Appearance.lunanaEverywhere || Appearance.angelEverywhere ? 1 : 0
             border.color: root.borderColor
 
             ColumnLayout {
@@ -1194,9 +1194,9 @@ Item {
             radius: root.panelRadius
             fallbackColor: root.surfaceColor
             wallpaperBackdropEnabled: !root.editorial
-            inirColor: Appearance.inir.colLayer1
+            lunanaColor: Appearance.lunana.colLayer1
             auroraTransparency: Appearance.aurora.popupTransparentize
-            border.width: Appearance.inirEverywhere || Appearance.angelEverywhere ? 1 : 0
+            border.width: Appearance.lunanaEverywhere || Appearance.angelEverywhere ? 1 : 0
             border.color: root.borderColor
 
             ColumnLayout {
@@ -1339,7 +1339,7 @@ Item {
         Rectangle {
             implicitWidth: 1; implicitHeight: 16
             color: Appearance.angelEverywhere ? Appearance.angel.colBorderSubtle
-                 : Appearance.inirEverywhere ? Appearance.inir.colBorderSubtle
+                 : Appearance.lunanaEverywhere ? Appearance.lunana.colBorderSubtle
                  : Appearance.colors.colOnSurfaceVariant
             opacity: 0.2
         }
@@ -1373,7 +1373,7 @@ Item {
         Rectangle {
             implicitWidth: 1; implicitHeight: 16
             color: Appearance.angelEverywhere ? Appearance.angel.colBorderSubtle
-                 : Appearance.inirEverywhere ? Appearance.inir.colBorderSubtle
+                 : Appearance.lunanaEverywhere ? Appearance.lunana.colBorderSubtle
                  : Appearance.colors.colOnSurfaceVariant
             opacity: 0.2
         }
@@ -1406,7 +1406,7 @@ Item {
         Rectangle {
             implicitWidth: 1; implicitHeight: 16
             color: Appearance.angelEverywhere ? Appearance.angel.colBorderSubtle
-                 : Appearance.inirEverywhere ? Appearance.inir.colBorderSubtle
+                 : Appearance.lunanaEverywhere ? Appearance.lunana.colBorderSubtle
                  : Appearance.colors.colOnSurfaceVariant
             opacity: 0.2
         }

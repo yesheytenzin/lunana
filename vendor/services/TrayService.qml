@@ -15,15 +15,15 @@ Singleton {
 
     property bool _xembedProxyStartRequested: false
     property bool _xembedProxyCheckedOnce: false
-    readonly property string _xembedServicePath: `${Quickshell.env("XDG_CONFIG_HOME") || Quickshell.env("HOME") + "/.config"}/service/inir-xembedsniproxy`
+    readonly property string _xembedServicePath: `${Quickshell.env("XDG_CONFIG_HOME") || Quickshell.env("HOME") + "/.config"}/service/lunana-xembedsniproxy`
     readonly property string _xembedStartScript: `
         xembed_bin="$(command -v xembedsniproxy 2>/dev/null || true)"
         [ -n "$xembed_bin" ] || exit 0
         if [ -S "${Quickshell.env("XDG_RUNTIME_DIR") || ""}/systemd/private" ] &&
            /usr/bin/timeout 3s /usr/bin/systemctl --user show-environment >/dev/null 2>&1; then
-            exec /usr/bin/systemd-run --user --quiet --collect --unit=inir-xembedsniproxy \
-                --service-type=exec --property=BindsTo=inir.service \
-                --property=After=inir.service --property=Restart=on-failure \
+            exec /usr/bin/systemd-run --user --quiet --collect --unit=lunana-xembedsniproxy \
+                --service-type=exec --property=BindsTo=lunana.service \
+                --property=After=lunana.service --property=Restart=on-failure \
                 --property=RestartSec=1s --setenv=QT_NO_XDG_DESKTOP_PORTAL=1 \
                 --setenv=QT_QPA_PLATFORM=xcb "$xembed_bin"
         fi

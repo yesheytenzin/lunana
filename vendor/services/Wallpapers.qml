@@ -17,7 +17,7 @@ Singleton {
 
     signal wallpaperBlurTransitionRequested(var targetMonitors, int durationMs)
 
-    readonly property bool _debugWallpaperUrls: (Quickshell.env("INIR_DEBUG_WALLPAPER_URLS") ?? "") === "1"
+    readonly property bool _debugWallpaperUrls: (Quickshell.env("LUNANA_DEBUG_WALLPAPER_URLS") ?? "") === "1"
 
     // Suppression flag: prevents ThemeService from firing a duplicate
     // switchwall.sh run while a direct apply() is already in progress.
@@ -27,6 +27,83 @@ Singleton {
     property bool _queuedApplyNoSwitch: false
     readonly property string backendProvider: "awww"
     readonly property bool awwwBackendEnabled: true
+
+    // ── Omarchy background link ─────────────────────────────────────────────
+    // On Omarchy, ~/.local/state/omarchy/current/background is the system truth:
+    // `omarchy theme set` repoints it on every theme switch, `bg set`/`bg next`
+    // on every background change. lunana paints from its own config, so without
+    // this the two never meet: theme switches silently stop changing the desktop.
+    // Follow the link (adopt what Omarchy chose) and repoint it on lunana-side
+    // applies, so both directions converge instead of fighting. Inert everywhere
+    // else: the availability check keeps the poll and the repoint off Omarchy.
+    readonly property string omarchyBackgroundLink: (Quickshell.env("HOME") + "/.local/state/omarchy/current/background")
+    property bool omarchyLinkAvailable: false
+    property string _omarchyLinkTarget: ""
+    readonly property bool omarchyFollowWanted: (Config.options?.background?.followOmarchyBackground ?? true) && root.omarchyLinkAvailable
+
+    Process {
+        id: omarchyLinkCheckProc
+        command: ["test", "-d", (Quickshell.env("HOME") + "/.local/state/omarchy")]
+        onExited: (exitCode, exitStatus) => {
+            root.omarchyLinkAvailable = (exitCode === 0)
+            console.log("[Wallpapers] Omarchy background link available:", root.omarchyLinkAvailable)
+        }
+    }
+    Component.onCompleted: omarchyLinkCheckProc.running = true
+
+    Timer {
+        id: omarchyLinkPoll
+        interval: 4000
+        repeat: true
+        running: root.omarchyFollowWanted && Config.ready
+        onTriggered: {
+            if (!applyProc.running && !root._applyInProgress)
+                omarchyLinkReadProc.running = true
+        }
+    }
+
+    Process {
+        id: omarchyLinkReadProc
+        command: ["readlink", root.omarchyBackgroundLink]
+        stdout: SplitParser {
+            onRead: line => { root._omarchyLinkTarget = FileUtils.trimFileProtocol(String(line ?? "").trim()) }
+        }
+        onExited: (exitCode, exitStatus) => {
+            if (exitCode !== 0) return
+            root._adoptOmarchyBackground()
+        }
+    }
+
+    function _adoptOmarchyBackground(): void {
+        const target = FileUtils.trimFileProtocol(String(root._omarchyLinkTarget ?? ""))
+        if (!target) return
+        if (root._applyInProgress || applyProc.running) return
+        // Per-monitor setups keep their own truth; the link is global.
+        if (WallpaperListener.multiMonitorEnabled) return
+        if (root.isCurrentWallpaperPath(target)) return
+        console.log("[Wallpapers] adopting Omarchy background:", target)
+        root._applyInProgress = true
+        _applySuppressTimer.restart()
+        // Same paint as apply(), but the link already points here: no repoint.
+        Config.setNestedValue("background.wallpaperPath", target)
+        Config.setNestedValue("background.thumbnailPath", "")
+        root._clearInternalPreview()
+        root._queueWallpaperScript(target, Appearance.m3colors.darkmode, false)
+        root.changed()
+    }
+
+    // Repoint Omarchy's link at what lunana just applied, so `bg current` and the
+    // switcher stay truthful and the next poll confirms instead of reverting.
+    // Deliberately `ln`, not `omarchy theme bg set`: that would fire the shell's
+    // transition cover over a desktop lunana already paints.
+    function _repointOmarchyLink(path: string): void {
+        if (!root.omarchyFollowWanted) return
+        const clean = FileUtils.trimFileProtocol(String(path ?? ""))
+        if (!clean) return
+        if (root._omarchyLinkTarget === clean) return
+        root._omarchyLinkTarget = clean
+        Quickshell.execDetached(["ln", "-nsf", clean, root.omarchyBackgroundLink])
+    }
 
     // Single gate for all animated wallpaper surfaces (background, backdrops, lock):
     // freeze video/GIF playback while discharging to save power.
@@ -159,9 +236,9 @@ Singleton {
     }
 
     // Wallpaper path resolution for aurora/backdrop
-    readonly property bool isWaffleFamily: (Config.options?.panelFamily ?? "ii") === "waffle"
-    readonly property bool useBackdropWallpaper: isWaffleFamily
-        ? ((Config.options?.waffles?.background?.backdrop?.enable ?? false) && (Config.options?.waffles?.background?.backdrop?.hideWallpaper ?? false))
+    readonly property bool isSlateFamily: (Config.options?.panelFamily ?? "drift") === "slate"
+    readonly property bool useBackdropWallpaper: isSlateFamily
+        ? ((Config.options?.slate?.background?.backdrop?.enable ?? false) && (Config.options?.slate?.background?.backdrop?.hideWallpaper ?? false))
         : ((Config.options?.background?.backdrop?.enable ?? false) && (Config.options?.background?.backdrop?.hideWallpaper ?? false))
     readonly property bool backdropOnlyShadowOverrideWanted: Config.ready && CompositorService.isNiri && useBackdropWallpaper
     property bool _backdropShadowSyncQueued: false
@@ -232,26 +309,26 @@ Singleton {
     function currentThemingWallpaperPath(monitorName = ""): string {
         const targetMonitor = monitorName || (WallpaperListener.multiMonitorEnabled ? WallpaperListener.getFocusedMonitor() : "")
         const mainPath = currentMainWallpaperPath(targetMonitor)
-        const waffleMainPath = currentWaffleWallpaperPath(targetMonitor)
+        const slateMainPath = currentSlateWallpaperPath(targetMonitor)
 
         if (root.useBackdropWallpaper || root.useBackdropForColors) {
-            if (root.isWaffleFamily) {
-                const waffleBackdrop = Config.options?.waffles?.background?.backdrop ?? {}
-                return (waffleBackdrop.useMainWallpaper ?? true) ? waffleMainPath : (waffleBackdrop.wallpaperPath || waffleMainPath)
+            if (root.isSlateFamily) {
+                const slateBackdrop = Config.options?.slate?.background?.backdrop ?? {}
+                return (slateBackdrop.useMainWallpaper ?? true) ? slateMainPath : (slateBackdrop.wallpaperPath || slateMainPath)
             }
 
-            const iiBackdrop = Config.options?.background?.backdrop ?? {}
-            if (iiBackdrop.useMainWallpaper ?? true)
+            const driftBackdrop = Config.options?.background?.backdrop ?? {}
+            if (driftBackdrop.useMainWallpaper ?? true)
                 return mainPath
             if (WallpaperListener.multiMonitorEnabled && targetMonitor) {
                 const monitorData = WallpaperListener.effectivePerMonitor[targetMonitor] ?? null
                 if (monitorData && monitorData.backdropPath)
                     return monitorData.backdropPath
             }
-            return iiBackdrop.wallpaperPath || mainPath
+            return driftBackdrop.wallpaperPath || mainPath
         }
 
-        return root.isWaffleFamily ? waffleMainPath : mainPath
+        return root.isSlateFamily ? slateMainPath : mainPath
     }
 
     readonly property string effectiveWallpaperPath: {
@@ -655,16 +732,16 @@ Singleton {
         return Config.options?.background?.wallpaperPath ?? ""
     }
 
-    function currentWaffleWallpaperPath(monitorName = ""): string {
+    function currentSlateWallpaperPath(monitorName = ""): string {
         const mainPath = currentMainWallpaperPath(monitorName)
-        const waffleBackground = Config.options?.waffles?.background ?? {}
-        return (waffleBackground.useMainWallpaper ?? true) ? mainPath : (waffleBackground.wallpaperPath || mainPath)
+        const slateBackground = Config.options?.slate?.background ?? {}
+        return (slateBackground.useMainWallpaper ?? true) ? mainPath : (slateBackground.wallpaperPath || mainPath)
     }
 
     // The image the desktop actually shows on an output: the backdrop's when it replaces the wallpaper
-    // ("show only the backdrop", ii and iRiS), the main wallpaper otherwise. Glass and Lume read this one,
+    // ("show only the backdrop", drift and Atoll), the main wallpaper otherwise. Glass and Lume read this one,
     // or they sample a wallpaper nobody sees.
-    readonly property bool desktopShowsBackdrop: !root.isWaffleFamily && root.useBackdropWallpaper
+    readonly property bool desktopShowsBackdrop: !root.isSlateFamily && root.useBackdropWallpaper
     readonly property real desktopDim: root.desktopShowsBackdrop
         ? Math.max(0, Math.min(1, Number(Config.options?.background?.backdrop?.dim ?? 35) / 100)) : 0
     readonly property real desktopSaturation: root.desktopShowsBackdrop ? Number(Config.options?.background?.backdrop?.saturation ?? 0) : 0
@@ -681,8 +758,8 @@ Singleton {
 
         switch (normalizedTarget) {
         case "backdrop": {
-            const iiBackdrop = Config.options?.background?.backdrop ?? {}
-            const useMainWallpaper = iiBackdrop.useMainWallpaper ?? true
+            const driftBackdrop = Config.options?.background?.backdrop ?? {}
+            const useMainWallpaper = driftBackdrop.useMainWallpaper ?? true
             if (useMainWallpaper)
                 return mainPath
             if (WallpaperListener.multiMonitorEnabled && monitorName) {
@@ -690,22 +767,22 @@ Singleton {
                 if (monitorData && monitorData.backdropPath)
                     return monitorData.backdropPath
             }
-            return iiBackdrop.wallpaperPath || mainPath
+            return driftBackdrop.wallpaperPath || mainPath
         }
-        case "waffle": {
-            return currentWaffleWallpaperPath(monitorName)
+        case "slate": {
+            return currentSlateWallpaperPath(monitorName)
         }
-        case "waffle-backdrop": {
-            const waffleBackdrop = Config.options?.waffles?.background?.backdrop ?? {}
-            const waffleMain = currentWaffleWallpaperPath(monitorName)
-            if (waffleBackdrop.useMainWallpaper ?? true)
-                return waffleMain
+        case "slate-backdrop": {
+            const slateBackdrop = Config.options?.slate?.background?.backdrop ?? {}
+            const slateMain = currentSlateWallpaperPath(monitorName)
+            if (slateBackdrop.useMainWallpaper ?? true)
+                return slateMain
             if (WallpaperListener.multiMonitorEnabled && monitorName) {
                 const monitorData = WallpaperListener.effectivePerMonitor[monitorName] ?? null
                 if (monitorData && monitorData.backdropPath)
                     return monitorData.backdropPath
             }
-            return waffleBackdrop.wallpaperPath || waffleMain
+            return slateBackdrop.wallpaperPath || slateMain
         }
         default:
             return mainPath
@@ -854,35 +931,35 @@ Singleton {
                 Quickshell.execDetached([Directories.wallpaperSwitchScriptPath, "--noswitch"])
             root.changed()
             return
-        case "waffle":
-            const waffleVisible = (Config.options?.panelFamily ?? "ii") === "waffle"
-            const adoptedWafflePreview = waffleVisible
+        case "slate":
+            const slateVisible = (Config.options?.panelFamily ?? "drift") === "slate"
+            const adoptedSlatePreview = slateVisible
                 ? root._adoptVisiblePreview(normalizedPath, monitorName)
                 : false
-            if (waffleVisible && !adoptedWafflePreview)
+            if (slateVisible && !adoptedSlatePreview)
                 root.requestWallpaperBlurTransition("")
-            Config.setNestedValue("waffles.background.useMainWallpaper", false)
-            Config.setNestedValue("waffles.background.wallpaperPath", normalizedPath)
-            Config.setNestedValue("waffles.background.thumbnailPath", thumbnailPath)
-            if (adoptedWafflePreview)
+            Config.setNestedValue("slate.background.useMainWallpaper", false)
+            Config.setNestedValue("slate.background.wallpaperPath", normalizedPath)
+            Config.setNestedValue("slate.background.thumbnailPath", thumbnailPath)
+            if (adoptedSlatePreview)
                 root._clearInternalPreview()
             if (needsThumbnail)
                 root.ensureThumbnailForPath(normalizedPath, "large")
-            // Regen colors from this wallpaper when waffle is active
-            if ((Config.options?.panelFamily ?? "ii") === "waffle") {
+            // Regen colors from this wallpaper when slate is active
+            if ((Config.options?.panelFamily ?? "drift") === "slate") {
                 root._applyInProgress = true
                 _applySuppressTimer.restart()
                 root._queueWallpaperScript(normalizedPath, darkMode, true)
             }
             root.changed()
             return
-        case "waffle-backdrop":
-            Config.setNestedValue("waffles.background.backdrop.useMainWallpaper", false)
-            Config.setNestedValue("waffles.background.backdrop.wallpaperPath", normalizedPath)
-            Config.setNestedValue("waffles.background.backdrop.thumbnailPath", thumbnailPath)
+        case "slate-backdrop":
+            Config.setNestedValue("slate.background.backdrop.useMainWallpaper", false)
+            Config.setNestedValue("slate.background.backdrop.wallpaperPath", normalizedPath)
+            Config.setNestedValue("slate.background.backdrop.thumbnailPath", thumbnailPath)
             if (needsThumbnail)
                 root.ensureThumbnailForPath(normalizedPath, "large")
-            if ((Config.options?.panelFamily ?? "ii") === "waffle"
+            if ((Config.options?.panelFamily ?? "drift") === "slate"
                     && (Config.options?.appearance?.wallpaperTheming?.useBackdropForColors ?? false)) {
                 root._applyInProgress = true
                 _applySuppressTimer.restart()
@@ -921,6 +998,7 @@ Singleton {
         if (root.awwwBackendEnabled && AwwwBackend.supportsMainWallpaper(normalizedPath)) {
             Config.setNestedValue("background.wallpaperPath", normalizedPath)
             Config.setNestedValue("background.thumbnailPath", "")
+            root._repointOmarchyLink(normalizedPath)
             if (adoptedPreview)
                 root._clearInternalPreview()
             root._queueWallpaperScript(normalizedPath, darkMode, false)
@@ -931,6 +1009,7 @@ Singleton {
         // Always set wallpaper path from QML to avoid race condition with Config write timer
         Config.setNestedValue("background.wallpaperPath", normalizedPath)
         Config.setNestedValue("background.thumbnailPath", "")
+        root._repointOmarchyLink(normalizedPath)
         if (adoptedPreview)
             root._clearInternalPreview()
         root._queueWallpaperScript(normalizedPath, darkMode, false)
@@ -1054,8 +1133,8 @@ Singleton {
         if (globalTarget && globalTarget !== "main")
             return globalTarget
 
-        if ((Config.options?.panelFamily ?? "ii") === "waffle")
-            return (Config.options?.waffles?.background?.useMainWallpaper ?? true) ? "main" : "waffle"
+        if ((Config.options?.panelFamily ?? "drift") === "slate")
+            return (Config.options?.slate?.background?.useMainWallpaper ?? true) ? "main" : "slate"
 
         return "main"
     }
@@ -1210,7 +1289,7 @@ Singleton {
         thumbgenDebounce.restart()
     }
 
-    // A still frame owned by iNiR, not the shared freedesktop thumbnail cache.
+    // A still frame owned by Lunana, not the shared freedesktop thumbnail cache.
     // Both write to ~/.cache/thumbnails/<size>/<md5>.png, and the desktop's own
     // video thumbnailer decorates its output with a film-strip border — whoever
     // wrote first won, so a surface that wants a clean frame could not rely on
@@ -1304,8 +1383,8 @@ Singleton {
         property string directory
         property string _size: ""
         environment: ({
-            "INIR_VENV": Quickshell.env("INIR_VENV") || Quickshell.env("HOME") + "/.local/state/quickshell/.venv",
-            "ILLOGICAL_IMPULSE_VIRTUAL_ENV": Quickshell.env("INIR_VENV") || Quickshell.env("HOME") + "/.local/state/quickshell/.venv"
+            "LUNANA_VENV": Quickshell.env("LUNANA_VENV") || Quickshell.env("HOME") + "/.local/state/quickshell/.venv",
+            "ILLOGICAL_IMPULSE_VIRTUAL_ENV": Quickshell.env("LUNANA_VENV") || Quickshell.env("HOME") + "/.local/state/quickshell/.venv"
         })
         stdout: SplitParser {
             onRead: data => {

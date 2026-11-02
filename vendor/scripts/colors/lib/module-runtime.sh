@@ -10,7 +10,7 @@ STATE_DIR="$XDG_STATE_HOME/quickshell"
 
 # shellcheck source=scripts/lib/config-path.sh
 source "$SCRIPT_DIR/../lib/config-path.sh"
-CONFIG_FILE="$(inir_config_file)"
+CONFIG_FILE="$(lunana_config_file)"
 MODULE_LOG="$STATE_DIR/user/generated/theming_modules.log"
 TARGETS_DIR="$SCRIPT_DIR/targets"
 MODULES_DIR="$SCRIPT_DIR/modules"
@@ -109,8 +109,8 @@ write_if_changed() {
 
 venv_python() {
   local venv_path
-  if [[ -n "${INIR_VENV:-}" ]]; then
-    venv_path="$(eval echo "$INIR_VENV")"
+  if [[ -n "${LUNANA_VENV:-}" ]]; then
+    venv_path="$(eval echo "$LUNANA_VENV")"
   elif [[ -n "${ILLOGICAL_IMPULSE_VIRTUAL_ENV:-}" ]]; then
     venv_path="$(eval echo "$ILLOGICAL_IMPULSE_VIRTUAL_ENV")"
   else
@@ -166,8 +166,8 @@ chromium_browsers() {
     "/etc/chromium/policies/managed|$XDG_CONFIG_HOME/thorium|thorium-browser thorium" \
     "/etc/opt/chrome/policies/managed|$var/com.google.Chrome/config/google-chrome|flatpak:com.google.Chrome" \
     "/etc/brave/policies/managed|$var/com.brave.Browser/config/BraveSoftware/Brave-Browser|flatpak:com.brave.Browser" \
-    "$ext/org.chromium.Chromium.Extension.inir/$arch/1/policies/managed|$var/org.chromium.Chromium/config/chromium|flatpak:org.chromium.Chromium" \
-    "$ext/io.github.ungoogled_software.ungoogled_chromium.Extension.inir/$arch/1/policies/managed|$var/io.github.ungoogled_software.ungoogled_chromium/config/chromium|flatpak:io.github.ungoogled_software.ungoogled_chromium"
+    "$ext/org.chromium.Chromium.Extension.lunana/$arch/1/policies/managed|$var/org.chromium.Chromium/config/chromium|flatpak:org.chromium.Chromium" \
+    "$ext/io.github.ungoogled_software.ungoogled_chromium.Extension.lunana/$arch/1/policies/managed|$var/io.github.ungoogled_software.ungoogled_chromium/config/chromium|flatpak:io.github.ungoogled_software.ungoogled_chromium"
 }
 
 # The entries of chromium_browsers that are installed here. Always returns 0: it runs inside the applycolor

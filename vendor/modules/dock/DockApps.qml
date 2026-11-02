@@ -28,7 +28,7 @@ Item {
     readonly property string surfaceDialect: Appearance.surfaceDialectFor(
         Config.options?.dock?.style === "island" ? "island" : "")
     readonly property bool zzzStyle: surfaceDialect === "zzz"
-    readonly property bool inirStyle: surfaceDialect === "inir"
+    readonly property bool lunanaStyle: surfaceDialect === "lunana"
     readonly property bool pillStyle: Config.options?.dock?.style === "pill" && !zzzStyle
     readonly property bool macosStyle: Config.options?.dock?.style === "macos" && !zzzStyle
 
@@ -63,7 +63,7 @@ Item {
     // Set true when a drag ends so the subsequent onClicked is ignored.
     property bool _suppressNextClick: false
 
-    // Function to show the new preview popup (Waffle-style)
+    // Function to show the new preview popup (Slate-style)
     function showPreviewPopup(appEntry: var, button: Item): void {
         // Respect hoverPreview setting
         if (Config.options?.dock?.hoverPreview === false || contextMenuOpen || dragActive)
@@ -876,7 +876,7 @@ Item {
                     : (parent.height - height) / 2
 
                 color: root.zzzStyle ? Appearance.zzz.tertiary
-                     : root.inirStyle ? Appearance.inir.colPrimary
+                     : root.lunanaStyle ? Appearance.lunana.colPrimary
                      : Appearance.colors.colPrimary
                 Behavior on color {
                     enabled: Appearance.animationsEnabled
@@ -1015,7 +1015,7 @@ Item {
         }
     }
 
-    // New Waffle-style preview popup
+    // New Slate-style preview popup
     DockPreview {
         id: dockPreviewPopup
         dockHovered: root.buttonHovered

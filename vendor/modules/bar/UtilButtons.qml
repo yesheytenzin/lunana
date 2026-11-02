@@ -14,9 +14,9 @@ Item {
     id: root
     property bool borderless: Config.options?.bar?.borderless ?? false
     readonly property color neutralIconColor: Appearance.zzzEverywhere ? Appearance.zzz.ink
-        : Appearance.inirEverywhere ? Appearance.inir.colText : Appearance.colors.colOnLayer2
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colText : Appearance.colors.colOnLayer2
     readonly property color dangerIconColor: Appearance.zzzEverywhere ? Appearance.zzz.signal
-        : Appearance.inirEverywhere ? Appearance.inir.colError : Appearance.colors.colError
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colError : Appearance.colors.colError
     // Exact content width — self-inflating (+spacing*2) made every group that
     // ends with these buttons read asymmetric: the group's own padding is the
     // spacing authority, modules must not add their own.
@@ -34,7 +34,7 @@ Item {
             visible: active
             sourceComponent: CircleUtilButton {
                 Layout.alignment: Qt.AlignVCenter
-                onClicked: Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")), "region", "screenshot"])
+                onClicked: Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/lunana")), "region", "screenshot"])
                 MaterialSymbol {
                     horizontalAlignment: Qt.AlignHCenter
                     fill: 1
@@ -218,7 +218,7 @@ Item {
                         color: micButton.isInUse && !micButton.isMuted
                             ? root.dangerIconColor
                             : (Appearance.angelEverywhere ? Appearance.angel.colText
-                             : Appearance.inirEverywhere ? Appearance.inir.colOnLayer2
+                             : Appearance.lunanaEverywhere ? Appearance.lunana.colOnLayer2
                              : Appearance.zzzEverywhere ? Appearance.zzz.accent
                              : Appearance.auroraEverywhere ? Appearance.colors.colOnSurface
                              : Appearance.colors.colOnLayer2)

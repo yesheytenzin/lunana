@@ -11,16 +11,16 @@ import "../../common"
 import "../../common/functions"
 import "../../common/widgets"
 import "../../common/widgets/widgetCanvas"
-import "../../iris/style"
-import "../../iris/widgets"
-import "../../iris/components"
+import "../../atoll/style"
+import "../../atoll/widgets"
+import "../../atoll/components"
 
 AbstractWidget {
     id: root
 
     required property string configEntryName
-    readonly property bool widgetIrisFamily: (Config.options?.panelFamily ?? "ii") === "iris"
-    readonly property bool widgetIris: root.widgetIrisFamily && root.irisDesign === "iris"
+    readonly property bool widgetIrisFamily: (Config.options?.panelFamily ?? "drift") === "atoll"
+    readonly property bool widgetAtoll: root.widgetIrisFamily && root.atollDesign === "atoll"
     required property int screenWidth
     required property int screenHeight
     required property int scaledScreenWidth
@@ -35,7 +35,7 @@ AbstractWidget {
         // A style picked on one widget while a design covers it makes that widget an exception.
         if (root.widgetSharedDesign !== "individual"
                 && (values.style !== undefined || values.displayMode !== undefined))
-            values = Object.assign({}, values, root.widgetIrisFamily ? { "iris.design": "material" } : { design: "individual" })
+            values = Object.assign({}, values, root.widgetIrisFamily ? { "atoll.design": "material" } : { design: "individual" })
         if (root.outputName.length > 0) {
             DesktopWidgetLayout.setValues(root.outputName, root.configEntryName, values)
             return
@@ -56,14 +56,14 @@ AbstractWidget {
     readonly property string editInstanceKey: root.outputName + "::" + root.configEntryName
     readonly property bool editSelected: GlobalStates.widgetEditMode
         && GlobalStates.selectedDesktopWidget === root.editInstanceKey
-    // iRiS stack (DesktopWidgetStacks): this widget is one page of several that share a place.
+    // Atoll stack (DesktopWidgetStacks): this widget is one page of several that share a place.
     readonly property var stack: DesktopWidgetStacks.info(root.outputName, root.configEntryName)
     readonly property bool stacked: root.stack !== null
     readonly property bool stackShown: root.stack === null || root.stack.shown
     // 0 while this page is shown; a page's length away (+1 below, -1 above) while it waits or leaves.
     property real stackPos: 0
     readonly property bool stackMoving: stackSlide.running
-    readonly property bool stackPresent: root.stackShown || (root.stackMoving && root.irisFaced)
+    readonly property bool stackPresent: root.stackShown || (root.stackMoving && root.atollFaced)
     readonly property bool stackLeaving: root.stacked && !root.stackShown && root.stackPresent
     // A stack sits in the layer order as one.
     readonly property string layerKey: root.stacked ? root.outputName + "::stack:" + root.stack.id : root.editInstanceKey
@@ -79,7 +79,7 @@ AbstractWidget {
     readonly property int desktopStackZ: root.stackLeaving ? 10001
         : root.editSelected ? 10000 : root.desktopPersistentZ
     // Diagnostic-only control, supplied by Background.qml when the supervised
-    // shell is loaded with INIR_REGION_DEBUG=1.
+    // shell is loaded with LUNANA_REGION_DEBUG=1.
     property bool debugQuickControlsOpen: false
     property bool debugLayoutProbeActive: false
     property int debugLayoutProbeX: 0
@@ -116,17 +116,17 @@ AbstractWidget {
     Behavior on implicitWidth {
         enabled: root.animateGeometry
         NumberAnimation {
-            duration: root.widgetIris ? IrisStyle.morphDuration : Appearance.animation.elementMove.duration
-            easing.type: root.widgetIris ? Easing.BezierSpline : Appearance.animation.elementMove.type
-            easing.bezierCurve: root.widgetIris ? IrisStyle.morphCurve : Appearance.animation.elementMove.bezierCurve
+            duration: root.widgetAtoll ? AtollStyle.morphDuration : Appearance.animation.elementMove.duration
+            easing.type: root.widgetAtoll ? Easing.BezierSpline : Appearance.animation.elementMove.type
+            easing.bezierCurve: root.widgetAtoll ? AtollStyle.morphCurve : Appearance.animation.elementMove.bezierCurve
         }
     }
     Behavior on implicitHeight {
         enabled: root.animateGeometry
         NumberAnimation {
-            duration: root.widgetIris ? IrisStyle.morphDuration : Appearance.animation.elementMove.duration
-            easing.type: root.widgetIris ? Easing.BezierSpline : Appearance.animation.elementMove.type
-            easing.bezierCurve: root.widgetIris ? IrisStyle.morphCurve : Appearance.animation.elementMove.bezierCurve
+            duration: root.widgetAtoll ? AtollStyle.morphDuration : Appearance.animation.elementMove.duration
+            easing.type: root.widgetAtoll ? Easing.BezierSpline : Appearance.animation.elementMove.type
+            easing.bezierCurve: root.widgetAtoll ? AtollStyle.morphCurve : Appearance.animation.elementMove.bezierCurve
         }
     }
     readonly property real widgetOpacity: {
@@ -144,11 +144,11 @@ AbstractWidget {
     readonly property bool showBackground: root._readConfigKey("showBackground") ?? true
     readonly property bool useBlur: root._readConfigKey("useBlur") ?? false
     readonly property bool _widgetIslandStyle: !Appearance.zzzEverywhere && !Appearance.cookieEverywhere
-        && !Appearance.angelEverywhere && !Appearance.auroraEverywhere && !Appearance.inirEverywhere
+        && !Appearance.angelEverywhere && !Appearance.auroraEverywhere && !Appearance.lunanaEverywhere
         && (Config.options?.background?.widgets?.style ?? "panel") === "island"
-    readonly property bool blurAvailable: !root.widgetIris && Appearance.effectsEnabled
+    readonly property bool blurAvailable: !root.widgetAtoll && Appearance.effectsEnabled
         && (Appearance.angelEverywhere
-            || (Appearance.auroraEverywhere && !Appearance.inirEverywhere)
+            || (Appearance.auroraEverywhere && !Appearance.lunanaEverywhere)
             || (root._widgetIslandStyle
                 && (Config.options?.appearance?.island?.glass ?? true)
                 && (Config.options?.appearance?.island?.opacity ?? 1) < 0.999))
@@ -506,9 +506,9 @@ AbstractWidget {
     }
 
     visible: opacity > 0
-    // iRiS dims the face only, so its edit toolbar and sheet stay legible over a dimmed widget.
+    // Atoll dims the face only, so its edit toolbar and sheet stay legible over a dimmed widget.
     opacity: ((GlobalStates.screenLocked && !visibleWhenLocked) ? 0 : 1)
-        * (root.irisFaced ? 1 : root.widgetOpacity * root.dimOpacity)
+        * (root.atollFaced ? 1 : root.widgetOpacity * root.dimOpacity)
         * (root.stackPresent ? 1 : 0)
         * (1 - root.absorb)
     enabled: !GlobalStates.screenLocked
@@ -532,7 +532,7 @@ AbstractWidget {
 
     // Eased transitions follow motionActive: behind windows a value snaps instead. Every animation that starts
     // makes Qt's threaded loop request a frame from every shell window (QSGThreadedRenderLoop::animationStarted).
-    readonly property bool animationsActive: (root.widgetIris ? IrisStyle.motionEnabled : Appearance.animationsEnabled) && root.motionActive
+    readonly property bool animationsActive: (root.widgetAtoll ? AtollStyle.motionEnabled : Appearance.animationsEnabled) && root.motionActive
 
     // Visual feedback when paused - desaturation + slight dim
     // Config option to disable visual effect if user only wants GPU savings
@@ -716,9 +716,9 @@ AbstractWidget {
     // Latched while the sheet is open: the edge it grew from, and the tallest
     // page it has shown, so switching pages resizes the sheet without moving it.
     property string _editPlacementSide: ""
-    // iRiS: the toolbar and the sheet step out while the widget is carried or resized and come back
+    // Atoll: the toolbar and the sheet step out while the widget is carried or resized and come back
     // where it lands, instead of chasing every frame of the gesture.
-    readonly property bool _irisGesture: root.irisFaced
+    readonly property bool _irisGesture: root.atollFaced
         && ((root.containsPress && root.dragMoved) || root._isResizing || root._irisSizing)
     on_IrisGestureChanged: {
         if (root._irisGesture || !editPopoverPanel.open) return
@@ -804,7 +804,7 @@ AbstractWidget {
     }
 
     onDebugQuickControlsOpenChanged: {
-        if (Quickshell.env("INIR_REGION_DEBUG") === "1")
+        if (Quickshell.env("LUNANA_REGION_DEBUG") === "1")
             editPopoverPanel.open = root.debugQuickControlsOpen;
     }
     // Locking keeps the sheet on the page that can unlock it.
@@ -913,7 +913,7 @@ AbstractWidget {
         radius: Appearance.rounding.small
         color: "transparent"
         border.width: 1.5
-        border.color: ColorUtils.applyAlpha(root.widgetIrisFamily ? IrisStyle.accent : Appearance.colors.colPrimary, 0.35)
+        border.color: ColorUtils.applyAlpha(root.widgetIrisFamily ? AtollStyle.accent : Appearance.colors.colPrimary, 0.35)
         opacity: 0.7
     }
 
@@ -1063,9 +1063,9 @@ AbstractWidget {
             anchors.fill: parent
             visible: root.widgetIrisFamily
             radius: height / 2
-            color: IrisStyle.surface
+            color: AtollStyle.surface
             border.width: 1
-            border.color: IrisStyle.hairlineStrong
+            border.color: AtollStyle.hairlineStrong
         }
 
         Flow {
@@ -1121,7 +1121,7 @@ AbstractWidget {
             // The sheet keeps the tallest page it has shown while open: switching pages or
             // toggling a row never resizes it back and forth.
             property real heldHeight: 0
-            // iRiS fits each page: the tallest each has shown (so a toggle never shrinks its own page), and the
+            // Atoll fits each page: the tallest each has shown (so a toggle never shrinks its own page), and the
             // sheet grows or shrinks to the page in view on the move curve, away from the toolbar.
             property var pageHeights: ({})
             readonly property real pageHeight: Math.max(editPopoverPanel.targetHeight,
@@ -1160,16 +1160,16 @@ AbstractWidget {
             y: root._editControlsGeometry.popoverY - root._editControlsGeometry.toolbarY
             width: Math.min(root.quickControlsAvailableWidth,
                 popoverLoader.item ? (popoverLoader.item.resolvedWidth ?? popoverLoader.item.implicitWidth) + 24 : 344)
-            height: root.irisFaced ? editPopoverPanel.pageHeight
+            height: root.atollFaced ? editPopoverPanel.pageHeight
                 : Math.max(editPopoverPanel.targetHeight, editPopoverPanel.heldHeight)
-            clip: root.irisFaced
+            clip: root.atollFaced
 
             Behavior on height {
-                enabled: root.irisFaced && editPopoverPanel.settled && IrisStyle.motionEnabled
+                enabled: root.atollFaced && editPopoverPanel.settled && AtollStyle.motionEnabled
                 NumberAnimation {
-                    duration: IrisStyle.moveDuration
+                    duration: AtollStyle.moveDuration
                     easing.type: Easing.BezierSpline
-                    easing.bezierCurve: IrisStyle.moveCurve
+                    easing.bezierCurve: AtollStyle.moveCurve
                 }
             }
 
@@ -1207,10 +1207,10 @@ AbstractWidget {
             Rectangle {
                 anchors.fill: parent
                 visible: root.widgetIrisFamily
-                radius: Math.round(18 * IrisStyle.density)
-                color: IrisStyle.surface
+                radius: Math.round(18 * AtollStyle.density)
+                color: AtollStyle.surface
                 border.width: 1
-                border.color: IrisStyle.hairlineStrong
+                border.color: AtollStyle.hairlineStrong
             }
             PanelSurface {
                 id: editPopoverSurface
@@ -1232,7 +1232,7 @@ AbstractWidget {
                 backdropScreenHeight: root.screenHeight
                 radiusOverride: Appearance.zzzEverywhere ? Appearance.zzz.controlRadius
                     : Appearance.angelEverywhere ? Appearance.angel.roundingSmall
-                    : Appearance.inirEverywhere ? Appearance.inir.roundingNormal
+                    : Appearance.lunanaEverywhere ? Appearance.lunana.roundingNormal
                     : Appearance.rounding.small
             }
 
@@ -1311,13 +1311,13 @@ AbstractWidget {
             anchors.verticalCenter: parent.verticalCenter
             readonly property string name: root.configEntryName.split(".").pop().replace(/([A-Z])/g, " $1").toLowerCase().trim()
             text: root.widgetIrisFamily ? name.charAt(0).toUpperCase() + name.slice(1) : name
-            font.family: root.widgetIrisFamily ? IrisStyle.fontMain : Appearance.font.family.main
+            font.family: root.widgetIrisFamily ? AtollStyle.fontMain : Appearance.font.family.main
             font.pixelSize: Appearance.font.pixelSize.smaller
             font.weight: root.widgetIrisFamily ? Font.DemiBold : Font.Normal
             font.capitalization: root.widgetIrisFamily ? Font.MixedCase : Font.Capitalize
-            color: root.widgetIrisFamily ? IrisStyle.text : Appearance.colors.colOnLayer0
+            color: root.widgetIrisFamily ? AtollStyle.text : Appearance.colors.colOnLayer0
             style: root.widgetIrisFamily ? Text.Raised : Text.Normal
-            styleColor: root.widgetIrisFamily ? IrisStyle.plateShadow : "transparent"
+            styleColor: root.widgetIrisFamily ? AtollStyle.plateShadow : "transparent"
         }
     }
 
@@ -1328,12 +1328,12 @@ AbstractWidget {
         anchors.margins: -4
         visible: GlobalStates.widgetEditMode && (root.editSelected || widgetEditHover.hovered)
         color: "transparent"
-        radius: root.widgetIris ? Math.round(root.widgetCardRadius * root.scaleFactor) + 4 : Appearance.rounding.small + 4
+        radius: root.widgetAtoll ? Math.round(root.widgetCardRadius * root.scaleFactor) + 4 : Appearance.rounding.small + 4
         border {
             width: root.editSelected || root.locked ? 2 : 1
             color: ColorUtils.applyAlpha(root.locked
-                    ? (root.widgetIrisFamily ? IrisStyle.danger : Appearance.colors.colError)
-                    : (root.widgetIrisFamily ? IrisStyle.accent : Appearance.colors.colPrimary),
+                    ? (root.widgetIrisFamily ? AtollStyle.danger : Appearance.colors.colError)
+                    : (root.widgetIrisFamily ? AtollStyle.accent : Appearance.colors.colPrimary),
                 root.locked ? (root.editSelected ? 0.86 : 0.42)
                     : root.editSelected ? 0.88 : widgetEditHover.hovered ? 0.62 : 0.26)
         }
@@ -1344,7 +1344,7 @@ AbstractWidget {
     }
 
     // ── Edit mode resize handles ─────────────────────────────
-    readonly property bool _hasResize: !root.irisFaced && Object.keys(root.resizableAxes).length > 0
+    readonly property bool _hasResize: !root.atollFaced && Object.keys(root.resizableAxes).length > 0
     readonly property bool _resizeVisible: GlobalStates.widgetEditMode
         && root._hasResize && !root.locked && root._editControlsShown
 
@@ -1372,8 +1372,8 @@ AbstractWidget {
         visible: root._resizeVisible && rh._axisSupported
         width: 12; height: 12
         radius: root.widgetIrisFamily ? 6 : 4
-        color: root.widgetIrisFamily ? IrisStyle.accent : Appearance.colors.colPrimary
-        border { width: 1; color: root.widgetIrisFamily ? IrisStyle.surface : ColorUtils.applyAlpha(Appearance.colors.colOnPrimary, 0.3) }
+        color: root.widgetIrisFamily ? AtollStyle.accent : Appearance.colors.colPrimary
+        border { width: 1; color: root.widgetIrisFamily ? AtollStyle.surface : ColorUtils.applyAlpha(Appearance.colors.colOnPrimary, 0.3) }
         opacity: rhArea.containsMouse || rhArea.pressed ? 1.0 : 0.7
 
         // Track drag start state in canvas-space to avoid feedback loops
@@ -1568,10 +1568,10 @@ AbstractWidget {
         resizeRight: true
     }
 
-    IrisSizeGrip {
+    AtollSizeGrip {
         z: 202
         widget: root
-        visible: GlobalStates.widgetEditMode && root.irisFaced && root.irisSizeChoices.length > 1 && !root.locked
+        visible: GlobalStates.widgetEditMode && root.atollFaced && root.atollSizeChoices.length > 1 && !root.locked
             && (root.editSelected || root._gripHover || root._irisSizing)
     }
     // The grip reads the hover a tick late: hiding it under the pointer re-delivers hover at once and
@@ -1579,20 +1579,20 @@ AbstractWidget {
     property bool _gripHover: false
     Timer { id: gripHoverSettle; interval: 0; onTriggered: root._gripHover = widgetEditHover.hovered }
     Connections {
-        target: root.irisFaced ? widgetEditHover : null
+        target: root.atollFaced ? widgetEditHover : null
         function onHoveredChanged(): void { gripHoverSettle.restart() }
     }
 
     function commitIrisSize(size: string): void {
         root._resizePreviewValues = ({})
         root._irisSizing = false
-        if (size !== String(root._readConfigKey("iris.size") ?? ""))
+        if (size !== String(root._readConfigKey("atoll.size") ?? ""))
             root.setIrisOption("size", size)
         _irisSizeSettle.restart()
     }
     Timer {
         id: _irisSizeSettle
-        interval: IrisStyle.morphDuration + 40
+        interval: AtollStyle.morphDuration + 40
         onTriggered: {
             if (root._isZonePlacement)
                 root.snapToZone(root.placementStrategy)
@@ -1603,7 +1603,7 @@ AbstractWidget {
     }
 
     // Carrying one widget over another lights the other as a drop target; letting go stacks them.
-    readonly property bool stackable: root.irisFaced && DesktopWidgetStacks.live && !root.locked
+    readonly property bool stackable: root.atollFaced && DesktopWidgetStacks.live && !root.locked
         && !root.outputName.startsWith("lock:")
     readonly property var _canvas: root.parent?.parent ?? null
     readonly property bool stackDropHint: root._canvas !== null && root._canvas.stackHint === root.editInstanceKey
@@ -1663,9 +1663,9 @@ AbstractWidget {
         property string targetKey: ""
         property real toX: 0
         property real toY: 0
-        NumberAnimation { target: root; property: "x"; to: stackAbsorb.toX; duration: IrisStyle.moveDuration; easing.type: Easing.BezierSpline; easing.bezierCurve: IrisStyle.moveCurve }
-        NumberAnimation { target: root; property: "y"; to: stackAbsorb.toY; duration: IrisStyle.moveDuration; easing.type: Easing.BezierSpline; easing.bezierCurve: IrisStyle.moveCurve }
-        NumberAnimation { target: root; property: "absorb"; from: 0; to: 1; duration: IrisStyle.moveDuration; easing.type: Easing.BezierSpline; easing.bezierCurve: IrisStyle.moveCurve }
+        NumberAnimation { target: root; property: "x"; to: stackAbsorb.toX; duration: AtollStyle.moveDuration; easing.type: Easing.BezierSpline; easing.bezierCurve: AtollStyle.moveCurve }
+        NumberAnimation { target: root; property: "y"; to: stackAbsorb.toY; duration: AtollStyle.moveDuration; easing.type: Easing.BezierSpline; easing.bezierCurve: AtollStyle.moveCurve }
+        NumberAnimation { target: root; property: "absorb"; from: 0; to: 1; duration: AtollStyle.moveDuration; easing.type: Easing.BezierSpline; easing.bezierCurve: AtollStyle.moveCurve }
         onFinished: root._joinStack(stackAbsorb.targetKey)
     }
     // Once it has joined, the stack turns to it, so the drop is seen to have landed.
@@ -1692,7 +1692,7 @@ AbstractWidget {
         const before = root._stackMemo
         root._stackMemo = memo
         const turned = before.length > 0 && memo.length > 0 && before.slice(0, -1) === memo.slice(0, -1)
-        if (!turned || !root.animationsActive || !root.irisFaced || !root.visible && memo.endsWith("-")) {
+        if (!turned || !root.animationsActive || !root.atollFaced || !root.visible && memo.endsWith("-")) {
             stackSlide.stop()
             root.stackPos = 0
             return
@@ -1711,9 +1711,9 @@ AbstractWidget {
         id: stackSlide
         target: root
         property: "stackPos"
-        duration: IrisStyle.moveDuration
+        duration: AtollStyle.moveDuration
         easing.type: Easing.BezierSpline
-        easing.bezierCurve: IrisStyle.moveCurve
+        easing.bezierCurve: AtollStyle.moveCurve
     }
 
     ShellEditSizeBadge {
@@ -1721,10 +1721,10 @@ AbstractWidget {
         anchors.centerIn: parent
         active: root._isResizing
         valueText: Math.round(root.width) + " × " + Math.round(root.height) + " px"
-        accentColor: root.widgetIrisFamily ? IrisStyle.accent : Appearance.colors.colPrimary
-        surfaceColor: root.widgetIrisFamily ? IrisStyle.surface : Appearance.colors.colLayer2
-        textColor: root.widgetIrisFamily ? IrisStyle.text : Appearance.colors.colOnLayer2
-        fontFamily: root.widgetIrisFamily ? IrisStyle.fontNumbers : Appearance.font.family.main
+        accentColor: root.widgetIrisFamily ? AtollStyle.accent : Appearance.colors.colPrimary
+        surfaceColor: root.widgetIrisFamily ? AtollStyle.surface : Appearance.colors.colLayer2
+        textColor: root.widgetIrisFamily ? AtollStyle.text : Appearance.colors.colOnLayer2
+        fontFamily: root.widgetIrisFamily ? AtollStyle.fontNumbers : Appearance.font.family.main
         fontPixelSize: Appearance.font.pixelSize.smaller
     }
 
@@ -1769,11 +1769,11 @@ AbstractWidget {
         ?? (root._manifestKeyList.length > 0 ? root._autoPopoverComponent : null)
     property string _quickTab: "widget"
     readonly property string identityGlyph: DesktopWidgetIdentity.glyph(root.configEntryName)
-    readonly property color identityTint: root.widgetIrisFamily ? IrisStyle.identityOf(DesktopWidgetIdentity.tint(root.configEntryName))
+    readonly property color identityTint: root.widgetIrisFamily ? AtollStyle.identityOf(DesktopWidgetIdentity.tint(root.configEntryName))
         : DesktopWidgetIdentity.tint(root.configEntryName)
-    // The page that holds position, lock and removal: "arrange" in an iRiS face's sheet, "layout" otherwise.
-    readonly property string _arrangeTab: root.irisFaced ? "arrange" : "layout"
-    readonly property Component _effectivePopover: root.irisFaced ? _irisPopoverRef : root._semanticPalettePopover
+    // The page that holds position, lock and removal: "arrange" in an Atoll face's sheet, "layout" otherwise.
+    readonly property string _arrangeTab: root.atollFaced ? "arrange" : "layout"
+    readonly property Component _effectivePopover: root.atollFaced ? _irisPopoverRef : root._semanticPalettePopover
 
     function openQuickControls(tab: string): void {
         root._quickTab = tab
@@ -1795,7 +1795,7 @@ AbstractWidget {
 
     Component {
         id: _irisPopoverRef
-        IrisWidgetControls { widget: root }
+        AtollWidgetControls { widget: root }
     }
 
     Component {
@@ -1825,7 +1825,7 @@ AbstractWidget {
             readonly property var pages: [
                 { value: "widget", label: Translation.tr("Widget"), visible: root._widgetSpecificPopover !== null && !root.locked },
                 { value: "colors", label: Translation.tr("Look"), visible: (root.semanticPaletteQuickControls
-                    || (root.widgetIrisFamily && root.irisFace !== null)) && !root.locked },
+                    || (root.widgetIrisFamily && root.atollFace !== null)) && !root.locked },
                 { value: "layout", label: Translation.tr("Arrange") }
             ]
             readonly property string page: {
@@ -1840,7 +1840,7 @@ AbstractWidget {
                 model: semanticQuickRoot.pages
                 onPicked: value => root._quickTab = value
             }
-            IrisSegmented {
+            AtollSegmented {
                 visible: root.widgetIrisFamily && semanticQuickRoot.pages.filter(entry => entry.visible !== false).length > 1
                 Layout.fillWidth: true
                 options: semanticQuickRoot.pages.filter(entry => entry.visible !== false)
@@ -1954,8 +1954,8 @@ AbstractWidget {
 
     // Read a possibly-nested key from configEntry (e.g. "cookie.size" → configEntry.cookie.size)
     readonly property var _designResolved: DesktopWidgetDesign.resolve(root.configEntryName,
-        String(root._storedConfigKey("iris.design") ?? "auto"), String(root._storedConfigKey("design") ?? "auto"),
-        root.irisFace !== null)
+        String(root._storedConfigKey("atoll.design") ?? "auto"), String(root._storedConfigKey("design") ?? "auto"),
+        root.atollFace !== null)
     readonly property string widgetSharedDesign: root._designResolved.design
     readonly property var widgetDesignValues: DesktopWidgetDesign.values(root.configEntryName, root.widgetSharedDesign)
     function _readConfigKey(key: string): var {
@@ -1993,7 +1993,7 @@ AbstractWidget {
         root._syncPlacementStrategy();
         _placementLater.restart();
         if (!root.outputName.startsWith("lock:"))
-            DesktopWidgetStacks.report(root.configEntryName, root.irisSizes, root.irisDefaultSize, root.irisFace !== null)
+            DesktopWidgetStacks.report(root.configEntryName, root.atollSizes, root.atollDefaultSize, root.atollFace !== null)
         root._stackMemo = root._stackKey()
     }
     function resetToDefaults(): void {
@@ -2009,11 +2009,11 @@ AbstractWidget {
         updates["palette.tertiary"] = "tertiary"
         updates["palette.signal"] = "signal"
         updates["palette.surface"] = "surface"
-        if (root.widgetIrisFamily && root.irisFace !== null) {
-            updates["iris.size"] = root.irisDefaultSize
-            updates["iris.material"] = "auto"
-            updates["iris.design"] = "auto"
-            updates["iris.opacity"] = -1
+        if (root.widgetIrisFamily && root.atollFace !== null) {
+            updates["atoll.size"] = root.atollDefaultSize
+            updates["atoll.material"] = "auto"
+            updates["atoll.design"] = "auto"
+            updates["atoll.opacity"] = -1
         }
         root._setOutputValues(updates);
         syncFreePositionFromConfig();
@@ -2022,9 +2022,9 @@ AbstractWidget {
 
     property bool needsColText: false
     readonly property bool _regionSampling: (root.needsColText && (root.positionColorAdaptationEnabled
-        || (root.widgetIrisFamily && !root.widgetHasSurface))) || root.irisReadsRegion
+        || (root.widgetIrisFamily && !root.widgetHasSurface))) || root.atollReadsRegion
     readonly property bool positionColorAdaptationEnabled: Boolean(root.widgetIrisFamily
-        ? Config.getNestedValue("iris.widgets.brightWallpapers", false)
+        ? Config.getNestedValue("atoll.widgets.brightWallpapers", false)
         : Config.getNestedValue("background.widgets.adaptColorsToWallpaperPosition", true))
     property color dominantColor: Appearance.colors.colPrimary
     // Wallpaper region brightness (0-1, gamma-encoded luma). -1 = not yet analyzed.
@@ -2085,13 +2085,13 @@ AbstractWidget {
     }
 
     readonly property color _regionBg: root._hasBrightness ? root.dominantColor : Appearance.colors.colLayer0
-    // Ink is chosen by the backdrop, never by the shell's mode: iRiS speaks its own light and dark ink;
+    // Ink is chosen by the backdrop, never by the shell's mode: Atoll speaks its own light and dark ink;
     // elsewhere the generated tone for each polarity, taken toward white or black while keeping its
     // hue, since light mode's inverse tone is a mid grey and dark mode's a mid grey the other way.
-    readonly property color _inkLight: root.widgetIrisFamily ? IrisStyle.inkOnDark
+    readonly property color _inkLight: root.widgetIrisFamily ? AtollStyle.inkOnDark
         : Appearance.m3colors.darkmode ? Appearance.colors.colOnLayer0
         : ColorUtils.mix(Appearance.m3colors.m3inverseOnSurface, Qt.rgba(1, 1, 1, 1), 0.3)
-    readonly property color _inkDark: root.widgetIrisFamily ? IrisStyle.inkOnLight
+    readonly property color _inkDark: root.widgetIrisFamily ? AtollStyle.inkOnLight
         : Appearance.m3colors.darkmode
         ? ColorUtils.mix(Appearance.m3colors.m3inverseOnSurface, Qt.rgba(0, 0, 0, 1), 0.55)
         : Appearance.colors.colOnLayer0
@@ -2101,12 +2101,12 @@ AbstractWidget {
     readonly property bool inkOnLight: root.forceDarkInk ? true : root.forceLightInk ? false
         : root._onBlurredLock ? false
         : root.positionColorAdaptationEnabled && root._hasBrightness && root.backdropIsLight
-    // The same for content on glass (iRiS faces).
+    // The same for content on glass (Atoll faces).
     readonly property bool glassInkOnLight: root.forceDarkInk ? true : root.forceLightInk ? false
         : root._onBlurredLock ? false
         : root.positionColorAdaptationEnabled && root._hasBrightness && root.backdropIsBright
     readonly property bool _onBlurredLock: GlobalStates.screenLocked && (Config.options?.lock?.blur?.enable ?? false)
-    // With the wallpaper unread, iRiS keeps its light ink (the contract of *On bright wallpapers*
+    // With the wallpaper unread, Atoll keeps its light ink (the contract of *On bright wallpapers*
     // off); the shell's light mode says nothing about the wallpaper under a plate-less widget.
     readonly property bool _unreadIsLight: !root.widgetIrisFamily && !Appearance.m3colors.darkmode
     property color colText: {
@@ -2118,7 +2118,7 @@ AbstractWidget {
     }
     Behavior on colText {
         enabled: root.animationsActive
-        ColorAnimation { duration: root.widgetIris ? IrisStyle.revealDuration : Appearance.animation.elementMoveFast.duration }
+        ColorAnimation { duration: root.widgetAtoll ? AtollStyle.revealDuration : Appearance.animation.elementMoveFast.duration }
     }
 
     // ── Centralized desktop-widget semantic palette ──────────────────────────
@@ -2184,51 +2184,51 @@ AbstractWidget {
         });
     }
 
-    // iRiS widgets keep the black Island material but can borrow the wallpaper:
+    // Atoll widgets keep the black Island material but can borrow the wallpaper:
     // its generated hues are lifted into a range that reads on black, and the
-    // plate can carry a trace of the same hue. Greyscale seeds keep iRiS blue.
-    readonly property var irisWidgetOptions: Config.options?.iris?.widgets ?? ({})
-    readonly property bool irisRim: Boolean(root.irisWidgetOptions.rim ?? false)
-    readonly property string irisOutline: {
-        const value = String(root.irisWidgetOptions.outline ?? "auto")
+    // plate can carry a trace of the same hue. Greyscale seeds keep Atoll blue.
+    readonly property var atollWidgetOptions: Config.options?.atoll?.widgets ?? ({})
+    readonly property bool atollRim: Boolean(root.atollWidgetOptions.rim ?? false)
+    readonly property string atollOutline: {
+        const value = String(root.atollWidgetOptions.outline ?? "auto")
         return ["auto", "always", "none"].includes(value) ? value : "auto"
     }
-    readonly property real irisSurfaceOpacity: {
-        const own = Number(root._readConfigKey("iris.opacity") ?? -1)
-        const value = own >= 20 ? own : Number(root.irisWidgetOptions.opacity ?? 100)
+    readonly property real atollSurfaceOpacity: {
+        const own = Number(root._readConfigKey("atoll.opacity") ?? -1)
+        const value = own >= 20 ? own : Number(root.atollWidgetOptions.opacity ?? 100)
         return Math.max(0, Math.min(100, Number.isFinite(value) ? value : 100)) / 100
     }
-    readonly property string irisPaletteName: {
-        const name = String(root.irisWidgetOptions.tint ?? "wallpaper")
-        return IrisStyle.widgetPaletteNames.includes(name) ? name : "wallpaper"
+    readonly property string atollPaletteName: {
+        const name = String(root.atollWidgetOptions.tint ?? "wallpaper")
+        return AtollStyle.widgetPaletteNames.includes(name) ? name : "wallpaper"
     }
-    readonly property bool irisWallpaperTint: root.irisPaletteName === "wallpaper"
-    readonly property real irisVibrance: Math.max(0, Math.min(100, Number(root.irisWidgetOptions.vibrance ?? 85))) / 100
-    readonly property var irisPalette: IrisStyle.widgetPalette(root.irisPaletteName, root.irisVibrance)
-    readonly property color irisAccent: root.irisPalette[0]
-    readonly property color irisAccent2: root.irisPalette[1]
-    readonly property color irisAccent3: root.irisPalette[2]
-    readonly property color irisTintedPlate: ColorUtils.mix(IrisStyle.surface, root.irisAccent, 0.82)
-    readonly property color irisPlate: root.irisMaterial === "tinted" ? root.irisTintedPlate : IrisStyle.surface
+    readonly property bool atollWallpaperTint: root.atollPaletteName === "wallpaper"
+    readonly property real atollVibrance: Math.max(0, Math.min(100, Number(root.atollWidgetOptions.vibrance ?? 85))) / 100
+    readonly property var atollPalette: AtollStyle.widgetPalette(root.atollPaletteName, root.atollVibrance)
+    readonly property color atollAccent: root.atollPalette[0]
+    readonly property color atollAccent2: root.atollPalette[1]
+    readonly property color atollAccent3: root.atollPalette[2]
+    readonly property color atollTintedPlate: ColorUtils.mix(AtollStyle.surface, root.atollAccent, 0.82)
+    readonly property color atollPlate: root.atollMaterial === "tinted" ? root.atollTintedPlate : AtollStyle.surface
 
-    property Component irisFace: null
-    property bool irisOnly: false
+    property Component atollFace: null
+    property bool atollOnly: false
     readonly property var designChoices: {
         const list = []
-        const family = Config.options?.panelFamily ?? "ii"
-        if (family !== "iris" && family !== "ii") return list
-        if (family === "iris" && root.irisFace !== null) list.push({ value: "iris", icon: "auto_awesome", label: Translation.tr("iRiS") })
-        if (family === "ii" || !root.irisOnly) list.push({ value: "material", icon: "widgets", label: Translation.tr("Material") })
+        const family = Config.options?.panelFamily ?? "drift"
+        if (family !== "atoll" && family !== "drift") return list
+        if (family === "atoll" && root.atollFace !== null) list.push({ value: "atoll", icon: "auto_awesome", label: Translation.tr("Atoll") })
+        if (family === "drift" || !root.atollOnly) list.push({ value: "material", icon: "widgets", label: Translation.tr("Material") })
         if (DesktopWidgetDesign.supports(root.configEntryName)) {
             list.push({ value: "instrument", icon: "avg_pace", label: Translation.tr("iNstrument") })
             list.push({ value: "readout", icon: "view_agenda", label: Translation.tr("Readout") })
         }
         return list
     }
-    readonly property string irisDesign: root._designResolved.face
-        || (root.irisOnly && root.widgetSharedDesign === "individual") ? "iris" : "material"
+    readonly property string atollDesign: root._designResolved.face
+        || (root.atollOnly && root.widgetSharedDesign === "individual") ? "atoll" : "material"
     // The design this widget shows, as the global picker names it.
-    readonly property string widgetDesign: root.irisDesign === "iris" ? "iris"
+    readonly property string widgetDesign: root.atollDesign === "atoll" ? "atoll"
         : root.widgetSharedDesign === "individual" ? "material" : root.widgetSharedDesign
     readonly property bool widgetDesignShared: root.widgetDesign === DesktopWidgetDesign.current
     readonly property bool widgetDesignMatchable: !root.widgetDesignShared || DesktopWidgetDesign.exceptionCount > 0
@@ -2241,39 +2241,39 @@ AbstractWidget {
                 : value === "material" ? "individual" : value)
             return
         }
-        root._setOutputValue("iris.design", value === DesktopWidgetDesign.current ? "auto" : value)
+        root._setOutputValue("atoll.design", value === DesktopWidgetDesign.current ? "auto" : value)
     }
-    property var irisSizes: ["small"]
-    property string irisDefaultSize: root.irisSizes[0]
-    property var irisOptions: []
-    readonly property bool irisFaced: root.widgetIris && root.irisFace !== null
-    readonly property var irisMaterials: ["glass", "clear", "solid", "tinted"]
-    readonly property string irisMaterial: {
-        const own = String(root._readConfigKey("iris.material") ?? "auto")
-        const shared = String(root.irisWidgetOptions.material ?? "glass")
-        return root.irisMaterials.includes(own) ? own : root.irisMaterials.includes(shared) ? shared : "glass"
+    property var atollSizes: ["small"]
+    property string atollDefaultSize: root.atollSizes[0]
+    property var atollOptions: []
+    readonly property bool atollFaced: root.widgetAtoll && root.atollFace !== null
+    readonly property var atollMaterials: ["glass", "clear", "solid", "tinted"]
+    readonly property string atollMaterial: {
+        const own = String(root._readConfigKey("atoll.material") ?? "auto")
+        const shared = String(root.atollWidgetOptions.material ?? "glass")
+        return root.atollMaterials.includes(own) ? own : root.atollMaterials.includes(shared) ? shared : "glass"
     }
-    readonly property bool irisReadsRegion: root.irisFaced && (root.irisMaterial === "glass" || root.irisMaterial === "clear")
+    readonly property bool atollReadsRegion: root.atollFaced && (root.atollMaterial === "glass" || root.atollMaterial === "clear")
     // A stack keeps the size classes all its pages have.
-    readonly property var irisSizeChoices: root.stacked ? root.stack.sizes : root.irisSizes
-    readonly property string irisSize: {
-        const chosen = String(root._readConfigKey("iris.size") ?? "")
+    readonly property var atollSizeChoices: root.stacked ? root.stack.sizes : root.atollSizes
+    readonly property string atollSize: {
+        const chosen = String(root._readConfigKey("atoll.size") ?? "")
         if (!root.stacked)
-            return root.irisSizes.includes(chosen) ? chosen : root.irisDefaultSize
+            return root.atollSizes.includes(chosen) ? chosen : root.atollDefaultSize
         const choices = root.stack.sizes
         return choices.includes(chosen) ? chosen : choices.includes(root.stack.size) ? root.stack.size : choices[0]
     }
-    readonly property real irisUnit: Math.round(170 * IrisStyle.density * root.scaleFactor)
-    readonly property real irisGutter: Math.round(16 * IrisStyle.density * root.scaleFactor)
-    readonly property real irisFaceWidth: root.irisSize === "small" ? root.irisUnit : root.irisUnit * 2 + root.irisGutter
-    readonly property real irisFaceHeight: root.irisSize === "large" ? root.irisUnit * 2 + root.irisGutter : root.irisUnit
-    readonly property var irisSizeLabels: ({ small: Translation.tr("Small"), medium: Translation.tr("Medium"), large: Translation.tr("Large") })
-    function irisOption(key: string, fallback: var): var {
-        const value = root._readConfigKey("iris." + key)
+    readonly property real atollUnit: Math.round(170 * AtollStyle.density * root.scaleFactor)
+    readonly property real atollGutter: Math.round(16 * AtollStyle.density * root.scaleFactor)
+    readonly property real atollFaceWidth: root.atollSize === "small" ? root.atollUnit : root.atollUnit * 2 + root.atollGutter
+    readonly property real atollFaceHeight: root.atollSize === "large" ? root.atollUnit * 2 + root.atollGutter : root.atollUnit
+    readonly property var atollSizeLabels: ({ small: Translation.tr("Small"), medium: Translation.tr("Medium"), large: Translation.tr("Large") })
+    function atollOption(key: string, fallback: var): var {
+        const value = root._readConfigKey("atoll." + key)
         return value === undefined || value === null ? fallback : value
     }
     function setIrisOption(key: string, value: var): void {
-        root._setOutputValue("iris." + key, value)
+        root._setOutputValue("atoll." + key, value)
     }
     // The sheet's own slider: not a gesture, so the sheet stays under the pointer that drags it.
     function previewIrisScale(percent: int): void {
@@ -2302,51 +2302,51 @@ AbstractWidget {
         _irisSizeSettle.restart()
     }
 
-    readonly property Item irisFaceView: irisFaceLoader.item
+    readonly property Item atollFaceView: atollFaceLoader.item
     Loader {
-        id: irisFaceLoader
+        id: atollFaceLoader
         anchors.fill: parent
-        active: root.irisFaced
+        active: root.atollFaced
         opacity: root.widgetOpacity * root.dimOpacity
-        sourceComponent: root.irisFace
+        sourceComponent: root.atollFace
     }
 
     function widgetSemanticSet(role: string): var {
-        if (root.widgetIris) {
-            const lifted = role === "surface" ? IrisStyle.text
-                : role === "signal" ? IrisStyle.danger
-                : role === "success" ? IrisStyle.success
-                : role === "warning" ? IrisStyle.secondaryAccent
-                : role === "tertiary" ? root.irisAccent3
-                : role === "secondary" ? root.irisAccent2 : root.irisAccent;
+        if (root.widgetAtoll) {
+            const lifted = role === "surface" ? AtollStyle.text
+                : role === "signal" ? AtollStyle.danger
+                : role === "success" ? AtollStyle.success
+                : role === "warning" ? AtollStyle.secondaryAccent
+                : role === "tertiary" ? root.atollAccent3
+                : role === "secondary" ? root.atollAccent2 : root.atollAccent;
             const onLight = root.inkOnLight && !root.widgetHasSurface
             const sample = root.widgetHasSurface || root.regionBrightness < 0 ? null
                 : { level: root.regionBrightness, spread: root.regionBrightnessSpread }
-            const foreground = role === "surface" ? (onLight ? IrisStyle.inkOnLight : lifted)
-                : sample ? IrisStyle.markOn(lifted, sample, onLight, 3)
-                : onLight ? IrisStyle.deepAccent(lifted, IrisStyle.inkOnLight) : lifted;
-            return { color: foreground, onColor: IrisStyle.surface,
-                container: role === "surface" ? root.irisPlate : ColorUtils.mix(root.irisPlate, IrisStyle.text, 0.9),
-                onContainer: IrisStyle.text };
+            const foreground = role === "surface" ? (onLight ? AtollStyle.inkOnLight : lifted)
+                : sample ? AtollStyle.markOn(lifted, sample, onLight, 3)
+                : onLight ? AtollStyle.deepAccent(lifted, AtollStyle.inkOnLight) : lifted;
+            return { color: foreground, onColor: AtollStyle.surface,
+                container: role === "surface" ? root.atollPlate : ColorUtils.mix(root.atollPlate, AtollStyle.text, 0.9),
+                onContainer: AtollStyle.text };
         }
-        // Bare Material widgets under iRiS (iNstrument, Readout) draw with the same three accents as the faces.
+        // Bare Material widgets under Atoll (iNstrument, Readout) draw with the same three accents as the faces.
         // Their neutral is the ink itself and their states the Island's, never the Material scheme's
         // tones, which follow the shell's mode rather than the wallpaper. With adaptation off the
         // accents keep their hue and the Lume shadow holds them, instead of fading toward the ink.
         if (root.widgetIrisFamily && !root.widgetHasSurface) {
             const onLight = root.inkOnLight
             if (role === "surface")
-                return { color: root.colText, onColor: onLight ? IrisStyle.inkOnDark : IrisStyle.inkOnLight,
-                    container: ColorUtils.mix(IrisStyle.surface, root.colText, 0.9), onContainer: IrisStyle.text };
-            const seed = role === "signal" ? IrisStyle.dangerOnMedia : role === "warning" ? IrisStyle.highlightOnMedia
-                : role === "success" ? (IrisStyle.light ? Lume.mark(IrisStyle.success, 0.35, 0, false, 3) : IrisStyle.success)
-                : role === "tertiary" ? root.irisAccent3 : role === "secondary" ? root.irisAccent2 : root.irisAccent
+                return { color: root.colText, onColor: onLight ? AtollStyle.inkOnDark : AtollStyle.inkOnLight,
+                    container: ColorUtils.mix(AtollStyle.surface, root.colText, 0.9), onContainer: AtollStyle.text };
+            const seed = role === "signal" ? AtollStyle.dangerOnMedia : role === "warning" ? AtollStyle.highlightOnMedia
+                : role === "success" ? (AtollStyle.light ? Lume.mark(AtollStyle.success, 0.35, 0, false, 3) : AtollStyle.success)
+                : role === "tertiary" ? root.atollAccent3 : role === "secondary" ? root.atollAccent2 : root.atollAccent
             const sample = root.regionBrightness < 0 || !root.positionColorAdaptationEnabled ? null
                 : { level: root.regionBrightness, spread: root.regionBrightnessSpread }
-            const shown = sample ? IrisStyle.markOn(seed, sample, onLight, 3)
-                : onLight ? IrisStyle.deepAccent(seed, IrisStyle.inkOnLight) : seed
-            return { color: shown, onColor: IrisStyle.onTintFor(seed),
-                container: ColorUtils.mix(IrisStyle.surface, seed, 0.78), onContainer: IrisStyle.text };
+            const shown = sample ? AtollStyle.markOn(seed, sample, onLight, 3)
+                : onLight ? AtollStyle.deepAccent(seed, AtollStyle.inkOnLight) : seed
+            return { color: shown, onColor: AtollStyle.onTintFor(seed),
+                container: ColorUtils.mix(AtollStyle.surface, seed, 0.78), onContainer: AtollStyle.text };
         }
         const c = Appearance.colors;
         // Bare on a light region in a dark theme, an accent takes its container tone: the same
@@ -2365,7 +2365,7 @@ AbstractWidget {
         case "signal":
             return {
                 color: deep ? c.colErrorContainer : Appearance.zzzEverywhere ? Appearance.zzz.signal
-                    : Appearance.inirEverywhere ? Appearance.inir.colError : c.colError,
+                    : Appearance.lunanaEverywhere ? Appearance.lunana.colError : c.colError,
                 onColor: Appearance.zzzEverywhere ? Appearance.zzz.onSignal : c.colOnError,
                 container: c.colErrorContainer,
                 onContainer: c.colOnErrorContainer
@@ -2377,7 +2377,7 @@ AbstractWidget {
                 container: Appearance.zzzEverywhere ? Appearance.zzz.chrome
                     : Appearance.cookieEverywhere ? c.colLayer2
                     : Appearance.angelEverywhere ? Appearance.angel.colGlassCard
-                    : Appearance.inirEverywhere ? Appearance.inir.colLayer1
+                    : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer1
                     : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurface
                     : c.colLayer1,
                 onContainer: Appearance.zzzEverywhere ? Appearance.zzz.onBg
@@ -2419,9 +2419,9 @@ AbstractWidget {
 
     // Surfaces use semantic containers directly. This removes the old HSL
     // wallpaper-region re-toning that could turn generated warm palettes muddy.
-    readonly property color widgetPlateColor: root.widgetIris && root.forceDarkInk
-        ? ColorUtils.mix(IrisStyle.text, IrisStyle.accent, 0.98)
-        : root.widgetIris && root.forceLightInk ? IrisStyle.surface
+    readonly property color widgetPlateColor: root.widgetAtoll && root.forceDarkInk
+        ? ColorUtils.mix(AtollStyle.text, AtollStyle.accent, 0.98)
+        : root.widgetAtoll && root.forceLightInk ? AtollStyle.surface
         : root.widgetSemanticContainer(root.widgetSurfaceRole)
     readonly property bool widgetPlateIsDark: ColorUtils.relativeLuminance(root.widgetPlateColor) < 0.38
     readonly property color widgetSurfaceInk: root.forceLightInk ? root._inkLight
@@ -2432,26 +2432,26 @@ AbstractWidget {
         ? ColorUtils.ensureReadable(ColorUtils.mix(root.widgetInk, root.widgetPlateColor, 0.72), root.widgetPlateColor, 4.5)
         : ColorUtils.applyAlpha(root.widgetInk, 0.66)
     readonly property color widgetInkSubtle: ColorUtils.applyAlpha(root.widgetInk, 0.58)
-    readonly property bool widgetEditorial: !root.widgetIris && Appearance.editorialEverywhere
-    // Family-owned type: iRiS widgets speak the Island's typeface; every other
+    readonly property bool widgetEditorial: !root.widgetAtoll && Appearance.editorialEverywhere
+    // Family-owned type: Atoll widgets speak the Island's typeface; every other
     // family keeps the shell fonts it always used.
-    readonly property string widgetBodyFamily: root.widgetIris ? IrisStyle.fontMain : Appearance.font.family.main
-    readonly property string widgetNumbersFamily: root.widgetIrisFamily ? IrisStyle.fontNumbers : Appearance.font.family.numbers
-    // Metadata labels: shouting caps are Material/Instrument grammar; iRiS uses
+    readonly property string widgetBodyFamily: root.widgetAtoll ? AtollStyle.fontMain : Appearance.font.family.main
+    readonly property string widgetNumbersFamily: root.widgetIrisFamily ? AtollStyle.fontNumbers : Appearance.font.family.numbers
+    // Metadata labels: shouting caps are Material/Instrument grammar; Atoll uses
     // sentence case (first letter up, the rest as written by the locale).
     function widgetCase(text): string {
         const value = String(text ?? "")
-        return root.widgetIris ? value.charAt(0).toUpperCase() + value.slice(1) : value.toUpperCase()
+        return root.widgetAtoll ? value.charAt(0).toUpperCase() + value.slice(1) : value.toUpperCase()
     }
-    readonly property int widgetCapitalization: root.widgetIris ? Font.MixedCase : Font.AllUppercase
-    readonly property string widgetTitleFamily: root.widgetIris ? IrisStyle.fontMain : root.widgetEditorial
+    readonly property int widgetCapitalization: root.widgetAtoll ? Font.MixedCase : Font.AllUppercase
+    readonly property string widgetTitleFamily: root.widgetAtoll ? AtollStyle.fontMain : root.widgetEditorial
         ? Appearance.editorial.displayFamily : Appearance.font.family.main
-    // iRiS display type: one chosen weight for titles and figures, with the
+    // Atoll display type: one chosen weight for titles and figures, with the
     // slight negative tracking large system numerals use.
-    readonly property int widgetTitleWeight: root.widgetIris
-        ? ({ light: Font.Light, regular: Font.Medium, bold: Font.Bold })[String(root.irisWidgetOptions.weight ?? "regular")] ?? Font.Medium
+    readonly property int widgetTitleWeight: root.widgetAtoll
+        ? ({ light: Font.Light, regular: Font.Medium, bold: Font.Bold })[String(root.atollWidgetOptions.weight ?? "regular")] ?? Font.Medium
         : root.widgetEditorial ? Appearance.editorial.titleWeight : Font.DemiBold
-    readonly property real widgetTitleTracking: root.widgetIris ? -0.4
+    readonly property real widgetTitleTracking: root.widgetAtoll ? -0.4
         : root.widgetEditorial ? Appearance.editorial.titleTracking : 0
     readonly property real widgetTitleScale: root.widgetEditorial
         ? Appearance.editorial.titleScale : 1
@@ -2459,11 +2459,11 @@ AbstractWidget {
         ? Appearance.editorial.spacing : 1
     readonly property int widgetLabelWeight: root.widgetEditorial ? Appearance.editorial.labelWeight : Font.Medium
     readonly property real widgetMetadataTracking: root.widgetEditorial ? Appearance.editorial.metadataTracking : 0
-    readonly property real widgetControlRadius: root.widgetIris ? Math.round(12 * IrisStyle.density) : root.widgetEditorial ? Appearance.rounding.small : Appearance.rounding.normal
-    readonly property real widgetCardRadius: root.widgetIris ? Math.round(Math.max(0, Math.min(40, Config.options?.iris?.widgets?.radius ?? 22)) * IrisStyle.density) : root.widgetEditorial ? Appearance.editorial.radius : Appearance.zzzEverywhere ? Appearance.zzz.controlRadius
+    readonly property real widgetControlRadius: root.widgetAtoll ? Math.round(12 * AtollStyle.density) : root.widgetEditorial ? Appearance.rounding.small : Appearance.rounding.normal
+    readonly property real widgetCardRadius: root.widgetAtoll ? Math.round(Math.max(0, Math.min(40, Config.options?.atoll?.widgets?.radius ?? 22)) * AtollStyle.density) : root.widgetEditorial ? Appearance.editorial.radius : Appearance.zzzEverywhere ? Appearance.zzz.controlRadius
         : Appearance.cookieEverywhere ? Appearance.cookie.roundLarge
         : Appearance.angelEverywhere ? Appearance.angel.roundingNormal
-        : Appearance.inirEverywhere ? Appearance.inir.roundingNormal
+        : Appearance.lunanaEverywhere ? Appearance.lunana.roundingNormal
         : Appearance.rounding.normal
 
     property color accentBackdrop: root.widgetHasSurface ? root.widgetPlateColor
@@ -2507,7 +2507,7 @@ AbstractWidget {
     // Legibility shadow behind plate-less text, scaled by how busy the region is. Light ink gets a
     // dark shadow; dark ink on a light region gets only a faint light lift over its darker patches,
     // since a dark shadow under dark text reads as a smear and a strong light one as a glow.
-    readonly property bool legibleAlways: root.widgetIrisFamily && Boolean(root.irisWidgetOptions.legibleAlways ?? false)
+    readonly property bool legibleAlways: root.widgetIrisFamily && Boolean(root.atollWidgetOptions.legibleAlways ?? false)
     readonly property real _haloBusy: root.legibleAlways ? 1 : root.positionColorAdaptationEnabled
         ? Math.min(1, root.regionBrightnessSpread / 0.28) : 0
     // The same held by the whole bare widget (Lume's third step for content with no plate): a soft dark
@@ -2526,8 +2526,8 @@ AbstractWidget {
         return Math.max(0, Math.min(0.55, (0.62 - darkest) / 0.35 * 0.55))
     }
     readonly property color _legibleShadowColor: root._inkIsLight ? Qt.rgba(0, 0, 0, 1) : Qt.rgba(1, 1, 1, 1)
-    // iRiS only: Material widgets keep their own text halo and never carry a shadow under the whole body.
-    readonly property bool _legibleShadow: root.widgetIrisFamily && root.needsColText && !root.widgetHasSurface && !root.irisFaced
+    // Atoll only: Material widgets keep their own text halo and never carry a shadow under the whole body.
+    readonly property bool _legibleShadow: root.widgetIrisFamily && root.needsColText && !root.widgetHasSurface && !root.atollFaced
         && !GlobalStates.widgetEditMode && root._legibleShadowOpacity > 0.06
     readonly property color colHalo: root.inkOnLight && !root.forceDarkInk
         ? Qt.rgba(1, 1, 1, 0.12 + 0.3 * root._haloBusy)

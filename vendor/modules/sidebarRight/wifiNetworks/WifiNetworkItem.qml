@@ -33,7 +33,7 @@ DialogListItem {
                 iconSize: Appearance.font.pixelSize.larger
                 property int strength: root.wifiNetwork?.strength ?? 0
                 text: strength > 80 ? "signal_wifi_4_bar" : strength > 60 ? "network_wifi_3_bar" : strength > 40 ? "network_wifi_2_bar" : strength > 20 ? "network_wifi_1_bar" : "signal_wifi_0_bar"
-                color: Appearance.inirEverywhere ? Appearance.inir.colTextSecondary : Appearance.colSecondaryActionIcon
+                color: Appearance.lunanaEverywhere ? Appearance.lunana.colTextSecondary : Appearance.colSecondaryActionIcon
             }
             ColumnLayout {
                 Layout.fillWidth: true
@@ -50,7 +50,7 @@ DialogListItem {
                     Layout.fillWidth: true
                     StyledText {
                         font.pixelSize: Appearance.font.pixelSize.smaller
-                        color: Appearance.inirEverywhere ? Appearance.inir.colTextSecondary : Appearance.colors.colSubtext
+                        color: Appearance.lunanaEverywhere ? Appearance.lunana.colTextSecondary : Appearance.colors.colSubtext
                         elide: Text.ElideRight
                         text: {
                             if (!root.wifiNetwork?.active) return "";
@@ -66,7 +66,7 @@ DialogListItem {
                 visible: (root.wifiNetwork?.isSecure || root.wifiNetwork?.active) ?? false
                 text: root.wifiNetwork?.active ? "check" : Network.wifiConnectTarget === root.wifiNetwork ? "settings_ethernet" : "lock"
                 iconSize: Appearance.font.pixelSize.larger
-                color: Appearance.inirEverywhere ? Appearance.inir.colTextSecondary : Appearance.colSecondaryActionIcon
+                color: Appearance.lunanaEverywhere ? Appearance.lunana.colTextSecondary : Appearance.colSecondaryActionIcon
             }
         }
 

@@ -1,7 +1,7 @@
 # Optional extras helpers for setup/install flows
 # shellcheck shell=bash
 
-inir_get_user_wallpapers_dir() {
+lunana_get_user_wallpapers_dir() {
   local _xdg_pictures
   _xdg_pictures="$(xdg-user-dir PICTURES 2>/dev/null || true)"
   if [[ -z "$_xdg_pictures" || "$_xdg_pictures" != /* || "$_xdg_pictures" == "$HOME" ]]; then
@@ -12,7 +12,7 @@ inir_get_user_wallpapers_dir() {
 
 extras_hybrid_nvidia() {
   local dev vendor devices="" nvidia=false
-  for dev in "${INIR_DRM_SYSFS:-/sys/class/drm}"/card[0-9]*/device; do
+  for dev in "${LUNANA_DRM_SYSFS:-/sys/class/drm}"/card[0-9]*/device; do
     [[ -r "$dev/vendor" ]] || continue
     vendor="$(cat "$dev/vendor" 2>/dev/null)"
     devices+="$(readlink -f "$dev")"$'\n'
@@ -46,7 +46,7 @@ extras_sddm_greeter_mode() {
   if $hybrid; then echo niri; else echo keep; fi
 }
 
-# Install ii-pixel-sddm via the canonical installer script.
+# Install drift-pixel-sddm via the canonical installer script.
 # Args:
 #   $1 auto apply mode: ask|yes|no (default: ask)
 #   $2 make SDDM the login screen if it is not: yes|no (default: yes; updates pass no)
@@ -57,59 +57,59 @@ extras_install_sddm_theme() {
   local greeter_mode="${3:-}"
 
   if ! command -v sddm &>/dev/null; then
-    log_warning "SDDM not detected. Skipping ii-pixel-sddm setup."
+    log_warning "SDDM not detected. Skipping drift-pixel-sddm setup."
     return 0
   fi
 
   local sddm_script="${REPO_ROOT}/scripts/sddm/install-pixel-sddm.sh"
   if [[ ! -f "$sddm_script" ]]; then
-    log_warning "ii-pixel-sddm install script not found, skipping"
+    log_warning "drift-pixel-sddm install script not found, skipping"
     return 0
   fi
 
-  tui_info "Setting up ii-pixel-sddm login theme..."
+  tui_info "Setting up drift-pixel-sddm login theme..."
   chmod +x "$sddm_script"
   [[ -n "$greeter_mode" ]] || greeter_mode="$(extras_sddm_greeter_mode "$auto_apply_mode")"
-  if ! INIR_SDDM_AUTO_APPLY="$auto_apply_mode" INIR_SDDM_ENABLE_SERVICE="$enable_service" INIR_SDDM_GREETER="$greeter_mode" bash "$sddm_script"; then
-    log_warning "ii-pixel-sddm setup failed — SDDM config may need manual update"
+  if ! LUNANA_SDDM_AUTO_APPLY="$auto_apply_mode" LUNANA_SDDM_ENABLE_SERVICE="$enable_service" LUNANA_SDDM_GREETER="$greeter_mode" bash "$sddm_script"; then
+    log_warning "drift-pixel-sddm setup failed — SDDM config may need manual update"
     log_warning "Try: sudo bash ${sddm_script}"
     return 1
   fi
 }
 
-# Install iNiR-Walls image assets into user's wallpapers directory.
+# Install Lunana-Walls image assets into user's wallpapers directory.
 # Behavior:
 # - clones repo to temp dir (not persisted)
 # - copies only image files into destination
 # - does not overwrite existing non-empty files
 # Output contract:
-# - sets global EXTRAS_INIR_WALLS_FIRST_IMAGE to first copied/available image path (or empty)
-extras_install_inir_walls() {
-  local walls_repo_url="https://github.com/snowarch/iNiR-Walls.git"
+# - sets global EXTRAS_LUNANA_WALLS_FIRST_IMAGE to first copied/available image path (or empty)
+extras_install_lunana_walls() {
+  local walls_repo_url="https://github.com/snowarch/Lunana-Walls.git"
   local walls_estimated_count=148
   local walls_estimated_bytes=663709943
   local walls_estimated_mib
   walls_estimated_mib=$(awk "BEGIN { printf \"%.1f\", ${walls_estimated_bytes}/1024/1024 }")
 
-  tui_info "Optional wallpapers: iNiR-Walls (~${walls_estimated_count} images, ~${walls_estimated_mib} MiB download)."
+  tui_info "Optional wallpapers: Lunana-Walls (~${walls_estimated_count} images, ~${walls_estimated_mib} MiB download)."
   tui_dim "Downloads to temp dir, copies image files only, then removes temp clone."
 
   if ! command -v git >/dev/null 2>&1; then
-    log_warning "Git is required to install iNiR-Walls, skipping"
+    log_warning "Git is required to install Lunana-Walls, skipping"
     return 0
   fi
 
   local user_wallpapers_dir
-  user_wallpapers_dir="$(inir_get_user_wallpapers_dir)"
+  user_wallpapers_dir="$(lunana_get_user_wallpapers_dir)"
   mkdir -p "$user_wallpapers_dir"
 
   local walls_tmp
   walls_tmp="$(mktemp -d)"
-  local walls_repo_dir="${walls_tmp}/iNiR-Walls"
+  local walls_repo_dir="${walls_tmp}/Lunana-Walls"
   local first_image=""
-  EXTRAS_INIR_WALLS_FIRST_IMAGE=""
+  EXTRAS_LUNANA_WALLS_FIRST_IMAGE=""
 
-  tui_info "Downloading iNiR-Walls repository (git progress below)..."
+  tui_info "Downloading Lunana-Walls repository (git progress below)..."
   if git clone --depth 1 --progress "$walls_repo_url" "$walls_repo_dir"; then
     local walls_scanned=0
     local walls_copied=0
@@ -117,7 +117,7 @@ extras_install_inir_walls() {
     shopt -s nullglob globstar
     for wall in "${walls_repo_dir}"/**/*.{jpg,jpeg,png,webp,avif}; do
       [[ -f "$wall" ]] || continue
-      # iNiR-Walls generates a 640px WebP per wallpaper under images/thumbs/ for
+      # Lunana-Walls generates a 640px WebP per wallpaper under images/thumbs/ for
       # its gallery page. globstar swept those in as if they were wallpapers.
       # They also share the exact basename of the image they preview, so the
       # only thing keeping a thumbnail from landing on a real wallpaper here is
@@ -138,16 +138,16 @@ extras_install_inir_walls() {
     shopt -u nullglob globstar
 
     if [[ "$walls_scanned" -gt 0 ]]; then
-      log_success "iNiR-Walls synced (${walls_scanned} images scanned, ${walls_copied} new copied)"
+      log_success "Lunana-Walls synced (${walls_scanned} images scanned, ${walls_copied} new copied)"
     else
-      log_warning "No wallpapers found in iNiR-Walls repository"
+      log_warning "No wallpapers found in Lunana-Walls repository"
     fi
   else
-    log_warning "Failed to download iNiR-Walls, continuing"
+    log_warning "Failed to download Lunana-Walls, continuing"
   fi
 
   rm -rf "$walls_tmp"
-  EXTRAS_INIR_WALLS_FIRST_IMAGE="$first_image"
+  EXTRAS_LUNANA_WALLS_FIRST_IMAGE="$first_image"
   return 0
 }
 
@@ -155,7 +155,7 @@ extras_install_inir_walls() {
 # dirn-typo. GPL-3, ~23 MiB. Lives in user-scope ($HOME/.local/share/icons) so
 # it's available to GTK / Qt without root. Non-intrusive: only installs the
 # theme files. The user's current icon theme is NOT touched — they can switch
-# via iNiR Settings if they want.
+# via Lunana Settings if they want.
 #
 # Idempotent: clones on first run, fast-forwards on subsequent runs.
 extras_install_yamis_icons() {
@@ -189,7 +189,7 @@ extras_install_yamis_icons() {
   tui_info "Installing YAMIS monochrome icon theme (~23 MiB, by dirn-typo)..."
   if git clone --depth 1 --quiet "$repo_url" "$dest"; then
     log_success "YAMIS icons installed at ${dest}"
-    log_info  "Switch to it via iNiR Settings → Appearance → Icon theme"
+    log_info  "Switch to it via Lunana Settings → Appearance → Icon theme"
     if command -v gtk-update-icon-cache >/dev/null 2>&1; then
       gtk-update-icon-cache -q "$dest" 2>/dev/null || true
     fi
@@ -213,22 +213,22 @@ extras_refresh_yamis_icons_on_update() {
 
 # Void has no Cloudflare XBPS package; official APT metadata supplies the version,
 # artifact path and SHA-256 without executing Debian maintainer scripts.
-INIR_WARP_PACKAGES_URL="${INIR_WARP_PACKAGES_URL:-https://pkg.cloudflareclient.com/dists/bookworm/main/binary-amd64/Packages}"
-INIR_WARP_REPO_BASE_URL="${INIR_WARP_REPO_BASE_URL:-https://pkg.cloudflareclient.com/}"
-INIR_WARP_FALLBACK_VERSION="${INIR_WARP_FALLBACK_VERSION:-2026.7.1377.0}"
-INIR_WARP_FALLBACK_FILENAME="${INIR_WARP_FALLBACK_FILENAME:-pool/bookworm/main/c/cloudflare-warp/cloudflare-warp_2026.7.1377.0_amd64.deb}"
-INIR_WARP_FALLBACK_SHA256="${INIR_WARP_FALLBACK_SHA256:-95d33c2b4fc42f21c204981c51470a6a679d618fb0b78ee64bdd0db142230c55}"
+LUNANA_WARP_PACKAGES_URL="${LUNANA_WARP_PACKAGES_URL:-https://pkg.cloudflareclient.com/dists/bookworm/main/binary-amd64/Packages}"
+LUNANA_WARP_REPO_BASE_URL="${LUNANA_WARP_REPO_BASE_URL:-https://pkg.cloudflareclient.com/}"
+LUNANA_WARP_FALLBACK_VERSION="${LUNANA_WARP_FALLBACK_VERSION:-2026.7.1377.0}"
+LUNANA_WARP_FALLBACK_FILENAME="${LUNANA_WARP_FALLBACK_FILENAME:-pool/bookworm/main/c/cloudflare-warp/cloudflare-warp_2026.7.1377.0_amd64.deb}"
+LUNANA_WARP_FALLBACK_SHA256="${LUNANA_WARP_FALLBACK_SHA256:-95d33c2b4fc42f21c204981c51470a6a679d618fb0b78ee64bdd0db142230c55}"
 
 extras_void_warp_state_file() {
-  printf '%s\n' "${XDG_STATE_HOME:-$HOME/.local/state}/inir/warp-provider.json"
+  printf '%s\n' "${XDG_STATE_HOME:-$HOME/.local/state}/lunana/warp-provider.json"
 }
 
 extras_void_warp_release_info() {
   local packages="" parsed=""
-  if [[ -n "${INIR_WARP_PACKAGES_FILE:-}" && -f "${INIR_WARP_PACKAGES_FILE}" ]]; then
-    packages="$(cat "$INIR_WARP_PACKAGES_FILE")"
+  if [[ -n "${LUNANA_WARP_PACKAGES_FILE:-}" && -f "${LUNANA_WARP_PACKAGES_FILE}" ]]; then
+    packages="$(cat "$LUNANA_WARP_PACKAGES_FILE")"
   elif command -v curl >/dev/null 2>&1; then
-    packages="$(curl -fsSL --max-time 15 "$INIR_WARP_PACKAGES_URL" 2>/dev/null || true)"
+    packages="$(curl -fsSL --max-time 15 "$LUNANA_WARP_PACKAGES_URL" 2>/dev/null || true)"
   fi
 
   if [[ -n "$packages" ]]; then
@@ -255,7 +255,7 @@ extras_void_warp_release_info() {
     printf '%s\n' "$parsed"
   else
     printf '%s\t%s\t%s\n' \
-      "$INIR_WARP_FALLBACK_VERSION" "$INIR_WARP_FALLBACK_FILENAME" "$INIR_WARP_FALLBACK_SHA256"
+      "$LUNANA_WARP_FALLBACK_VERSION" "$LUNANA_WARP_FALLBACK_FILENAME" "$LUNANA_WARP_FALLBACK_SHA256"
   fi
 }
 
@@ -276,7 +276,7 @@ extras_void_warp_owned() {
   state_file="$(extras_void_warp_state_file)"
   [[ -f "$state_file" ]] && return 0
   [[ -x /usr/local/bin/warp-cli && -f /etc/sv/warp-svc/run ]] \
-    && grep -Fq '# Managed by iNiR.' /etc/sv/warp-svc/run 2>/dev/null
+    && grep -Fq '# Managed by Lunana.' /etc/sv/warp-svc/run 2>/dev/null
 }
 
 extras_void_warp_write_state() {
@@ -341,7 +341,7 @@ extras_install_void_warp() {
     detect_distro
   fi
   if [[ "${OS_GROUP_ID:-}" != void ]]; then
-    log_warning "Cloudflare WARP extra is only provided by iNiR on Void Linux"
+    log_warning "Cloudflare WARP extra is only provided by Lunana on Void Linux"
     return 1
   fi
   if [[ "$(uname -m)" != x86_64 ]]; then
@@ -381,7 +381,7 @@ extras_install_void_warp() {
   temp_dir="$(mktemp -d)" || return 1
   archive="$temp_dir/cloudflare-warp.deb"
   payload_dir="$temp_dir/payload"
-  local url="${INIR_WARP_REPO_BASE_URL%/}/${filename#/}"
+  local url="${LUNANA_WARP_REPO_BASE_URL%/}/${filename#/}"
 
   tui_info "Installing Cloudflare WARP v${version} from Cloudflare's verified upstream package..."
   if ! curl -fsSL --retry 2 --max-time 120 -o "$archive" "$url" \
@@ -413,7 +413,7 @@ extras_install_void_warp() {
 }
 
 extras_refresh_void_warp_on_update() {
-  [[ "${INIR_SKIP_WARP_REFRESH:-false}" == true ]] && return 0
+  [[ "${LUNANA_SKIP_WARP_REFRESH:-false}" == true ]] && return 0
   if [[ -z "${OS_GROUP_ID:-}" ]] && declare -F detect_distro >/dev/null 2>&1; then
     detect_distro
   fi
@@ -422,11 +422,11 @@ extras_refresh_void_warp_on_update() {
   extras_install_void_warp
 }
 
-# Resolve the latest inir-mascot release tag from the GitHub redirect
+# Resolve the latest lunana-mascot release tag from the GitHub redirect
 # (no API quota involved). Tests and local mirrors can provide an explicit tag.
 extras_mascot_latest_tag() {
-  if [[ -n "${INIR_MASCOT_RELEASE_TAG:-}" ]]; then
-    printf '%s\n' "$INIR_MASCOT_RELEASE_TAG"
+  if [[ -n "${LUNANA_MASCOT_RELEASE_TAG:-}" ]]; then
+    printf '%s\n' "$LUNANA_MASCOT_RELEASE_TAG"
     return 0
   fi
   local final_url
@@ -437,11 +437,11 @@ extras_mascot_latest_tag() {
 }
 
 extras_mascot_release_base_url() {
-  printf '%s\n' "${INIR_MASCOT_RELEASE_BASE_URL:-https://github.com/snowarch/inir-mascot/releases/latest/download}"
+  printf '%s\n' "${LUNANA_MASCOT_RELEASE_BASE_URL:-https://github.com/snowarch/inir-mascot/releases/latest/download}"
 }
 
 extras_mascot_helper() {
-  local shell_dir="${XDG_CONFIG_HOME:-$HOME/.config}/quickshell/inir"
+  local shell_dir="${XDG_CONFIG_HOME:-$HOME/.config}/quickshell/lunana"
   printf '%s\n' "${shell_dir}/scripts/lib/mascot-pack.py"
 }
 
@@ -449,11 +449,11 @@ extras_mascot_helper() {
 # remain opt-in: update only acts when art or a prior install marker exists.
 # A matching tag is not enough; the installed count and aggregate tree hash
 # must also match the recorded state, so deleted/corrupt files self-repair.
-# Repo-link checkouts are maintained with inir-mascot/scripts/sync-shell.py.
+# Repo-link checkouts are maintained with lunana-mascot/scripts/sync-shell.py.
 extras_refresh_mascot_pack_on_update() {
-  local shell_dir="${XDG_CONFIG_HOME:-$HOME/.config}/quickshell/inir"
+  local shell_dir="${XDG_CONFIG_HOME:-$HOME/.config}/quickshell/lunana"
   local dest="${shell_dir}/assets/images/mascot"
-  local state_dir="${XDG_STATE_HOME:-$HOME/.local/state}/inir"
+  local state_dir="${XDG_STATE_HOME:-$HOME/.local/state}/lunana"
   local state_file="${state_dir}/mascot-pack-state.json"
   local legacy_marker="${state_dir}/mascot-pack-version"
   local helper
@@ -463,7 +463,7 @@ extras_refresh_mascot_pack_on_update() {
   [[ -x "$helper" || -f "$helper" ]] || return 0
 
   local count
-  count=$(find "$dest" -maxdepth 1 -type f \( -name 'inir-mascot-*.png' -o -name 'inir-mascot-*.gif' \) 2>/dev/null | wc -l)
+  count=$(find "$dest" -maxdepth 1 -type f \( -name 'lunana-mascot-*.png' -o -name 'lunana-mascot-*.gif' \) 2>/dev/null | wc -l)
   if (( count <= 10 )) && [[ ! -f "$state_file" && ! -f "$legacy_marker" ]]; then
     return 0
   fi
@@ -498,26 +498,26 @@ PY
 }
 
 # Optional mascot art pack: canonical art comes from snowarch/inir-mascot;
-# manifest/dialogue/behavior stay in iNiR. Download and validation happen in a
+# manifest/dialogue/behavior stay in Lunana. Download and validation happen in a
 # temporary staging directory. Only a complete verified tree is synchronized
 # into the live runtime, preserving manifest.json and other shell-owned files.
 extras_install_mascot_pack() {
   local requested_tag="${1:-}"
-  local shell_dir="${XDG_CONFIG_HOME:-$HOME/.config}/quickshell/inir"
+  local shell_dir="${XDG_CONFIG_HOME:-$HOME/.config}/quickshell/lunana"
   local dest="${shell_dir}/assets/images/mascot"
   local helper
   helper="$(extras_mascot_helper)"
   local base_url
   base_url="$(extras_mascot_release_base_url)"
-  local pack_url="${base_url}/inir-mascot-pack.tar.gz"
-  local metadata_url="${base_url}/inir-mascot-pack.json"
-  local checksum_url="${base_url}/inir-mascot-pack.sha256"
+  local pack_url="${base_url}/lunana-mascot-pack.tar.gz"
+  local metadata_url="${base_url}/lunana-mascot-pack.json"
+  local checksum_url="${base_url}/lunana-mascot-pack.sha256"
 
   tui_info "Optional mascot art pack: downloading the latest published Kira release."
   tui_dim "Downloads and verifies the complete pack before updating the live assets."
 
   if [[ ! -d "$shell_dir" ]]; then
-    log_warning "iNiR shell dir not found at ${shell_dir}, skipping mascot pack"
+    log_warning "Lunana shell dir not found at ${shell_dir}, skipping mascot pack"
     return 0
   fi
   if [[ ! -f "$helper" ]]; then
@@ -528,9 +528,9 @@ extras_install_mascot_pack() {
 
   local tmp
   tmp="$(mktemp -d)"
-  local archive="${tmp}/inir-mascot-pack.tar.gz"
-  local metadata="${tmp}/inir-mascot-pack.json"
-  local checksum="${tmp}/inir-mascot-pack.sha256"
+  local archive="${tmp}/lunana-mascot-pack.tar.gz"
+  local metadata="${tmp}/lunana-mascot-pack.json"
+  local checksum="${tmp}/lunana-mascot-pack.sha256"
   local stage="${tmp}/stage"
   local verified_json=""
 
@@ -562,7 +562,7 @@ extras_install_mascot_pack() {
   fi
 
   if ! rsync -a --delay-updates --delete-delay \
-      --include='inir-mascot-*.png' --include='inir-mascot-*.gif' --exclude='*' \
+      --include='lunana-mascot-*.png' --include='lunana-mascot-*.gif' --exclude='*' \
       "${stage}/" "${dest}/"; then
     log_warning "Failed to install the verified mascot pack, keeping the previous state marker"
     rm -rf "$tmp"
@@ -591,7 +591,7 @@ PY
   [[ -n "$tag" ]] || tag="$(extras_mascot_latest_tag)"
   [[ -n "$tag" ]] || tag="unknown"
 
-  local state_dir="${XDG_STATE_HOME:-$HOME/.local/state}/inir"
+  local state_dir="${XDG_STATE_HOME:-$HOME/.local/state}/lunana"
   local state_file="${state_dir}/mascot-pack-state.json"
   local legacy_marker="${state_dir}/mascot-pack-version"
   local count tree_hash archive_hash

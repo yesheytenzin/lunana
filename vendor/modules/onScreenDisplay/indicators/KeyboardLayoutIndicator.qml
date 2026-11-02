@@ -23,13 +23,13 @@ Item {
         }
         radius: Appearance.editorialEverywhere ? Appearance.editorial.radius : Appearance.rounding.full
         color: Appearance.angelEverywhere ? Appearance.angel.colGlassPopup
-             : Appearance.inirEverywhere ? Appearance.inir.colLayer1
+             : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer1
              : Appearance.auroraEverywhere ? Appearance.aurora.colPopupSurface
              : Appearance.colors.colLayer0
         border.width: Appearance.angelEverywhere ? Appearance.angel.cardBorderWidth
-            : Appearance.auroraEverywhere || Appearance.inirEverywhere ? 1 : 0
+            : Appearance.auroraEverywhere || Appearance.lunanaEverywhere ? 1 : 0
         border.color: Appearance.angelEverywhere ? Appearance.angel.colCardBorder
-            : Appearance.inirEverywhere ? Appearance.inir.colBorder
+            : Appearance.lunanaEverywhere ? Appearance.lunana.colBorder
             : Appearance.auroraEverywhere ? Appearance.aurora.colTooltipBorder : "transparent"
         implicitHeight: contentRow.implicitHeight + contentRow.anchors.topMargin + contentRow.anchors.bottomMargin
 
@@ -74,7 +74,7 @@ Item {
                 text: KeyboardIndicators.popupText
                 font.pixelSize: Appearance.font.pixelSize.normal
                 color: Appearance.angelEverywhere ? Appearance.angel.colText
-                     : Appearance.inirEverywhere ? Appearance.inir.colText
+                     : Appearance.lunanaEverywhere ? Appearance.lunana.colText
                      : Appearance.colors.colOnLayer0
                 elide: Text.ElideRight
                 maximumLineCount: 1

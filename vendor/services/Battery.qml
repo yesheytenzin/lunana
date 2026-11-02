@@ -16,7 +16,7 @@ Singleton {
         if (Quickshell.env("QS_DEBUG") === "1") console.log(...args);
     }
 
-    // `inir battery simulate "14 charging"` stands in for UPower until `off` or a restart, so every family's battery
+    // `lunana battery simulate "14 charging"` stands in for UPower until `off` or a restart, so every family's battery
     // surface can be seen on a machine without one. It never suspends the real machine.
     property real simulatedPercentage: -1 // 0..1 while simulating
     property string simulatedState: "discharging" // charging, discharging, full

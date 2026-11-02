@@ -18,25 +18,25 @@ Item {
         : Appearance.zzzEverywhere ? Appearance.zzz.accent
         : editorial ? Appearance.editorial.accent
         : Appearance.angelEverywhere ? Appearance.angel.colPrimary
-        : Appearance.inirEverywhere ? Appearance.inir.colPrimary
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colPrimary
         : Appearance.colors.colPrimary
     readonly property color textColor: Appearance.regaliaEverywhere ? Appearance.regalia.onColor
         : Appearance.zzzEverywhere ? Appearance.zzz.ink
         : editorial ? Appearance.editorial.ink
         : Appearance.angelEverywhere ? Appearance.angel.colText
-        : Appearance.inirEverywhere ? Appearance.inir.colText
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colText
         : Appearance.colors.colOnLayer1
     readonly property color subtextColor: Appearance.regaliaEverywhere ? Appearance.regalia.onMuted
         : Appearance.zzzEverywhere ? Appearance.zzz.inkMuted
         : editorial ? Appearance.editorial.muted
         : Appearance.angelEverywhere ? Appearance.angel.colTextSecondary
-        : Appearance.inirEverywhere ? Appearance.inir.colTextSecondary
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colTextSecondary
         : Appearance.colors.colSubtext
     readonly property color cardInk: Appearance.regaliaEverywhere ? Appearance.regalia.onColor
         : Appearance.zzzEverywhere ? Appearance.zzz.ink
         : editorial ? Appearance.editorial.ink
         : Appearance.angelEverywhere ? Appearance.angel.colText
-        : Appearance.inirEverywhere ? Appearance.inir.colText
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colText
         : Appearance.colors.colOnLayer2
 
     implicitWidth: 568
@@ -74,23 +74,23 @@ Item {
         if (EasyEffects.equalizerError === "lsp_plugins_missing") return Services.Translation.tr("Linux Studio Plugins are missing")
         if (EasyEffects.equalizerError === "plugin_not_found") return Services.Translation.tr("Add an Equalizer to EasyEffects output")
         if (!EasyEffects.equalizerPluginAvailable) return Services.Translation.tr("No controllable Equalizer is active")
-        if (EasyEffects.equalizerBandCount !== 10) return Services.Translation.tr("Use the iNiR 10-band layout")
+        if (EasyEffects.equalizerBandCount !== 10) return Services.Translation.tr("Use the Lunana 10-band layout")
         return Services.Translation.tr("Equalizer unavailable")
     }
 
     function statusBody(): string {
         if (!EasyEffects.available)
-            return Services.Translation.tr("Install EasyEffects to control the output equalizer from iNiR.")
+            return Services.Translation.tr("Install EasyEffects to control the output equalizer from Lunana.")
         if (!EasyEffects.active)
-            return Services.Translation.tr("Start EasyEffects. iNiR will reconnect automatically when its local server becomes available.")
+            return Services.Translation.tr("Start EasyEffects. Lunana will reconnect automatically when its local server becomes available.")
         if (!EasyEffects.equalizerServerAvailable)
             return Services.Translation.tr("EasyEffects is running, but its local control socket is unavailable. Per-band control requires EasyEffects 8.2.8 or newer and the EasyEffects local server.")
         if (!EasyEffects.equalizerSupported)
             return Services.Translation.tr("This EasyEffects build does not expose per-band equalizer control through its local server.")
         if (EasyEffects.equalizerError === "lsp_plugins_missing")
-            return Services.Translation.tr("Install the Linux Studio Plugins LV2 package for your distribution, then restart EasyEffects. iNiR will detect the Equalizer automatically.")
+            return Services.Translation.tr("Install the Linux Studio Plugins LV2 package for your distribution, then restart EasyEffects. Lunana will detect the Equalizer automatically.")
         if (EasyEffects.equalizerError === "plugin_not_found")
-            return Services.Translation.tr("EasyEffects is connected, but its output pipeline has no Equalizer. In EasyEffects, open Output → Effects, add Equalizer, and leave this panel open. iNiR will detect the new Equalizer automatically without replacing the rest of your effects chain.")
+            return Services.Translation.tr("EasyEffects is connected, but its output pipeline has no Equalizer. In EasyEffects, open Output → Effects, add Equalizer, and leave this panel open. Lunana will detect the new Equalizer automatically without replacing the rest of your effects chain.")
         if (!EasyEffects.equalizerPluginAvailable)
             return Services.Translation.tr("EasyEffects is connected, but the Equalizer backend is not controllable. Make sure Linux Studio Plugins (LV2) is available to EasyEffects, then refresh this panel.")
         if (EasyEffects.equalizerBandCount !== 10)
@@ -153,7 +153,7 @@ Item {
                     : root.editorial ? Appearance.editorial.field
                     : Appearance.angelEverywhere ? Appearance.angel.colGlassElevated
                     : Appearance.auroraEverywhere ? Appearance.aurora.colElevatedSurface
-                    : Appearance.inirEverywhere ? Appearance.inir.colPrimaryContainer
+                    : Appearance.lunanaEverywhere ? Appearance.lunana.colPrimaryContainer
                     : Appearance.colors.colPrimaryContainer
 
                 MaterialSymbol {
@@ -279,7 +279,7 @@ Item {
                                 : root.editorial ? Appearance.editorial.layer(2)
                                 : Appearance.angelEverywhere ? Appearance.angel.colGlassCard
                                 : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurface
-                                : Appearance.inirEverywhere ? Appearance.inir.colLayer2
+                                : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2
                                 : Appearance.colors.colSurfaceContainerHigh
 
                             StyledText {
@@ -404,7 +404,7 @@ Item {
                         : Appearance.zzzEverywhere ? Appearance.zzz.paperAlt
                         : Appearance.angelEverywhere ? Appearance.angel.colGlassElevated
                         : Appearance.auroraEverywhere ? Appearance.aurora.colElevatedSurface
-                        : Appearance.inirEverywhere ? Appearance.inir.colPrimaryContainer
+                        : Appearance.lunanaEverywhere ? Appearance.lunana.colPrimaryContainer
                         : Appearance.colors.colPrimaryContainer
 
                     MaterialSymbol {
@@ -450,13 +450,13 @@ Item {
                         buttonRadius: Appearance.rounding.full
                         colBackground: Appearance.regaliaEverywhere ? Appearance.regalia.primaryPlate
                             : Appearance.zzzEverywhere ? Appearance.zzz.sticker
-                            : Appearance.inirEverywhere ? Appearance.inir.colPrimaryContainer
+                            : Appearance.lunanaEverywhere ? Appearance.lunana.colPrimaryContainer
                             : Appearance.colors.colPrimaryContainer
                         colBackgroundHover: Appearance.regaliaEverywhere ? Appearance.regalia.primaryPlateHover
-                            : Appearance.inirEverywhere ? Appearance.inir.colPrimaryContainerHover
+                            : Appearance.lunanaEverywhere ? Appearance.lunana.colPrimaryContainerHover
                             : Appearance.colors.colPrimaryContainerHover
                         colRipple: Appearance.regaliaEverywhere ? Appearance.regalia.primaryPlateActive
-                            : Appearance.inirEverywhere ? Appearance.inir.colPrimaryActive
+                            : Appearance.lunanaEverywhere ? Appearance.lunana.colPrimaryActive
                             : Appearance.colors.colPrimaryContainerActive
                         onClicked: EasyEffects.openWindow()
 
@@ -470,7 +470,7 @@ Item {
                                 iconSize: 17
                                 color: Appearance.regaliaEverywhere ? Appearance.regalia.primaryPlateInk
                                     : Appearance.zzzEverywhere ? Appearance.zzz.onSticker
-                                    : Appearance.inirEverywhere ? Appearance.inir.colOnPrimaryContainer
+                                    : Appearance.lunanaEverywhere ? Appearance.lunana.colOnPrimaryContainer
                                     : Appearance.colors.colOnPrimaryContainer
                             }
                             StyledText {
@@ -481,7 +481,7 @@ Item {
                                 font.weight: Font.DemiBold
                                 color: Appearance.regaliaEverywhere ? Appearance.regalia.primaryPlateInk
                                     : Appearance.zzzEverywhere ? Appearance.zzz.onSticker
-                                    : Appearance.inirEverywhere ? Appearance.inir.colOnPrimaryContainer
+                                    : Appearance.lunanaEverywhere ? Appearance.lunana.colOnPrimaryContainer
                                     : Appearance.colors.colOnPrimaryContainer
                             }
                         }
@@ -497,7 +497,7 @@ Item {
                         buttonRadius: Appearance.rounding.full
                         colBackground: Appearance.regaliaEverywhere ? Appearance.regalia.controlPlate
                             : Appearance.zzzEverywhere ? Appearance.zzz.paperAlt
-                            : Appearance.inirEverywhere ? Appearance.inir.colLayer2
+                            : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2
                             : Appearance.colors.colSurfaceContainerHigh
                         colBackgroundHover: Appearance.colLayer2Hover
                         colRipple: Appearance.colLayer1Active

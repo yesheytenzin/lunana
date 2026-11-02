@@ -1,9 +1,9 @@
-// inir-washi solves iRiS's palette: every role of every scheme (dark, ink, light) from what the person chose and
+// lunana-washi solves Atoll's palette: every role of every scheme (dark, ink, light) from what the person chose and
 // the seeds the wallpaper and the colour theme give. The shell and the app themes both read its output, so they
 // wear one set of colours.
 //
-//	inir-washi --request '<json>' [--out file]
-//	inir-washi --default            (the palette of a fresh install, for defaults/iris-washi.json)
+//	lunana-washi --request '<json>' [--out file]
+//	lunana-washi --default            (the palette of a fresh install, for defaults/atoll-washi.json)
 package main
 
 import (
@@ -17,7 +17,7 @@ import (
 func defaultRequest() Request {
 	// Light's fresh paper is Soft (defaults/config.json tune.light), so a first start is not a blank white.
 	soft := 38.0
-	return Request{Language: "iris", Material: "black", Accent: "blue", AccentHue: 212, Highlight: "orange", HighlightHue: 32, Vibrance: 0.85,
+	return Request{Language: "atoll", Material: "black", Accent: "blue", AccentHue: 212, Highlight: "orange", HighlightHue: 32, Vibrance: 0.85,
 		Tune: map[string]Tune{"light": {Tone: -8, Warmth: &soft}}}
 }
 
@@ -31,11 +31,11 @@ func main() {
 	raw := []byte(*request)
 	if !*def {
 		if len(raw) == 0 {
-			fmt.Fprintln(os.Stderr, "inir-washi: --request or --default")
+			fmt.Fprintln(os.Stderr, "lunana-washi: --request or --default")
 			os.Exit(2)
 		}
 		if err := json.Unmarshal(raw, &req); err != nil {
-			fmt.Fprintln(os.Stderr, "inir-washi:", err)
+			fmt.Fprintln(os.Stderr, "lunana-washi:", err)
 			os.Exit(2)
 		}
 	} else {
@@ -43,7 +43,7 @@ func main() {
 	}
 	data, err := json.Marshal(Solve(req, string(raw)))
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "inir-washi:", err)
+		fmt.Fprintln(os.Stderr, "lunana-washi:", err)
 		os.Exit(1)
 	}
 	if *out != "" {
@@ -52,7 +52,7 @@ func main() {
 			err = os.Rename(tmp, *out)
 		}
 		if err != nil {
-			fmt.Fprintln(os.Stderr, "inir-washi:", err)
+			fmt.Fprintln(os.Stderr, "lunana-washi:", err)
 		}
 	}
 	os.Stdout.Write(data)

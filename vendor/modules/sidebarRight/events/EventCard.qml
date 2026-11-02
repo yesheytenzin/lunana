@@ -20,16 +20,16 @@ Item {
     
     // Style tokens
     readonly property color colPrimary: Appearance.angelEverywhere ? Appearance.angel.colPrimary
-        : Appearance.inirEverywhere ? Appearance.inir.colPrimary : Appearance.colors.colPrimary
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colPrimary : Appearance.colors.colPrimary
     readonly property color colText: Appearance.angelEverywhere ? Appearance.angel.colText
-        : Appearance.inirEverywhere ? Appearance.inir.colText : Appearance.colors.colOnLayer1
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colText : Appearance.colors.colOnLayer1
     readonly property color colSubtext: Appearance.angelEverywhere ? Appearance.angel.colTextSecondary
-        : Appearance.inirEverywhere ? Appearance.inir.colTextSecondary : Appearance.colors.colSubtext
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colTextSecondary : Appearance.colors.colSubtext
     readonly property color colError: Appearance.angelEverywhere ? Appearance.angel.colError
-        : Appearance.inirEverywhere ? (Appearance.inir?.colError ?? Appearance.colors.colError)
+        : Appearance.lunanaEverywhere ? (Appearance.lunana?.colError ?? Appearance.colors.colError)
         : Appearance.colors.colError
     readonly property color colBadge: Appearance.angelEverywhere ? Appearance.angel.colBorderSubtle
-        : Appearance.inirEverywhere ? ColorUtils.transparentize(Appearance.inir.colBorder, 0.5)
+        : Appearance.lunanaEverywhere ? ColorUtils.transparentize(Appearance.lunana.colBorder, 0.5)
         : Appearance.auroraEverywhere ? (Appearance.aurora?.colSubSurface ?? ColorUtils.transparentize(Appearance.colors.colPrimary, 0.90))
         : ColorUtils.transparentize(Appearance.colors.colPrimary, 0.90)
 
@@ -52,31 +52,31 @@ Item {
     
     StyledRectangularShadow {
         target: cardBg
-        visible: !Appearance.inirEverywhere && !Appearance.auroraEverywhere
+        visible: !Appearance.lunanaEverywhere && !Appearance.auroraEverywhere
     }
     
     Rectangle {
         id: cardBg
         anchors.fill: parent
         radius: Appearance.angelEverywhere ? Appearance.angel.roundingSmall
-            : Appearance.inirEverywhere ? Appearance.inir.roundingSmall
+            : Appearance.lunanaEverywhere ? Appearance.lunana.roundingSmall
             : Appearance.rounding.small
         color: {
             if (Appearance.editorialEverywhere) return editMA.containsMouse && !root.isExternal ? Appearance.colLayer2Hover : Appearance.editorial.layer(1)
             if (editMA.containsMouse && !root.isExternal) {
                 if (Appearance.angelEverywhere) return Appearance.angel.colGlassCardHover
-                if (Appearance.inirEverywhere) return Appearance.inir.colLayer2Hover
+                if (Appearance.lunanaEverywhere) return Appearance.lunana.colLayer2Hover
                 if (Appearance.auroraEverywhere) return Appearance.aurora?.colSubSurface ?? Appearance.colLayer2Hover
                 return Appearance.colLayer2Hover
             }
             if (Appearance.angelEverywhere) return Appearance.angel.colGlassCard
-            if (Appearance.inirEverywhere) return Appearance.inir.colLayer2
+            if (Appearance.lunanaEverywhere) return Appearance.lunana.colLayer2
             if (Appearance.auroraEverywhere) return Appearance.aurora?.colSubSurface ?? Appearance.colors.colLayer2
             return Appearance.m3colors?.m3surfaceContainerHigh ?? Appearance.colors.colLayer2
         }
         border.width: Appearance.editorialEverywhere ? 0 : 1
         border.color: Appearance.angelEverywhere ? Appearance.angel.colBorder
-            : Appearance.inirEverywhere ? Appearance.inir.colBorder
+            : Appearance.lunanaEverywhere ? Appearance.lunana.colBorder
             : Appearance.auroraEverywhere ? ColorUtils.transparentize(Appearance.colors.colOutlineVariant, 0.78)
             : ColorUtils.transparentize(Appearance.colors.colOutlineVariant, 0.72)
         Behavior on color {
@@ -228,7 +228,7 @@ Item {
                 visible: !root.isExternal
                 colBackground: "transparent"
                 colBackgroundHover: Appearance.angelEverywhere ? Appearance.angel.colGlassCardHover
-                    : Appearance.inirEverywhere ? Appearance.inir.colLayer2Hover
+                    : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2Hover
                     : Appearance.colLayer1Hover
                 onClicked: root.removeClicked()
                 

@@ -11,7 +11,7 @@ import "../../../common/widgets"
 import "../../../common/widgets/widgetCanvas"
 import ".."
 import "../instrument"
-import "../../../iris/widgets"
+import "../../../atoll/widgets"
 
 AbstractBackgroundWidget {
     id: root
@@ -28,14 +28,14 @@ AbstractBackgroundWidget {
         x: 120, y: 180
     })
 
-    implicitWidth: root.irisFaced ? root.irisFaceWidth : Math.round(Number(root._readConfigKey("contentWidth") ?? 300)
+    implicitWidth: root.atollFaced ? root.atollFaceWidth : Math.round(Number(root._readConfigKey("contentWidth") ?? 300)
         * root.scaleFactor)
-    implicitHeight: root.irisFaced ? root.irisFaceHeight : Math.round(Number(root._readConfigKey("contentHeight") ?? 276)
+    implicitHeight: root.atollFaced ? root.atollFaceHeight : Math.round(Number(root._readConfigKey("contentHeight") ?? 276)
         * root.scaleFactor)
-    irisFace: Component { IrisTodoFace { widget: root } }
-    irisSizes: ["small", "medium", "large"]
-    irisDefaultSize: "medium"
-    irisOptions: [
+    atollFace: Component { AtollTodoFace { widget: root } }
+    atollSizes: ["small", "medium", "large"]
+    atollDefaultSize: "medium"
+    atollOptions: [
         { key: "showCompleted", raw: true, label: Translation.tr("Show completed"), icon: "task_alt", fallback: true }
     ]
 
@@ -185,7 +185,7 @@ AbstractBackgroundWidget {
     }
 
     WidgetSurface {
-        irisPresentation: root.widgetIris
+        atollPresentation: root.widgetAtoll
         anchors.fill: parent
         regionBrightness: root.regionBrightness
         surfaceRadius: root.cornerRadiusOverride >= 0
@@ -202,13 +202,13 @@ AbstractBackgroundWidget {
         screenY: root.y
         screenWidth: root.scaledScreenWidth
         screenHeight: root.scaledScreenHeight
-        shown: !root.irisFaced && !root.instrument
+        shown: !root.atollFaced && !root.instrument
             && (root.backgroundOpacity > 0 || root.borderWidth > 0 || root.effectiveBlur)
     }
 
     Item {
         id: stage
-        visible: !root.irisFaced
+        visible: !root.atollFaced
         anchors.fill: parent
         anchors.margins: root.inset
 
@@ -271,7 +271,7 @@ AbstractBackgroundWidget {
                         font.pixelSize: Math.round(Appearance.font.pixelSize.smaller * root.scaleFactor)
                         font.letterSpacing: root.instrument
                             ? Math.round(1.2 * root.scaleFactor) : 0
-                        font.capitalization: root.instrument && !root.widgetIris ? Font.AllUppercase : Font.MixedCase
+                        font.capitalization: root.instrument && !root.widgetAtoll ? Font.AllUppercase : Font.MixedCase
                     }
                 }
 

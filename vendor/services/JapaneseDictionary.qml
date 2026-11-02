@@ -170,7 +170,7 @@ Singleton {
         }
         onExited: (code) => {
             root.refresh()
-            Quickshell.execDetached(["notify-send", code === 0 ? "Japanese dictionary" : "Japanese dictionary error", root.status, "-a", "iNiR"])
+            Quickshell.execDetached(["notify-send", code === 0 ? "Japanese dictionary" : "Japanese dictionary error", root.status, "-a", "Lunana"])
             if (code === 0 && root._lastLookupText.length > 0) {
                 const g = root._pendingGeometry
                 lookupRetryTimer.restart()
@@ -202,7 +202,7 @@ Singleton {
         }
         onExited: (code) => {
             root.refresh()
-            Quickshell.execDetached(["notify-send", code === 0 ? "Japanese dictionary" : "Japanese dictionary error", root.status, "-a", "iNiR"])
+            Quickshell.execDetached(["notify-send", code === 0 ? "Japanese dictionary" : "Japanese dictionary error", root.status, "-a", "Lunana"])
         }
     }
 
@@ -335,7 +335,7 @@ Singleton {
         }
         onExited: (code) => {
             if (code === 0)
-                Quickshell.execDetached(["notify-send", "Anki", root.status, "-a", "iNiR"])
+                Quickshell.execDetached(["notify-send", "Anki", root.status, "-a", "Lunana"])
             else
                 root.checkAnki()
         }

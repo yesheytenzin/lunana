@@ -9,12 +9,12 @@ import ".."
 import "../modules/common"
 
 /**
- * DesktopWidgetStacks - iRiS widget stacks: several widgets sharing one place, one page shown at a time.
+ * DesktopWidgetStacks - Atoll widget stacks: several widgets sharing one place, one page shown at a time.
  *
  * A stack is a list of widget keys in `background.widgets.stacks`. The widgets stay what they are; the
  * stack owns what must be one for all of them (place, size class, material, corners, lock), kept in
  * `outputOverrides` under the pseudo widget "stack:<id>" so every output has its own. DesktopWidgetLayout
- * asks `owner()` for whose record a value lives in. Nothing of this applies outside the iRiS design
+ * asks `owner()` for whose record a value lives in. Nothing of this applies outside the Atoll design
  * (`live`): elsewhere every widget stands where it was, and the lock screen never stacks.
  *
  * Which page is shown is runtime state (`pages`), never persisted. Rotation is one Timer per stack, held
@@ -25,15 +25,15 @@ Singleton {
 
     readonly property var sharedKeys: ({
         "x": true, "y": true, "placementStrategy": true, "widgetScale": true, "locked": true,
-        "iris.size": true, "iris.material": true, "iris.opacity": true, "cornerRadius": true
+        "atoll.size": true, "atoll.material": true, "atoll.opacity": true, "cornerRadius": true
     })
     readonly property var sizeOrder: ["small", "medium", "large"]
     readonly property var intervals: [10, 20, 30, 60, 300]
     readonly property int defaultInterval: 20
     readonly property string prefix: "stack:"
 
-    readonly property bool live: (Config.options?.panelFamily ?? "ii") === "iris"
-        && !["material", "instrument", "readout"].includes(String(Config.options?.iris?.widgets?.design ?? "iris"))
+    readonly property bool live: (Config.options?.panelFamily ?? "drift") === "atoll"
+        && !["material", "instrument", "readout"].includes(String(Config.options?.atoll?.widgets?.design ?? "atoll"))
 
     readonly property var stacks: {
         const raw = Config.options?.background?.widgets?.stacks ?? []
@@ -194,9 +194,9 @@ Singleton {
         }
         const key = root.prefix + id
         for (const record of (Config.options?.background?.widgets?.outputOverrides ?? [])) {
-            const size = record?.widgets?.[key]?.["iris.size"]
+            const size = record?.widgets?.[key]?.["atoll.size"]
             if (size !== undefined && fit(size) !== size)
-                DesktopWidgetLayout.setValue(String(record.output), key, "iris.size", fit(size))
+                DesktopWidgetLayout.setValue(String(record.output), key, "atoll.size", fit(size))
         }
         if (stack.size.length > 0 && fit(stack.size) !== stack.size)
             root._patch(id, { size: fit(stack.size) })
@@ -337,8 +337,8 @@ Singleton {
         const facts = root.reported[anchor]
         for (const output of root._outputs()) {
             const values = root._effective(output, anchor)
-            if (values["iris.size"] === undefined && facts?.size)
-                values["iris.size"] = facts.size
+            if (values["atoll.size"] === undefined && facts?.size)
+                values["atoll.size"] = facts.size
             DesktopWidgetLayout.setValues(output, root.prefix + id, values)
         }
         const list = root.stacks.slice()
@@ -351,17 +351,17 @@ Singleton {
         return id
     }
 
-    // A stack shows its pages in the iRiS design; a widget that chose another look for itself gives it up.
+    // A stack shows its pages in the Atoll design; a widget that chose another look for itself gives it up.
     function _ownDesign(key: string): void {
         const updates = ({})
-        if (Config.getNestedValue("background.widgets." + key + ".iris.design", "auto") !== "auto")
-            updates["background.widgets." + key + ".iris.design"] = "auto"
+        if (Config.getNestedValue("background.widgets." + key + ".atoll.design", "auto") !== "auto")
+            updates["background.widgets." + key + ".atoll.design"] = "auto"
         if (Object.keys(updates).length > 0)
             Config.setNestedValues(updates)
         for (const record of (Config.options?.background?.widgets?.outputOverrides ?? [])) {
-            const own = record?.widgets?.[key]?.["iris.design"]
+            const own = record?.widgets?.[key]?.["atoll.design"]
             if (own !== undefined && own !== "auto")
-                DesktopWidgetLayout.setValue(String(record.output), key, "iris.design", "auto")
+                DesktopWidgetLayout.setValue(String(record.output), key, "atoll.design", "auto")
         }
     }
 
@@ -530,7 +530,7 @@ Singleton {
         function status(): string { return root.describe() }
         function create(widgets: string): string {
             const id = root.create(widgets.split("+").map(name => name.trim()).filter(name => name.length > 0))
-            return id.length > 0 ? id : "needs two or more iRiS widgets on the desktop that are not in a stack"
+            return id.length > 0 ? id : "needs two or more Atoll widgets on the desktop that are not in a stack"
         }
         function add(stack: string, widget: string): string {
             return root.add(stack, widget) ? "added" : "not added"

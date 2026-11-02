@@ -41,7 +41,7 @@ WindowDialog {
                 rightMargin: 4
             }
             placeholderText: Translation.tr("Network name (SSID)")
-            text: Config.options?.hotspot?.ssid ?? "iNiR Hotspot"
+            text: Config.options?.hotspot?.ssid ?? "Lunana Hotspot"
             onTextEdited: Config.setNestedValue("hotspot.ssid", text)
         }
 

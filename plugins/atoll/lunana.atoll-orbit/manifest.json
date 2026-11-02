@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "lunana.atoll-orbit",
+  "name": "Lunana Atoll Orbit",
+  "version": "0.4.0",
+  "author": "lunana",
+  "license": "GPL-3.0",
+  "description": "Lunana Atoll orbit + workspace edge-strip host (Hyprland model + MRU).",
+  "kinds": [
+    "service"
+  ],
+  "entryPoints": {
+    "service": "AtollOrbit.qml"
+  },
+  "x-lunana": {
+    "suiteId": "lunana",
+    "role": "atoll-orbit",
+    "milestone": "parity",
+    "requires": [],
+    "recommends": []
+  }
+}

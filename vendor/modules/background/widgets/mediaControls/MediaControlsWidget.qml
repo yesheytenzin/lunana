@@ -9,8 +9,8 @@ import ".."
 import "../instrument"
 import "../../../mediaControls/presets"
 import "../../../mediaControls/components"
-import "../../../iris/components"
-import "../../../iris/widgets"
+import "../../../atoll/components"
+import "../../../atoll/widgets"
 
 import QtQuick
 import QtQuick.Layouts
@@ -50,7 +50,7 @@ AbstractBackgroundWidget {
         "expandingLyrics": { w: 400, h: 128 },
         "instrument": { w: 380, h: 116 }
     })
-    readonly property bool instrument: !root.irisFaced && root._readConfigKey("style") === "instrument"
+    readonly property bool instrument: !root.atollFaced && root._readConfigKey("style") === "instrument"
     readonly property var sizedGeometry: root.instrument ? root.presetGeometry["instrument"]
         : root.presetGeometry[root.effectiveSizedPreset] ?? root.presetGeometry["full"]
 
@@ -126,7 +126,7 @@ AbstractBackgroundWidget {
         }
     }
 
-    readonly property bool nativeIrisPlayer: root.widgetIris && ["full", "compact", "minimal", "classic"].includes(root.effectiveRenderedPreset)
+    readonly property bool nativeIrisPlayer: root.widgetAtoll && ["full", "compact", "minimal", "classic"].includes(root.effectiveRenderedPreset)
 
     readonly property real widgetHeight: root.nativeIrisPlayer
         ? Math.round((root.effectiveRenderedPreset === "compact" ? 126 : 204) * scaleFactor * Appearance.fontSizeScale)
@@ -336,12 +336,12 @@ AbstractBackgroundWidget {
         ? [root.meaningfulPlayer] : []
     readonly property bool hasPlayer: root.meaningfulPlayers.length > 0
 
-    implicitWidth: root.irisFaced ? root.irisFaceWidth : root.hasPlayer ? root.widgetWidth : root.placeholderWidth
-    implicitHeight: root.irisFaced ? root.irisFaceHeight : root.hasPlayer ? root.widgetHeight : root.placeholderHeight
-    irisFace: Component { IrisNowPlayingFace { widget: root } }
-    irisSizes: ["small", "medium", "large"]
-    irisDefaultSize: "medium"
-    irisOptions: [
+    implicitWidth: root.atollFaced ? root.atollFaceWidth : root.hasPlayer ? root.widgetWidth : root.placeholderWidth
+    implicitHeight: root.atollFaced ? root.atollFaceHeight : root.hasPlayer ? root.widgetHeight : root.placeholderHeight
+    atollFace: Component { AtollNowPlayingFace { widget: root } }
+    atollSizes: ["small", "medium", "large"]
+    atollDefaultSize: "medium"
+    atollOptions: [
         { key: "lyrics", label: Translation.tr("Synced lyrics"), icon: "lyrics", fallback: true },
         { key: "rest", label: Translation.tr("Rest when paused"), icon: "bedtime", fallback: true }
     ]
@@ -359,7 +359,7 @@ AbstractBackgroundWidget {
     ]
 
     Timer {
-        running: !root.widgetIris && !root.instrument && !root.hasPlayer && root.visible && root.motionActive
+        running: !root.widgetAtoll && !root.instrument && !root.hasPlayer && root.visible && root.motionActive
             && Appearance.animationsEnabled
         interval: 9000
         repeat: true
@@ -370,7 +370,7 @@ AbstractBackgroundWidget {
     // true. Rechecking the global base would incorrectly disable Cava for a
     // widget enabled only on this monitor.
     // Frozen (covered, paused for power) the field shows its last frame: nothing reads the audio then.
-    readonly property bool visualizerActive: !root.irisFaced && !root.instrument && root.vizPosition !== "none"
+    readonly property bool visualizerActive: !root.atollFaced && !root.instrument && root.vizPosition !== "none"
         && root.visible && root.motionActive && MprisController.isPlaying
 
     CavaProcess {
@@ -398,8 +398,8 @@ AbstractBackgroundWidget {
     }
     
     Component {
-        id: irisPlayerComponent
-        IrisMediaCard {
+        id: atollPlayerComponent
+        AtollMediaCard {
             compact: ["compact", "minimal"].includes(root.effectiveRenderedPreset)
             active: root.visible && root.powerActive
             showBackground: false
@@ -459,12 +459,12 @@ AbstractBackgroundWidget {
     ColumnLayout {
         id: playerColumnLayout
         anchors.fill: parent
-        visible: !root.irisFaced
+        visible: !root.atollFaced
         spacing: -Appearance.sizes.elevationMargin
 
         Repeater {
             model: ScriptModel {
-                values: root.irisFaced ? [] : root.meaningfulPlayers
+                values: root.atollFaced ? [] : root.meaningfulPlayers
             }
             delegate: Item {
                 id: delegateRoot
@@ -497,7 +497,7 @@ AbstractBackgroundWidget {
                     z: -2
                     target: playerLoader
                     radius: root.popupRounding
-                    visible: !root.widgetIris && !root.instrument && (root.vizType !== "organic" || root.vizPosition === "none")
+                    visible: !root.widgetAtoll && !root.instrument && (root.vizType !== "organic" || root.vizPosition === "none")
                 }
 
                 Loader {
@@ -506,7 +506,7 @@ AbstractBackgroundWidget {
                     anchors.fill: parent
                     active: root.presetLoaderActive
                     sourceComponent: root.instrument ? instrumentPlayerComponent
-                        : root.nativeIrisPlayer ? irisPlayerComponent : root.presetComponent
+                        : root.nativeIrisPlayer ? atollPlayerComponent : root.presetComponent
 
                     onLoaded: {
                         item.player = delegateRoot.modelData
@@ -562,15 +562,15 @@ AbstractBackgroundWidget {
                     StyledText { Layout.fillWidth: true; text: Translation.tr("Nothing playing"); color: root.widgetInk; elide: Text.ElideRight; font.family: root.widgetTitleFamily; font.pixelSize: Math.round(15 * root.scaleFactor); font.weight: Font.DemiBold }
                 }
             }
-            IrisArtwork {
+            AtollArtwork {
                 anchors.centerIn: parent
-                visible: root.widgetIris
+                visible: root.widgetAtoll
                 width: Math.min(parent.width, parent.height) * 0.6
                 height: width
             }
             MaterialShape {
                 id: idleOrnament
-                visible: !root.widgetIris && !root.instrument
+                visible: !root.widgetAtoll && !root.instrument
                 anchors.centerIn: parent
                 implicitSize: Math.max(24, Math.min(parent.width, parent.height)
                     - Appearance.sizes.elevationMargin)

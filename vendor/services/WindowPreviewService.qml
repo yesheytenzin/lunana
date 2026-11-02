@@ -15,7 +15,7 @@ import "../modules/common/functions"
  * 
  * Strategy:
  * - Capture previews only when a consumer actually requests them
- * - Cache in ~/.cache/inir/window-previews/
+ * - Cache in ~/.cache/lunana/window-previews/
  * - Each consumer supplies its own freshness budget
  * - Mark a window dirty when it loses focus, but defer capture until requested
  * - Clean up on window close
@@ -27,7 +27,7 @@ Singleton {
         if (Quickshell.env("QS_DEBUG") === "1") console.log(...args);
     }
 
-    readonly property string previewDir: FileUtils.trimFileProtocol(Directories.genericCache) + "/inir/window-previews"
+    readonly property string previewDir: FileUtils.trimFileProtocol(Directories.genericCache) + "/lunana/window-previews"
     readonly property string sessionMarkerPath: previewDir + "/.niri-session"
     readonly property string sessionKey: NiriService.socketPath ?? ""
     

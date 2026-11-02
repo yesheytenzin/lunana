@@ -29,7 +29,7 @@ Singleton {
     // prematurely cleared by unrelated file-watch events.
     property bool _forceApply: false
 
-    readonly property bool defaultApplyExternal: (Quickshell.env("INIR_STANDALONE_WINDOW") ?? "") !== "1"
+    readonly property bool defaultApplyExternal: (Quickshell.env("LUNANA_STANDALONE_WINDOW") ?? "") !== "1"
 
     // Check if auto theme is selected (reads directly from Config to avoid circular dependency with ThemeService)
     readonly property bool isAutoTheme: (Config.options?.appearance?.theme ?? "auto") === "auto"
@@ -50,10 +50,10 @@ Singleton {
         // (the seed of the new mode starts one) and undo it. The Settings switch shows it off; the person turns it back on.
         if (Config.options?.appearance?.wallpaperTheming?.autoDarkLightMode ?? false)
             Config.setNestedValue("appearance.wallpaperTheming.autoDarkLightMode", false)
-        // A scheme iRiS was told to keep is the mode: leaving it behind would put the shell and the apps in different ones on the next regeneration.
-        const scheme = String(Config.options?.iris?.appearance?.scheme ?? "auto")
-        if ((Config.options?.panelFamily ?? "ii") === "iris" && scheme !== "auto")
-            Config.setNestedValue("iris.appearance.scheme", dark ? "dark" : scheme === "ink" ? "ink" : "light")
+        // A scheme Atoll was told to keep is the mode: leaving it behind would put the shell and the apps in different ones on the next regeneration.
+        const scheme = String(Config.options?.atoll?.appearance?.scheme ?? "auto")
+        if ((Config.options?.panelFamily ?? "drift") === "atoll" && scheme !== "auto")
+            Config.setNestedValue("atoll.appearance.scheme", dark ? "dark" : scheme === "ink" ? "ink" : "light")
         darkModeProc.command = [
             "/usr/bin/bash",
             Directories.wallpaperSwitchScriptPath,
@@ -300,9 +300,9 @@ Singleton {
     // containers with their own plates and every other style resolves back to
     // the Material roles.
     function _styleAppPaletteOverlay(): var {
-        // iRiS hands its own surface to the generator (IrisAppsSync): the Material style's layers
-        // are another family's, and overwrote the apps' ramp with them (#242122 over iRiS's #221f20).
-        if ((Config.options?.panelFamily ?? "ii") === "iris") return null
+        // Atoll hands its own surface to the generator (AtollAppsSync): the Material style's layers
+        // are another family's, and overwrote the apps' ramp with them (#242122 over Atoll's #221f20).
+        if ((Config.options?.panelFamily ?? "drift") === "atoll") return null
         const c = Appearance.colors
         if (!c) return null
 
@@ -416,14 +416,14 @@ Singleton {
     readonly property bool loginScreenInstalled: loginThemeView.loaded
     FileView {
         id: loginThemeView
-        path: "/usr/share/sddm/themes/ii-pixel/theme.conf"
+        path: "/usr/share/sddm/themes/drift-pixel/theme.conf"
         printErrors: false
     }
     readonly property string _loginScreenKey: {
         const o = Config.options
         if (!o) return ""
-        const lock = o.iris?.lock
-        const look = o.iris?.appearance
+        const lock = o.atoll?.lock
+        const look = o.atoll?.appearance
         return JSON.stringify([o.lock?.loginScreen, o.lock?.loginStyle, o.panelFamily, o.lock?.materialShapeChars, lock?.scene, lock?.type,
             lock?.blocks?.session, look?.fontFamily, look?.numbersFontFamily, look?.titleFontFamily,
             look?.followTheme, look?.theme?.surface])
@@ -445,11 +445,11 @@ Singleton {
     IpcHandler {
         target: "loginScreen"
         function set(look: string): string {
-            if (["auto", "classic", "iris"].indexOf(look) < 0) return "unknown look: " + look + " (auto, classic or iris)"
+            if (["auto", "classic", "atoll"].indexOf(look) < 0) return "unknown look: " + look + " (auto, classic or atoll)"
             Config.setNestedValue("lock.loginScreen", look)
             return look
         }
-        // The iRiS login's composition: cover (the picture as a cover), frame (hung in a mat), lens (the time as a lens).
+        // The Atoll login's composition: cover (the picture as a cover), frame (hung in a mat), lens (the time as a lens).
         function style(name: string): string {
             if (["cover", "frame", "lens"].indexOf(name) < 0) return "unknown style: " + name + " (cover, frame or lens)"
             Config.setNestedValue("lock.loginStyle", name)
@@ -458,8 +458,8 @@ Singleton {
         function status(): string {
             if (!root.loginScreenInstalled) return "not installed"
             const look = String(Config.options?.lock?.loginScreen ?? "auto")
-            const iris = look === "iris" || (look === "auto" && (Config.options?.panelFamily ?? "ii") === "iris")
-            const shown = iris ? "iris, " + String(Config.options?.lock?.loginStyle ?? "lens") : "classic"
+            const atoll = look === "atoll" || (look === "auto" && (Config.options?.panelFamily ?? "drift") === "atoll")
+            const shown = atoll ? "atoll, " + String(Config.options?.lock?.loginStyle ?? "lens") : "classic"
             return look === "auto" ? "auto (" + shown + ")" : shown
         }
         function sync(): void { loginScreenSync.restart() }
@@ -478,8 +478,8 @@ Singleton {
         }
     }
 
-    // iRiS hands the generator a surface of its own (ThemeService.appsSurfaceSeed). A new wallpaper is generated at
-    // once with the surface of the old one, and again once iRiS has read the new wallpaper: applying both restyled
+    // Atoll hands the generator a surface of its own (ThemeService.appsSurfaceSeed). A new wallpaper is generated at
+    // once with the surface of the old one, and again once Atoll has read the new wallpaper: applying both restyled
     // every app twice, first with the wrong body. Apps wait for the generation that carries the wanted surface, or
     // 10 s if none comes.
     readonly property string _generatedSurfaceSeed: {

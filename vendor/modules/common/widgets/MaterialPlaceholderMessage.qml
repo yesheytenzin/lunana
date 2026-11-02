@@ -47,35 +47,35 @@ Item {
         id: placeholderColumn
         anchors.centerIn: parent
         width: Math.max(0, Math.min(root.maximumWidth, parent ? parent.width - 24 : root.maximumWidth))
-        spacing: Appearance.editorialEverywhere ? Math.round((root.compact ? 8 : 12) * Appearance.editorial.spacing) : root.compact ? 6 : (Appearance.inirEverywhere ? 8 : 10)
+        spacing: Appearance.editorialEverywhere ? Math.round((root.compact ? 8 : 12) * Appearance.editorial.spacing) : root.compact ? 6 : (Appearance.lunanaEverywhere ? 8 : 10)
 
         Item {
             visible: root.icon !== ""
             Layout.alignment: Qt.AlignHCenter
-            implicitWidth: Appearance.inirEverywhere ? (root.compact ? 48 : 72) : materialShape.implicitWidth
-            implicitHeight: Appearance.inirEverywhere ? (root.compact ? 48 : 72) : materialShape.implicitHeight
+            implicitWidth: Appearance.lunanaEverywhere ? (root.compact ? 48 : 72) : materialShape.implicitWidth
+            implicitHeight: Appearance.lunanaEverywhere ? (root.compact ? 48 : 72) : materialShape.implicitHeight
 
             Rectangle {
                 anchors.fill: parent
-                visible: Appearance.inirEverywhere || (Appearance.editorialEverywhere && !Appearance.editorial.ornaments)
-                radius: Appearance.editorialEverywhere ? Appearance.editorial.radius : Appearance.inir.roundingNormal
-                color: Appearance.editorialEverywhere ? Appearance.editorial.secondaryField : Appearance.inir.colLayer2
+                visible: Appearance.lunanaEverywhere || (Appearance.editorialEverywhere && !Appearance.editorial.ornaments)
+                radius: Appearance.editorialEverywhere ? Appearance.editorial.radius : Appearance.lunana.roundingNormal
+                color: Appearance.editorialEverywhere ? Appearance.editorial.secondaryField : Appearance.lunana.colLayer2
                 border.width: Appearance.editorialEverywhere ? 0 : 1
-                border.color: Appearance.inir.colBorder
+                border.color: Appearance.lunana.colBorder
             }
 
             MaterialSymbol {
                 anchors.centerIn: parent
-                visible: Appearance.inirEverywhere || (Appearance.editorialEverywhere && !Appearance.editorial.ornaments)
+                visible: Appearance.lunanaEverywhere || (Appearance.editorialEverywhere && !Appearance.editorial.ornaments)
                 text: root.icon
                 iconSize: root.compact ? 24 : 32
-                color: Appearance.editorialEverywhere ? Appearance.editorial.secondaryFieldInk : Appearance.inir.colTextSecondary
+                color: Appearance.editorialEverywhere ? Appearance.editorial.secondaryFieldInk : Appearance.lunana.colTextSecondary
             }
 
             MaterialShapeWrappedMaterialSymbol {
                 id: materialShape
                 anchors.centerIn: parent
-                visible: !Appearance.inirEverywhere && (!Appearance.editorialEverywhere || Appearance.editorial.ornaments)
+                visible: !Appearance.lunanaEverywhere && (!Appearance.editorialEverywhere || Appearance.editorial.ornaments)
                 text: root.icon
                 shape: root.shape
                 padding: root.compact ? 8 : 12
@@ -94,7 +94,7 @@ Item {
             font.family: Appearance.editorialEverywhere ? Appearance.font.family.title : Appearance.font.family.main
             font.weight: Appearance.editorialEverywhere ? Appearance.editorial.titleWeight : Font.DemiBold
             font.letterSpacing: Appearance.editorialEverywhere ? Appearance.editorial.titleTracking : 0
-            color: Appearance.inirEverywhere ? Appearance.inir.colText : Appearance.colors.colOnSurface
+            color: Appearance.lunanaEverywhere ? Appearance.lunana.colText : Appearance.colors.colOnSurface
         }
 
         StyledText {
@@ -105,7 +105,7 @@ Item {
             horizontalAlignment: root.textHorizontalAlignment
             wrapMode: Text.Wrap
             font.pixelSize: Appearance.font.pixelSize.small
-            color: Appearance.inirEverywhere ? Appearance.inir.colTextSecondary : Appearance.colors.colSubtext
+            color: Appearance.lunanaEverywhere ? Appearance.lunana.colTextSecondary : Appearance.colors.colSubtext
         }
 
         RippleButtonWithIcon {

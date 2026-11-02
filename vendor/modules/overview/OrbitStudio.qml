@@ -1237,7 +1237,7 @@ FocusScope {
 
             SectionIntro {
                 titleText: Translation.tr("Atmosphere")
-                descriptionText: Translation.tr("Shape the material behind Orbit. These controls affect the live iNiR glass, scrim and workspace wallpaper only.")
+                descriptionText: Translation.tr("Shape the material behind Orbit. These controls affect the live Lunana glass, scrim and workspace wallpaper only.")
             }
 
             ChoiceControl {
@@ -1253,7 +1253,7 @@ FocusScope {
                     onClicked: root.previewRequested("backdropBlurMode", "off")
                 }
                 DeckChip {
-                    text: Translation.tr("iNiR glass")
+                    text: Translation.tr("Lunana glass")
                     chipIcon: "blur_on"
                     selected: {
                         const mode = String(root.effectiveOptions?.backdropBlurMode ?? "")

@@ -143,16 +143,16 @@ LazyLoader {
             implicitHeight: root.contentItem.implicitHeight + margin * 2
             color: Appearance.regaliaEverywhere ? Appearance.regalia.bg2
                 : Appearance.angelEverywhere ? Appearance.angel.colGlassPopup
-                : Appearance.inirEverywhere ? Appearance.inir.colLayer2
+                : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2
                 : Appearance.colors.colSurfaceContainer
             radius: Appearance.regaliaEverywhere ? Appearance.regalia.roundNormal
                 : Appearance.angelEverywhere ? Appearance.angel.roundingNormal
-                : Appearance.inirEverywhere ? Appearance.inir.roundingNormal : Appearance.rounding.small
+                : Appearance.lunanaEverywhere ? Appearance.lunana.roundingNormal : Appearance.rounding.small
             children: [root.contentItem]
 
             border.width: Appearance.regaliaEverywhere ? 0 : 1
             border.color: Appearance.angelEverywhere ? Appearance.angel.colBorder
-                : Appearance.inirEverywhere ? Appearance.inir.colBorder 
+                : Appearance.lunanaEverywhere ? Appearance.lunana.colBorder 
                 : Appearance.colors.colLayer0Border
         }
 

@@ -31,7 +31,7 @@ Singleton {
     // MRU window order, compositor-agnostic. Niri publishes `mruWindowIds`;
     // Hyprland has no MRU feed, so maintain one here from focus events.
     // Entries are opaque window keys: Niri int ids, Hyprland hex addresses.
-    // Consumed by iRiS orbit, altSwitcher, dock, GamePerformance.
+    // Consumed by Atoll orbit, altSwitcher, dock, GamePerformance.
     property var mruWindowKeys: []
 
     function _mruTouch(key): void {

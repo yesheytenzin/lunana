@@ -16,7 +16,7 @@ take_back() {
   [[ -f "$WRITTEN_FILE" ]] || return 0
   local name
   while IFS= read -r name; do
-    [[ "$name" =~ ^inir[a-z-]*\.json$ ]] && rm -f "$THEMES_DIR/$name"
+    [[ "$name" =~ ^lunana[a-z-]*\.json$ ]] && rm -f "$THEMES_DIR/$name"
   done < "$WRITTEN_FILE"
   rm -f "$WRITTEN_FILE"
   log_module "themes taken back"
@@ -35,6 +35,6 @@ fi
 
 python="$(venv_python)"
 result="$("$python" "$GENERATOR" --terminal "$TERMINAL_FILE" --palette "$PALETTE_FILE" --mode "$(theme_mode)" --out-dir "$THEMES_DIR")"
-printf '%s\n' inir.json inir-soft.json inir-monokai.json inir-monokai-soft.json > "$WRITTEN_FILE"
+printf '%s\n' lunana.json lunana-soft.json lunana-monokai.json lunana-monokai-soft.json > "$WRITTEN_FILE"
 [[ "$result" == changed:* ]] && log_module "$result"
 exit 0

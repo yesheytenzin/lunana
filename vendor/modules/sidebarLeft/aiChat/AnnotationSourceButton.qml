@@ -16,15 +16,15 @@ RippleButton {
     leftPadding: (implicitHeight - faviconSize) / 2
     rightPadding: 10
     buttonRadius: Appearance.editorialEverywhere ? Appearance.rounding.small : Appearance.angelEverywhere ? Appearance.angel.roundingSmall
-        : Appearance.inirEverywhere ? Appearance.inir.roundingSmall : Appearance.rounding.full
+        : Appearance.lunanaEverywhere ? Appearance.lunana.roundingSmall : Appearance.rounding.full
     colBackground: Appearance.editorialEverywhere ? Appearance.editorial.tertiaryField : Appearance.angelEverywhere ? Appearance.angel.colGlassCard
-        : Appearance.inirEverywhere ? Appearance.inir.colLayer2 
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2 
         : Appearance.auroraEverywhere ? "transparent" : Appearance.colors.colSurfaceContainerHighest
     colBackgroundHover: Appearance.angelEverywhere ? Appearance.angel.colGlassCardHover
-        : Appearance.inirEverywhere ? Appearance.inir.colLayer2Hover 
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2Hover 
         : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurfaceHover : Appearance.colors.colSurfaceContainerHighestHover
     colRipple: Appearance.angelEverywhere ? Appearance.angel.colGlassCardActive
-        : Appearance.inirEverywhere ? Appearance.inir.colLayer2Active 
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2Active 
         : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurfaceActive : Appearance.colors.colSurfaceContainerHighestActive
 
     PointingHandInteraction {}
@@ -52,7 +52,7 @@ RippleButton {
                 id: text
                 horizontalAlignment: Text.AlignHCenter
                 text: displayText
-                color: Appearance.editorialEverywhere ? Appearance.editorial.tertiaryFieldInk : Appearance.inirEverywhere ? Appearance.inir.colText : Appearance.colors.colOnSurface
+                color: Appearance.editorialEverywhere ? Appearance.editorial.tertiaryFieldInk : Appearance.lunanaEverywhere ? Appearance.lunana.colText : Appearance.colors.colOnSurface
             }
         }
     }

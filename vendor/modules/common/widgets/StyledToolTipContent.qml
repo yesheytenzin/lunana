@@ -28,17 +28,17 @@ Item {
          : (root.implicitHeight - implicitHeight) / 2
         color: Appearance.regaliaEverywhere ? "transparent"
              : Appearance.angelEverywhere ? Appearance.angel.colGlassTooltip
-             : Appearance.inirEverywhere ? Appearance.inir.colLayer2
+             : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2
              : Appearance.auroraEverywhere ? Appearance.aurora.colTooltipSurface
              : Appearance.colors.colLayer3
         radius: Appearance.regaliaEverywhere ? Appearance.regalia.roundSmall
              : Appearance.angelEverywhere ? Appearance.angel.roundingSmall
-             : Appearance.inirEverywhere ? Appearance.inir.roundingNormal
+             : Appearance.lunanaEverywhere ? Appearance.lunana.roundingNormal
              : Appearance.rounding.verysmall
         border.width: Appearance.regaliaEverywhere ? 0
              : Appearance.angelEverywhere ? Appearance.angel.cardBorderWidth : 1
         border.color: Appearance.angelEverywhere ? Appearance.angel.colBorderSubtle
-                    : Appearance.inirEverywhere ? Appearance.inir.colBorder
+                    : Appearance.lunanaEverywhere ? Appearance.lunana.colBorder
                     : Appearance.auroraEverywhere ? Appearance.aurora.colTooltipBorder
                     : Appearance.colors.colLayer3Hover
         opacity: shown ? 1 : 0
@@ -90,7 +90,7 @@ Item {
             font.hintingPreference: Font.PreferNoHinting // Prevent shaky text
             color: Appearance.regaliaEverywhere ? Appearance.regalia.onColor
                 : Appearance.angelEverywhere ? Appearance.angel.colText
-                : Appearance.inirEverywhere ? Appearance.inir.colText
+                : Appearance.lunanaEverywhere ? Appearance.lunana.colText
                 : Appearance.colors.colOnLayer3
             wrapMode: Text.Wrap
         }

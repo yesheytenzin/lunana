@@ -19,15 +19,15 @@ PanelSurface {
     }
     readonly property bool compactMode: Config.options?.controlPanel?.compactMode ?? true
     
-    readonly property bool inirEverywhere: Appearance.inirEverywhere
+    readonly property bool lunanaEverywhere: Appearance.lunanaEverywhere
     readonly property bool auroraEverywhere: Appearance.auroraEverywhere
-    readonly property bool hideLocation: Config.options?.waffles?.widgetsPanel?.weatherHideLocation ?? false
+    readonly property bool hideLocation: Config.options?.slate?.widgetsPanel?.weatherHideLocation ?? false
     readonly property string weatherDescription: Weather.describeWeather(Weather.data?.wCode ?? "113")
     readonly property string locationText: Weather.visibleCity
     readonly property string secondaryText: locationText || root.weatherDescription
 
     elevation: 1
-    radiusOverride: islandSkin ? -1 : (inirEverywhere ? Appearance.inir.roundingNormal : Appearance.rounding.normal)
+    radiusOverride: islandSkin ? -1 : (lunanaEverywhere ? Appearance.lunana.roundingNormal : Appearance.rounding.normal)
 
     AngelPartialBorder { targetRadius: root.radiusOverride; coverage: 0.45; visible: Appearance.angelEverywhere && !root.islandSkin }
 
@@ -45,7 +45,7 @@ PanelSurface {
                 text: Icons.getWeatherIcon(Weather.data?.wCode, Weather.isNightNow()) ?? "cloud"
                 iconSize: root.compactMode ? 26 : 32
                 color: Appearance.angelEverywhere ? Appearance.angel.colPrimary
-                     : root.inirEverywhere ? Appearance.inir.colPrimary
+                     : root.lunanaEverywhere ? Appearance.lunana.colPrimary
                      : root.auroraEverywhere ? Appearance.colors.colPrimary
                      : Appearance.colors.colPrimary
                 Layout.alignment: Qt.AlignVCenter
@@ -59,7 +59,7 @@ PanelSurface {
                 font.weight: Appearance.editorialEverywhere ? Font.DemiBold : Font.Medium
                 font.family: Appearance.font.family.numbers
                 color: Appearance.angelEverywhere ? Appearance.angel.colText
-                     : root.inirEverywhere ? Appearance.inir.colText
+                     : root.lunanaEverywhere ? Appearance.lunana.colText
                      : root.auroraEverywhere ? Appearance.colors.colOnSurface
                      : Appearance.colors.colOnLayer1
                 Layout.alignment: Qt.AlignVCenter
@@ -74,19 +74,19 @@ PanelSurface {
                 implicitHeight: root.compactMode ? 24 : 28
                 buttonRadius: Appearance.editorialEverywhere ? Appearance.rounding.small
                     : Appearance.angelEverywhere ? Appearance.angel.roundingSmall
-                    : root.inirEverywhere ? Appearance.inir.roundingSmall : Appearance.rounding.full
+                    : root.lunanaEverywhere ? Appearance.lunana.roundingSmall : Appearance.rounding.full
                 colBackground: "transparent"
                 colBackgroundHover: Appearance.angelEverywhere ? Appearance.angel.colGlassCardHover
-                    : root.inirEverywhere ? Appearance.inir.colLayer2Hover
+                    : root.lunanaEverywhere ? Appearance.lunana.colLayer2Hover
                     : root.auroraEverywhere ? Appearance.aurora.colSubSurfaceHover
                     : Appearance.colors.colLayer2Hover
-                onClicked: Config.setNestedValue("waffles.widgetsPanel.weatherHideLocation", !root.hideLocation)
+                onClicked: Config.setNestedValue("slate.widgetsPanel.weatherHideLocation", !root.hideLocation)
                 contentItem: MaterialSymbol {
                     anchors.centerIn: parent
                     text: root.hideLocation ? "visibility_off" : "visibility"
                     iconSize: root.compactMode ? 14 : 16
                     color: Appearance.angelEverywhere ? Appearance.angel.colTextSecondary
-                         : root.inirEverywhere ? Appearance.inir.colTextSecondary
+                         : root.lunanaEverywhere ? Appearance.lunana.colTextSecondary
                          : root.auroraEverywhere ? Appearance.colors.colOnSurfaceVariant
                          : Appearance.colors.colSubtext
                     opacity: root.hideLocation ? 1 : 0.7
@@ -99,10 +99,10 @@ PanelSurface {
                 implicitHeight: root.compactMode ? 24 : 28
                 buttonRadius: Appearance.editorialEverywhere ? Appearance.rounding.small
                     : Appearance.angelEverywhere ? Appearance.angel.roundingSmall
-                    : root.inirEverywhere ? Appearance.inir.roundingSmall : Appearance.rounding.full
+                    : root.lunanaEverywhere ? Appearance.lunana.roundingSmall : Appearance.rounding.full
                 colBackground: "transparent"
                 colBackgroundHover: Appearance.angelEverywhere ? Appearance.angel.colGlassCardHover
-                    : root.inirEverywhere ? Appearance.inir.colLayer2Hover
+                    : root.lunanaEverywhere ? Appearance.lunana.colLayer2Hover
                     : root.auroraEverywhere ? Appearance.aurora.colSubSurfaceHover
                     : Appearance.colors.colLayer2Hover
                 onClicked: Weather.forceRefresh()
@@ -111,7 +111,7 @@ PanelSurface {
                     text: "refresh"
                     iconSize: root.compactMode ? 14 : 16
                     color: Appearance.angelEverywhere ? Appearance.angel.colTextSecondary
-                         : root.inirEverywhere ? Appearance.inir.colTextSecondary
+                         : root.lunanaEverywhere ? Appearance.lunana.colTextSecondary
                          : root.auroraEverywhere ? Appearance.colors.colOnSurfaceVariant
                          : Appearance.colors.colSubtext
                 }
@@ -127,7 +127,7 @@ PanelSurface {
             font.weight: Appearance.editorialEverywhere ? Font.DemiBold : Font.Normal
             font.letterSpacing: Appearance.editorialEverywhere ? 0.6 : 0
             color: Appearance.angelEverywhere ? Appearance.angel.colTextSecondary
-                 : root.inirEverywhere ? Appearance.inir.colTextSecondary
+                 : root.lunanaEverywhere ? Appearance.lunana.colTextSecondary
                  : root.auroraEverywhere ? Appearance.colors.colOnSurfaceVariant
                  : Appearance.colors.colSubtext
             elide: Text.ElideRight

@@ -1,0 +1,11 @@
+# vendor-patches/modules/settings/IrisConfig.qml.patch
+#
+# Lunana family switching through the Omarchy shell (see the IrisOptions
+# patch for the full rationale): the "Activate Atoll" button calls
+# `omarchy-shell lunana.family set` instead of the unvendored upstream script.
+
+--- a/modules/settings/IrisConfig.qml
++++ b/modules/settings/IrisConfig.qml
+@@ -124,1 +124,1 @@
+-                            onClicked: Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")), "panelFamily", "set", "iris"])
++                            onClicked: Quickshell.execDetached(["omarchy-shell", "lunana.family", "set", "atoll"])

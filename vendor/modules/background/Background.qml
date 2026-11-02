@@ -39,10 +39,10 @@ import "widgets/newsTicker"
 import "widgets/mascot"
 import "widgets/japaneseTypography"
 import "desktopItems"
-import "../iris/components"
-import "../iris/style"
-import "../iris/frame"
-import "../iris/background"
+import "../atoll/components"
+import "../atoll/style"
+import "../atoll/frame"
+import "../atoll/background"
 import "../common/functions/parallax.js" as ParallaxMath
 import "widgets/OrganicEdgeConfig.js" as OrganicEdgeConfig
 
@@ -52,7 +52,7 @@ Scope {
     property var widgetCanvases: ({})
 
     // Bounded diagnostics for the desktop clock. They are inert unless the
-    // supervised shell is loaded with INIR_REGION_DEBUG=1.
+    // supervised shell is loaded with LUNANA_REGION_DEBUG=1.
     property bool clockDebugRegionActive: false
     property color clockDebugRegionColor: "transparent"
     property real clockDebugRegionBrightness: -1
@@ -107,14 +107,14 @@ Scope {
         function widgetMaterial(action: string): string {
             if (action === "match") return DesktopWidgetDesign.matchSurfaces()
             if (action === "status")
-                return String(Config.options?.iris?.widgets?.material ?? "glass") + " · "
+                return String(Config.options?.atoll?.widgets?.material ?? "glass") + " · "
                     + DesktopWidgetDesign.ownSurfaceCount + " widgets with their own material or opacity"
             return "Use status or match"
         }
 
         function widgetSearch(query: string): string {
-            if ((Config.options?.panelFamily ?? "ii") !== "iris")
-                return "the widget search is part of the iRiS widget bar"
+            if ((Config.options?.panelFamily ?? "drift") !== "atoll")
+                return "the widget search is part of the Atoll widget bar"
             if (query === "close") {
                 GlobalStates.widgetSearchOpen = false
                 GlobalStates.widgetSearchText = ""
@@ -203,8 +203,8 @@ Scope {
                 .find(item => item.configEntryName === name) ?? null
             if (!widget)
                 return "select a widget first: focusWidget <name> true"
-            const pages = widget.irisFaced ? ["widget", "look", "arrange"].concat(widget.stacked ? ["stack"] : []) : ["widget", "colors", "layout"]
-            const aliases = ({ look: widget.irisFaced ? "look" : "colors", colors: widget.irisFaced ? "look" : "colors",
+            const pages = widget.atollFaced ? ["widget", "look", "arrange"].concat(widget.stacked ? ["stack"] : []) : ["widget", "colors", "layout"]
+            const aliases = ({ look: widget.atollFaced ? "look" : "colors", colors: widget.atollFaced ? "look" : "colors",
                 arrange: widget._arrangeTab, layout: widget._arrangeTab, widget: "widget", stack: "stack" })
             const target = aliases[String(page ?? "").trim()] ?? ""
             if (!pages.includes(target))
@@ -255,9 +255,9 @@ Scope {
                         darkInk: widget.inkOnLight,
                         plate: widget.widgetHasSurface,
                         shadow: widget._legibleShadow ? Math.round(widget._legibleShadowOpacity * 100) / 100 : 0,
-                        face: widget.irisFaced ? { lightBackdrop: widget.irisFaceView?.lightBackdrop ?? null,
-                            veil: Math.round((widget.irisFaceView?.veil ?? -1) * 100) / 100,
-                            material: widget.irisFaceView?.material ?? "" } : false,
+                        face: widget.atollFaced ? { lightBackdrop: widget.atollFaceView?.lightBackdrop ?? null,
+                            veil: Math.round((widget.atollFaceView?.veil ?? -1) * 100) / 100,
+                            material: widget.atollFaceView?.material ?? "" } : false,
                         ink: String(widget.widgetInk),
                         accent: String(widget.widgetAccent)
                     })
@@ -357,7 +357,7 @@ Scope {
 
         function clockDebugState(): string {
             return JSON.stringify({
-                enabled: Quickshell.env("INIR_REGION_DEBUG") === "1",
+                enabled: Quickshell.env("LUNANA_REGION_DEBUG") === "1",
                 config: {
                     style: Config.getNestedValue("background.widgets.clock.style", "cookie"),
                     adaptToWallpaper: Config.getNestedValue("background.widgets.clock.digital.adaptToWallpaper", true),
@@ -379,8 +379,8 @@ Scope {
         }
 
         function clockDebugSetMode(style: string, adaptToWallpaper: bool): string {
-            if (Quickshell.env("INIR_REGION_DEBUG") !== "1")
-                return "clock diagnostics disabled; load with INIR_REGION_DEBUG=1";
+            if (Quickshell.env("LUNANA_REGION_DEBUG") !== "1")
+                return "clock diagnostics disabled; load with LUNANA_REGION_DEBUG=1";
             if (style !== "digital" && style !== "cookie")
                 return "invalid clock style: " + style;
             backgroundScope._captureClockDebugSnapshot();
@@ -401,8 +401,8 @@ Scope {
         }
 
         function clockDebugSetRegion(color: string, brightness: real, spread: real): string {
-            if (Quickshell.env("INIR_REGION_DEBUG") !== "1")
-                return "clock diagnostics disabled; load with INIR_REGION_DEBUG=1";
+            if (Quickshell.env("LUNANA_REGION_DEBUG") !== "1")
+                return "clock diagnostics disabled; load with LUNANA_REGION_DEBUG=1";
             const parsed = Qt.color(color);
             if (!parsed.valid)
                 return "invalid color: " + color;
@@ -414,8 +414,8 @@ Scope {
         }
 
         function clockDebugSetLayout(x: int, y: int, quickControlsOpen: bool): string {
-            if (Quickshell.env("INIR_REGION_DEBUG") !== "1")
-                return "clock diagnostics disabled; load with INIR_REGION_DEBUG=1";
+            if (Quickshell.env("LUNANA_REGION_DEBUG") !== "1")
+                return "clock diagnostics disabled; load with LUNANA_REGION_DEBUG=1";
             if (!backgroundScope._clockDebugEditModeSnapshotValid) {
                 backgroundScope._clockDebugEditModeSnapshot = GlobalStates.widgetEditMode;
                 backgroundScope._clockDebugEditModeSnapshotValid = true;
@@ -495,7 +495,7 @@ Scope {
         required property var modelData
         // Afterglow draws the container graded (and hides it): glass copies what is seen.
         readonly property Item wallpaperLayer: afterglowLoader.item ?? wallpaperContainer
-        // Bumped whenever what the wallpaper layer shows can change (picture, parallax, Afterglow arriving): iRiS glass
+        // Bumped whenever what the wallpaper layer shows can change (picture, parallax, Afterglow arriving): Atoll glass
         // copies the layer only after a bump instead of every frame the desktop redraws.
         property int wallpaperLayerRevision: 0
         readonly property bool wallpaperLayerAnimating: bgRoot.internalShaderTransitionRequested
@@ -562,7 +562,7 @@ Scope {
         readonly property var workSafetyOptions: Config.options?.workSafety ?? {}
         readonly property var workSafetyEnableOptions: workSafetyOptions.enable ?? {}
         readonly property var workSafetyTriggerOptions: workSafetyOptions.triggerCondition ?? {}
-        readonly property var lockBlurOptions: Config.options?.panelFamily === "iris" ? ({}) : (Config.options?.lock?.blur ?? {})
+        readonly property var lockBlurOptions: Config.options?.panelFamily === "atoll" ? ({}) : (Config.options?.lock?.blur ?? {})
         readonly property var desktopFreeWorkArea: ShellLayoutController.desktopWorkArea(
             screen?.name ?? "", screen?.width ?? 0, screen?.height ?? 0)
         readonly property var desktopItemsWorkArea: ShellLayoutController.desktopZoneWorkArea(
@@ -712,7 +712,7 @@ Scope {
         // turn the Bottom layer keyboard-focusable during reload.
         // A desktop menu is a grabbing popup of this surface: its parent's keyboard
         // mode never changes while one is open.
-        readonly property bool _menuOpen: irisDesktopMenu.active || desktopContextMenu.active || desktopItemContextMenu.active
+        readonly property bool _menuOpen: atollDesktopMenu.active || desktopContextMenu.active || desktopItemContextMenu.active
         // Once a desktop menu has closed, the keyboard its right-click took goes back too.
         on_MenuOpenChanged: if (!bgRoot._menuOpen) Qt.callLater(bgRoot.releaseKeyboard)
         readonly property bool _needsKeyboardFocus: GlobalStates.deferredPanelsReady
@@ -825,10 +825,10 @@ Scope {
         }
         readonly property string wallpaperThumbnailPath: bgRoot.backgroundOptions.thumbnailPath ?? bgRoot.wallpaperPathRaw
         readonly property bool enableAnimation: bgRoot.backgroundOptions.enableAnimation ?? true
-        // True while ii is the family actually painting the screen. The family
+        // True while drift is the family actually painting the screen. The family
         // LazyLoader can retain the inactive tree, so every heavy source in here
         // has to ask, not assume.
-        readonly property bool _familyOwnsScreen: ["ii", "iris"].includes(Config.options?.panelFamily ?? "ii")
+        readonly property bool _familyOwnsScreen: ["drift", "atoll"].includes(Config.options?.panelFamily ?? "drift")
         property bool wallpaperIsVideo: wallpaperPathRaw.endsWith(".mp4") || wallpaperPathRaw.endsWith(".webm") || wallpaperPathRaw.endsWith(".mkv") || wallpaperPathRaw.endsWith(".avi") || wallpaperPathRaw.endsWith(".mov")
         property bool wallpaperIsGif: wallpaperPathRaw.toLowerCase().endsWith(".gif")
         property string wallpaperPath: bgRoot.wallpaperPathRaw
@@ -881,11 +881,11 @@ Scope {
             && !bgRoot.effectiveHasPan
             && !bgRoot.internalShaderTransitionRequested
             && !afterglowHandoff.running
-        // iRiS Afterglow grades whatever is drawn here (still, transition, preview, video, GIF), so the picture is drawn
+        // Atoll Afterglow grades whatever is drawn here (still, transition, preview, video, GIF), so the picture is drawn
         // here, not by awww; leaving it, the picture stays drawn here until awww shows it.
-        readonly property bool afterglowWallpaperActive: (Config.options?.panelFamily ?? "ii") === "iris"
-            && String(Config.options?.iris?.appearance?.texture ?? "solid") === "afterglow"
-            && (Config.options?.iris?.appearance?.afterglow?.wallpaper ?? true)
+        readonly property bool afterglowWallpaperActive: (Config.options?.panelFamily ?? "drift") === "atoll"
+            && String(Config.options?.atoll?.appearance?.texture ?? "solid") === "afterglow"
+            && (Config.options?.atoll?.appearance?.afterglow?.wallpaper ?? true)
             && bgRoot.wallpaperPathRaw.length > 0
             && !bgRoot.webWallpaperActive && !bgRoot.wallpaperSafetyTriggered && !bgRoot.backdropActive
         Timer {
@@ -1729,7 +1729,7 @@ Scope {
                 z: 0.5
                 anchors.fill: wallpaperContainer
                 active: bgRoot.afterglowWallpaperActive && bgRoot._familyOwnsScreen
-                sourceComponent: IrisAfterglowWallpaper {
+                sourceComponent: AtollAfterglowWallpaper {
                     onShown: bgRoot.wallpaperLayerRevision++
                     source: wallpaperContainer
                     live: bgRoot.wallpaperIsVideo || bgRoot.wallpaperIsGif
@@ -1911,13 +1911,13 @@ Scope {
                         GlobalStates.clearDesktopItemSelection()
                         if (desktopContextMenu.active) desktopContextMenu.close()
                         if (desktopItemContextMenu.active) desktopItemContextMenu.close()
-                        if (irisDesktopMenu.active) irisDesktopMenu.close()
+                        if (atollDesktopMenu.active) atollDesktopMenu.close()
                         return
                     }
                     if (desktopItemContextMenu.active) desktopItemContextMenu.close()
                     desktopMenuAnchor.x = mouse.x
                     desktopMenuAnchor.y = mouse.y
-                    if ((Config.options?.panelFamily ?? "ii") === "iris") irisDesktopMenu.requestOpen()
+                    if ((Config.options?.panelFamily ?? "drift") === "atoll") atollDesktopMenu.requestOpen()
                     else desktopContextMenu.requestOpen()
                 }
             }
@@ -1966,7 +1966,7 @@ Scope {
                         action: () => { widgetManagerPanel.shown = false; GlobalStates.setWidgetEditMode(false) } }
                 ] : [
                     { text: Translation.tr("Settings"), iconName: "settings", monochromeIcon: true,
-                        action: () => { Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")), "settings"]) } },
+                        action: () => { Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/lunana")), "settings"]) } },
                     { type: "separator" },
                     { text: Translation.tr("Change wallpaper"), iconName: "image", monochromeIcon: true,
                         action: () => { GlobalActions.runLauncher(["wallpaperSelector", "toggle"]) } },
@@ -1980,21 +1980,21 @@ Scope {
                 ]
             }
 
-            // iRiS desktop menu: the Island's material, quick-action tiles and
+            // Atoll desktop menu: the Island's material, quick-action tiles and
             // keyboard, growing out of the pointer. Only the actions that drive
-            // something under iRiS (shell layout editing is ii/Waffle-only).
+            // something under Atoll (shell layout editing is drift/Slate-only).
             Connections {
                 target: GlobalStates
                 function onIrisDesktopMenuRequested(outputName: string, x: real, y: real): void {
-                    if (outputName !== bgRoot.screenName || (Config.options?.panelFamily ?? "ii") !== "iris") return
+                    if (outputName !== bgRoot.screenName || (Config.options?.panelFamily ?? "drift") !== "atoll") return
                     desktopMenuAnchor.x = x
                     desktopMenuAnchor.y = y
-                    irisDesktopMenu.requestOpen()
+                    atollDesktopMenu.requestOpen()
                 }
             }
 
-            IrisDesktopMenu {
-                id: irisDesktopMenu
+            AtollDesktopMenu {
+                id: atollDesktopMenu
                 z: 27
                 anchorItem: desktopMenuAnchor
                 readonly property int gridSize: Config.getNestedValue("background.widgets.editGrid.size", 32)
@@ -2002,21 +2002,21 @@ Scope {
                 model: GlobalStates.widgetEditMode ? [
                     { text: Translation.tr("Add widgets"), iconName: "dashboard_customize", tint: "teal",
                         action: () => { widgetManagerPanel.shown = true } },
-                    { text: Translation.tr("Snap to grid"), iconName: "grid_on", checked: irisDesktopMenu.gridSnap, keepOpen: true,
-                        action: () => Config.setNestedValue("background.widgets.editGrid.snap", !irisDesktopMenu.gridSnap) },
+                    { text: Translation.tr("Snap to grid"), iconName: "grid_on", checked: atollDesktopMenu.gridSnap, keepOpen: true,
+                        action: () => Config.setNestedValue("background.widgets.editGrid.snap", !atollDesktopMenu.gridSnap) },
                     { type: "separator" },
-                    { text: Translation.tr("Grid size"), iconName: "grid_4x4", detail: irisDesktopMenu.gridSize + " px",
+                    { text: Translation.tr("Grid size"), iconName: "grid_4x4", detail: atollDesktopMenu.gridSize + " px",
                         action: () => {
                             const sizes = [16, 32, 48, 64]
                             Config.setNestedValue("background.widgets.editGrid.size",
-                                sizes[(sizes.indexOf(irisDesktopMenu.gridSize) + 1) % sizes.length])
+                                sizes[(sizes.indexOf(atollDesktopMenu.gridSize) + 1) % sizes.length])
                         } },
                     { text: Translation.tr("Widget settings"), iconName: "settings",
                         action: () => GlobalStates.openSettingsPage(14) },
                     { type: "separator" },
                     { text: Translation.tr("Done"), iconName: "check", tint: "green",
                         action: () => { widgetManagerPanel.shown = false; GlobalStates.setWidgetEditMode(false) } }
-                ] : IrisDesktopActions.menu(bgRoot.screenName, bgRoot.wallpaperPath, bgRoot.wallpaperPath)
+                ] : AtollDesktopActions.menu(bgRoot.screenName, bgRoot.wallpaperPath, bgRoot.wallpaperPath)
             }
 
             // Managed items use the same stable screen-level popup path as the
@@ -2178,7 +2178,7 @@ Scope {
                     return widgets
                 }
 
-                // The widget lit as a drop target while another is carried over it (iRiS stacks).
+                // The widget lit as a drop target while another is carried over it (Atoll stacks).
                 property string stackHint: ""
 
                 function loadedWidget(instanceKey: string): var {
@@ -2495,7 +2495,7 @@ Scope {
                     const nextKey = String(next?.editInstanceKey ?? instanceKey)
                     backgroundScope.promoteDesktopWidgetKey(nextKey)
                     GlobalStates.selectDesktopWidget(nextKey)
-                    if (Quickshell.env("INIR_REGION_DEBUG") === "1")
+                    if (Quickshell.env("LUNANA_REGION_DEBUG") === "1")
                         console.debug("[WidgetEdit] layer promote", instanceKey, "->", nextKey,
                             "overlaps=", matches.length)
                     return nextKey
@@ -2539,11 +2539,11 @@ Scope {
                     readonly property int gridSize: Config.getNestedValue("background.widgets.editGrid.size", 32)
                     readonly property bool gridVisible: Config.getNestedValue("background.widgets.editGrid.snap", true)
                     readonly property color gridColor: Appearance.angelEverywhere ? Appearance.angel.colPrimary
-                        : Appearance.inirEverywhere ? Appearance.inir.colAccent
+                        : Appearance.lunanaEverywhere ? Appearance.lunana.colAccent
                         : Appearance.auroraEverywhere ? Appearance.colors.colPrimary
                         : Appearance.colors.colPrimary
                     readonly property color crosshairColor: Appearance.angelEverywhere ? Appearance.angel.colTertiary
-                        : Appearance.inirEverywhere ? Appearance.inir.colTertiary
+                        : Appearance.lunanaEverywhere ? Appearance.lunana.colTertiary
                         : Appearance.auroraEverywhere ? Appearance.colors.colTertiary
                         : Appearance.colors.colTertiary
                     readonly property var workArea: ShellLayoutController.desktopWorkArea(
@@ -2776,9 +2776,9 @@ Scope {
 
                     DesktopEditToolbar {
                         id: editControlsBar
-                        // iRiS hosts the toolbar in its chassis (IrisWidgetBar) so it joins the frame.
-                        visible: !editControlsBar.iris
-                        enabled: !editControlsBar.iris
+                        // Atoll hosts the toolbar in its chassis (AtollWidgetBar) so it joins the frame.
+                        visible: !editControlsBar.atoll
+                        enabled: !editControlsBar.atoll
                         availableWidth: Math.max(0, editGridOverlay.safeWidth - 16)
                         availableHeight: editGridOverlay.safeHeight
                         outputName: bgRoot.screenName
@@ -2786,12 +2786,12 @@ Scope {
                         libraryOpen: widgetManagerPanel.shown
                         x: Math.round(editGridOverlay.safeLeft
                             + (editGridOverlay.safeWidth - width) / 2)
-                        // iRiS: the Dock steps aside while editing and the toolbar takes the
+                        // Atoll: the Dock steps aside while editing and the toolbar takes the
                         // edge opposite the Island, so it never lands on the Island.
-                        readonly property bool irisTopEdge: (Config.options?.panelFamily ?? "ii") === "iris"
+                        readonly property bool atollTopEdge: (Config.options?.panelFamily ?? "drift") === "atoll"
                             && editGridOverlay.workArea?.insets?.barEdge === "bottom"
-                        attachedTopEdge: irisTopEdge
-                        y: editControlsBar.iris ? (irisTopEdge ? IrisFrame.band : parent.height - height - IrisFrame.band)
+                        attachedTopEdge: atollTopEdge
+                        y: editControlsBar.atoll ? (atollTopEdge ? AtollFrame.band : parent.height - height - AtollFrame.band)
                             : Math.max(editGridOverlay.safeTop, editGridOverlay.safeBottom - height - 12)
                         onLibraryRequested: widgetManagerPanel.shown = !widgetManagerPanel.shown
                         onEdgeSettingsRequested: GlobalStates.openSettingsPage(14, "Organic edge")
@@ -2819,18 +2819,18 @@ Scope {
                         }
                         active: shown
                         visible: shown
-                        enabled: shown && (!editControlsBar.iris || geometryReady)
-                        opacity: editControlsBar.iris && !geometryReady ? 0 : 1
+                        enabled: shown && (!editControlsBar.atoll || geometryReady)
+                        opacity: editControlsBar.atoll && !geometryReady ? 0 : 1
                         z: 150
                         x: 0
                         y: 0
 
                         Behavior on opacity {
-                            enabled: editControlsBar.iris && IrisStyle.motionEnabled
+                            enabled: editControlsBar.atoll && AtollStyle.motionEnabled
                             NumberAnimation {
-                                duration: IrisStyle.revealDuration
+                                duration: AtollStyle.revealDuration
                                 easing.type: Easing.BezierSpline
-                                easing.bezierCurve: IrisStyle.morphCurve
+                                easing.bezierCurve: AtollStyle.morphCurve
                             }
                         }
 
@@ -3139,7 +3139,7 @@ Scope {
                 }
 
                 FadeLoader {
-                    shown: bgRoot._widgetEnabled("controls", false) && (Config.options?.panelFamily ?? "ii") === "iris"
+                    shown: bgRoot._widgetEnabled("controls", false) && (Config.options?.panelFamily ?? "drift") === "atoll"
                     z: item?.desktopStackZ ?? 0
                     containmentMask: GlobalStates.widgetEditMode ? _hitMaskControls : null
                     WidgetInputMask { id: _hitMaskControls; loader: parent }
@@ -3155,7 +3155,7 @@ Scope {
                 }
 
                 FadeLoader {
-                    shown: bgRoot._widgetEnabled("screenTime", false) && (Config.options?.panelFamily ?? "ii") === "iris"
+                    shown: bgRoot._widgetEnabled("screenTime", false) && (Config.options?.panelFamily ?? "drift") === "atoll"
                     z: item?.desktopStackZ ?? 0
                     containmentMask: GlobalStates.widgetEditMode ? _hitMaskScreenTime : null
                     WidgetInputMask { id: _hitMaskScreenTime; loader: parent }
@@ -3372,7 +3372,7 @@ Scope {
                     }
                 }
 
-                // Custom user widgets from ~/.config/inir/widgets/
+                // Custom user widgets from ~/.config/lunana/widgets/
                 Repeater {
                     model: CustomWidgets.ready ? CustomWidgets.widgets : []
 

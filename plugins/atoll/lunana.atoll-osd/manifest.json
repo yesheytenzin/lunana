@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "lunana.atoll-osd",
+  "name": "Lunana Atoll OSD",
+  "version": "0.4.0",
+  "author": "lunana",
+  "license": "GPL-3.0",
+  "description": "Lunana Atoll on-screen-display host (volume/brightness/layout).",
+  "kinds": [
+    "service"
+  ],
+  "entryPoints": {
+    "service": "AtollOsd.qml"
+  },
+  "x-lunana": {
+    "suiteId": "lunana",
+    "role": "atoll-osd",
+    "milestone": "parity",
+    "requires": [],
+    "recommends": []
+  }
+}

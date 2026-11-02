@@ -17,7 +17,7 @@ PanelSurface {
     implicitHeight: slidersRow.implicitHeight + 12
     readonly property bool compactMode: Config.options?.controlPanel?.compactMode ?? true
 
-    readonly property bool inirEverywhere: Appearance.inirEverywhere
+    readonly property bool lunanaEverywhere: Appearance.lunanaEverywhere
     readonly property bool auroraEverywhere: Appearance.auroraEverywhere
 
     property var screen: root.QsWindow.window?.screen ?? null
@@ -26,7 +26,7 @@ PanelSurface {
 
     elevation: 1
     radiusOverride: islandSkin ? -1
-        : inirEverywhere ? Appearance.inir.roundingNormal
+        : lunanaEverywhere ? Appearance.lunana.roundingNormal
         : Appearance.zzzEverywhere ? Appearance.zzz.panelRadius
         : Appearance.rounding.normal
 

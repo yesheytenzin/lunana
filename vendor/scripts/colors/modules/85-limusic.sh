@@ -2,8 +2,8 @@
 set -euo pipefail
 # LiMusic reads ~/.config/limusic/matugen.css, adds it as a <style> after its own sheet and
 # re-reads it whenever the file changes (upstream PR SimoHypers/limusic#351). The file only sets
-# LiMusic's shadcn tokens, so every theme preset, light and dark, takes the iNiR palette. Releases
-# without that support read the same file through iNiR's WebKit theme module (see below).
+# LiMusic's shadcn tokens, so every theme preset, light and dark, takes the Lunana palette. Releases
+# without that support read the same file through Lunana's WebKit theme module (see below).
 
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/lib/module-runtime.sh"
 COLOR_MODULE_ID="limusic"
@@ -46,7 +46,7 @@ generate_limusic_css() {
   chart5=$(read_hex outline "#8e9099")
 
   cat <<EOCSS
-/* iNiR — LiMusic. Generated from the current palette; edits are overwritten. */
+/* Lunana — LiMusic. Generated from the current palette; edits are overwritten. */
 
 /* Outranks LiMusic's presets (.dark.theme-x is 0,2,0) without a class of its own, so it holds
    whichever preset or mode is selected. */
@@ -91,10 +91,10 @@ html:root:root:not(.art-tint) {
 EOCSS
 }
 
-# LiMusic releases before #351 have no way in. A small GTK module (webkit-theme/inir-webkit-theme.c) adds the
+# LiMusic releases before #351 have no way in. A small GTK module (webkit-theme/lunana-webkit-theme.c) adds the
 # same file as a WebKit user stylesheet and swaps it when it changes; the launcher loads it through GTK_MODULES.
-WEBKIT_THEME_SRC="$SCRIPT_DIR/webkit-theme/inir-webkit-theme.c"
-WEBKIT_THEME_SO="$STATE_DIR/user/generated/bin/libinir-webkit-theme.so"
+WEBKIT_THEME_SRC="$SCRIPT_DIR/webkit-theme/lunana-webkit-theme.c"
+WEBKIT_THEME_SO="$STATE_DIR/user/generated/bin/liblunana-webkit-theme.so"
 
 build_webkit_theme_module() {
   [[ -f "$WEBKIT_THEME_SO" && "$WEBKIT_THEME_SO" -nt "$WEBKIT_THEME_SRC" ]] && return 0
@@ -166,7 +166,7 @@ patch_limusic_launchers() {
 
 remove_limusic_theme() {
   local entry
-  if [[ -f "$LIMUSIC_CSS" ]] && head -n1 "$LIMUSIC_CSS" | grep -q 'iNiR'; then
+  if [[ -f "$LIMUSIC_CSS" ]] && head -n1 "$LIMUSIC_CSS" | grep -q 'Lunana'; then
     rm -f "$LIMUSIC_CSS"
     log_module "removed $LIMUSIC_CSS"
   fi

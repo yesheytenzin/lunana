@@ -98,7 +98,7 @@ EOCSS
   steam_refinements_css
 }
 
-# iNiR's finish on Material-Theme. It rides in this file because Material-Theme re-reads it every 1.5 s in
+# Lunana's finish on Material-Theme. It rides in this file because Material-Theme re-reads it every 1.5 s in
 # every Steam window, so it follows the palette live without touching Millennium's options or reloading Steam.
 # Selectors are Material-Theme's own (css/main/restyle/recolor.css), doubled to outrank them.
 steam_refinements_css() {
@@ -106,7 +106,7 @@ steam_refinements_css() {
   font="$(shell_font_family)"
   cat <<'EOCSS'
 
-/* iNiR: a selection is the accent's container, as in every themed app; the accent itself is kept for actions */
+/* Lunana: a selection is the accent's container, as in every themed app; the accent itself is kept for actions */
 ._3pSPluBgf0NeR1kkCLWMhR._3pSPluBgf0NeR1kkCLWMhR.eNLOx4LVceeMwRvTVWh3 {
     background-color: var(--md-sys-color-primary-container) !important;
 }
@@ -394,7 +394,7 @@ main() {
   local enabled
   enabled=$(config_bool '.appearance.wallpaperTheming.enableSteam' true)
 
-  [[ "$enabled" == 'true' || "${INIR_STEAM_THEME_FORCE:-0}" == "1" ]] || exit 0
+  [[ "$enabled" == 'true' || "${LUNANA_STEAM_THEME_FORCE:-0}" == "1" ]] || exit 0
 
   if ! millennium_runtime_available; then
     log_module "Millennium is required for Steam theming — install millennium-bin"

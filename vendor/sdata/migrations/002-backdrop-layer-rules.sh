@@ -10,11 +10,11 @@ MIGRATION_REQUIRED=false
 
 migration_check() {
   local config="${XDG_CONFIG_HOME:-$HOME/.config}/niri/config.kdl"
-  [[ -f "$config" ]] && ! grep -q "quickshell:iiBackdrop" "$config"
+  [[ -f "$config" ]] && ! grep -q "quickshell:driftBackdrop" "$config"
 }
 
 migration_preview() {
-  echo -e "${STY_GREEN}+ layer-rule { match namespace=\"quickshell:iiBackdrop\" ... }${STY_RST}"
+  echo -e "${STY_GREEN}+ layer-rule { match namespace=\"quickshell:driftBackdrop\" ... }${STY_RST}"
   echo -e "${STY_GREEN}+ layer-rule { match namespace=\"quickshell:wBackdrop\" ... }${STY_RST}"
 }
 
@@ -23,7 +23,7 @@ migration_diff() {
 Will append to end of config:
 
 layer-rule {
-    match namespace="quickshell:iiBackdrop"
+    match namespace="quickshell:driftBackdrop"
     place-within-backdrop true
     opacity 1.0
 }
@@ -46,10 +46,10 @@ migration_apply() {
   cat >> "$config" << 'BACKDROP_RULES'
 
 // ============================================================================
-// Layer rules added by iNiR (required for backdrop in overview)
+// Layer rules added by Lunana (required for backdrop in overview)
 // ============================================================================
 layer-rule {
-    match namespace="quickshell:iiBackdrop"
+    match namespace="quickshell:driftBackdrop"
     place-within-backdrop true
     opacity 1.0
 }

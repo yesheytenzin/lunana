@@ -6,7 +6,7 @@ import "../../.."
 import "../../../services"
 import "../../common"
 import "../../common/widgets"
-import "../../iris/style"
+import "../../atoll/style"
 
 // Where a widget sits and what can be done to it: anchor, free or quietest spot, scale and
 // opacity, then lock, front, reset and remove. The same page answers "More actions" and a right click,
@@ -16,8 +16,8 @@ ColumnLayout {
     required property var widget
     property bool wide: false
 
-    readonly property bool iris: (Config.options?.panelFamily ?? "ii") === "iris"
-    readonly property real d: root.iris ? IrisStyle.density : 1
+    readonly property bool atoll: (Config.options?.panelFamily ?? "drift") === "atoll"
+    readonly property real d: root.atoll ? AtollStyle.density : 1
     readonly property var zoneGlyphs: ({ topLeft: "north_west", topCenter: "north", topRight: "north_east",
         centerLeft: "west", center: "filter_center_focus", centerRight: "east",
         bottomLeft: "south_west", bottomCenter: "south", bottomRight: "south_east" })

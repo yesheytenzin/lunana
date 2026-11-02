@@ -1,4 +1,4 @@
-# Package installation functions for iNiR
+# Package installation functions for Lunana
 # This is NOT a script for execution, but for loading functions
 # Shared across all distros
 
@@ -59,7 +59,7 @@ _show_privilege_instructions() {
     echo "" >&2
     echo -e "${STY_CYAN}Recommended solutions:${STY_RST}" >&2
     echo "  1. Run it from a terminal, so sudo can ask for your password," >&2
-    echo "     or with the iNiR shell running, which answers password prompts" >&2
+    echo "     or with the Lunana shell running, which answers password prompts" >&2
     echo "" >&2
     echo "  2. Configure sudo with passwordless NOPASSWD (quick fix):" >&2
     echo "     sudo visudo" >&2
@@ -246,7 +246,7 @@ install-python-packages(){
 
   if [[ ! -d "$venv_dir/bin" ]]; then
     x mkdir -p "$(dirname "$venv_dir")"
-    x uv venv --prompt ii-venv "$venv_dir" -p 3.12 || uv venv --prompt ii-venv "$venv_dir" || {
+    x uv venv --prompt drift-venv "$venv_dir" -p 3.12 || uv venv --prompt drift-venv "$venv_dir" || {
       log_warning "Could not create Python venv"
       return 0
     }
@@ -259,7 +259,7 @@ install-python-packages(){
     if declare -F get_runtime_shell_dir >/dev/null; then
       requirements_file="$(get_runtime_shell_dir)/sdata/uv/requirements.txt"
     else
-      requirements_file="${XDG_CONFIG_HOME:-$HOME/.config}/quickshell/inir/sdata/uv/requirements.txt"
+      requirements_file="${XDG_CONFIG_HOME:-$HOME/.config}/quickshell/lunana/sdata/uv/requirements.txt"
     fi
   fi
 
@@ -777,7 +777,7 @@ setup-environment-config(){
 
   log_info "Setting up environment variables..."
 
-  # Detect the actual KDE Qt platform-theme provider. iNiR does not require a
+  # Detect the actual KDE Qt platform-theme provider. Lunana does not require a
   # Plasma desktop session; plasma-integration is intentionally supported as a
   # standalone dependency under Niri.
   local qt_theme="qt6ct"
@@ -795,8 +795,8 @@ setup-environment-config(){
   fi
 
   mkdir -p ~/.config/environment.d
-  cat > ~/.config/environment.d/inir.conf << EOF
-# iNiR environment variables
+  cat > ~/.config/environment.d/lunana.conf << EOF
+# Lunana environment variables
 XCURSOR_THEME=${cursor_theme}
 XCURSOR_SIZE=24
 QT_QPA_PLATFORM=wayland
@@ -805,7 +805,7 @@ QT_STYLE_OVERRIDE=Darkly
 GTK_THEME=adw-gtk3-dark
 ELECTRON_OZONE_PLATFORM_HINT=auto
 ILLOGICAL_IMPULSE_VIRTUAL_ENV=\$HOME/.local/state/quickshell/.venv
-INIR_VENV=\$HOME/.local/state/quickshell/.venv
+LUNANA_VENV=\$HOME/.local/state/quickshell/.venv
 EOF
 
   log_success "Environment configuration set"
@@ -832,7 +832,7 @@ pad=25x25
 
 bold-text-in-bright=no
 
-include=~/.config/foot/inir-colors.ini
+include=~/.config/foot/lunana-colors.ini
 
 [scrollback]
 lines=10000
@@ -863,9 +863,9 @@ delete-prev-word=Control+BackSpace
 EOF
   else
     # Existing config - ensure include line is present for theming
-    if ! grep -q "include=.*inir-colors\.ini" ~/.config/foot/foot.ini; then
-      log_info "Adding inir-colors.ini include to existing foot.ini..."
-      sed -i '1i include=~/.config/foot/inir-colors.ini' ~/.config/foot/foot.ini
+    if ! grep -q "include=.*lunana-colors\.ini" ~/.config/foot/foot.ini; then
+      log_info "Adding lunana-colors.ini include to existing foot.ini..."
+      sed -i '1i include=~/.config/foot/lunana-colors.ini' ~/.config/foot/foot.ini
     fi
     # Remove stale colors.ini include if present (legacy matugen terminal template)
     sed -i '/^include=.*\/colors\.ini$/d' ~/.config/foot/foot.ini
@@ -882,7 +882,7 @@ setup-kitty-config(){
   # Only create if doesn't exist or is minimal
   if [[ ! -f ~/.config/kitty/kitty.conf ]] || [[ $(wc -l < ~/.config/kitty/kitty.conf) -lt 5 ]]; then
     cat > ~/.config/kitty/kitty.conf << 'EOF'
-# iNiR wallpaper theming - colors from quickshell
+# Lunana wallpaper theming - colors from quickshell
 include current-theme.conf
 
 # Font configuration
@@ -976,7 +976,7 @@ if status is-interactive
         starship init fish | source
     end
 
-    # Load terminal colors from ii theming
+    # Load terminal colors from drift theming
     if test -f ~/.local/state/quickshell/user/generated/terminal/sequences.txt
         cat ~/.local/state/quickshell/user/generated/terminal/sequences.txt
     end
@@ -986,7 +986,7 @@ if status is-interactive
         alias ls 'eza --icons'
     end
     alias clear "printf '\033[2J\033[3J\033[1;1H'"
-    alias q 'inir run'
+    alias q 'lunana run'
 
     # Add local bin to PATH
     fish_add_path ~/.local/bin
@@ -1002,15 +1002,15 @@ setup-bash-config(){
   log_info "Setting up Bash shell configuration..."
 
   local bashrc="$HOME/.bashrc"
-  local inir_config="$HOME/.config/inir/bashrc"
+  local lunana_config="$HOME/.config/lunana/bashrc"
 
-  mkdir -p ~/.config/inir
+  mkdir -p ~/.config/lunana
 
-  # Create ii bash config
-  cat > "$inir_config" << 'EOF'
-# ii shell integration - starship prompt and terminal colors
+  # Create drift bash config
+  cat > "$lunana_config" << 'EOF'
+# drift shell integration - starship prompt and terminal colors
 
-# Load terminal colors from ii theming
+# Load terminal colors from drift theming
 if [[ -f ~/.local/state/quickshell/user/generated/terminal/sequences.txt ]]; then
     cat ~/.local/state/quickshell/user/generated/terminal/sequences.txt
 fi
@@ -1028,7 +1028,7 @@ if command -v eza &> /dev/null; then
 elif [[ -x ~/.local/bin/eza ]]; then
     alias ls='~/.local/bin/eza --icons'
 fi
-alias q='inir run'
+alias q='lunana run'
 
 # Add local bin to PATH
 export PATH="$HOME/.local/bin:$PATH"
@@ -1036,17 +1036,17 @@ EOF
 
   # Add source line to .bashrc if not present
   if [[ -f "$bashrc" ]]; then
-    if grep -q "source.*ii/bashrc" "$bashrc" || grep -q "\..*ii/bashrc" "$bashrc"; then
-      sed -i 's|~/.config/ii/bashrc|~/.config/inir/bashrc|g' "$bashrc"
+    if grep -q "source.*drift/bashrc" "$bashrc" || grep -q "\..*drift/bashrc" "$bashrc"; then
+      sed -i 's|~/.config/drift/bashrc|~/.config/lunana/bashrc|g' "$bashrc"
       log_success "Updated Bash integration path in .bashrc"
-    elif ! grep -q "source.*inir/bashrc" "$bashrc" && ! grep -q "\..*inir/bashrc" "$bashrc"; then
-      echo -e "\n# ii shell integration\n[[ -f ~/.config/inir/bashrc ]] && source ~/.config/inir/bashrc" >> "$bashrc"
+    elif ! grep -q "source.*lunana/bashrc" "$bashrc" && ! grep -q "\..*lunana/bashrc" "$bashrc"; then
+      echo -e "\n# drift shell integration\n[[ -f ~/.config/lunana/bashrc ]] && source ~/.config/lunana/bashrc" >> "$bashrc"
       log_success "Added Bash integration to .bashrc"
     else
       log_info "Bash integration already in .bashrc"
     fi
   else
-    echo -e "# ii shell integration\n[[ -f ~/.config/inir/bashrc ]] && source ~/.config/inir/bashrc" > "$bashrc"
+    echo -e "# drift shell integration\n[[ -f ~/.config/lunana/bashrc ]] && source ~/.config/lunana/bashrc" > "$bashrc"
     log_success "Created .bashrc with Bash integration"
   fi
 
@@ -1057,15 +1057,15 @@ setup-zsh-config(){
   log_info "Setting up Zsh shell configuration..."
 
   local zshrc="$HOME/.zshrc"
-  local inir_config="$HOME/.config/inir/zshrc"
+  local lunana_config="$HOME/.config/lunana/zshrc"
 
-  mkdir -p ~/.config/inir
+  mkdir -p ~/.config/lunana
 
-  # Create ii zsh config
-  cat > "$inir_config" << 'EOF'
-# ii shell integration - starship prompt and terminal colors
+  # Create drift zsh config
+  cat > "$lunana_config" << 'EOF'
+# drift shell integration - starship prompt and terminal colors
 
-# Load terminal colors from ii theming
+# Load terminal colors from drift theming
 if [[ -f ~/.local/state/quickshell/user/generated/terminal/sequences.txt ]]; then
     cat ~/.local/state/quickshell/user/generated/terminal/sequences.txt
 fi
@@ -1083,7 +1083,7 @@ if command -v eza &> /dev/null; then
 elif [[ -x ~/.local/bin/eza ]]; then
     alias ls='~/.local/bin/eza --icons'
 fi
-alias q='inir run'
+alias q='lunana run'
 
 # Add local bin to PATH
 export PATH="$HOME/.local/bin:$PATH"
@@ -1091,11 +1091,11 @@ EOF
 
   # Add source line to .zshrc if not present
   if [[ -f "$zshrc" ]]; then
-    if grep -q "source.*ii/zshrc" "$zshrc" || grep -q "\..*ii/zshrc" "$zshrc"; then
-      sed -i 's|~/.config/ii/zshrc|~/.config/inir/zshrc|g' "$zshrc"
+    if grep -q "source.*drift/zshrc" "$zshrc" || grep -q "\..*drift/zshrc" "$zshrc"; then
+      sed -i 's|~/.config/drift/zshrc|~/.config/lunana/zshrc|g' "$zshrc"
       log_success "Updated Zsh integration path in .zshrc"
-    elif ! grep -q "source.*inir/zshrc" "$zshrc" && ! grep -q "\..*inir/zshrc" "$zshrc"; then
-      echo -e "\n# ii shell integration\n[[ -f ~/.config/inir/zshrc ]] && source ~/.config/inir/zshrc" >> "$zshrc"
+    elif ! grep -q "source.*lunana/zshrc" "$zshrc" && ! grep -q "\..*lunana/zshrc" "$zshrc"; then
+      echo -e "\n# drift shell integration\n[[ -f ~/.config/lunana/zshrc ]] && source ~/.config/lunana/zshrc" >> "$zshrc"
       log_success "Added Zsh integration to .zshrc"
     else
       log_info "Zsh integration already in .zshrc"

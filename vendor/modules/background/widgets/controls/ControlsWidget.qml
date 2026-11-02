@@ -2,7 +2,7 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import ".."
-import "../../../iris/widgets"
+import "../../../atoll/widgets"
 
 AbstractBackgroundWidget {
     id: root
@@ -12,20 +12,20 @@ AbstractBackgroundWidget {
         placementStrategy: "free", widgetScale: 100, cornerRadius: -1, x: 120, y: 420
     })
 
-    implicitWidth: root.irisFaced ? root.irisFaceWidth : instrumentBody.implicitWidth
-    implicitHeight: root.irisFaced ? root.irisFaceHeight : instrumentBody.implicitHeight
-    irisOnly: true
-    irisFace: Component { IrisControlsFace { widget: root } }
-    irisSizes: ["small", "medium", "large"]
-    irisDefaultSize: "medium"
+    implicitWidth: root.atollFaced ? root.atollFaceWidth : instrumentBody.implicitWidth
+    implicitHeight: root.atollFaced ? root.atollFaceHeight : instrumentBody.implicitHeight
+    atollOnly: true
+    atollFace: Component { AtollControlsFace { widget: root } }
+    atollSizes: ["small", "medium", "large"]
+    atollDefaultSize: "medium"
     semanticPaletteControls: false
     widgetSurfaceEnabled: false
-    needsColText: !root.irisFaced
+    needsColText: !root.atollFaced
 
     Loader {
         id: instrumentBody
         anchors.fill: parent
-        active: !root.irisFaced
+        active: !root.atollFaced
         sourceComponent: ControlsInstrument { widget: root }
     }
 }

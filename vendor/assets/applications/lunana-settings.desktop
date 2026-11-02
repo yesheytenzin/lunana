@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Lunana Settings
+Comment=Open Lunana settings
+Exec=lunana settings
+Icon=lunana
+Terminal=false
+Categories=Settings;

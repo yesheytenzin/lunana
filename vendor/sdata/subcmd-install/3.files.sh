@@ -1,4 +1,4 @@
-# Config file installation for iNiR
+# Config file installation for Lunana
 # This script is meant to be sourced.
 
 # shellcheck shell=bash
@@ -18,9 +18,9 @@ for dir in "$XDG_BIN_HOME" "$XDG_CACHE_HOME" "$XDG_CONFIG_HOME" "$XDG_DATA_HOME"
   fi
 done
 
-INIR_LAUNCHER_PATH="${XDG_BIN_HOME}/inir"
-INIR_APPLICATIONS_DIR="${XDG_DATA_HOME}/applications"
-INIR_ICON_DIR="${XDG_DATA_HOME}/icons/hicolor/scalable/apps"
+LUNANA_LAUNCHER_PATH="${XDG_BIN_HOME}/lunana"
+LUNANA_APPLICATIONS_DIR="${XDG_DATA_HOME}/applications"
+LUNANA_ICON_DIR="${XDG_DATA_HOME}/icons/hicolor/scalable/apps"
 local _use_systemd=false
 
 # Create quickshell state directories
@@ -92,17 +92,17 @@ function auto_backup_configs(){
 if [[ ! "${SKIP_BACKUP}" == true ]]; then auto_backup_configs; fi
 
 #####################################################################################
-# Install Quickshell config (ii)
+# Install Quickshell config (drift)
 #####################################################################################
 case "${SKIP_QUICKSHELL}" in
   true) sleep 0;;
   *)
-    tui_info "Installing Quickshell inir config..."
+    tui_info "Installing Quickshell lunana config..."
 
-    # The ii QML code is in the root of this repo, not in dots/
-    # We copy it to ~/.config/quickshell/inir/
+    # The drift QML code is in the root of this repo, not in dots/
+    # We copy it to ~/.config/quickshell/lunana/
     II_SOURCE="${REPO_ROOT}"
-    II_TARGET="${XDG_CONFIG_HOME}/quickshell/inir"
+    II_TARGET="${XDG_CONFIG_HOME}/quickshell/lunana"
 
     v mkdir -p "$II_TARGET"
 
@@ -114,7 +114,7 @@ case "${SKIP_QUICKSHELL}" in
 
     # Generate manifest BEFORE syncing (to know what should exist)
     log_info "Generating file manifest..."
-    generate_manifest "$II_SOURCE" "${II_TARGET}/.inir-manifest.new" || return 1
+    generate_manifest "$II_SOURCE" "${II_TARGET}/.lunana-manifest.new" || return 1
 
     # Copy all .qml files from root (auto-detect, no manual list needed)
     for qml_file in "${II_SOURCE}"/*.qml; do
@@ -145,12 +145,12 @@ case "${SKIP_QUICKSHELL}" in
     fi
 
     # Finalize manifest
-    mv "${II_TARGET}/.inir-manifest.new" "${II_TARGET}/.inir-manifest"
+    mv "${II_TARGET}/.lunana-manifest.new" "${II_TARGET}/.lunana-manifest"
 
     # Cleanup orphan files (files that no longer exist in repo)
     if [[ "${IS_UPDATE}" == "true" ]]; then
       log_info "Cleaning up orphan files..."
-      cleanup_orphans "$II_TARGET" "${II_TARGET}/.inir-manifest" || return 1
+      cleanup_orphans "$II_TARGET" "${II_TARGET}/.lunana-manifest" || return 1
     fi
 
     # Fix script permissions
@@ -158,51 +158,51 @@ case "${SKIP_QUICKSHELL}" in
     find "$II_TARGET/scripts" \( -name "*.sh" -o -name "*.fish" -o -name "*.py" \) -exec chmod +x {} \; 2>/dev/null || true
     [[ -f "${II_TARGET}/setup" ]] && chmod +x "${II_TARGET}/setup"
 
-    if [[ -f "${REPO_ROOT}/scripts/inir" ]]; then
+    if [[ -f "${REPO_ROOT}/scripts/lunana" ]]; then
       if sync_launcher_from_repo >/dev/null; then
         log_success "Launcher installed"
         log_success "Launcher path configured for login and interactive shells"
       else
-        log_error "Could not install the inir launcher"
+        log_error "Could not install the lunana launcher"
         return 1
       fi
     fi
 
     # Determine supervisor path once; the shared reconciler owns the service file.
-    if [[ "$(inir_supervisor)" == systemd ]]; then
+    if [[ "$(lunana_supervisor)" == systemd ]]; then
       _use_systemd=true
     fi
 
     repair_legacy_niri_shell_startup >/dev/null 2>&1 || true
     local _service_refresh_status=1
     local _service_dir="${XDG_CONFIG_HOME}/systemd/user"
-    local _service_asset="${REPO_ROOT}/assets/systemd/inir.service"
-    local _service_target="${_service_dir}/inir.service"
+    local _service_asset="${REPO_ROOT}/assets/systemd/lunana.service"
+    local _service_target="${_service_dir}/lunana.service"
 
     if $_use_systemd && [[ -f "$_service_asset" ]]; then
       mkdir -p "$_service_dir"
 
-      if inir_user_service_is_masked; then
-        systemctl --user unmask inir.service >/dev/null 2>&1 || true
-        systemctl --user unmask --runtime inir.service >/dev/null 2>&1 || true
+      if lunana_user_service_is_masked; then
+        systemctl --user unmask lunana.service >/dev/null 2>&1 || true
+        systemctl --user unmask --runtime lunana.service >/dev/null 2>&1 || true
         rm -f "$_service_target"
       fi
 
-      if sync_user_inir_service_from_repo_if_present; then
+      if sync_user_lunana_service_from_repo_if_present; then
         _service_refresh_status=0
-        if [[ "${INIR_SERVICE_SYNC_CHANGED:-0}" -gt 0 ]]; then
-          log_success "User inir.service refreshed"
+        if [[ "${LUNANA_SERVICE_SYNC_CHANGED:-0}" -gt 0 ]]; then
+          log_success "User lunana.service refreshed"
         else
-          log_success "User inir.service current"
+          log_success "User lunana.service current"
         fi
       fi
     fi
 
     if $_use_systemd && [[ -f "$_service_target" ]]; then
-      if ensure_user_inir_service_enabled; then
-        log_success "User inir.service enabled (wired to niri.service)"
+      if ensure_user_lunana_service_enabled; then
+        log_success "User lunana.service enabled (wired to niri.service)"
       else
-        log_warning "Could not wire inir.service to niri.service — run 'inir service enable'"
+        log_warning "Could not wire lunana.service to niri.service — run 'lunana service enable'"
       fi
     fi
 
@@ -212,7 +212,7 @@ case "${SKIP_QUICKSHELL}" in
       log_warning "Could not install desktop integration"
     fi
 
-    log_success "Quickshell inir config installed"
+    log_success "Quickshell lunana config installed"
 
     # Install Python packages now that requirements.txt is in place
     showfun install-python-packages
@@ -221,14 +221,14 @@ case "${SKIP_QUICKSHELL}" in
     v ensure-ytmusic-js-runtime
 
     if [[ "${IS_UPDATE}" == "true" && "${SKIP_VERIFICATION}" != "true" ]] \
-        && [[ -n "${NIRI_SOCKET:-}${WAYLAND_DISPLAY:-}" ]] && ! inir_user_service_is_masked; then
+        && [[ -n "${NIRI_SOCKET:-}${WAYLAND_DISPLAY:-}" ]] && ! lunana_user_service_is_masked; then
       log_info "Restarting the shell on the new files..."
       restart_shell_and_verify 30
       case $? in
         0) log_success "The shell loaded the new files" ;;
         1) log_error "The shell did not load the new files"
            log_warning "Run './setup rollback' to go back to the previous version" ;;
-        *) log_warning "Could not confirm the shell loaded; 'inir logs' shows why" ;;
+        *) log_warning "Could not confirm the shell loaded; 'lunana logs' shows why" ;;
       esac
     fi
     ;;
@@ -246,7 +246,7 @@ case "${SKIP_NIRI}" in
     NIRI_CONFIG="${XDG_CONFIG_HOME}/niri/config.kdl"
 
     # On updates, preserve the user's config and only patch launcher/theme bits.
-    # On first run, always install iNiR defaults (backup_clashing_targets already
+    # On first run, always install Lunana defaults (backup_clashing_targets already
     # saved the pre-existing config to the backup dir).
     if [[ "${INSTALL_FIRSTRUN}" == true ]]; then
       if [[ -d "defaults/niri" ]]; then
@@ -297,7 +297,7 @@ case "${SKIP_NIRI}" in
       # installed standalone for KDE theming without the full Plasma desktop.
       if xbps-query -p pkgver plasma-integration >/dev/null 2>&1 || \
          pacman -Q plasma-integration &>/dev/null 2>&1 || \
-         dpkg -l plasma-integration 2>/dev/null | grep -q '^ii' || \
+         dpkg -l plasma-integration 2>/dev/null | grep -q '^drift' || \
          rpm -q plasma-integration &>/dev/null 2>&1; then
         # Reconcile previous fallback installs back to KDE when the provider exists.
         sed -i 's/QT_QPA_PLATFORMTHEME "qt6ct"/QT_QPA_PLATFORMTHEME "kde"/' "$NIRI_ENV_TARGET"
@@ -312,9 +312,9 @@ case "${SKIP_NIRI}" in
 
       if niri_can_resolve_launcher_dir "$XDG_BIN_HOME"; then
         sed -i \
-          -e 's|spawn "bash" "-lc" "exec \"\$(inir path)/scripts/launch-terminal.sh\""|spawn "inir" "terminal"|' \
-          -e 's|spawn "bash" "-lc" "exec \"\$(inir path)/scripts/close-window.sh\""|spawn "inir" "close-window"|' \
-          -e 's|spawn "[^"]*/inir" "|spawn "inir" "|g' \
+          -e 's|spawn "bash" "-lc" "exec \"\$(lunana path)/scripts/launch-terminal.sh\""|spawn "lunana" "terminal"|' \
+          -e 's|spawn "bash" "-lc" "exec \"\$(lunana path)/scripts/close-window.sh\""|spawn "lunana" "close-window"|' \
+          -e 's|spawn "[^"]*/lunana" "|spawn "lunana" "|g' \
           "$NIRI_BINDS_TARGET"
       else
         log_warning "Niri is still running without ${XDG_BIN_HOME} in PATH — preserving existing launcher paths until the next session"
@@ -326,8 +326,8 @@ esac
 # Render the startup supervisor and service after the Niri config has been installed.
 source "$REPO_ROOT/sdata/lib/functions.sh" 2>/dev/null || true
 local _selected_supervisor
-if ! _selected_supervisor="$(reconcile_inir_supervisor)"; then
-  log_error "Could not configure the iNiR supervisor"
+if ! _selected_supervisor="$(reconcile_lunana_supervisor)"; then
+  log_error "Could not configure the Lunana supervisor"
   return 1
 fi
 log_success "Startup: selected ${_selected_supervisor} supervisor"
@@ -341,17 +341,17 @@ elif [[ -d "dots/.config/matugen" ]]; then
   log_success "Theming templates installed (dots)"
 fi
 
-# ii-pixel-sddm theme (login screen matching ii lockscreen aesthetic)
+# drift-pixel-sddm theme (login screen matching drift lockscreen aesthetic)
 # This MUST run AFTER theming templates are deployed above, because the distributed
 # config includes the SDDM sync post_hook template.
 if command -v sddm &>/dev/null; then
   if [[ "${INSTALL_FIRSTRUN}" == true ]]; then
     if [[ "${ask}" == "true" ]]; then
-      tui_info "Recommended: install ii-pixel-sddm login theme (matches iNiR lockscreen)."
-      if tui_confirm "Install ii-pixel-sddm now?" "yes"; then
+      tui_info "Recommended: install drift-pixel-sddm login theme (matches Lunana lockscreen)."
+      if tui_confirm "Install drift-pixel-sddm now?" "yes"; then
         extras_install_sddm_theme "yes" no
       else
-        log_info "Skipping ii-pixel-sddm setup"
+        log_info "Skipping drift-pixel-sddm setup"
       fi
     else
       # Non-interactive: auto-install SDDM theme
@@ -377,7 +377,7 @@ if [[ -d "dots/.config/fish" ]]; then
   log_success "Fish shell config installed"
 
   # Set Fish as default shell if requested
-  if [[ "${INIR_SET_DEFAULT_SHELL:-}" == "true" ]]; then
+  if [[ "${LUNANA_SET_DEFAULT_SHELL:-}" == "true" ]]; then
     if command -v chsh &>/dev/null; then
       local fish_path
       fish_path=$(command -v fish 2>/dev/null)
@@ -494,7 +494,7 @@ for gtkver in gtk-3.0 gtk-4.0; do
 done
 
 # KDE settings (for Qt apps like Dolphin, Kate, etc.)
-# These are controlled by iNiR for theming - always overwrite
+# These are controlled by Lunana for theming - always overwrite
 if [[ -f "defaults/kde/kdeglobals" ]]; then
   install_file "defaults/kde/kdeglobals" "${XDG_CONFIG_HOME}/kdeglobals"
 elif [[ -f "dots/.config/kdeglobals" ]]; then
@@ -571,12 +571,12 @@ if [[ -d "dots/.config/vesktop/themes" ]]; then
 
   # Migrate: Remove old theme files from previous versions
   OLD_VESKTOP_THEMES=(
-    "midnight-ii.theme.css"
+    "midnight-drift.theme.css"
     "dms-midnight.theme.css"
-    "system24-ii.theme.css"
+    "system24-drift.theme.css"
     "system24-palette.css"
-    "ii-palette.css"
-    "ii-system24.theme.css"
+    "drift-palette.css"
+    "drift-system24.theme.css"
   )
   for old_theme in "${OLD_VESKTOP_THEMES[@]}"; do
     if [[ -f "${XDG_CONFIG_HOME}/vesktop/themes/${old_theme}" ]]; then
@@ -605,12 +605,12 @@ if [[ -d "dots/.config/vesktop/themes" ]]; then
 fi
 
 # Fontconfig: grayscale for the shell only; the rest of the desktop keeps the user's choice
-if [[ -f "dots/.config/fontconfig/conf.d/90-inir-shell.conf" ]]; then
+if [[ -f "dots/.config/fontconfig/conf.d/90-lunana-shell.conf" ]]; then
   LEGACY_FONTCONFIG="${XDG_CONFIG_HOME}/fontconfig/fonts.conf"
   if [[ -f "$LEGACY_FONTCONFIG" ]] && [[ "$(tr -d '[:space:]' < "$LEGACY_FONTCONFIG")" == '<?xmlversion="1.0"?><!DOCTYPEfontconfigSYSTEM"urn:fontconfig:fonts.dtd"><fontconfig><matchtarget="font"><editname="rgba"mode="assign"><const>none</const></edit></match></fontconfig>' ]]; then
     v rm -f "$LEGACY_FONTCONFIG"
   fi
-  install_file "dots/.config/fontconfig/conf.d/90-inir-shell.conf" "${XDG_CONFIG_HOME}/fontconfig/conf.d/90-inir-shell.conf"
+  install_file "dots/.config/fontconfig/conf.d/90-lunana-shell.conf" "${XDG_CONFIG_HOME}/fontconfig/conf.d/90-lunana-shell.conf"
 fi
 
 # Config (use defaults for distribution)
@@ -673,35 +673,35 @@ v dedup_and_sort_listfile "${INSTALLED_LISTFILE}" "${INSTALLED_LISTFILE}"
 # Environment variables are configured in Niri
 #####################################################################################
 tui_info "Configuring environment variables..."
-[[ "${IS_UPDATE}" != "true" ]] && INIR_REBOOT_REASONS+=("Niri's environment and the shell profile variables only load on a new login")
+[[ "${IS_UPDATE}" != "true" ]] && LUNANA_REBOOT_REASONS+=("Niri's environment and the shell profile variables only load on a new login")
 
 # Primary: environment {} block in Niri config.kdl (already installed)
 # Secondary: shell profile files for terminals outside Niri session (SSH, TTY, etc.)
 
 # Verify Niri config has the variable
-if grep -q "INIR_VENV" "${XDG_CONFIG_HOME}/niri/config.kdl" 2>/dev/null || \
+if grep -q "LUNANA_VENV" "${XDG_CONFIG_HOME}/niri/config.kdl" 2>/dev/null || \
    grep -q "ILLOGICAL_IMPULSE_VIRTUAL_ENV" "${XDG_CONFIG_HOME}/niri/config.kdl" 2>/dev/null; then
     log_success "Environment variable configured in Niri config"
 else
-    log_warning "INIR_VENV not found in Niri config"
+    log_warning "LUNANA_VENV not found in Niri config"
 fi
 
 # Write shell profile env vars (for SSH, TTY, non-Niri terminals)
 VENV_PATH="${XDG_STATE_HOME:-$HOME/.local/state}/quickshell/.venv"
 
 # Bash: source from .bashrc
-BASH_ENV_MARKER="# iNiR environment"
+BASH_ENV_MARKER="# Lunana environment"
 if [[ -f "$HOME/.bashrc" ]]; then
     # Clean up old markers
-    sed -i '/iNiR-env.sh/d' "$HOME/.bashrc"
-    # Remove any existing iNiR block
-    sed -i "/${BASH_ENV_MARKER}/,/# end iNiR/d" "$HOME/.bashrc"
+    sed -i '/Lunana-env.sh/d' "$HOME/.bashrc"
+    # Remove any existing Lunana block
+    sed -i "/${BASH_ENV_MARKER}/,/# end Lunana/d" "$HOME/.bashrc"
 fi
 cat >> "$HOME/.bashrc" << BEOF
 
 ${BASH_ENV_MARKER}
-export INIR_VENV="${VENV_PATH}"
-export ILLOGICAL_IMPULSE_VIRTUAL_ENV="\$INIR_VENV"
+export LUNANA_VENV="${VENV_PATH}"
+export ILLOGICAL_IMPULSE_VIRTUAL_ENV="\$LUNANA_VENV"
 # Apply terminal color sequences (Material You from wallpaper)
 if [ -f ~/.local/state/quickshell/user/generated/terminal/sequences.txt ]; then
   cat ~/.local/state/quickshell/user/generated/terminal/sequences.txt
@@ -710,29 +710,29 @@ fi
 if command -v starship >/dev/null 2>&1; then
   eval "\$(starship init bash)"
 fi
-# end iNiR
+# end Lunana
 BEOF
 log_success "Bash environment configured"
 
 # Fish: conf.d snippet
 FISH_CONF_DIR="${XDG_CONFIG_HOME}/fish/conf.d"
 mkdir -p "$FISH_CONF_DIR"
-cat > "${FISH_CONF_DIR}/inir-env.fish" << FEOF
-# iNiR environment — auto-generated by setup install
-set -gx INIR_VENV "${VENV_PATH}"
-set -gx ILLOGICAL_IMPULSE_VIRTUAL_ENV "\$INIR_VENV"
+cat > "${FISH_CONF_DIR}/lunana-env.fish" << FEOF
+# Lunana environment — auto-generated by setup install
+set -gx LUNANA_VENV "${VENV_PATH}"
+set -gx ILLOGICAL_IMPULSE_VIRTUAL_ENV "\$LUNANA_VENV"
 FEOF
 log_success "Fish environment configured"
 
 # Zsh: source from .zshrc (if zsh is installed)
 if [[ -f "$HOME/.zshrc" ]]; then
-    sed -i '/iNiR-env.sh/d' "$HOME/.zshrc"
-    sed -i "/${BASH_ENV_MARKER}/,/# end iNiR/d" "$HOME/.zshrc"
+    sed -i '/Lunana-env.sh/d' "$HOME/.zshrc"
+    sed -i "/${BASH_ENV_MARKER}/,/# end Lunana/d" "$HOME/.zshrc"
     cat >> "$HOME/.zshrc" << ZEOF
 
 ${BASH_ENV_MARKER}
-export INIR_VENV="${VENV_PATH}"
-export ILLOGICAL_IMPULSE_VIRTUAL_ENV="\$INIR_VENV"
+export LUNANA_VENV="${VENV_PATH}"
+export ILLOGICAL_IMPULSE_VIRTUAL_ENV="\$LUNANA_VENV"
 # Apply terminal color sequences (Material You from wallpaper)
 if [ -f ~/.local/state/quickshell/user/generated/terminal/sequences.txt ]; then
   cat ~/.local/state/quickshell/user/generated/terminal/sequences.txt
@@ -741,7 +741,7 @@ fi
 if command -v starship >/dev/null 2>&1; then
   eval "\$(starship init zsh)"
 fi
-# end iNiR
+# end Lunana
 ZEOF
     log_success "Zsh environment configured"
 fi
@@ -907,7 +907,7 @@ tui_info "Copying wallpapers..."
 # Copy bundled wallpapers to user's Pictures/Wallpapers (always, don't overwrite)
 #####################################################################################
 # Ensure II_TARGET is defined (in case SKIP_QUICKSHELL was set)
-II_TARGET="${II_TARGET:-${XDG_CONFIG_HOME}/quickshell/inir}"
+II_TARGET="${II_TARGET:-${XDG_CONFIG_HOME}/quickshell/lunana}"
 # Validate xdg-user-dir output: must be absolute and not equal to $HOME itself
 _xdg_pictures="$(xdg-user-dir PICTURES 2>/dev/null || true)"
 if [[ -z "$_xdg_pictures" || "$_xdg_pictures" != /* || "$_xdg_pictures" == "$HOME" ]]; then
@@ -932,15 +932,15 @@ if [[ -d "${II_TARGET}/assets/wallpapers" ]]; then
 fi
 
 # Optional extra wallpapers (fresh install interactive only)
-INIR_WALLS_DEFAULT_OVERRIDE=""
+LUNANA_WALLS_DEFAULT_OVERRIDE=""
 if [[ "${INSTALL_FIRSTRUN}" == true && "${ask}" == "true" ]]; then
-  if tui_confirm "Download and install iNiR-Walls wallpapers?" "no"; then
-    EXTRAS_INIR_WALLS_FIRST_IMAGE=""
-    extras_install_inir_walls
-    INIR_WALLS_FIRST="${EXTRAS_INIR_WALLS_FIRST_IMAGE}"
-    if [[ -n "$INIR_WALLS_FIRST" ]] && tui_confirm "Replace iNiR default wallpaper selection with an iNiR-Walls wallpaper?" "yes"; then
-      INIR_WALLS_DEFAULT_OVERRIDE="$INIR_WALLS_FIRST"
-      log_success "Default wallpaper source switched to iNiR-Walls"
+  if tui_confirm "Download and install Lunana-Walls wallpapers?" "no"; then
+    EXTRAS_LUNANA_WALLS_FIRST_IMAGE=""
+    extras_install_lunana_walls
+    LUNANA_WALLS_FIRST="${EXTRAS_LUNANA_WALLS_FIRST_IMAGE}"
+    if [[ -n "$LUNANA_WALLS_FIRST" ]] && tui_confirm "Replace Lunana default wallpaper selection with an Lunana-Walls wallpaper?" "yes"; then
+      LUNANA_WALLS_DEFAULT_OVERRIDE="$LUNANA_WALLS_FIRST"
+      log_success "Default wallpaper source switched to Lunana-Walls"
     fi
   fi
 fi
@@ -965,8 +965,8 @@ fi
 #####################################################################################
 # Pick the first available wallpaper (don't hardcode a filename that may not exist)
 DEFAULT_WALLPAPER=""
-if [[ -n "$INIR_WALLS_DEFAULT_OVERRIDE" && -f "$INIR_WALLS_DEFAULT_OVERRIDE" && -s "$INIR_WALLS_DEFAULT_OVERRIDE" ]]; then
-  DEFAULT_WALLPAPER="$INIR_WALLS_DEFAULT_OVERRIDE"
+if [[ -n "$LUNANA_WALLS_DEFAULT_OVERRIDE" && -f "$LUNANA_WALLS_DEFAULT_OVERRIDE" && -s "$LUNANA_WALLS_DEFAULT_OVERRIDE" ]]; then
+  DEFAULT_WALLPAPER="$LUNANA_WALLS_DEFAULT_OVERRIDE"
 fi
 for candidate in \
   "${USER_WALLPAPERS_DIR}/G5uBmitWkAAyk8s.jpg" \
@@ -1009,9 +1009,9 @@ if [[ "${INSTALL_FIRSTRUN}" == true && -n "${DEFAULT_WALLPAPER}" && -f "${DEFAUL
   fi
 
   # Generate initial theme colors using unified Python pipeline
-  export INIR_VENV="${XDG_STATE_HOME}/quickshell/.venv"
-  export ILLOGICAL_IMPULSE_VIRTUAL_ENV="${INIR_VENV}"
-  _init_python_cmd="${INIR_VENV}/bin/python3"
+  export LUNANA_VENV="${XDG_STATE_HOME}/quickshell/.venv"
+  export ILLOGICAL_IMPULSE_VIRTUAL_ENV="${LUNANA_VENV}"
+  _init_python_cmd="${LUNANA_VENV}/bin/python3"
   _init_gen_material="${II_TARGET}/scripts/colors/generate_colors_material.py"
   _init_template_dir="${XDG_CONFIG_HOME}/matugen"
   _init_scss_file="${XDG_STATE_HOME}/quickshell/user/generated/material_colors.scss"
@@ -1130,7 +1130,7 @@ if ! ${quiet:-false}; then
   _VERIFY_ERRORS=0
   for _crit_file in "shell.qml" "GlobalStates.qml" "modules/common/Config.qml" \
                     "modules/common/Appearance.qml" "services/NiriService.qml"; do
-    if [[ -f "${II_TARGET:-${XDG_CONFIG_HOME}/quickshell/inir}/${_crit_file}" ]]; then
+    if [[ -f "${II_TARGET:-${XDG_CONFIG_HOME}/quickshell/lunana}/${_crit_file}" ]]; then
       tui_verify_ok "${_crit_file}"
     else
       tui_verify_fail "${_crit_file}" "MISSING"
@@ -1142,7 +1142,7 @@ if ! ${quiet:-false}; then
   echo ""
   for _cfg_path \
     in "${XDG_CONFIG_HOME}/niri/config.kdl:Niri config" \
-       "${DOTS_CORE_CONFDIR}/config.json:iNiR config" \
+       "${DOTS_CORE_CONFDIR}/config.json:Lunana config" \
        "${XDG_CONFIG_HOME}/matugen:Theming templates" \
        "${XDG_STATE_HOME}/quickshell/user/generated/colors.json:Theme colors"; do
     _cfg_file="${_cfg_path%%:*}"
@@ -1170,9 +1170,9 @@ fi
 # In quiet mode, just print a simple status line
 if ${quiet:-false}; then
   if [[ "${IS_UPDATE}" == "true" ]]; then
-    echo "iNiR: update complete"
+    echo "Lunana: update complete"
   else
-    echo "iNiR: install complete"
+    echo "Lunana: install complete"
   fi
 else
   echo ""
@@ -1193,7 +1193,7 @@ EOF
 
     echo -e "${STY_BLUE}${STY_BOLD}┌─ What was updated${STY_RST}"
     echo -e "${STY_BLUE}│${STY_RST}"
-    echo -e "${STY_BLUE}│${STY_RST}  ${STY_GREEN}✓${STY_RST} Quickshell inir synced to ~/.config/quickshell/inir/"
+    echo -e "${STY_BLUE}│${STY_RST}  ${STY_GREEN}✓${STY_RST} Quickshell lunana synced to ~/.config/quickshell/lunana/"
     echo -e "${STY_BLUE}│${STY_RST}  ${STY_GREEN}✓${STY_RST} Missing keybinds added to Niri config (if any)"
     echo -e "${STY_BLUE}│${STY_RST}  ${STY_GREEN}✓${STY_RST} Config migrations applied"
     echo -e "${STY_BLUE}│${STY_RST}"
@@ -1214,8 +1214,8 @@ EOF
 
     echo -e "${STY_BLUE}${STY_BOLD}┌─ What was installed${STY_RST}"
     echo -e "${STY_BLUE}│${STY_RST}"
-    echo -e "${STY_BLUE}│${STY_RST}  ${STY_GREEN}✓${STY_RST} Quickshell inir copied to ~/.config/quickshell/inir/"
-    echo -e "${STY_BLUE}│${STY_RST}  ${STY_GREEN}✓${STY_RST} Niri config wired to the inir launcher"
+    echo -e "${STY_BLUE}│${STY_RST}  ${STY_GREEN}✓${STY_RST} Quickshell lunana copied to ~/.config/quickshell/lunana/"
+    echo -e "${STY_BLUE}│${STY_RST}  ${STY_GREEN}✓${STY_RST} Niri config wired to the lunana launcher"
     echo -e "${STY_BLUE}│${STY_RST}  ${STY_GREEN}✓${STY_RST} GTK/Qt theming (Material You + Kvantum + Darkly)"
     echo -e "${STY_BLUE}│${STY_RST}  ${STY_GREEN}✓${STY_RST} Environment variables for ${DETECTED_SHELL:-your shell}"
     echo -e "${STY_BLUE}│${STY_RST}  ${STY_GREEN}✓${STY_RST} Default wallpaper and color scheme"
@@ -1257,7 +1257,7 @@ if ! ${quiet:-false}; then
     echo -e "${STY_PURPLE}│${STY_RST}"
     echo -e "${STY_PURPLE}│${STY_RST}  ${STY_INVERT} Super+Space ${STY_RST}     Search and overview"
     echo -e "${STY_PURPLE}│${STY_RST}  ${STY_INVERT} Super+, ${STY_RST}         Settings"
-    echo -e "${STY_PURPLE}│${STY_RST}  ${STY_INVERT} Super+Shift+W ${STY_RST}   Switch between Material, Waffle and iRiS"
+    echo -e "${STY_PURPLE}│${STY_RST}  ${STY_INVERT} Super+Shift+W ${STY_RST}   Switch between Material, Slate and Atoll"
     echo -e "${STY_PURPLE}│${STY_RST}  ${STY_INVERT} Super+V ${STY_RST}         Clipboard history"
     echo -e "${STY_PURPLE}│${STY_RST}  ${STY_INVERT} Ctrl+Alt+T ${STY_RST}      Wallpapers"
     echo -e "${STY_PURPLE}│${STY_RST}  ${STY_INVERT} Super+/ ${STY_RST}         Every other shortcut"
@@ -1267,7 +1267,7 @@ if ! ${quiet:-false}; then
   fi
 
   echo -e "${STY_FAINT}Backups saved to: ${BACKUP_DIR}${STY_RST}"
-  echo -e "${STY_FAINT}Logs: inir logs${STY_RST}"
+  echo -e "${STY_FAINT}Logs: lunana logs${STY_RST}"
   echo ""
 
   if [[ "${IS_UPDATE}" == "true" ]]; then

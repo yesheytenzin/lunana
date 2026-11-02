@@ -1462,7 +1462,7 @@ Item {
                 NumberAnimation { duration: Appearance.animation.elementMoveFast.duration }
             }
             color: Appearance.angelEverywhere ? Appearance.angel.colGlassCard
-                : Appearance.inirEverywhere ? Appearance.inir.colLayer2 : Appearance.auroraEverywhere ? Appearance.aurora.colElevatedSurface : Appearance.colors.colLayer2
+                : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2 : Appearance.auroraEverywhere ? Appearance.aurora.colElevatedSurface : Appearance.colors.colLayer2
             implicitWidth: tagInputField.implicitWidth
             implicitHeight: Math.max(inputFieldRowLayout.implicitHeight + 10, 48)
             clip: true

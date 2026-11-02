@@ -17,10 +17,10 @@ ContentPage {
     settingsPageIndex: 22
     settingsPageName: Translation.tr("Dock")
 
-    property bool isIiActive: (Config.options?.panelFamily ?? "ii") === "ii"
+    property bool isDriftActive: (Config.options?.panelFamily ?? "drift") === "drift"
 
     SettingsCardSection {
-        visible: root.isIiActive
+        visible: root.isDriftActive
         expanded: true
         icon: "call_to_action"
         title: Translation.tr("Dock")

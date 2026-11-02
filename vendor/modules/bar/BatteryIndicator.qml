@@ -12,7 +12,7 @@ MouseArea {
     // Easter egg: long-press the battery and she boops in
     onPressAndHold: {
         if (Config.options?.mascot?.enable ?? false)
-            Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")), "mascot", "appearWithLine",
+            Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/lunana")), "mascot", "appearWithLine",
                 "camera-boop", "top", Translation.tr("Boop.")])
     }
     readonly property var chargeState: Battery.chargeState
@@ -31,8 +31,8 @@ MouseArea {
         anchors.centerIn: parent
         value: percentage
         highlightColor: (isLow && !isCharging)
-            ? (Appearance.inirEverywhere ? Appearance.inir.colError : Appearance.colors.colError)
-            : (Appearance.angelEverywhere ? Appearance.angel.colText : Appearance.inirEverywhere ? Appearance.inir.colText : Appearance.colors.colOnLayer0)
+            ? (Appearance.lunanaEverywhere ? Appearance.lunana.colError : Appearance.colors.colError)
+            : (Appearance.angelEverywhere ? Appearance.angel.colText : Appearance.lunanaEverywhere ? Appearance.lunana.colText : Appearance.colors.colOnLayer0)
 
         Item {
             anchors.centerIn: parent

@@ -12,8 +12,8 @@ import "."
 /**
  * AnimeWatch — anime from the shell, with the installed CLI as the engine.
  *
- * With ani-cli, iNiR is the whole interface: scripts/inir-ani runs it with iNiR as
- * its menu (scripts/inir-ani-menu) and its player (scripts/inir-mpv), so every
+ * With ani-cli, Lunana is the whole interface: scripts/lunana-ani runs it with Lunana as
+ * its menu (scripts/lunana-ani-menu) and its player (scripts/lunana-mpv), so every
  * question ani-cli asks comes here, and mpv hands its IPC socket to MpvIpc. Each
  * run owns a directory under $XDG_RUNTIME_DIR; its `exit` file says when ani-cli
  * is gone and why. Progress is kept here per show and episode, so an episode
@@ -24,15 +24,15 @@ Singleton {
     id: root
 
     readonly property int maxShows: 6
-    // The service is constructed whenever IrisPieces.available("watching") is read,
+    // The service is constructed whenever AtollPieces.available("watching") is read,
     // so nothing here may start a process until the piece is actually on.
-    readonly property bool enabled: Config.options?.iris?.bubbles?.extras?.watching?.enable ?? false
+    readonly property bool enabled: Config.options?.atoll?.bubbles?.extras?.watching?.enable ?? false
     readonly property double finishedRatio: 0.9
-    readonly property string audio: Config.options?.iris?.anime?.audio === "dub" ? "dub" : "sub"
-    readonly property string quality: String(Config.options?.iris?.anime?.quality ?? "best")
-    readonly property int subtitleScale: Math.max(50, Math.min(200, Number(Config.options?.iris?.anime?.subtitleScale ?? 100)))
-    readonly property int subtitlePosition: Math.max(50, Math.min(100, Number(Config.options?.iris?.anime?.subtitlePosition ?? 100)))
-    readonly property bool skipIntro: Config.options?.iris?.anime?.skipIntro ?? false
+    readonly property string audio: Config.options?.atoll?.anime?.audio === "dub" ? "dub" : "sub"
+    readonly property string quality: String(Config.options?.atoll?.anime?.quality ?? "best")
+    readonly property int subtitleScale: Math.max(50, Math.min(200, Number(Config.options?.atoll?.anime?.subtitleScale ?? 100)))
+    readonly property int subtitlePosition: Math.max(50, Math.min(100, Number(Config.options?.atoll?.anime?.subtitlePosition ?? 100)))
+    readonly property bool skipIntro: Config.options?.atoll?.anime?.skipIntro ?? false
     property bool hasAniSkip: false
 
     property string cli: ""
@@ -58,7 +58,7 @@ Singleton {
 
     readonly property string _runsHome: {
         const value = Quickshell.env("XDG_RUNTIME_DIR")
-        return (value && value.length > 0 ? value : "/tmp") + "/inir-anime"
+        return (value && value.length > 0 ? value : "/tmp") + "/lunana-anime"
     }
 
     readonly property string progressPath: Directories.stateUserPath + "/anime-watch-progress.json"
@@ -68,7 +68,7 @@ Singleton {
     property var covers: ({})
     property var _coverAsked: ({})
     readonly property string playingCover: root.session ? root.coverOf(root.session) : ""
-    readonly property string launcher: Directories.scriptPath + "/inir-ani"
+    readonly property string launcher: Directories.scriptPath + "/lunana-ani"
 
     property string runDir: ""
     readonly property bool running: root.runDir.length > 0
@@ -170,10 +170,10 @@ Singleton {
     function seekBy(seconds: real): void { mpv.seekBy(seconds) }
     function addSubtitle(path: string): void { mpv.addSub(String(path ?? "").replace(/^file:\/\//, "")) }
     function setSubtitleScale(percent: int): void {
-        Config.setNestedValue("iris.anime.subtitleScale", Math.max(50, Math.min(200, Math.round(percent / 10) * 10)))
+        Config.setNestedValue("atoll.anime.subtitleScale", Math.max(50, Math.min(200, Math.round(percent / 10) * 10)))
     }
     function setSubtitlePosition(percent: int): void {
-        Config.setNestedValue("iris.anime.subtitlePosition", Math.max(50, Math.min(100, Math.round(percent))))
+        Config.setNestedValue("atoll.anime.subtitlePosition", Math.max(50, Math.min(100, Math.round(percent))))
     }
     function _applySubtitleLook(): void {
         mpv.apply("sub-scale", root.subtitleScale / 100)
@@ -350,9 +350,9 @@ Singleton {
         if (root.quality !== "best") flags.push("-q", root.quality)
         ShellExec.execDetachedArgs([
             "/usr/bin/env",
-            "INIR_ANI_EXPECT=" + expect,
-            "INIR_ANI_PROGRESS=" + root.progressPath,
-            "INIR_ANI_FINISHED=" + String(root.finishedRatio),
+            "LUNANA_ANI_EXPECT=" + expect,
+            "LUNANA_ANI_PROGRESS=" + root.progressPath,
+            "LUNANA_ANI_FINISHED=" + String(root.finishedRatio),
             root.launcher, root.runDir,
             ...flags, ...args
         ], "Anime: " + args.join(" "))
@@ -709,7 +709,7 @@ Singleton {
 
     // The provider slug is not stable: searching the same show can resolve it to a
     // different id, which would orphan its saved position. The title is what both
-    // the history and the player agree on. scripts/inir-mpv derives the same key.
+    // the history and the player agree on. scripts/lunana-mpv derives the same key.
     function progressKey(entry: var): string {
         return String(entry?.title ?? "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim()
     }

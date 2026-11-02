@@ -1,0 +1,5 @@
+AtollControlCenter 1.0 AtollControlCenter.qml
+AtollControlGrid 1.0 AtollControlGrid.qml
+AtollControlMark 1.0 AtollControlMark.qml
+singleton AtollControlOptions 1.0 AtollControlOptions.qml
+AtollQuickPanel 1.0 AtollQuickPanel.qml

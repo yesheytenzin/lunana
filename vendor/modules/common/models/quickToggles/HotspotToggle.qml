@@ -20,7 +20,7 @@ import Quickshell.Io
  * Status is verified by parsing the active connection list, not just exit codes.
  *
  * Config keys read:
- *   hotspot.ssid     — broadcast network name (default: "iNiR Hotspot")
+ *   hotspot.ssid     — broadcast network name (default: "Lunana Hotspot")
  *   hotspot.password — WPA2 passphrase generated during installation
  *   hotspot.band     — "bg" (2.4GHz) or "a" (5GHz) (default: "bg")
  */
@@ -34,7 +34,7 @@ QuickToggleModel {
     hasMenu: true
     hasStatusText: true
     statusText: root.toggled
-        ? (Config.options?.hotspot?.ssid ?? "iNiR Hotspot")
+        ? (Config.options?.hotspot?.ssid ?? "Lunana Hotspot")
         : Translation.tr("Off")
 
     tooltipText: Translation.tr("Personal Wi-Fi Hotspot")
@@ -48,7 +48,7 @@ QuickToggleModel {
         if (root.toggled) {
             stopProc.running = true
         } else {
-            const ssid = Config.options?.hotspot?.ssid ?? "iNiR Hotspot"
+            const ssid = Config.options?.hotspot?.ssid ?? "Lunana Hotspot"
             const password = Config.options?.hotspot?.password ?? ""
             const band = Config.options?.hotspot?.band ?? "bg"
             // Delete any stale "Hotspot" profile first, then create fresh.
@@ -118,7 +118,7 @@ QuickToggleModel {
                     errMsg.length > 0
                         ? errMsg
                         : Translation.tr("Failed to start hotspot. Ensure your Wi-Fi adapter supports AP mode."),
-                    "-a", "iNiR"
+                    "-a", "Lunana"
                 ])
             }
             root.refreshStatus()
@@ -144,7 +144,7 @@ QuickToggleModel {
                     errMsg.length > 0
                         ? errMsg
                         : Translation.tr("Failed to stop hotspot."),
-                    "-a", "iNiR"
+                    "-a", "Lunana"
                 ])
             }
             root.refreshStatus()
@@ -156,7 +156,7 @@ QuickToggleModel {
         interval: 5000
         repeat: true
         triggeredOnStart: true
-        running: GlobalStates.sidebarRightOpen || GlobalStates.waffleActionCenterOpen
+        running: GlobalStates.sidebarRightOpen || GlobalStates.slateActionCenterOpen
         onTriggered: root.refreshStatus()
     }
 

@@ -4,24 +4,24 @@ import QtQuick
 import "../../.."
 import "../../common"
 import "../../common/widgets"
-import "../../iris/style"
+import "../../atoll/style"
 
-// A widget's mark at the head of its quick controls. iRiS: the category-tint squircle with a white
-// glyph (its identity grammar); the ii family: the Global Style's tonal container.
+// A widget's mark at the head of its quick controls. Atoll: the category-tint squircle with a white
+// glyph (its identity grammar); the drift family: the Global Style's tonal container.
 Rectangle {
     id: root
 
     property string glyph: "widgets"
-    property color tint: IrisStyle.accent
+    property color tint: AtollStyle.accent
 
-    readonly property bool iris: (Config.options?.panelFamily ?? "ii") === "iris"
-    readonly property real d: root.iris ? IrisStyle.density : 1
+    readonly property bool atoll: (Config.options?.panelFamily ?? "drift") === "atoll"
+    readonly property real d: root.atoll ? AtollStyle.density : 1
 
     implicitWidth: Math.round(28 * root.d)
     implicitHeight: implicitWidth
-    radius: root.iris ? IrisStyle.iconRadius(width) : Appearance.rounding.small
-    color: root.iris ? root.tint : Appearance.colors.colSecondaryContainer
-    gradient: root.iris ? tintGradient : null
+    radius: root.atoll ? AtollStyle.iconRadius(width) : Appearance.rounding.small
+    color: root.atoll ? root.tint : Appearance.colors.colSecondaryContainer
+    gradient: root.atoll ? tintGradient : null
 
     Gradient {
         id: tintGradient
@@ -34,6 +34,6 @@ Rectangle {
         text: root.glyph
         fill: 1
         iconSize: Math.round(17 * root.d)
-        color: root.iris ? IrisStyle.onTint : Appearance.colors.colOnSecondaryContainer
+        color: root.atoll ? AtollStyle.onTint : Appearance.colors.colOnSecondaryContainer
     }
 }

@@ -95,7 +95,7 @@ Scope {
 
     // Where the user's main panel actually lives — contextual reactions and
     // panel-flavored peeks come from this edge instead of a hardcoded "top"
-    readonly property string panelEdge: (Config.options?.panelFamily ?? "ii") === "waffle" ? "bottom"
+    readonly property string panelEdge: (Config.options?.panelFamily ?? "drift") === "slate" ? "bottom"
         : (Config.options?.bar?.bottom ?? false) ? "bottom"
         : (Config.options?.bar?.vertical ?? false) ? "left"
         : "top"
@@ -1148,7 +1148,7 @@ Scope {
                 AnimatedImage {
                     id: companionSprite
                     anchors.fill: parent
-                    source: ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + (`assets/images/mascot/inir-mascot-${root.displayPose}.${root.animatedPoses.includes(root.displayPose) ? "gif" : "png"}`))
+                    source: ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + (`assets/images/mascot/lunana-mascot-${root.displayPose}.${root.animatedPoses.includes(root.displayPose) ? "gif" : "png"}`))
                     playing: root.showing
                     fillMode: Image.PreserveAspectFit
                     asynchronous: true
@@ -1160,7 +1160,7 @@ Scope {
                     antialiasing: true
                     // Only poses drawn hugging the left canvas edge flip on the
                     // right edge; everything else (badge text, asymmetric props)
-                    // must render as drawn — mirroring reverses the iNiR badge.
+                    // must render as drawn — mirroring reverses the Lunana badge.
                     mirror: root.edge === "right" && (root._manifest.mirrorOnRight ?? ["edge-peek"]).includes(root.pose)
 
                     // She isn't just a swapped photo: a slow breathing pulse runs
@@ -1272,15 +1272,15 @@ Scope {
                 // Same style dispatch as StyledToolTipContent so the bubble
                 // reads as a native shell tooltip in every global style
                 radius: Appearance.angelEverywhere ? Appearance.angel.roundingSmall
-                     : Appearance.inirEverywhere ? Appearance.inir.roundingNormal
+                     : Appearance.lunanaEverywhere ? Appearance.lunana.roundingNormal
                      : Appearance.rounding.verysmall
                 color: Appearance.angelEverywhere ? Appearance.angel.colGlassTooltip
-                     : Appearance.inirEverywhere ? Appearance.inir.colLayer2
+                     : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2
                      : Appearance.auroraEverywhere ? Appearance.aurora.colTooltipSurface
                      : Appearance.colors.colLayer3
                 border.width: Appearance.angelEverywhere ? Appearance.angel.cardBorderWidth : 1
                 border.color: Appearance.angelEverywhere ? Appearance.angel.colBorderSubtle
-                            : Appearance.inirEverywhere ? Appearance.inir.colBorder
+                            : Appearance.lunanaEverywhere ? Appearance.lunana.colBorder
                             : Appearance.auroraEverywhere ? Appearance.aurora.colTooltipBorder
                             : Appearance.colors.colLayer3Hover
 
@@ -1313,7 +1313,7 @@ Scope {
                     horizontalAlignment: Text.AlignHCenter
                     font.pixelSize: Appearance.font.pixelSize.smaller
                     color: Appearance.angelEverywhere ? Appearance.angel.colText
-                         : Appearance.inirEverywhere ? Appearance.inir.colText
+                         : Appearance.lunanaEverywhere ? Appearance.lunana.colText
                          : Appearance.colors.colOnLayer3
                 }
             }

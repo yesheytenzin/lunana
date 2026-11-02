@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "lunana.atoll-wallpaper",
+  "name": "Lunana Atoll Wallpaper",
+  "version": "0.4.0",
+  "author": "lunana",
+  "license": "GPL-3.0",
+  "description": "Lunana Atoll wallpaper gallery host (AtollWallpaperPicker).",
+  "kinds": [
+    "overlay"
+  ],
+  "entryPoints": {
+    "overlay": "AtollWallpaper.qml"
+  },
+  "x-lunana": {
+    "suiteId": "lunana",
+    "role": "atoll-wallpaper",
+    "milestone": "parity",
+    "requires": [],
+    "recommends": []
+  }
+}

@@ -14,13 +14,13 @@ ContentPage {
     settingsPageIndex: 3
     settingsPageName: Translation.tr("Background")
 
-    property bool isIiActive: (Config.options?.panelFamily ?? "ii") === "ii"
-    property bool isWaffleActive: Config.options?.panelFamily === "waffle"
+    property bool isDriftActive: (Config.options?.panelFamily ?? "drift") === "drift"
+    property bool isSlateActive: Config.options?.panelFamily === "slate"
     property string activeSection: "source"
-    readonly property bool screensTaskActive: root.isIiActive && root.activeSection === "screens"
+    readonly property bool screensTaskActive: root.isDriftActive && root.activeSection === "screens"
 
     SettingsTaskNavigator {
-        visible: root.isIiActive
+        visible: root.isDriftActive
         icon: "texture"
         title: Translation.tr("Wallpaper")
         description: Translation.tr("Choose the source and rotation first, then tune motion, screen behavior or visual effects without scrolling through unrelated controls.")
@@ -41,21 +41,21 @@ ContentPage {
             { displayName: Translation.tr("Notifications"), icon: "notifications", value: "notifications" }
         ]
     }
-    readonly property var iiParallax: Config.options?.background?.parallax ?? {}
-    readonly property string iiParallaxPreset: ParallaxMath.detectPreset(
-        iiParallax.zoom ?? iiParallax.workspaceZoom ?? 1.0,
-        iiParallax.workspaceShift ?? 1,
-        iiParallax.panelShift ?? iiParallax.sidebarShift ?? 0.15,
-        iiParallax.widgetDepth ?? iiParallax.widgetsFactor ?? 1.2
+    readonly property var driftParallax: Config.options?.background?.parallax ?? {}
+    readonly property string driftParallaxPreset: ParallaxMath.detectPreset(
+        driftParallax.zoom ?? driftParallax.workspaceZoom ?? 1.0,
+        driftParallax.workspaceShift ?? 1,
+        driftParallax.panelShift ?? driftParallax.sidebarShift ?? 0.15,
+        driftParallax.widgetDepth ?? driftParallax.widgetsFactor ?? 1.2
     )
 
-    function setIiParallaxAxis(value: string): void {
+    function setDriftParallaxAxis(value: string): void {
         Config.setNestedValue("background.parallax.axis", value)
         Config.setNestedValue("background.parallax.autoVertical", value === "auto")
         Config.setNestedValue("background.parallax.vertical", value === "vertical")
     }
 
-    function applyIiParallaxPreset(presetId: string): void {
+    function applyDriftParallaxPreset(presetId: string): void {
         const preset = ParallaxMath.preset(presetId)
         Config.setNestedValue("background.parallax.enable", true)
         Config.setNestedValue("background.parallax.zoom", preset.zoom)
@@ -67,15 +67,15 @@ ContentPage {
     }
 
     SettingsCardSection {
-        visible: root.isWaffleActive
+        visible: root.isSlateActive
         expanded: true
         icon: "info"
-        title: Translation.tr("Waffle Mode")
+        title: Translation.tr("Slate Mode")
 
         SettingsGroup {
             StyledText {
                 Layout.fillWidth: true
-                text: Translation.tr("You're using Waffle style. Most background settings are in the Waffle Style page. Only the Backdrop section below applies to both styles.")
+                text: Translation.tr("You're using Slate style. Most background settings are in the Slate Style page. Only the Backdrop section below applies to both styles.")
                 color: Appearance.colors.colSubtext
                 font.pixelSize: Appearance.font.pixelSize.small
                 wrapMode: Text.WordWrap
@@ -84,7 +84,7 @@ ContentPage {
     }
 
     SettingsTaskLoader {
-        requested: root.isIiActive && root.activeSection === "motion"
+        requested: root.isDriftActive && root.activeSection === "motion"
         sourceComponent: Component {
     SettingsCardSection {
         settingsTaskSection: "motion"
@@ -96,7 +96,7 @@ ContentPage {
             SettingsSwitch {
                 buttonIcon: "image"
                 text: Translation.tr("Enable parallax")
-                checked: root.iiParallax.enable ?? ((root.iiParallax.enableWorkspace ?? false) || (root.iiParallax.enableSidebar ?? false))
+                checked: root.driftParallax.enable ?? ((root.driftParallax.enableWorkspace ?? false) || (root.driftParallax.enableSidebar ?? false))
                 onCheckedChanged: Config.setNestedValue("background.parallax.enable", checked)
                 StyledToolTip {
                     text: Translation.tr("Move the wallpaper and background widgets with workspaces and panels")
@@ -105,7 +105,7 @@ ContentPage {
 
             StyledText {
                 Layout.fillWidth: true
-                text: Translation.tr("When parallax is active, ii renders the wallpaper internally so workspace motion, widget depth and wallpaper transitions stay synchronized.")
+                text: Translation.tr("When parallax is active, drift renders the wallpaper internally so workspace motion, widget depth and wallpaper transitions stay synchronized.")
                 color: Appearance.colors.colSubtext
                 font.pixelSize: Appearance.font.pixelSize.small
                 wrapMode: Text.WordWrap
@@ -115,13 +115,13 @@ ContentPage {
                 title: Translation.tr("Motion profile")
 
                 ConfigSelectionArray {
-                    currentValue: root.iiParallaxPreset === "custom" ? null : root.iiParallaxPreset
+                    currentValue: root.driftParallaxPreset === "custom" ? null : root.driftParallaxPreset
                     options: [
                         { displayName: Translation.tr("Subtle"), icon: "bedtime", value: "subtle" },
                         { displayName: Translation.tr("Balanced"), icon: "tune", value: "balanced" },
                         { displayName: Translation.tr("Immersive"), icon: "movie", value: "immersive" }
                     ]
-                    onSelected: newValue => root.applyIiParallaxPreset(newValue)
+                    onSelected: newValue => root.applyDriftParallaxPreset(newValue)
                 }
             }
 
@@ -129,14 +129,14 @@ ContentPage {
                 title: Translation.tr("Axis")
 
                 ConfigSelectionArray {
-                    currentValue: root.iiParallax.axis
-                        ?? ((root.iiParallax.autoVertical ?? false) ? "auto" : ((root.iiParallax.vertical ?? false) ? "vertical" : "horizontal"))
+                    currentValue: root.driftParallax.axis
+                        ?? ((root.driftParallax.autoVertical ?? false) ? "auto" : ((root.driftParallax.vertical ?? false) ? "vertical" : "horizontal"))
                     options: [
                         { displayName: Translation.tr("Horizontal"), icon: "east", value: "horizontal" },
                         { displayName: Translation.tr("Vertical"), icon: "north", value: "vertical" },
                         { displayName: Translation.tr("Auto"), icon: "sync_alt", value: "auto" }
                     ]
-                    onSelected: newValue => root.setIiParallaxAxis(newValue)
+                    onSelected: newValue => root.setDriftParallaxAxis(newValue)
                 }
             }
 
@@ -145,8 +145,8 @@ ContentPage {
                 SettingsSwitch {
                     buttonIcon: "counter_1"
                     text: Translation.tr("Follow workspace")
-                    checked: root.iiParallax.enableWorkspace ?? false
-                    enabled: root.iiParallax.enable ?? true
+                    checked: root.driftParallax.enableWorkspace ?? false
+                    enabled: root.driftParallax.enable ?? true
                     onCheckedChanged: Config.setNestedValue("background.parallax.enableWorkspace", checked)
                     StyledToolTip {
                         text: Translation.tr("Use the current workspace range to shift the wallpaper")
@@ -155,8 +155,8 @@ ContentPage {
                 SettingsSwitch {
                     buttonIcon: "side_navigation"
                     text: Translation.tr("Follow sidebars")
-                    checked: root.iiParallax.enableSidebar ?? false
-                    enabled: root.iiParallax.enable ?? true
+                    checked: root.driftParallax.enableSidebar ?? false
+                    enabled: root.driftParallax.enable ?? true
                     onCheckedChanged: Config.setNestedValue("background.parallax.enableSidebar", checked)
                     StyledToolTip {
                         text: Translation.tr("Add lateral offset when left or right sidebar is open")
@@ -167,7 +167,7 @@ ContentPage {
             ConfigSpinBox {
                 icon: "loupe"
                 text: Translation.tr("Wallpaper zoom (%)")
-                value: Math.round((root.iiParallax.zoom ?? root.iiParallax.workspaceZoom ?? 1.0) * 100)
+                value: Math.round((root.driftParallax.zoom ?? root.driftParallax.workspaceZoom ?? 1.0) * 100)
                 from: 10
                 to: 200
                 stepSize: 1
@@ -183,33 +183,33 @@ ContentPage {
             ConfigSpinBox {
                 icon: "north"
                 text: Translation.tr("Workspace travel (%)")
-                value: Math.round((root.iiParallax.workspaceShift ?? 1) * 100)
+                value: Math.round((root.driftParallax.workspaceShift ?? 1) * 100)
                 from: 0
                 to: 150
                 stepSize: 5
-                enabled: (root.iiParallax.enable ?? true) && (root.iiParallax.enableWorkspace ?? false)
+                enabled: (root.driftParallax.enable ?? true) && (root.driftParallax.enableWorkspace ?? false)
                 onValueChanged: Config.setNestedValue("background.parallax.workspaceShift", value / 100)
             }
 
             ConfigSpinBox {
                 icon: "left_panel_open"
                 text: Translation.tr("Sidebar travel (%)")
-                value: Math.round((root.iiParallax.panelShift ?? root.iiParallax.sidebarShift ?? 0.15) * 100)
+                value: Math.round((root.driftParallax.panelShift ?? root.driftParallax.sidebarShift ?? 0.15) * 100)
                 from: 0
                 to: 30
                 stepSize: 1
-                enabled: (root.iiParallax.enable ?? true) && (root.iiParallax.enableSidebar ?? false)
+                enabled: (root.driftParallax.enable ?? true) && (root.driftParallax.enableSidebar ?? false)
                 onValueChanged: Config.setNestedValue("background.parallax.panelShift", value / 100)
             }
 
             ConfigSpinBox {
                 icon: "layers"
                 text: Translation.tr("Widget depth (%)")
-                value: Math.round((root.iiParallax.widgetDepth ?? root.iiParallax.widgetsFactor ?? 1.2) * 100)
+                value: Math.round((root.driftParallax.widgetDepth ?? root.driftParallax.widgetsFactor ?? 1.2) * 100)
                 from: 50
                 to: 180
                 stepSize: 5
-                enabled: root.iiParallax.enable ?? true
+                enabled: root.driftParallax.enable ?? true
                 onValueChanged: {
                     Config.setNestedValue("background.parallax.widgetDepth", value / 100)
                     Config.setNestedValue("background.parallax.widgetsFactor", value / 100)
@@ -219,19 +219,19 @@ ContentPage {
             SettingsSwitch {
                 buttonIcon: "transition_fade"
                 text: Translation.tr("Pause during wallpaper transitions")
-                checked: root.iiParallax.pauseDuringTransitions ?? true
-                enabled: root.iiParallax.enable ?? true
+                checked: root.driftParallax.pauseDuringTransitions ?? true
+                enabled: root.driftParallax.enable ?? true
                 onCheckedChanged: Config.setNestedValue("background.parallax.pauseDuringTransitions", checked)
             }
 
             ConfigSpinBox {
                 icon: "timer"
                 text: Translation.tr("Transition settle (ms)")
-                value: root.iiParallax.transitionSettleMs ?? 220
+                value: root.driftParallax.transitionSettleMs ?? 220
                 from: 0
                 to: 1200
                 stepSize: 20
-                enabled: (root.iiParallax.enable ?? true) && (root.iiParallax.pauseDuringTransitions ?? true)
+                enabled: (root.driftParallax.enable ?? true) && (root.driftParallax.pauseDuringTransitions ?? true)
                 onValueChanged: Config.setNestedValue("background.parallax.transitionSettleMs", value)
             }
         }
@@ -240,7 +240,7 @@ ContentPage {
     }
 
     SettingsTaskLoader {
-        requested: root.isIiActive && root.activeSection === "screens"
+        requested: root.isDriftActive && root.activeSection === "screens"
         sourceComponent: Component {
     SettingsCardSection {
         settingsTaskSection: "screens"
@@ -272,7 +272,7 @@ ContentPage {
     }
 
     SettingsTaskLoader {
-        requested: root.isIiActive && root.activeSection === "screens"
+        requested: root.isDriftActive && root.activeSection === "screens"
         sourceComponent: Component {
     SettingsCardSection {
         settingsTaskSection: "screens"
@@ -333,13 +333,13 @@ ContentPage {
                     Layout.preferredHeight: 180
                     radius: Appearance.rounding.normal
                     color: Appearance.angelEverywhere ? Appearance.angel.colGlassCard
-                         : Appearance.inirEverywhere ? Appearance.inir.colLayer0
+                         : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer0
                          : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurface
                          : Appearance.colors.colLayer0
                     border.width: Appearance.angelEverywhere ? Appearance.angel.cardBorderWidth
-                        : Appearance.inirEverywhere ? 1 : (Appearance.auroraEverywhere ? 0 : 1)
+                        : Appearance.lunanaEverywhere ? 1 : (Appearance.auroraEverywhere ? 0 : 1)
                     border.color: Appearance.angelEverywhere ? Appearance.angel.colCardBorder
-                               : Appearance.inirEverywhere ? Appearance.inir.colBorder
+                               : Appearance.lunanaEverywhere ? Appearance.lunana.colBorder
                                : Appearance.colors.colLayer0Border
 
                     RowLayout {
@@ -390,14 +390,14 @@ ContentPage {
                                     height: bgMonDelegate.cardHeight
                                     radius: Appearance.rounding.small
                                     color: Appearance.angelEverywhere ? Appearance.angel.colGlassCard
-                                         : Appearance.inirEverywhere ? Appearance.inir.colLayer1
+                                         : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer1
                                          : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurface
                                          : Appearance.colors.colLayer1
                                     border.width: bgMonDelegate.isSelected && bgMultiMonPanel.showBackdropView
-                                        ? (Appearance.angelEverywhere ? Appearance.angel.cardBorderWidth : Appearance.inirEverywhere ? 1 : 2) : (Appearance.angelEverywhere ? Appearance.angel.cardBorderWidth : Appearance.inirEverywhere ? 1 : 0)
+                                        ? (Appearance.angelEverywhere ? Appearance.angel.cardBorderWidth : Appearance.lunanaEverywhere ? 1 : 2) : (Appearance.angelEverywhere ? Appearance.angel.cardBorderWidth : Appearance.lunanaEverywhere ? 1 : 0)
                                     border.color: bgMonDelegate.isSelected && bgMultiMonPanel.showBackdropView
-                                        ? (Appearance.angelEverywhere ? Appearance.angel.colPrimary : Appearance.inirEverywhere ? Appearance.inir.colAccent : Appearance.colors.colPrimary)
-                                        : (Appearance.angelEverywhere ? Appearance.angel.colCardBorder : Appearance.inirEverywhere ? Appearance.inir.colBorder : "transparent")
+                                        ? (Appearance.angelEverywhere ? Appearance.angel.colPrimary : Appearance.lunanaEverywhere ? Appearance.lunana.colAccent : Appearance.colors.colPrimary)
+                                        : (Appearance.angelEverywhere ? Appearance.angel.colCardBorder : Appearance.lunanaEverywhere ? Appearance.lunana.colBorder : "transparent")
                                     clip: true
 
                                     layer.enabled: true
@@ -506,7 +506,7 @@ ContentPage {
                                         color: "transparent"
                                         visible: bgMultiMonPanel.showBackdropView && bgMonDelegate.isSelected
                                         border.width: 2
-                                        border.color: Appearance.inirEverywhere ? Appearance.inir.colAccent : Appearance.colors.colPrimary
+                                        border.color: Appearance.lunanaEverywhere ? Appearance.lunana.colAccent : Appearance.colors.colPrimary
                                     }
                                 }
 
@@ -522,14 +522,14 @@ ContentPage {
                                     height: bgMonDelegate.cardHeight
                                     radius: Appearance.rounding.small
                                     color: Appearance.angelEverywhere ? Appearance.angel.colGlassCard
-                                         : Appearance.inirEverywhere ? Appearance.inir.colLayer1
+                                         : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer1
                                          : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurface
                                          : Appearance.colors.colLayer1
                                     border.width: bgMonDelegate.isSelected && !bgMultiMonPanel.showBackdropView
-                                        ? (Appearance.angelEverywhere ? Appearance.angel.cardBorderWidth : Appearance.inirEverywhere ? 1 : 2) : (Appearance.angelEverywhere ? Appearance.angel.cardBorderWidth : Appearance.inirEverywhere ? 1 : 0)
+                                        ? (Appearance.angelEverywhere ? Appearance.angel.cardBorderWidth : Appearance.lunanaEverywhere ? 1 : 2) : (Appearance.angelEverywhere ? Appearance.angel.cardBorderWidth : Appearance.lunanaEverywhere ? 1 : 0)
                                     border.color: bgMonDelegate.isSelected && !bgMultiMonPanel.showBackdropView
-                                        ? (Appearance.angelEverywhere ? Appearance.angel.colPrimary : Appearance.inirEverywhere ? Appearance.inir.colAccent : Appearance.colors.colPrimary)
-                                        : (Appearance.angelEverywhere ? Appearance.angel.colCardBorder : Appearance.inirEverywhere ? Appearance.inir.colBorder : "transparent")
+                                        ? (Appearance.angelEverywhere ? Appearance.angel.colPrimary : Appearance.lunanaEverywhere ? Appearance.lunana.colAccent : Appearance.colors.colPrimary)
+                                        : (Appearance.angelEverywhere ? Appearance.angel.colCardBorder : Appearance.lunanaEverywhere ? Appearance.lunana.colBorder : "transparent")
                                     clip: true
 
                                     layer.enabled: true
@@ -727,12 +727,12 @@ ContentPage {
                     implicitHeight: bgMonPreviewCol.implicitHeight
                     radius: Appearance.rounding.small
                     color: Appearance.angelEverywhere ? Appearance.angel.colGlassCard
-                         : Appearance.inirEverywhere ? Appearance.inir.colLayer1
+                         : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer1
                          : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurface
                          : Appearance.colors.colLayer1
                     border.width: Appearance.angelEverywhere ? (Appearance.angel?.cardBorderWidth ?? 1) : 1
                     border.color: Appearance.angelEverywhere ? (Appearance.angel?.colCardBorder ?? Appearance.colors.colLayer0Border)
-                               : Appearance.inirEverywhere ? (Appearance.inir?.colBorder ?? Appearance.colors.colLayer0Border)
+                               : Appearance.lunanaEverywhere ? (Appearance.lunana?.colBorder ?? Appearance.colors.colLayer0Border)
                                : Appearance.colors.colLayer0Border
                     clip: true
 
@@ -904,8 +904,8 @@ ContentPage {
                         Rectangle {
                             Layout.fillWidth: true
                             implicitHeight: 1
-                            color: Appearance.inirEverywhere
-                                ? (Appearance.inir?.colBorder
+                            color: Appearance.lunanaEverywhere
+                                ? (Appearance.lunana?.colBorder
                                     ?? Appearance.colors?.colLayer0Border
                                     ?? Appearance.colors?.colLayer0Border
                                     ?? Appearance.colors.colOutlineVariant)
@@ -967,7 +967,7 @@ ContentPage {
                                         if (mon) {
                                             Config.setNestedValue("wallpaperSelector.selectionTarget", "main")
                                             Config.setNestedValue("wallpaperSelector.targetMonitor", mon)
-                                            Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")), "wallpaperSelector", "toggle"])
+                                            Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/lunana")), "wallpaperSelector", "toggle"])
                                         }
                                     }
                                 }
@@ -1011,7 +1011,7 @@ ContentPage {
                                     }
                                     onClicked: {
                                         Config.setNestedValue("wallpaperSelector.selectionTarget", "backdrop")
-                                        Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")), "wallpaperSelector", "toggle"])
+                                        Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/lunana")), "wallpaperSelector", "toggle"])
                                     }
                                 }
                                 RippleButtonWithIcon {
@@ -1121,7 +1121,7 @@ ContentPage {
     }
 
     SettingsTaskLoader {
-        requested: !root.isIiActive || root.activeSection === "source"
+        requested: !root.isDriftActive || root.activeSection === "source"
         sourceComponent: Component {
     SettingsCardSection {
         settingsTaskSection: "source"
@@ -1241,7 +1241,7 @@ ContentPage {
     }
 
     SettingsTaskLoader {
-        requested: !root.isIiActive || root.activeSection === "source"
+        requested: !root.isDriftActive || root.activeSection === "source"
         sourceComponent: Component {
     SettingsCardSection {
         settingsTaskSection: "source"
@@ -1267,7 +1267,7 @@ ContentPage {
     }
 
     SettingsTaskLoader {
-        requested: !root.isIiActive || root.activeSection === "source"
+        requested: !root.isDriftActive || root.activeSection === "source"
         sourceComponent: Component {
     SettingsCardSection {
         settingsTaskSection: "source"
@@ -1329,7 +1329,7 @@ ContentPage {
     }
 
     SettingsTaskLoader {
-        requested: root.isIiActive && root.activeSection === "motion"
+        requested: root.isDriftActive && root.activeSection === "motion"
         sourceComponent: Component {
     SettingsCardSection {
         settingsTaskSection: "motion"
@@ -1374,11 +1374,11 @@ ContentPage {
                             case "glitch":       return Translation.tr("Digital glitch displacement between both wallpapers.")
                             case "ripple":       return Translation.tr("Radial ripple distortion carries the old image into the new one.")
                             case "shatter":      return Translation.tr("Fragments the outgoing wallpaper into a shatter transition.")
-                            case "inirMelt":     return Translation.tr("iNiR Melt breaks the outgoing wallpaper into staggered vertical streams with a restrained luminous edge.")
-                            case "inirVeil":     return Translation.tr("Chromatic Veil sweeps diagonally across the screen with a narrow controlled RGB fringe.")
-                            case "inirFracture": return Translation.tr("Glass Fracture shifts large screen fragments outward before resolving cleanly into the next wallpaper.")
-                            case "inirInk":      return Translation.tr("Sumi Wash reveals the next wallpaper through an irregular ink-like front with a muted monochrome edge.")
-                            case "inirPrism":    return Translation.tr("Prism Slices resolves the next wallpaper through staggered refractive strips with restrained chromatic edges.")
+                            case "lunanaMelt":     return Translation.tr("Lunana Melt breaks the outgoing wallpaper into staggered vertical streams with a restrained luminous edge.")
+                            case "lunanaVeil":     return Translation.tr("Chromatic Veil sweeps diagonally across the screen with a narrow controlled RGB fringe.")
+                            case "lunanaFracture": return Translation.tr("Glass Fracture shifts large screen fragments outward before resolving cleanly into the next wallpaper.")
+                            case "lunanaInk":      return Translation.tr("Sumi Wash reveals the next wallpaper through an irregular ink-like front with a muted monochrome edge.")
+                            case "lunanaPrism":    return Translation.tr("Prism Slices resolves the next wallpaper through staggered refractive strips with restrained chromatic edges.")
                             case "shaderRandom": return Translation.tr("Chooses a different internal shader for each wallpaper change.")
                             }
                         }
@@ -1446,11 +1446,11 @@ ContentPage {
                         { displayName: Translation.tr("Glitch"), icon: "bug_report", value: "glitch" },
                         { displayName: Translation.tr("Ripple"), icon: "water", value: "ripple" },
                         { displayName: Translation.tr("Shatter"), icon: "broken_image", value: "shatter" },
-                        { displayName: Translation.tr("iNiR Melt"), icon: "waterfall_chart", value: "inirMelt" },
-                        { displayName: Translation.tr("Chromatic Veil"), icon: "gradient", value: "inirVeil" },
-                        { displayName: Translation.tr("Glass Fracture"), icon: "deployed_code", value: "inirFracture" },
-                        { displayName: Translation.tr("Sumi Wash"), icon: "ink_highlighter", value: "inirInk" },
-                        { displayName: Translation.tr("Prism Slices"), icon: "view_column_2", value: "inirPrism" },
+                        { displayName: Translation.tr("Lunana Melt"), icon: "waterfall_chart", value: "lunanaMelt" },
+                        { displayName: Translation.tr("Chromatic Veil"), icon: "gradient", value: "lunanaVeil" },
+                        { displayName: Translation.tr("Glass Fracture"), icon: "deployed_code", value: "lunanaFracture" },
+                        { displayName: Translation.tr("Sumi Wash"), icon: "ink_highlighter", value: "lunanaInk" },
+                        { displayName: Translation.tr("Prism Slices"), icon: "view_column_2", value: "lunanaPrism" },
                         { displayName: Translation.tr("Random shader"), icon: "shuffle", value: "shaderRandom" }
                     ]
                 }
@@ -1527,7 +1527,7 @@ ContentPage {
     }
 
     SettingsTaskLoader {
-        requested: root.isIiActive && root.activeSection === "screens"
+        requested: root.isDriftActive && root.activeSection === "screens"
         sourceComponent: Component {
     SettingsCardSection {
         settingsTaskSection: "screens"
@@ -1588,7 +1588,7 @@ ContentPage {
                         MaterialSymbol {
                             text: "open_with"
                             iconSize: 16
-                            color: Appearance.inirEverywhere ? Appearance.inir.colPrimary
+                            color: Appearance.lunanaEverywhere ? Appearance.lunana.colPrimary
                                  : Appearance.auroraEverywhere ? Appearance.colors.colPrimary
                                  : Appearance.colors.colPrimary
                         }
@@ -1597,7 +1597,7 @@ ContentPage {
                             text: Translation.tr("Wallpaper position")
                             font.pixelSize: Appearance.font.pixelSize.small
                             font.weight: Font.Medium
-                            color: Appearance.inirEverywhere ? Appearance.inir.colText
+                            color: Appearance.lunanaEverywhere ? Appearance.lunana.colText
                                  : Appearance.auroraEverywhere ? Appearance.colors.colOnSurface
                                  : Appearance.colors.colOnLayer1
                         }
@@ -1625,9 +1625,9 @@ ContentPage {
                             visible: panCard.hasPan
                             implicitWidth: 26
                             implicitHeight: 26
-                            buttonRadius: Appearance.inirEverywhere ? Appearance.inir.roundingSmall : Appearance.rounding.full
+                            buttonRadius: Appearance.lunanaEverywhere ? Appearance.lunana.roundingSmall : Appearance.rounding.full
                             colBackground: "transparent"
-                            colBackgroundHover: Appearance.inirEverywhere ? Appearance.inir.colLayer2Hover
+                            colBackgroundHover: Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2Hover
                                 : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurfaceHover
                                 : Appearance.colors.colLayer2Hover
                             onClicked: {
@@ -1639,7 +1639,7 @@ ContentPage {
                                 anchors.centerIn: parent
                                 text: "restart_alt"
                                 iconSize: 14
-                                color: Appearance.inirEverywhere ? Appearance.inir.colTextSecondary
+                                color: Appearance.lunanaEverywhere ? Appearance.lunana.colTextSecondary
                                      : Appearance.auroraEverywhere ? Appearance.colors.colOnSurfaceVariant
                                      : Appearance.colors.colSubtext
                             }
@@ -1902,7 +1902,7 @@ ContentPage {
     }
 
     SettingsTaskLoader {
-        requested: root.isIiActive && root.activeSection === "effects"
+        requested: root.isDriftActive && root.activeSection === "effects"
         sourceComponent: Component {
     SettingsCardSection {
         settingsTaskSection: "effects"
@@ -2271,7 +2271,7 @@ ContentPage {
                     mainText: Translation.tr("Pick backdrop wallpaper")
                     onClicked: {
                         Config.setNestedValue("wallpaperSelector.selectionTarget", "backdrop")
-                        Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")), "wallpaperSelector", "toggle"]);
+                        Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/lunana")), "wallpaperSelector", "toggle"]);
                     }
                 }
 
@@ -2395,7 +2395,7 @@ ContentPage {
     // Desktop widget settings moved to DesktopWidgetsConfig.qml (settingsPageIndex: 14)
 
     SettingsTaskLoader {
-        requested: !root.isIiActive || root.activeSection === "notifications"
+        requested: !root.isDriftActive || root.activeSection === "notifications"
         sourceComponent: Component {
     SettingsCardSection {
         settingsTaskSection: "notifications"

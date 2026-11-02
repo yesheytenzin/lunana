@@ -10,7 +10,7 @@ import "../../../common/functions"
 import "../../../common/widgets"
 import "../../../common/widgets/widgetCanvas"
 import ".."
-import "../../../iris/widgets"
+import "../../../atoll/widgets"
 
 AbstractBackgroundWidget {
     id: root
@@ -32,13 +32,13 @@ AbstractBackgroundWidget {
         x: 80, y: 80
     })
 
-    implicitWidth: root.irisFaced ? root.irisFaceWidth : Math.round(Number(root._readConfigKey("contentWidth") ?? 240)
+    implicitWidth: root.atollFaced ? root.atollFaceWidth : Math.round(Number(root._readConfigKey("contentWidth") ?? 240)
         * root.scaleFactor)
-    implicitHeight: root.irisFaced ? root.irisFaceHeight : Math.round(Number(root._readConfigKey("contentHeight") ?? 160)
+    implicitHeight: root.atollFaced ? root.atollFaceHeight : Math.round(Number(root._readConfigKey("contentHeight") ?? 160)
         * root.scaleFactor)
-    irisFace: Component { IrisNotesFace { widget: root } }
-    irisSizes: ["small", "medium", "large"]
-    irisDefaultSize: "medium"
+    atollFace: Component { AtollNotesFace { widget: root } }
+    atollSizes: ["small", "medium", "large"]
+    atollDefaultSize: "medium"
 
     visibleWhenLocked: false
     needsColText: true
@@ -174,7 +174,7 @@ AbstractBackgroundWidget {
     }
 
     WidgetSurface {
-        irisPresentation: root.widgetIris
+        atollPresentation: root.widgetAtoll
         regionBrightness: root.regionBrightness
         anchors.fill: parent
         surfaceRadius: root.cornerRadiusOverride >= 0
@@ -191,13 +191,13 @@ AbstractBackgroundWidget {
         screenY: root.y
         screenWidth: root.scaledScreenWidth
         screenHeight: root.scaledScreenHeight
-        shown: !root.irisFaced && !root.instrument && (root.backgroundOpacity > 0 || root.borderWidth > 0
+        shown: !root.atollFaced && !root.instrument && (root.backgroundOpacity > 0 || root.borderWidth > 0
             || root.effectiveBlur)
     }
 
     Rectangle {
         anchors.fill: parent
-        visible: !root.irisFaced
+        visible: !root.atollFaced
         color: "transparent"
         radius: root.cornerRadiusOverride >= 0
             ? root.cornerRadiusOverride : root.cardRadius
@@ -226,7 +226,7 @@ AbstractBackgroundWidget {
         x: 14 * root.scaleFactor
         y: 10 * root.scaleFactor
         width: root.width - 28 * root.scaleFactor
-        visible: !root.irisFaced && root.height >= 120 * root.scaleFactor
+        visible: !root.atollFaced && root.height >= 120 * root.scaleFactor
         spacing: 6 * root.scaleFactor
         MaterialSymbol {
             visible: !root.instrument
@@ -282,8 +282,8 @@ AbstractBackgroundWidget {
     Flickable {
         id: editorFlick
         anchors.fill: parent
-        anchors.margins: root.irisFaced ? root.irisGutter : Math.round(14 * root.scaleFactor)
-        anchors.topMargin: root.irisFaced ? Math.round(root.irisGutter * 2.75)
+        anchors.margins: root.atollFaced ? root.atollGutter : Math.round(14 * root.scaleFactor)
+        anchors.topMargin: root.atollFaced ? Math.round(root.atollGutter * 2.75)
             : noteHeading.visible ? noteHeading.y + noteHeading.height + 10 * root.scaleFactor : anchors.margins
         clip: true
         contentWidth: width

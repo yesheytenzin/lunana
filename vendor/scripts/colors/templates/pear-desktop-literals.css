@@ -118,12 +118,12 @@ ytmusic-simple-text-section-renderer,
 ytmusic-toggle-button-renderer[is-paper-button]:not([link-mode]):not([chip-mode]),
 ytmusic-toggle-menu-service-item-renderer,
 ytmusic-two-row-item-renderer[item-size="COLLECTION_STYLE_ITEM_SIZE_SMALL_STATIC"] .details.ytmusic-two-row-item-renderer .title.ytmusic-two-row-item-renderer {
-  color: var(--inir-fg) !important;
-  --yt-endpoint-color: var(--inir-fg) !important;
-  --yt-endpoint-hover-color: var(--inir-fg) !important;
-  --yt-endpoint-visited-color: var(--inir-fg) !important;
-  --icon-color: var(--inir-fg) !important;
-  --iron-icon-fill-color: var(--inir-fg) !important;
+  color: var(--lunana-fg) !important;
+  --yt-endpoint-color: var(--lunana-fg) !important;
+  --yt-endpoint-hover-color: var(--lunana-fg) !important;
+  --yt-endpoint-visited-color: var(--lunana-fg) !important;
+  --icon-color: var(--lunana-fg) !important;
+  --iron-icon-fill-color: var(--lunana-fg) !important;
 }
 
 .autoplay-with-toggle.ytmusic-player-queue .subtitle.ytmusic-player-queue,
@@ -180,10 +180,10 @@ ytmusic-player-live-indicator:not([is-at-live-head]) .ytIconWrapperHost.ytmusic-
 .ytmusicTrackInfoByline,
 ytmusic-two-row-item-renderer[item-size="COLLECTION_STYLE_ITEM_SIZE_SMALL_STATIC"] .details.ytmusic-two-row-item-renderer .subtitle.ytmusic-two-row-item-renderer,
 ytmusic-two-row-item-renderer[item-size="COLLECTION_STYLE_ITEM_SIZE_SMALL_STATIC"] .details.ytmusic-two-row-item-renderer .subtitle.ytmusic-two-row-item-renderer, ytmusic-two-row-item-renderer[item-size="COLLECTION_STYLE_ITEM_SIZE_SMALL_STATIC"] .details.ytmusic-two-row-item-renderer .title.ytmusic-two-row-item-renderer {
-  color: var(--inir-subtext) !important;
-  --yt-endpoint-color: var(--inir-subtext) !important;
-  --yt-endpoint-hover-color: var(--inir-subtext) !important;
-  --yt-endpoint-visited-color: var(--inir-subtext) !important;
-  --icon-color: var(--inir-subtext) !important;
-  --iron-icon-fill-color: var(--inir-subtext) !important;
+  color: var(--lunana-subtext) !important;
+  --yt-endpoint-color: var(--lunana-subtext) !important;
+  --yt-endpoint-hover-color: var(--lunana-subtext) !important;
+  --yt-endpoint-visited-color: var(--lunana-subtext) !important;
+  --icon-color: var(--lunana-subtext) !important;
+  --iron-icon-fill-color: var(--lunana-subtext) !important;
 }

@@ -9,7 +9,7 @@ import "../../../common/functions"
 import "../../../common/widgets"
 import ".."
 import "../instrument"
-import "../../../iris/widgets"
+import "../../../atoll/widgets"
 
 AbstractBackgroundWidget {
     id: root
@@ -24,10 +24,10 @@ AbstractBackgroundWidget {
         x: 80, y: 260
     })
 
-    implicitWidth: root.irisFaced ? root.irisFaceWidth : Math.round(Number(root._readConfigKey("contentWidth") ?? 240) * scaleFactor)
-    implicitHeight: root.irisFaced ? root.irisFaceHeight : Math.round(Number(root._readConfigKey("contentHeight") ?? 240) * scaleFactor)
-    irisFace: Component { IrisDayFace { widget: root } }
-    irisSizes: ["small", "medium"]
+    implicitWidth: root.atollFaced ? root.atollFaceWidth : Math.round(Number(root._readConfigKey("contentWidth") ?? 240) * scaleFactor)
+    implicitHeight: root.atollFaced ? root.atollFaceHeight : Math.round(Number(root._readConfigKey("contentHeight") ?? 240) * scaleFactor)
+    atollFace: Component { AtollDayFace { widget: root } }
+    atollSizes: ["small", "medium"]
     resizableAxes: ({ width: "contentWidth", height: "contentHeight" })
     resizeMinWidth: 190
     resizeMinHeight: 190
@@ -71,7 +71,7 @@ AbstractBackgroundWidget {
     // Borderless composition: no card, no border. The wallpaper-sampled ink
     // (needsColText) is the only thing keeping ring and type legible.
     ColumnLayout {
-        visible: !root.irisFaced
+        visible: !root.atollFaced
         anchors.fill: parent
         anchors.margins: Math.round(14 * root.scaleFactor)
         spacing: Math.round(10 * root.scaleFactor)
@@ -158,7 +158,7 @@ AbstractBackgroundWidget {
                             pixelSize: Math.round(ringArea.size * 0.062 * root.textScale)
                             weight: Font.DemiBold
                             letterSpacing: Math.round(1.2 * root.scaleFactor)
-                            capitalization: root.widgetIris ? Font.MixedCase : Font.AllUppercase
+                            capitalization: root.widgetAtoll ? Font.MixedCase : Font.AllUppercase
                         }
                     }
                 }

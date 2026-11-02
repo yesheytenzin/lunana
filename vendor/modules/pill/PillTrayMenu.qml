@@ -202,7 +202,7 @@ Scope {
         exclusionMode: ExclusionMode.Ignore
         WlrLayershell.layer: WlrLayer.Overlay
         WlrLayershell.keyboardFocus: WlrKeyboardFocus.Exclusive
-        WlrLayershell.namespace: "inir-pill-tray"
+        WlrLayershell.namespace: "lunana-pill-tray"
 
         anchors { top: true; left: true; right: true; bottom: true }
 

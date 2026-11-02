@@ -207,7 +207,7 @@ Item { // Bar content region
     readonly property QtObject blendedColors: root._useGlobalQuantizer
         ? Appearance.wallpaperBlendedColors : _localBlendedColors
 
-    readonly property bool inirEverywhere: root.surfaceDialect === "inir"
+    readonly property bool lunanaEverywhere: root.surfaceDialect === "lunana"
     readonly property bool angelEverywhere: root.surfaceDialect === "angel"
     readonly property bool regaliaEverywhere: root.surfaceDialect === "regalia"
     readonly property bool auroraEverywhere: root.surfaceDialect === "aurora" || root.angelEverywhere
@@ -315,7 +315,7 @@ Item { // Bar content region
     readonly property real barSpectrumOrganicBaseRadius: Math.max(0, Math.min(1,
         (Config.options?.bar?.visualizer?.organicBaseRadius ?? 36) / 100))
     readonly property bool barSpectrumOrganicEdgeAura: root.barSpectrumOrganicFit === "aura"
-    readonly property color barSpectrumColor: root.inirEverywhere ? Appearance.inir.colPrimary
+    readonly property color barSpectrumColor: root.lunanaEverywhere ? Appearance.lunana.colPrimary
         : root.zzzEverywhere ? Appearance.zzz.accent
         : root.regaliaEverywhere ? Appearance.regalia.hardwarePrimary
         : (root.blendedColors?.colPrimary ?? Appearance.colors.colPrimary)
@@ -455,7 +455,7 @@ Item { // Bar content region
         Layout.fillHeight: true
         implicitWidth: root.zzzEverywhere ? 1 : 1
         color: root.zzzEverywhere ? Appearance.zzz.hairlineStrong
-            : root.inirEverywhere ? Appearance.inir.colBorderSubtle : root.separatorColor
+            : root.lunanaEverywhere ? Appearance.lunana.colBorderSubtle : root.separatorColor
         Behavior on implicitWidth {
             enabled: Appearance.animationsEnabled
             NumberAnimation { duration: Appearance.animation.elementMoveFast.duration; easing.type: Appearance.animation.elementMoveFast.type; easing.bezierCurve: Appearance.animation.elementMoveFast.bezierCurve }
@@ -718,7 +718,7 @@ Item { // Bar content region
     // Background shadow
     Loader {
         active: root.barAppearance === "classic"
-            && !root.inirEverywhere
+            && !root.lunanaEverywhere
             && (root.angelEverywhere || root.surfaceDialect !== "aurora")
             && !Appearance.gameModeMinimal
             && (Config.options?.bar?.showBackground ?? true)
@@ -790,12 +790,12 @@ Item { // Bar content region
             GradientStop {
                 position: 0
                 color: barBackground.isBottom ? "transparent"
-                    : ColorUtils.transparentize(root.inirEverywhere ? Appearance.inir.colLayer0 : Appearance.colors.colLayer0, 0.15)
+                    : ColorUtils.transparentize(root.lunanaEverywhere ? Appearance.lunana.colLayer0 : Appearance.colors.colLayer0, 0.15)
             }
             GradientStop {
                 position: 1
                 color: barBackground.isBottom
-                    ? ColorUtils.transparentize(root.inirEverywhere ? Appearance.inir.colLayer0 : Appearance.colors.colLayer0, 0.15)
+                    ? ColorUtils.transparentize(root.lunanaEverywhere ? Appearance.lunana.colLayer0 : Appearance.colors.colLayer0, 0.15)
                     : "transparent"
             }
         }
@@ -827,8 +827,8 @@ Item { // Bar content region
                     return ColorUtils.transparentize(base, Appearance.angel.compositorPanelTransparentize)
                 return ColorUtils.applyAlpha(base, 1)
             }
-            if (root.inirEverywhere) {
-                return Appearance.inir.colLayer0
+            if (root.lunanaEverywhere) {
+                return Appearance.lunana.colLayer0
             }
             if (auroraEverywhere) {
                 const base = blendedColors?.colLayer0 ?? Appearance.colors.colLayer0
@@ -877,7 +877,7 @@ Item { // Bar content region
             }
             if (root.isFrame) {
                 return root.angelEverywhere ? Appearance.angel.roundingNormal
-                    : root.inirEverywhere ? Appearance.inir.roundingNormal
+                    : root.lunanaEverywhere ? Appearance.lunana.roundingNormal
                     : Appearance.rounding.windowRounding
             }
             if (root.regaliaEverywhere) {
@@ -886,10 +886,10 @@ Item { // Bar content region
             if (root.angelEverywhere) {
                 return (cornerStyle === 1 || cornerStyle === 3) ? Appearance.angel.roundingNormal : 0
             }
-            if (root.inirEverywhere) {
-                // Inir: use inir rounding for Float/Card, 0 for Hug/Rect
+            if (root.lunanaEverywhere) {
+                // Lunana: use lunana rounding for Float/Card, 0 for Hug/Rect
                 if (cornerStyle === 1 || cornerStyle === 3) {
-                    return Appearance.inir.roundingNormal
+                    return Appearance.lunana.roundingNormal
                 }
                 return 0
             }
@@ -940,7 +940,7 @@ Item { // Bar content region
             if (barBackground.editorialPaperStackActive) return 0
             if (root.isFrame) return root.angelEverywhere ? Appearance.angel.panelBorderWidth : 1
             if (root.angelEverywhere) return Appearance.angel.panelBorderWidth
-            if (root.inirEverywhere) {
+            if (root.lunanaEverywhere) {
                 return (cornerStyle === 1 || cornerStyle === 3) ? 1 : 0
             }
             if (auroraEverywhere) {
@@ -960,12 +960,12 @@ Item { // Bar content region
             if (root.zzzEverywhere) return Appearance.zzz.hairline
             if (root.regaliaEverywhere) return "transparent"
             // Frame is defined by its outline — use the visible outline token
-            if (root.isFrame && !root.angelEverywhere && !root.inirEverywhere) {
+            if (root.isFrame && !root.angelEverywhere && !root.lunanaEverywhere) {
                 return Appearance.colors.colOutlineVariant
             }
             if (root.angelEverywhere) return Appearance.angel.colPanelBorder
-            if (root.inirEverywhere) {
-                return Appearance.inir.colBorder
+            if (root.lunanaEverywhere) {
+                return Appearance.lunana.colBorder
             }
             if (auroraEverywhere) {
                 return Appearance.aurora.colTooltipBorder
@@ -1002,7 +1002,7 @@ Item { // Bar content region
         }
 
         layer.enabled: (auroraEverywhere || barBackground.editorialGlassActive)
-            && !root.inirEverywhere && !root.zzzEverywhere && !gameModeMinimal
+            && !root.lunanaEverywhere && !root.zzzEverywhere && !gameModeMinimal
             && !root.nativeBlurActive && root.barAppearance === "classic"
         layer.effect: GE.OpacityMask {
             maskSource: Rectangle {
@@ -1015,7 +1015,7 @@ Item { // Bar content region
         Image {
             id: blurredWallpaper
             readonly property bool requested: (barBackground.auroraEverywhere || barBackground.editorialGlassActive)
-                && !root.inirEverywhere && !root.zzzEverywhere
+                && !root.lunanaEverywhere && !root.zzzEverywhere
                 && !barBackground.gameModeMinimal && !root.nativeBlurActive
                 && root.barAppearance === "classic"
             x: -barBackground.barMargin
@@ -1037,7 +1037,7 @@ Item { // Bar content region
             // (avoids double-blur and the FBO cost). See #159.
             layer.enabled: Appearance.effectsEnabled
                 && (barBackground.auroraEverywhere || barBackground.editorialGlassActive)
-                && !root.inirEverywhere && !root.nativeBlurActive
+                && !root.lunanaEverywhere && !root.nativeBlurActive
             layer.effect: MultiEffect {
                 source: blurredWallpaper
                 anchors.fill: source

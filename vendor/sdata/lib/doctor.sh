@@ -1,4 +1,4 @@
-# Doctor command for iNiR
+# Doctor command for Lunana
 # Diagnoses AND FIXES common issues
 # This script is meant to be sourced.
 
@@ -181,7 +181,7 @@ check_dependencies() {
 
     # EasyEffects can expose Equalizer settings through its local server even
     # when the actual LSP LV2 DSP backend is absent. Check the bundle itself so
-    # Doctor repairs the capability the native iNiR equalizer depends on.
+    # Doctor repairs the capability the native Lunana equalizer depends on.
     local lsp_lv2_found=false lsp_dir
     for lsp_dir in /usr/lib/lv2 /usr/lib64/lv2 /usr/local/lib/lv2 /usr/local/lib64/lv2; do
         if compgen -G "$lsp_dir/lsp-plugins*.lv2" >/dev/null \
@@ -203,16 +203,16 @@ check_dependencies() {
         missing_cmds+=("lsp-plugins-lv2")
     fi
 
-    # Tesseract itself can be installed while the language data iNiR exposes in
+    # Tesseract itself can be installed while the language data Lunana exposes in
     # Settings is absent. Treat those models as first-class dependencies so an
     # existing install can be repaired instead of failing every OCR attempt.
     local tesseract_langs=""
     if command -v tesseract &>/dev/null; then
         tesseract_langs="$(tesseract --list-langs 2>/dev/null | tail -n +2)"
-        local inir_tessdata="${XDG_DATA_HOME:-$HOME/.local/share}/inir/tessdata"
-        if [[ -d "$inir_tessdata" ]]; then
+        local lunana_tessdata="${XDG_DATA_HOME:-$HOME/.local/share}/lunana/tessdata"
+        if [[ -d "$lunana_tessdata" ]]; then
             local cached_model
-            for cached_model in "$inir_tessdata"/*.traineddata; do
+            for cached_model in "$lunana_tessdata"/*.traineddata; do
                 [[ -e "$cached_model" ]] || continue
                 tesseract_langs+=$'\n'"$(basename "$cached_model" .traineddata)"
             done
@@ -427,7 +427,7 @@ check_repo_checkout_state() {
 
     if [[ ! -e "${REPO_ROOT}/.git" ]]; then
         doctor_fail "Repo checkout is missing git metadata"
-        echo -e "    ${STY_FAINT}Run setup from a real iNiR checkout, not a random copy${STY_RST}"
+        echo -e "    ${STY_FAINT}Run setup from a real Lunana checkout, not a random copy${STY_RST}"
         return 1
     fi
 
@@ -466,7 +466,7 @@ check_repo_checkout_state() {
                 if declare -F show_repo_realign_guidance >/dev/null 2>&1; then
                     show_repo_realign_guidance "$tracked_branch"
                 else
-                    echo -e "    ${STY_FAINT}Run: inir update --realign${STY_RST}"
+                    echo -e "    ${STY_FAINT}Run: lunana update --realign${STY_RST}"
                 fi
                 ;;
         esac
@@ -484,16 +484,16 @@ check_launcher_health() {
     installed_strategy="$(get_installed_update_strategy)"
 
     local launcher_cmd expected_launcher repo_launcher runtime_launcher
-    launcher_cmd="$(command -v inir 2>/dev/null || true)"
-    expected_launcher="${XDG_BIN_HOME}/inir"
-    repo_launcher="${REPO_ROOT}/scripts/inir"
-    runtime_launcher="$(doctor_runtime_dir 2>/dev/null)/scripts/inir"
+    launcher_cmd="$(command -v lunana 2>/dev/null || true)"
+    expected_launcher="${XDG_BIN_HOME}/lunana"
+    repo_launcher="${REPO_ROOT}/scripts/lunana"
+    runtime_launcher="$(doctor_runtime_dir 2>/dev/null)/scripts/lunana"
 
     if [[ "$installed_strategy" == "package-manager" ]]; then
         if [[ -n "$launcher_cmd" ]]; then
             doctor_pass "Launcher available"
         else
-            doctor_fail "inir launcher not found in PATH"
+            doctor_fail "lunana launcher not found in PATH"
             echo -e "    ${STY_FAINT}Run the package install flow again, or install the launcher manually${STY_RST}"
         fi
         return 0
@@ -550,7 +550,7 @@ check_launcher_health() {
 
     if declare -F sync_user_desktop_integration_from_repo >/dev/null 2>&1; then
         if sync_user_desktop_integration_from_repo; then
-            if [[ "${INIR_DESKTOP_INTEGRATION_CHANGED:-0}" -gt 0 ]]; then
+            if [[ "${LUNANA_DESKTOP_INTEGRATION_CHANGED:-0}" -gt 0 ]]; then
                 doctor_fix "Refreshed desktop integration"
             fi
         else
@@ -749,7 +749,7 @@ check_fonts() {
             .appearance.typography.mainFont,
             .appearance.typography.titleFont,
             .appearance.typography.monospaceFont,
-            .waffles.theming.font.family
+            .slate.theming.font.family
         ] | .[] | select(type == "string" and length > 0)' "$config_file" 2>/dev/null | sort -u)
     fi
 
@@ -932,25 +932,25 @@ check_niri_running() {
     if declare -F has_usable_systemd_user_manager >/dev/null 2>&1 \
             && has_usable_systemd_user_manager \
             && systemctl --user is-active --quiet niri.service >/dev/null 2>&1 \
-            && declare -F inir_resolve_niri_service_environment >/dev/null 2>&1; then
-        if ! inir_resolve_niri_service_environment; then
+            && declare -F lunana_resolve_niri_service_environment >/dev/null 2>&1; then
+        if ! lunana_resolve_niri_service_environment; then
             doctor_fail "niri.service is running but its session sockets could not be verified"
             return 0
         fi
 
-        export NIRI_SOCKET="$INIR_RESOLVED_NIRI_SOCKET"
-        export WAYLAND_DISPLAY="$INIR_RESOLVED_WAYLAND_DISPLAY"
+        export NIRI_SOCKET="$LUNANA_RESOLVED_NIRI_SOCKET"
+        export WAYLAND_DISPLAY="$LUNANA_RESOLVED_WAYLAND_DISPLAY"
 
         local manager_env manager_socket manager_wayland
         manager_env="$(systemctl --user show-environment 2>/dev/null || true)"
         manager_socket="$(grep '^NIRI_SOCKET=' <<< "$manager_env" | head -1 | cut -d= -f2- || true)"
         manager_wayland="$(grep '^WAYLAND_DISPLAY=' <<< "$manager_env" | head -1 | cut -d= -f2- || true)"
 
-        if [[ "$manager_socket" != "$INIR_RESOLVED_NIRI_SOCKET" \
-                || "$manager_wayland" != "$INIR_RESOLVED_WAYLAND_DISPLAY" ]]; then
+        if [[ "$manager_socket" != "$LUNANA_RESOLVED_NIRI_SOCKET" \
+                || "$manager_wayland" != "$LUNANA_RESOLVED_WAYLAND_DISPLAY" ]]; then
             if systemctl --user set-environment \
-                    "NIRI_SOCKET=$INIR_RESOLVED_NIRI_SOCKET" \
-                    "WAYLAND_DISPLAY=$INIR_RESOLVED_WAYLAND_DISPLAY" >/dev/null 2>&1; then
+                    "NIRI_SOCKET=$LUNANA_RESOLVED_NIRI_SOCKET" \
+                    "WAYLAND_DISPLAY=$LUNANA_RESOLVED_WAYLAND_DISPLAY" >/dev/null 2>&1; then
                 doctor_fix "Repaired Niri session environment in the user manager"
             else
                 doctor_fail "Niri session environment is missing from the user manager"
@@ -1020,7 +1020,7 @@ check_manifest() {
         doctor_runtime_dir_or_fail "File manifest"
         return 0
     fi
-    local manifest="${target}/.inir-manifest"
+    local manifest="${target}/.lunana-manifest"
     local installed_marker="${DOTS_CORE_CONFDIR}/installed_true"
     local installed_strategy
     installed_strategy=$(get_installed_update_strategy)
@@ -1060,30 +1060,30 @@ check_service_unit_health() {
 
     local installed_strategy service_path expected_target
     installed_strategy="$(get_installed_update_strategy)"
-    service_path="${XDG_CONFIG_HOME}/systemd/user/inir.service"
+    service_path="${XDG_CONFIG_HOME}/systemd/user/lunana.service"
     expected_target="$(doctor_detect_compositor_service 2>/dev/null || true)"
 
-    if inir_user_service_is_masked; then
-        doctor_fail "User inir.service is masked"
-        echo -e "    ${STY_FAINT}Run: inir service install && inir service enable${STY_RST}"
+    if lunana_user_service_is_masked; then
+        doctor_fail "User lunana.service is masked"
+        echo -e "    ${STY_FAINT}Run: lunana service install && lunana service enable${STY_RST}"
         return 0
     fi
 
     if [[ "$installed_strategy" == "package-manager" ]]; then
         systemctl --user daemon-reload >/dev/null 2>&1 || true
-        service_path="$(systemctl --user show -p FragmentPath --value inir.service 2>/dev/null || true)"
+        service_path="$(systemctl --user show -p FragmentPath --value lunana.service 2>/dev/null || true)"
         if [[ ! -f "$service_path" ]]; then
-            doctor_fail "Packaged inir.service is missing"
-            echo -e "    ${STY_FAINT}Reinstall the iNiR shell package${STY_RST}"
+            doctor_fail "Packaged lunana.service is missing"
+            echo -e "    ${STY_FAINT}Reinstall the Lunana shell package${STY_RST}"
             return 0
         fi
 
-        local user_service="${XDG_CONFIG_HOME}/systemd/user/inir.service"
+        local user_service="${XDG_CONFIG_HOME}/systemd/user/lunana.service"
         if [[ "$service_path" == "$user_service" ]]; then
-            local packaged_asset="${REPO_ROOT}/assets/systemd/inir.service"
+            local packaged_asset="${REPO_ROOT}/assets/systemd/lunana.service"
             local packaged_unit=""
             local candidate
-            for candidate in /usr/lib/systemd/user/inir.service /usr/local/lib/systemd/user/inir.service /lib/systemd/user/inir.service; do
+            for candidate in /usr/lib/systemd/user/lunana.service /usr/local/lib/systemd/user/lunana.service /lib/systemd/user/lunana.service; do
                 if [[ -f "$candidate" ]]; then
                     packaged_unit="$candidate"
                     break
@@ -1094,73 +1094,73 @@ check_service_unit_health() {
                     && cmp -s "$packaged_unit" "$packaged_asset"; then
                 rm -f "$user_service"
                 systemctl --user daemon-reload >/dev/null 2>&1 || true
-                service_path="$(systemctl --user show -p FragmentPath --value inir.service 2>/dev/null || true)"
+                service_path="$(systemctl --user show -p FragmentPath --value lunana.service 2>/dev/null || true)"
                 if [[ "$service_path" == "$packaged_unit" ]]; then
                     doctor_fix "Removed redundant user service shadowing the package"
                 else
-                    doctor_fail "Packaged inir.service did not become active after removing the duplicate"
+                    doctor_fail "Packaged lunana.service did not become active after removing the duplicate"
                     return 0
                 fi
             else
-                doctor_fail "Local inir.service shadows the package-managed unit"
-                echo -e "    ${STY_FAINT}Review ${user_service}, then run: inir service uninstall && inir service enable${STY_RST}"
+                doctor_fail "Local lunana.service shadows the package-managed unit"
+                echo -e "    ${STY_FAINT}Review ${user_service}, then run: lunana service uninstall && lunana service enable${STY_RST}"
                 return 0
             fi
         fi
     elif [[ ! -f "$service_path" ]]; then
-        if declare -F sync_user_inir_service_from_repo_if_present >/dev/null 2>&1 \
-                && sync_user_inir_service_from_repo_if_present >/dev/null 2>&1 \
+        if declare -F sync_user_lunana_service_from_repo_if_present >/dev/null 2>&1 \
+                && sync_user_lunana_service_from_repo_if_present >/dev/null 2>&1 \
                 && [[ -f "$service_path" ]]; then
-            ensure_user_inir_service_enabled >/dev/null 2>&1 || true
-            doctor_fix "Restored missing user inir.service"
+            ensure_user_lunana_service_enabled >/dev/null 2>&1 || true
+            doctor_fix "Restored missing user lunana.service"
         else
-            doctor_fail "User inir.service missing"
-            echo -e "    ${STY_FAINT}Run: inir service install${STY_RST}"
+            doctor_fail "User lunana.service missing"
+            echo -e "    ${STY_FAINT}Run: lunana service install${STY_RST}"
             return 0
         fi
     fi
 
     if [[ "$installed_strategy" != "package-manager" ]] && declare -F repair_legacy_niri_shell_startup >/dev/null 2>&1; then
         if repair_legacy_niri_shell_startup; then
-            [[ "${INIR_LEGACY_NIRI_STARTUP_REPAIRED:-0}" -gt 0 ]] && doctor_fix "Removed legacy Niri shell startup"
+            [[ "${LUNANA_LEGACY_NIRI_STARTUP_REPAIRED:-0}" -gt 0 ]] && doctor_fix "Removed legacy Niri shell startup"
         fi
     fi
 
-    if [[ "$installed_strategy" != "package-manager" ]] && declare -F sync_user_inir_service_from_repo_if_present >/dev/null 2>&1; then
-        if sync_user_inir_service_from_repo_if_present >/dev/null 2>&1; then
-            [[ "${INIR_SERVICE_SYNC_CHANGED:-0}" -gt 0 ]] && doctor_fix "Refreshed user inir.service from repo"
+    if [[ "$installed_strategy" != "package-manager" ]] && declare -F sync_user_lunana_service_from_repo_if_present >/dev/null 2>&1; then
+        if sync_user_lunana_service_from_repo_if_present >/dev/null 2>&1; then
+            [[ "${LUNANA_SERVICE_SYNC_CHANGED:-0}" -gt 0 ]] && doctor_fix "Refreshed user lunana.service from repo"
         else
-            doctor_fail "Could not refresh user inir.service from repo"
+            doctor_fail "Could not refresh user lunana.service from repo"
             return 0
         fi
     fi
 
-    if declare -F ensure_user_inir_service_enabled >/dev/null 2>&1 \
-            && ensure_user_inir_service_enabled >/dev/null 2>&1 \
-            && [[ "${INIR_SERVICE_WIRING_CHANGED:-0}" -gt 0 ]]; then
-        doctor_fix "Repaired inir.service Niri wiring"
+    if declare -F ensure_user_lunana_service_enabled >/dev/null 2>&1 \
+            && ensure_user_lunana_service_enabled >/dev/null 2>&1 \
+            && [[ "${LUNANA_SERVICE_WIRING_CHANGED:-0}" -gt 0 ]]; then
+        doctor_fix "Repaired lunana.service Niri wiring"
     fi
 
     local active_state service_result kill_mode fragment_path
-    active_state="$(systemctl --user show -p ActiveState --value inir.service 2>/dev/null || true)"
-    service_result="$(systemctl --user show -p Result --value inir.service 2>/dev/null || true)"
-    kill_mode="$(systemctl --user show -p KillMode inir.service 2>/dev/null | cut -d= -f2)"
-    fragment_path="$(systemctl --user show -p FragmentPath inir.service 2>/dev/null | cut -d= -f2)"
+    active_state="$(systemctl --user show -p ActiveState --value lunana.service 2>/dev/null || true)"
+    service_result="$(systemctl --user show -p Result --value lunana.service 2>/dev/null || true)"
+    kill_mode="$(systemctl --user show -p KillMode lunana.service 2>/dev/null | cut -d= -f2)"
+    fragment_path="$(systemctl --user show -p FragmentPath lunana.service 2>/dev/null | cut -d= -f2)"
 
     if [[ "$active_state" == "failed" || "$service_result" == "start-limit-hit" ]]; then
         doctor_fail "Shell service failed (${service_result:-unknown result})"
-        echo -e "    ${STY_FAINT}Run: inir logs${STY_RST}"
+        echo -e "    ${STY_FAINT}Run: lunana logs${STY_RST}"
     fi
 
     if [[ -n "$kill_mode" && "$kill_mode" != "process" ]]; then
-        doctor_fail "inir.service KillMode is '${kill_mode}'"
-        echo -e "    ${STY_FAINT}Run: inir service install${STY_RST}"
+        doctor_fail "lunana.service KillMode is '${kill_mode}'"
+        echo -e "    ${STY_FAINT}Run: lunana service install${STY_RST}"
     else
         doctor_pass "User service file present"
     fi
 
     if [[ -n "$fragment_path" && "$fragment_path" != "$service_path" ]]; then
-        tui_warn "systemd is loading inir.service from ${fragment_path}"
+        tui_warn "systemd is loading lunana.service from ${fragment_path}"
     fi
 
     local has_expected_link=false
@@ -1168,7 +1168,7 @@ check_service_unit_health() {
     local wants_dir
     for wants_dir in "${XDG_CONFIG_HOME}/systemd/user"/*.wants; do
         [[ -d "$wants_dir" ]] || continue
-        [[ -e "$wants_dir/inir.service" || -L "$wants_dir/inir.service" ]] || continue
+        [[ -e "$wants_dir/lunana.service" || -L "$wants_dir/lunana.service" ]] || continue
         local target_name
         target_name="$(basename "${wants_dir%.wants}")"
         if [[ -n "$expected_target" && "$target_name" == "$expected_target" ]]; then
@@ -1179,17 +1179,17 @@ check_service_unit_health() {
     done
 
     if [[ -n "$expected_target" && "$has_expected_link" == false ]]; then
-        if declare -F ensure_user_inir_service_enabled >/dev/null 2>&1 && ensure_user_inir_service_enabled >/dev/null 2>&1; then
-            doctor_fix "Enabled inir.service for ${expected_target}"
+        if declare -F ensure_user_lunana_service_enabled >/dev/null 2>&1 && ensure_user_lunana_service_enabled >/dev/null 2>&1; then
+            doctor_fix "Enabled lunana.service for ${expected_target}"
         else
-            doctor_fail "inir.service not wired to ${expected_target}"
-            echo -e "    ${STY_FAINT}Run: inir service enable${STY_RST}"
+            doctor_fail "lunana.service not wired to ${expected_target}"
+            echo -e "    ${STY_FAINT}Run: lunana service enable${STY_RST}"
         fi
     fi
 
     if [[ ${#stale_links[@]} -gt 0 ]]; then
         doctor_fail "Stale service links found: ${stale_links[*]}"
-        echo -e "    ${STY_FAINT}Run: inir service disable && inir service enable${STY_RST}"
+        echo -e "    ${STY_FAINT}Run: lunana service disable && lunana service enable${STY_RST}"
     fi
 
     if [[ -z "$expected_target" ]]; then
@@ -1305,7 +1305,7 @@ check_quickshell_abi() {
     # Quickshell uses Qt private APIs — any Qt minor version bump (e.g. 6.10→6.11)
     # breaks ABI and requires rebuilding quickshell. This is the #1 cause of
     # "quickshell crashes on any UI interaction" after system updates.
-    # See: https://github.com/snowarch/iNiR/issues/93
+    # See: https://github.com/snowarch/Lunana/issues/93
 
     if ! command -v qs >/dev/null 2>&1; then
         # No qs binary — dependency check will catch this
@@ -1319,7 +1319,7 @@ check_quickshell_abi() {
 
     doctor_fail "Quickshell was built for another Qt version: $_doctor_abi_msg"
     echo -e "  ${STY_YELLOW}Quickshell uses Qt internals and asks to be rebuilt after every Qt update. Until then it can crash.${STY_RST}"
-    echo -e "  ${STY_FAINT}Fix: inir doctor --fix-abi${STY_RST}"
+    echo -e "  ${STY_FAINT}Fix: lunana doctor --fix-abi${STY_RST}"
     return 1
 }
 
@@ -1404,7 +1404,7 @@ check_quickshell_loads() {
         # The Qt warning prints on every start of a mismatched build, so it is a lead, not the cause.
         if echo "$output" | grep -qiE "built against Qt|Qt.*mismatch|incompatible Qt"; then
             doctor_fail "Quickshell failed to load, and it was built for another Qt version"
-            echo -e "  ${STY_YELLOW}Rebuild it first (inir doctor --fix-abi), then run inir doctor again.${STY_RST}"
+            echo -e "  ${STY_YELLOW}Rebuild it first (lunana doctor --fix-abi), then run lunana doctor again.${STY_RST}"
             return 1
         fi
         
@@ -1548,9 +1548,9 @@ check_conflicting_services() {
         done
         if declare -F has_usable_systemd_user_manager >/dev/null 2>&1 \
                 && has_usable_systemd_user_manager; then
-            doctor_fix "Stopped conflicting: ${running[*]} (iNiR has built-in notifications; re-enable with systemctl --user if desired)"
+            doctor_fix "Stopped conflicting: ${running[*]} (Lunana has built-in notifications; re-enable with systemctl --user if desired)"
         else
-            doctor_fix "Stopped conflicting: ${running[*]} (iNiR has built-in notifications; restart manually if desired)"
+            doctor_fix "Stopped conflicting: ${running[*]} (Lunana has built-in notifications; restart manually if desired)"
         fi
     else
         doctor_pass "No conflicting notification daemons"
@@ -1558,7 +1558,7 @@ check_conflicting_services() {
 }
 
 check_conflicting_shells() {
-    # Quickshell-based shells that conflict with iNiR at the package level.
+    # Quickshell-based shells that conflict with Lunana at the package level.
     # These provide/replace quickshell or own overlapping config paths.
     local shell_pkgs=(
         "cachyos-niri-noctalia"
@@ -1588,7 +1588,7 @@ check_conflicting_shells() {
 
     if [[ ${#found[@]} -gt 0 ]]; then
         doctor_fail "Conflicting Quickshell shells installed: ${found[*]}"
-        echo -e "    ${STY_FAINT}These must be removed for iNiR to work. Run: ./setup install${STY_RST}"
+        echo -e "    ${STY_FAINT}These must be removed for Lunana to work. Run: ./setup install${STY_RST}"
     else
         doctor_pass "No conflicting Quickshell shells"
     fi
@@ -1649,50 +1649,50 @@ check_environment_vars() {
     local legacy_malloc_repaired=0
 
     if repair_legacy_quickshell_malloc_environment; then
-        legacy_malloc_repaired="${INIR_LEGACY_MALLOC_ENV_REPAIRED:-0}"
+        legacy_malloc_repaired="${LUNANA_LEGACY_MALLOC_ENV_REPAIRED:-0}"
     else
         doctor_fail "Could not clean legacy Quickshell allocator environment"
     fi
     
-    # Check bash — look for INIR_VENV (canonical) or ILLOGICAL_IMPULSE_VIRTUAL_ENV (legacy)
-    if [[ -f "$HOME/.bashrc" ]] && ! grep -q "INIR_VENV" "$HOME/.bashrc" 2>/dev/null; then
+    # Check bash — look for LUNANA_VENV (canonical) or ILLOGICAL_IMPULSE_VIRTUAL_ENV (legacy)
+    if [[ -f "$HOME/.bashrc" ]] && ! grep -q "LUNANA_VENV" "$HOME/.bashrc" 2>/dev/null; then
         cat >> "$HOME/.bashrc" << BEOF
 
-# iNiR environment
-export INIR_VENV="${venv_path}"
-export ILLOGICAL_IMPULSE_VIRTUAL_ENV="\$INIR_VENV"
-# end iNiR
+# Lunana environment
+export LUNANA_VENV="${venv_path}"
+export ILLOGICAL_IMPULSE_VIRTUAL_ENV="\$LUNANA_VENV"
+# end Lunana
 BEOF
         ((fixed++)) || true
     fi
     
     # Check fish
-    local fish_conf="${XDG_CONFIG_HOME}/fish/conf.d/inir-env.fish"
+    local fish_conf="${XDG_CONFIG_HOME}/fish/conf.d/lunana-env.fish"
     if command -v fish &>/dev/null && [[ ! -f "$fish_conf" ]]; then
         mkdir -p "$(dirname "$fish_conf")"
         cat > "$fish_conf" << FEOF
-# iNiR environment — auto-generated by doctor
-set -gx INIR_VENV "${venv_path}"
-set -gx ILLOGICAL_IMPULSE_VIRTUAL_ENV "\$INIR_VENV"
+# Lunana environment — auto-generated by doctor
+set -gx LUNANA_VENV "${venv_path}"
+set -gx ILLOGICAL_IMPULSE_VIRTUAL_ENV "\$LUNANA_VENV"
 FEOF
         ((fixed++)) || true
     fi
     
     # Check zsh
-    if [[ -f "$HOME/.zshrc" ]] && ! grep -q "INIR_VENV" "$HOME/.zshrc" 2>/dev/null; then
+    if [[ -f "$HOME/.zshrc" ]] && ! grep -q "LUNANA_VENV" "$HOME/.zshrc" 2>/dev/null; then
         cat >> "$HOME/.zshrc" << ZEOF
 
-# iNiR environment
-export INIR_VENV="${venv_path}"
-export ILLOGICAL_IMPULSE_VIRTUAL_ENV="\$INIR_VENV"
-# end iNiR
+# Lunana environment
+export LUNANA_VENV="${venv_path}"
+export ILLOGICAL_IMPULSE_VIRTUAL_ENV="\$LUNANA_VENV"
+# end Lunana
 ZEOF
         ((fixed++)) || true
     fi
     
     if [[ $legacy_malloc_repaired -gt 0 ]]; then
         doctor_fix "Removed legacy global Quickshell allocator tuning"
-        if [[ "${INIR_LEGACY_MALLOC_ENV_CURRENT_PROCESS:-0}" -gt 0 ]]; then
+        if [[ "${LUNANA_LEGACY_MALLOC_ENV_CURRENT_PROCESS:-0}" -gt 0 ]]; then
             tui_info "This Doctor process inherited the retired allocator values too; the file/user-manager sources are now cleaned for future launches."
         fi
     fi
@@ -1897,7 +1897,7 @@ run_doctor_with_fixes() {
                         doctor_fail "Dependency installation failed"
                     elif [[ "$OS_GROUP_ID" == void ]] && ! configure_void_ydotool_uinput; then
                         doctor_fail "Could not configure the ydotool provider"
-                    elif [[ "$OS_GROUP_ID" == void ]] && ! reconcile_inir_supervisor >/dev/null; then
+                    elif [[ "$OS_GROUP_ID" == void ]] && ! reconcile_lunana_supervisor >/dev/null; then
                         doctor_fail "Could not activate the ydotool provider"
                     else
                         # Re-check after a successful repair.
@@ -1926,17 +1926,17 @@ run_doctor_with_fixes() {
     _doctor_run_step 13 $total_steps "Checking Python packages"      check_python_packages
     _doctor_run_step 14 $total_steps "Checking stale local quickshell" check_stale_local_quickshell
 
-    # Step 15 pre-check: the CLI owns the rebuild for every install kind (`inir doctor --fix-abi`).
+    # Step 15 pre-check: the CLI owns the rebuild for every install kind (`lunana doctor --fix-abi`).
     # It runs outside _doctor_run_step so the build and its prompts show live in the terminal.
     if ! _doctor_abi_detect; then
         echo ""
         echo -e "  ${STY_YELLOW}Quickshell was built for another Qt version: $_doctor_abi_msg${STY_RST}"
         echo -e "  ${STY_FAINT}Quickshell uses Qt internals and asks to be rebuilt after every Qt update. Until then it can crash.${STY_RST}"
-        local _inir_cli
-        _inir_cli="$(doctor_repo_root)/scripts/inir"
-        if $ask && [[ -t 0 && -t 1 && -f "$_inir_cli" ]]; then
+        local _lunana_cli
+        _lunana_cli="$(doctor_repo_root)/scripts/lunana"
+        if $ask && [[ -t 0 && -t 1 && -f "$_lunana_cli" ]]; then
             echo ""
-            if bash "$_inir_cli" doctor --fix-abi && _doctor_abi_detect; then
+            if bash "$_lunana_cli" doctor --fix-abi && _doctor_abi_detect; then
                 doctor_fixed=$((doctor_fixed + 1))
             fi
         fi
@@ -1972,11 +1972,11 @@ run_doctor_with_fixes() {
     if [[ $doctor_failed -gt 0 ]]; then
         tui_error "Some issues need manual attention."
         tui_info "Start with: ./setup status"
-        tui_info "Then read logs: inir logs"
+        tui_info "Then read logs: lunana logs"
         return 1
     elif [[ $doctor_fixed -gt 0 ]]; then
         tui_success "All issues fixed automatically."
-        tui_info "Restart the shell to apply: inir restart"
+        tui_info "Restart the shell to apply: lunana restart"
     else
         tui_success "Everything looks good!"
     fi

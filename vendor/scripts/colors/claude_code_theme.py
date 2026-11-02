@@ -2,11 +2,11 @@
 """Claude Code custom themes from the generated palette.
 
 Writes four files into Claude Code's themes folder:
-  inir.json, inir-soft.json                 follow the wallpaper: base dark-ansi / light-ansi, so the syntax colours of
+  lunana.json, lunana-soft.json                 follow the wallpaper: base dark-ansi / light-ansi, so the syntax colours of
                                             diffs and code blocks are the terminal's own slots 8, 10-14 (keyword 13, storage 14,
                                             number 12, string 10, function 11, comment 8), and every other token is either an
                                             ANSI name (follows the terminal at once) or a hex solved from the palette
-  inir-monokai.json, inir-monokai-soft.json fixed retro palette: base dark, which makes Claude Code use Monokai Extended for
+  lunana-monokai.json, lunana-monokai-soft.json fixed retro palette: base dark, which makes Claude Code use Monokai Extended for
                                             syntax and draw red and green bars on diffs (ANSI themes get neither); in light
                                             mode the same families on paper, base light
 
@@ -192,12 +192,12 @@ def main() -> int:
     term = json.load(open(args.terminal))
     palette = json.load(open(args.palette))
     files = {
-        "inir.json": dynamic("iNiR", False, term, palette, args.mode),
-        "inir-soft.json": dynamic("iNiR Soft", True, term, palette, args.mode),
-        "inir-monokai.json": monokai("iNiR Monokai", VIVID) if args.mode != "light"
-            else monokai("iNiR Monokai", paper_backgrounds(PAPER, term), "light"),
-        "inir-monokai-soft.json": monokai("iNiR Monokai Soft", MONOKAI_SOFT) if args.mode != "light"
-            else monokai("iNiR Monokai Soft", paper_backgrounds(PAPER_SOFT, term), "light"),
+        "lunana.json": dynamic("Lunana", False, term, palette, args.mode),
+        "lunana-soft.json": dynamic("Lunana Soft", True, term, palette, args.mode),
+        "lunana-monokai.json": monokai("Lunana Monokai", VIVID) if args.mode != "light"
+            else monokai("Lunana Monokai", paper_backgrounds(PAPER, term), "light"),
+        "lunana-monokai-soft.json": monokai("Lunana Monokai Soft", MONOKAI_SOFT) if args.mode != "light"
+            else monokai("Lunana Monokai Soft", paper_backgrounds(PAPER_SOFT, term), "light"),
     }
     out = pathlib.Path(args.out_dir)
     changed = []

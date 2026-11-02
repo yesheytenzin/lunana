@@ -4,7 +4,7 @@ import QtQuick
 import Quickshell
 import Quickshell.Wayland
 
-// Continuous motion inside a full-output window (the iRiS chassis, the desktop background) costs the whole
+// Continuous motion inside a full-output window (the Atoll chassis, the desktop background) costs the whole
 // screen: Qt presents every frame with plain eglSwapBuffers, which damages the entire window, and Niri
 // recomposes all of it (the same spinner cost niri ~8 % in a 48 px layer and ~19 % in a full-output one). A
 // LiveLayer draws its content in place while the host moves, fades or covers it, and, once the host is still
@@ -153,7 +153,7 @@ Item {
             exclusionMode: ExclusionMode.Ignore
             exclusiveZone: 0
             mask: Region {}
-            WlrLayershell.namespace: "quickshell:inir-live"
+            WlrLayershell.namespace: "quickshell:lunana-live"
             WlrLayershell.layer: root.surfaceLayer
             WlrLayershell.keyboardFocus: WlrKeyboardFocus.None
             anchors { left: true; top: true }

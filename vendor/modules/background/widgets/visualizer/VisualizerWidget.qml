@@ -51,8 +51,8 @@ AbstractBackgroundWidget {
     semanticPaletteQuickControls: root.paletteMode === "accent"
         || root.paletteMode === "primary"
     readonly property var spectrumPalette: {
-        // iRiS draws its widgets from one solved palette; Cava's colours are Material's.
-        if (root.paletteMode === "accent" || (root.widgetIris && root.paletteMode === "cava"))
+        // Atoll draws its widgets from one solved palette; Cava's colours are Material's.
+        if (root.paletteMode === "accent" || (root.widgetAtoll && root.paletteMode === "cava"))
             return [root.widgetAccentVisible, root.widgetAccent2Visible, root.widgetAccent3Visible]
         if (root.paletteMode === "primary")
             return [root.widgetAccent]
@@ -243,9 +243,9 @@ AbstractBackgroundWidget {
 
     function _organicArtIdentity(source: string): string {
         const value = source ?? ""
-        let marker = value.indexOf("?inir_art=")
+        let marker = value.indexOf("?lunana_art=")
         if (marker < 0)
-            marker = value.indexOf("&inir_art=")
+            marker = value.indexOf("&lunana_art=")
         return marker >= 0 ? value.slice(0, marker) : value
     }
     readonly property color _organicPrimary: {
@@ -344,7 +344,7 @@ AbstractBackgroundWidget {
 
     // ── Card background ────────────────────────────────────────
     WidgetSurface {
-        irisPresentation: root.widgetIris
+        atollPresentation: root.widgetAtoll
         regionBrightness: root.regionBrightness
         id: cardBg
         anchors.centerIn: parent
@@ -386,7 +386,7 @@ AbstractBackgroundWidget {
             AudioVisualizerLayer {
                 id: visualizerLayer
                 anchors.fill: parent
-                anchors.margins: Appearance.angelEverywhere || Appearance.inirEverywhere ? 4 : 0
+                anchors.margins: Appearance.angelEverywhere || Appearance.lunanaEverywhere ? 4 : 0
                 points: root.vizType === "organic"
                     ? (root._active && cavaProcess.audioSignalActive
                         ? cavaProcess.points : root._organicSilentPoints)

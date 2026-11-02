@@ -246,7 +246,7 @@ PanelWindow {
         const lines = romp._chaosCfg.notify ?? ["Nothing happened. Don't check your widgets."]
         const body = Translation.tr(lines[Math.floor(Math.random() * lines.length)])
         Quickshell.execDetached(["notify-send", "-a", "Kira", "-i",
-            ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("assets/images/mascot/inir-mascot-peace-wink.png")).toString().replace("file://", ""),
+            ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("assets/images/mascot/lunana-mascot-peace-wink.png")).toString().replace("file://", ""),
             Translation.tr("Kira was here"), body])
     }
 
@@ -853,7 +853,7 @@ PanelWindow {
 
             readonly property string source: romp.phase === "idle"
                 ? ""
-                : ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + (`assets/images/mascot/inir-mascot-${romp.displayPose}.${(romp._manifest.animatedPoses ?? []).includes(romp.displayPose) ? "gif" : "png"}`))
+                : ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + (`assets/images/mascot/lunana-mascot-${romp.displayPose}.${(romp._manifest.animatedPoses ?? []).includes(romp.displayPose) ? "gif" : "png"}`))
             readonly property bool mirrored: romp.running
                 && (romp.movingRight !== (romp._manifest.facesRight ?? []).includes(romp.displayPose))
             readonly property int fadeDuration: Appearance.calcEffectiveDuration(130)
@@ -939,15 +939,15 @@ PanelWindow {
         implicitWidth: rompBubbleText.width + pad * 2
         implicitHeight: rompBubbleText.implicitHeight + pad * 2
         radius: Appearance.angelEverywhere ? Appearance.angel.roundingSmall
-             : Appearance.inirEverywhere ? Appearance.inir.roundingNormal
+             : Appearance.lunanaEverywhere ? Appearance.lunana.roundingNormal
              : Appearance.rounding.verysmall
         color: Appearance.angelEverywhere ? Appearance.angel.colGlassTooltip
-             : Appearance.inirEverywhere ? Appearance.inir.colLayer2
+             : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2
              : Appearance.auroraEverywhere ? Appearance.aurora.colTooltipSurface
              : Appearance.colors.colLayer3
         border.width: Appearance.angelEverywhere ? Appearance.angel.cardBorderWidth : 1
         border.color: Appearance.angelEverywhere ? Appearance.angel.colBorderSubtle
-                    : Appearance.inirEverywhere ? Appearance.inir.colBorder
+                    : Appearance.lunanaEverywhere ? Appearance.lunana.colBorder
                     : Appearance.auroraEverywhere ? Appearance.aurora.colTooltipBorder
                     : Appearance.colors.colLayer3Hover
         x: Math.max(12, Math.min(sprite.x + sprite.width / 2 - width / 2, romp.width - width - 12))
@@ -975,7 +975,7 @@ PanelWindow {
             horizontalAlignment: Text.AlignHCenter
             font.pixelSize: Appearance.font.pixelSize.smaller
             color: Appearance.angelEverywhere ? Appearance.angel.colText
-                 : Appearance.inirEverywhere ? Appearance.inir.colText
+                 : Appearance.lunanaEverywhere ? Appearance.lunana.colText
                  : Appearance.colors.colOnLayer3
         }
     }

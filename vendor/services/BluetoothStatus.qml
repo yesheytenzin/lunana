@@ -12,7 +12,7 @@ import QtQuick
 Singleton {
     id: root
 
-    // `inir bluetooth simulate 2` stands in for the adapter (`off`, `on`, a count of connected devices, `none` for no
+    // `lunana bluetooth simulate 2` stands in for the adapter (`off`, `on`, a count of connected devices, `none` for no
     // adapter) until `clear` or a restart, so every Bluetooth surface can be seen without the hardware.
     property string simulated: ""
     readonly property int _simulatedCount: /^\d+$/.test(root.simulated) ? parseInt(root.simulated) : 0

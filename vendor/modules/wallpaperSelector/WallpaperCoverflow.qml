@@ -17,7 +17,7 @@ import Quickshell.Hyprland
  * Fullscreen coverflow wallpaper selector — alternative to the grid WallpaperSelector.
  * Activated when Config wallpaperSelector.style === "coverflow", or directly via IPC.
  *
- * Full-featured: supports selectionTarget (main/backdrop/waffle/waffle-backdrop),
+ * Full-featured: supports selectionTarget (main/backdrop/slate/slate-backdrop),
  * multi-monitor, dark mode toggle, folder navigation, search, and runtime switch to grid.
  */
 Scope {
@@ -182,9 +182,9 @@ Scope {
                 // (mirrors WallpaperSelector.qml's family-aware target logic)
                 const explicitTarget = Config.options?.wallpaperSelector?.selectionTarget ?? "main"
                 if (explicitTarget === "main") {
-                    if (Config.options?.panelFamily === "waffle") {
-                        const useMain = Config.options?.waffles?.background?.useMainWallpaper ?? true
-                        Config.setNestedValue("wallpaperSelector.selectionTarget", useMain ? "main" : "waffle")
+                    if (Config.options?.panelFamily === "slate") {
+                        const useMain = Config.options?.slate?.background?.useMainWallpaper ?? true
+                        Config.setNestedValue("wallpaperSelector.selectionTarget", useMain ? "main" : "slate")
                     }
                 }
 

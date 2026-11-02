@@ -7,7 +7,7 @@ import ".."
 import "../modules/common"
 import "../modules/common/functions"
 
-// Lume: how iNiR keeps content readable over whatever is behind it. Three steps, each usable alone:
+// Lume: how Lunana keeps content readable over whatever is behind it. Three steps, each usable alone:
 //
 // 1. Read what sits behind a rect (`read`): the wallpaper that output shows (preview included, a video's
 //    still), summed from WallpaperLuma's grid: gamma level, spread and mean colour, instant and live. When
@@ -20,8 +20,8 @@ import "../modules/common/functions"
 // 4. Plate a panel (`plateOver`, `stack`): a translucent body keeps its tint for the look and puts a plate
 //    only under what holds text, as thick as the backdrop needs and no thicker.
 //
-// Consumers: desktop widgets (AbstractBackgroundWidget, iRiS faces via IrisStyle.legibleVeil/legibleFrost),
-// Waffle's desktop clock, iRiS Places (IrisStyle.placePlate/readingCard: Settings sidebar and cards).
+// Consumers: desktop widgets (AbstractBackgroundWidget, Atoll faces via AtollStyle.legibleVeil/legibleFrost),
+// Slate's desktop clock, Atoll Places (AtollStyle.placePlate/readingCard: Settings sidebar and cards).
 // Family tokens decide the colours; Lume decides how much of them.
 Singleton {
     id: root
@@ -45,7 +45,7 @@ Singleton {
         return { level: sample.level * keep, spread: sample.spread * keep, color: colour,
             luminance: ColorUtils.relativeLuminance(colour) }
     }
-    // The same for a surface that shows its own image (Waffle's wallpaper). Read as the desktop scales it
+    // The same for a surface that shows its own image (Slate's wallpaper). Read as the desktop scales it
     // (Wallpapers.fillMode): bars are black, span reads this output's slice of the whole canvas.
     function readFrom(path: string, output: string, x: real, y: real, w: real, h: real): var {
         void root.revision

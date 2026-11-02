@@ -203,7 +203,7 @@ AbstractBackgroundWidget {
     }
 
     WidgetSurface {
-        irisPresentation: root.widgetIris
+        atollPresentation: root.widgetAtoll
         anchors.fill: parent
         regionBrightness: root.regionBrightness
         surfaceRadius: root.cornerRadiusOverride >= 0

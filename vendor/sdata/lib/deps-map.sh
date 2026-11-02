@@ -1,4 +1,4 @@
-# Dependency mapping for iNiR across distributions
+# Dependency mapping for Lunana across distributions
 # This file maps generic dependency names to distro-specific package names
 # Format: DEPS_<CATEGORY>_<GENERIC_NAME>="arch:pkg fedora:pkg debian:pkg opensuse:pkg void:pkg"
 #
@@ -42,7 +42,7 @@ declare -A AUR_HELPER_CMD=(
 ###############################################################################
 
 # Quickshell - the shell framework itself. Fedora's distro package is currently
-# below iNiR's 0.3 requirement, so its installer selects the release COPR until
+# below Lunana's 0.3 requirement, so its installer selects the release COPR until
 # the official package catches up. Debian resolves this from stable backports.
 DEPS_CRITICAL_QUICKSHELL="arch:quickshell fedora:quickshell debian:quickshell ubuntu:COMPILE:https://github.com/quickshell-mirror/quickshell opensuse:COMPILE:https://github.com/quickshell-mirror/quickshell void:quickshell"
 
@@ -100,7 +100,7 @@ DEPS_AUDIO_LSP_PLUGINS_LV2="arch:lsp-plugins-lv2 fedora:lsp-plugins-lv2 debian:l
 DEPS_AUDIO_MPV="arch:mpv fedora:mpv debian:mpv ubuntu:mpv opensuse:mpv void:mpv"
 DEPS_AUDIO_MPV_MPRIS="arch:mpv-mpris fedora:mpv-mpris debian:mpv-mpris ubuntu:mpv-mpris opensuse:mpv-mpris void:mpv-mpris"
 DEPS_AUDIO_YTDLP="arch:yt-dlp fedora:yt-dlp debian:yt-dlp ubuntu:yt-dlp opensuse:yt-dlp void:yt-dlp"
-# ytmusicapi and yt-dlp's cookie-loader module are owned by iNiR's managed
+# ytmusicapi and yt-dlp's cookie-loader module are owned by Lunana's managed
 # Python runtime on setup-managed installs; package-managed distros declare
 # their own Python runtime dependency at the packaging boundary.
 DEPS_AUDIO_SOCAT="arch:socat fedora:socat debian:socat ubuntu:socat opensuse:socat void:socat"

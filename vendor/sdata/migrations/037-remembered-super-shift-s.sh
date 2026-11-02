@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 # Route Super+Shift+S through the unified snip menu so its remembered action
 # (Shot/Edit/OCR/Search) is actually honored. Only replace the exact historical
-# iNiR-managed bind; custom user bindings are left untouched.
+# Lunana-managed bind; custom user bindings are left untouched.
 
 MIGRATION_ID="037-remembered-super-shift-s"
 MIGRATION_TITLE="Remember Super+Shift+S snip mode"
-MIGRATION_DESCRIPTION="Changes the historical iNiR Super+Shift+S region-screenshot bind to the unified region menu. The menu restores the last non-recording action and selection shape when 'Remember last snip choice' is enabled."
+MIGRATION_DESCRIPTION="Changes the historical Lunana Super+Shift+S region-screenshot bind to the unified region menu. The menu restores the last non-recording action and selection shape when 'Remember last snip choice' is enabled."
 MIGRATION_TARGET_FILE="~/.config/niri/config.d/70-binds.kdl"
 MIGRATION_REQUIRED=true
 

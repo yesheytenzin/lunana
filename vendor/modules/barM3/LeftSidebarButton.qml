@@ -58,8 +58,8 @@ RippleButton {
         anchors.centerIn: parent
         width: root.isMaterial ? (root.vertical ? 24 : 22) : 19.5
         height: root.isMaterial ? (root.vertical ? 24 : 22) : 19.5
-        // Config.options.custom.distroIcon/colorizeIcon do not exist in iNiR;
-        // ported to the same source iNiR's own LeftSidebarButton uses.
+        // Config.options.custom.distroIcon/colorizeIcon do not exist in Lunana;
+        // ported to the same source Lunana's own LeftSidebarButton uses.
         source: (Config.options?.bar?.topLeftIcon ?? "distro") === "distro"
             ? SystemInfo.distroIcon
             : `${Config.options?.bar?.topLeftIcon ?? "distro"}-symbolic`

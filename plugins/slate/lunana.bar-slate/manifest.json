@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "lunana.bar-slate",
+  "name": "Lunana Slate Bar",
+  "version": "0.4.0",
+  "author": "lunana",
+  "license": "GPL-3.0",
+  "description": "Lunana exact Slate wBar host (Slate taskbar). Selectable kind:bar plugin.",
+  "kinds": [
+    "bar"
+  ],
+  "entryPoints": {
+    "bar": "Bar.qml"
+  },
+  "x-lunana": {
+    "suiteId": "lunana",
+    "role": "bar-host",
+    "milestone": "parity",
+    "requires": [],
+    "recommends": []
+  }
+}

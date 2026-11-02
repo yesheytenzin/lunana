@@ -43,29 +43,29 @@ Slider {
     property color highlightColor: Appearance.editorialEverywhere ? Appearance.editorial.accent
         : Appearance.regaliaEverywhere ? Appearance.regalia.hardwarePrimary
         : Appearance.angelEverywhere ? Appearance.angel.colPrimary
-        : Appearance.inirEverywhere ? Appearance.inir.colPrimary
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colPrimary
         : Appearance.zzzEverywhere ? Appearance.zzz.accentSoft : Appearance.colors.colPrimary
     property color trackColor: Appearance.editorialEverywhere ? Appearance.editorial.layer(3)
         : Appearance.regaliaEverywhere ? Appearance.regalia.controlPlate
         : Appearance.angelEverywhere ? Appearance.angel.colGlassCard
-        : Appearance.inirEverywhere ? Appearance.inir.colLayer2
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2
         : Appearance.auroraEverywhere ? Appearance.aurora.colElevatedSurface
         : Appearance.zzzEverywhere ? Appearance.zzz.metricTrack
         : Appearance.colors.colSecondaryContainer
     property color handleColor: Appearance.editorialEverywhere ? Appearance.editorial.accent
         : Appearance.regaliaEverywhere ? Appearance.regalia.hardwarePrimary
         : Appearance.angelEverywhere ? Appearance.angel.colPrimary
-        : Appearance.inirEverywhere ? Appearance.inir.colPrimary
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colPrimary
         : Appearance.zzzEverywhere ? "transparent" : Appearance.colors.colPrimary
     property color dotColor: Appearance.editorialEverywhere ? Appearance.editorial.muted
         : Appearance.regaliaEverywhere ? Appearance.regalia.onMuted
         : Appearance.angelEverywhere ? Appearance.angel.colTextSecondary
-        : Appearance.inirEverywhere ? Appearance.inir.colTextSecondary
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colTextSecondary
         : Appearance.zzzEverywhere ? Appearance.zzz.onMuted : Appearance.colors.colOnSecondaryContainer
     property color dotColorHighlighted: Appearance.editorialEverywhere ? Appearance.editorial.accentInk
         : Appearance.regaliaEverywhere ? Appearance.regalia.hardwarePrimaryInk
         : Appearance.angelEverywhere ? Appearance.angel.colOnPrimary
-        : Appearance.inirEverywhere ? Appearance.inir.colOnPrimary
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colOnPrimary
         : Appearance.zzzEverywhere ? Appearance.zzz.onColor : Appearance.colors.colOnPrimary
     property real unsharpenRadius: Appearance.rounding.unsharpen
     property real trackWidth: Appearance.regaliaEverywhere ? Math.min(7, configuration) : configuration

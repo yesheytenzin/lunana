@@ -5,12 +5,12 @@ import QtQuick.Layouts
 import "../../.."
 import "../../common"
 import "../../common/widgets"
-import "../../iris/style"
-import "../../iris/components"
+import "../../atoll/style"
+import "../../atoll/components"
 import "../../../services"
 
-// The quick-controls sheet of a widget drawn by the ii family (or a Material-design widget under
-// iRiS): the widget's name and a close button, then its pages. Its width comes from its content,
+// The quick-controls sheet of a widget drawn by the drift family (or a Material-design widget under
+// Atoll): the widget's name and a close button, then its pages. Its width comes from its content,
 // bounded by the screen.
 ColumnLayout {
     id: root
@@ -19,12 +19,12 @@ ColumnLayout {
     required property real availableHeight
     property string title: Translation.tr("Quick controls")
     property string glyph: "widgets"
-    property color tint: IrisStyle.accent
+    property color tint: AtollStyle.accent
     property real regularWidth: 360
     signal closeRequested()
 
-    readonly property bool iris: (Config.options?.panelFamily ?? "ii") === "iris"
-    readonly property real d: root.iris ? IrisStyle.density : 1
+    readonly property bool atoll: (Config.options?.panelFamily ?? "drift") === "atoll"
+    readonly property real d: root.atoll ? AtollStyle.density : 1
     readonly property bool dense: availableHeight < 760
     readonly property bool wideDense: dense && availableWidth >= 480
     readonly property int optionColumns: wideDense ? 4 : 3
@@ -54,10 +54,10 @@ ColumnLayout {
             Layout.fillWidth: true
             text: root.title
             elide: Text.ElideRight
-            color: root.iris ? IrisStyle.text : Appearance.colors.colOnLayer2
-            font.family: root.iris ? IrisStyle.fontTitle : Appearance.font.family.title
-            font.pixelSize: root.iris ? IrisStyle.typeTitle : Appearance.font.pixelSize.normal
-            font.weight: root.iris ? IrisStyle.weight(Font.DemiBold) : Font.DemiBold
+            color: root.atoll ? AtollStyle.text : Appearance.colors.colOnLayer2
+            font.family: root.atoll ? AtollStyle.fontTitle : Appearance.font.family.title
+            font.pixelSize: root.atoll ? AtollStyle.typeTitle : Appearance.font.pixelSize.normal
+            font.weight: root.atoll ? AtollStyle.weight(Font.DemiBold) : Font.DemiBold
         }
         WidgetEditAction {
             iconName: "close"

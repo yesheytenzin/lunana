@@ -1,4 +1,4 @@
-# Install dependencies for iNiR on Arch-based systems
+# Install dependencies for Lunana on Arch-based systems
 # This script is meant to be sourced, not run directly.
 
 # shellcheck shell=bash
@@ -155,13 +155,13 @@ collect_pkgbuild_deps() {
 # Keep the same dependency surface as before, but defer installation until all
 # package groups and conflict decisions are known. This avoids one pacman
 # transaction per local PKGBUILD on fresh systems.
-for pkgdir in ./sdata/dist-arch/inir-*/; do
+for pkgdir in ./sdata/dist-arch/lunana-*/; do
   pkgname=$(basename "$pkgdir")
   case "$pkgname" in
-    inir-audio) $INSTALL_AUDIO || continue ;;
-    inir-toolkit) $INSTALL_TOOLKIT || continue ;;
-    inir-screencapture) $INSTALL_SCREENCAPTURE || continue ;;
-    inir-fonts) $INSTALL_FONTS || continue ;;
+    lunana-audio) $INSTALL_AUDIO || continue ;;
+    lunana-toolkit) $INSTALL_TOOLKIT || continue ;;
+    lunana-screencapture) $INSTALL_SCREENCAPTURE || continue ;;
+    lunana-fonts) $INSTALL_FONTS || continue ;;
   esac
   collect_pkgbuild_deps "$pkgdir"
 done
@@ -220,20 +220,20 @@ _qs_shell_found=false
 for _qs_pkg in "${_qs_shell_conflicts[@]}"; do
   if pacman -Qi "$_qs_pkg" &>/dev/null 2>&1; then
     _qs_shell_found=true
-    log_warning "$_qs_pkg is installed and conflicts with iNiR"
+    log_warning "$_qs_pkg is installed and conflicts with Lunana"
 
     # Stop related services before removal
     systemctl --user stop "${_qs_pkg}.service" 2>/dev/null || true
     systemctl --user disable "${_qs_pkg}.service" 2>/dev/null || true
 
     if $ask; then
-      if tui_confirm "Remove $_qs_pkg? (required for iNiR)"; then
+      if tui_confirm "Remove $_qs_pkg? (required for Lunana)"; then
         log_info "Removing $_qs_pkg..."
         v pkg_sudo pacman -Rdd --noconfirm "$_qs_pkg" 2>/dev/null \
           || v pkg_sudo pacman -R --noconfirm "$_qs_pkg" \
           || log_warning "Could not remove $_qs_pkg — install may fail"
       else
-        log_warning "Keeping $_qs_pkg — iNiR may not work correctly"
+        log_warning "Keeping $_qs_pkg — Lunana may not work correctly"
       fi
     else
       log_info "Non-interactive: removing $_qs_pkg"
@@ -458,7 +458,7 @@ if $INSTALL_FONTS; then
 fi
 
 if $INSTALL_AUDIO; then
-  : # cava moved to inir-audio PKGBUILD
+  : # cava moved to lunana-audio PKGBUILD
 fi
 
 # uv is in Arch extra and is installed in the official package batch.
@@ -500,7 +500,7 @@ if $INSTALL_FONTS; then
 
   for font in "${CRITICAL_FONTS[@]}"; do
     if ! pacman -Q "$font" &>/dev/null && ! $AUR_HELPER -S $installflags "$font" 2>/dev/null; then
-      log_error "CRITICAL: Failed to install $font — some iNiR typography may fall back"
+      log_error "CRITICAL: Failed to install $font — some Lunana typography may fall back"
       log_warning "Try: $AUR_HELPER -S $font"
     fi
   done
@@ -521,16 +521,16 @@ fi
 
 #####################################################################################
 # Register dependencies with pacman via meta-package
-# This prevents "clean orphans" from removing iNiR's deps.
+# This prevents "clean orphans" from removing Lunana's deps.
 # The meta-package contains no files — only dependency declarations.
 #####################################################################################
 tui_info "Registering dependencies with pacman..."
 
-_meta_dir="./sdata/dist-arch/inir-deps"
+_meta_dir="./sdata/dist-arch/lunana-deps"
 if [[ -f "$_meta_dir/PKGBUILD" ]]; then
   # Update pkgver from VERSION file
-  _inir_ver="$(cat ./VERSION 2>/dev/null || echo '2.33.0')"
-  sed -i "s/^pkgver=.*/pkgver=${_inir_ver}/" "$_meta_dir/PKGBUILD"
+  _lunana_ver="$(cat ./VERSION 2>/dev/null || echo '2.33.0')"
+  sed -i "s/^pkgver=.*/pkgver=${_lunana_ver}/" "$_meta_dir/PKGBUILD"
 
   (
     cd "$_meta_dir"
@@ -542,12 +542,12 @@ if [[ -f "$_meta_dir/PKGBUILD" ]]; then
       local_pkg=(*.pkg.tar.zst)
       if [[ -f "${local_pkg[0]}" ]]; then
         if pkg_sudo pacman -U --noconfirm --needed "${local_pkg[0]}" 2>/dev/null; then
-          log_success "Meta-package inir-deps registered — orphan cleaner will skip iNiR deps"
+          log_success "Meta-package lunana-deps registered — orphan cleaner will skip Lunana deps"
         else
           # Some deps might be AUR-only and not satisfy pacman's check.
           # Fall back to installing without dep verification.
           pkg_sudo pacman -Udd --noconfirm "${local_pkg[0]}" 2>/dev/null && \
-            log_success "Meta-package inir-deps registered (forced)" || \
+            log_success "Meta-package lunana-deps registered (forced)" || \
             log_warning "Could not register meta-package — orphan protection unavailable"
         fi
         rm -f "${local_pkg[@]}" 2>/dev/null
@@ -559,12 +559,12 @@ if [[ -f "$_meta_dir/PKGBUILD" ]]; then
 else
   log_warning "Meta-package PKGBUILD not found at $_meta_dir"
 fi
-unset _meta_dir _inir_ver
+unset _meta_dir _lunana_ver
 
 #####################################################################################
 # Post-install: Quickshell built for another Qt version
 # Quickshell uses Qt internals and asks to be rebuilt after every Qt update.
-# `inir doctor --fix-abi` (scripts/inir) owns the rebuild for every install kind.
+# `lunana doctor --fix-abi` (scripts/lunana) owns the rebuild for every install kind.
 #####################################################################################
 if command -v qs >/dev/null 2>&1; then
   qs_abi_output="$(timeout 5 env QT_QPA_PLATFORM=offscreen qs --version 2>&1 || true)"
@@ -572,8 +572,8 @@ if command -v qs >/dev/null 2>&1; then
     log_warning "Quickshell was built for another Qt version. Until it is rebuilt it can crash."
     qs_fix_args=(doctor --fix-abi)
     $ask || qs_fix_args+=(--noninteractive)
-    if ! bash ./scripts/inir "${qs_fix_args[@]}"; then
-      log_warning "To fix later: inir doctor --fix-abi"
+    if ! bash ./scripts/lunana "${qs_fix_args[@]}"; then
+      log_warning "To fix later: lunana doctor --fix-abi"
     fi
     unset qs_fix_args
   fi

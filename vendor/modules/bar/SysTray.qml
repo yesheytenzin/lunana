@@ -133,15 +133,15 @@ Item {
             background.implicitHeight: 24
             background.anchors.centerIn: this
             colBackgroundToggled: Appearance.zzzEverywhere ? Appearance.zzz.sticker
-                : Appearance.inirEverywhere ? Appearance.inir.colSelection
+                : Appearance.lunanaEverywhere ? Appearance.lunana.colSelection
                 : Appearance.auroraEverywhere ? Appearance.aurora.colElevatedSurface
                 : Appearance.colors.colSecondaryContainer
             colBackgroundToggledHover: Appearance.zzzEverywhere ? Appearance.colors.colPrimaryHover
-                : Appearance.inirEverywhere ? Appearance.inir.colSelectionHover
+                : Appearance.lunanaEverywhere ? Appearance.lunana.colSelectionHover
                 : Appearance.auroraEverywhere ? Appearance.aurora.colElevatedSurfaceHover
                 : Appearance.colors.colSecondaryContainerHover
             colRippleToggled: Appearance.zzzEverywhere ? Appearance.colors.colPrimaryActive
-                : Appearance.inirEverywhere ? Appearance.inir.colPrimaryActive
+                : Appearance.lunanaEverywhere ? Appearance.lunana.colPrimaryActive
                 : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurfaceActive
                 : Appearance.colors.colSecondaryContainerActive
 
@@ -151,8 +151,8 @@ Item {
                 text: "expand_more"
                 horizontalAlignment: Text.AlignHCenter
                 color: root.trayOverflowOpen
-                    ? (Appearance.zzzEverywhere ? Appearance.zzz.onSticker : Appearance.angelEverywhere ? Appearance.angel.colOnPrimary : Appearance.inirEverywhere ? Appearance.inir.colOnSelection : Appearance.colors.colOnSecondaryContainer)
-                    : (Appearance.zzzEverywhere ? Appearance.zzz.ink : Appearance.angelEverywhere ? Appearance.angel.colText : Appearance.inirEverywhere ? Appearance.inir.colText : Appearance.colors.colOnLayer2)
+                    ? (Appearance.zzzEverywhere ? Appearance.zzz.onSticker : Appearance.angelEverywhere ? Appearance.angel.colOnPrimary : Appearance.lunanaEverywhere ? Appearance.lunana.colOnSelection : Appearance.colors.colOnSecondaryContainer)
+                    : (Appearance.zzzEverywhere ? Appearance.zzz.ink : Appearance.angelEverywhere ? Appearance.angel.colText : Appearance.lunanaEverywhere ? Appearance.lunana.colText : Appearance.colors.colOnLayer2)
                 rotation: (root.trayOverflowOpen ? 180 : 0) - (90 * root.vertical) + (180 * root.invertSide)
                 Behavior on rotation {
                     animation: NumberAnimation { duration: Appearance.animation.elementMoveFast.duration; easing.type: Appearance.animation.elementMoveFast.type; easing.bezierCurve: Appearance.animation.elementMoveFast.bezierCurve }
@@ -217,7 +217,7 @@ Item {
             font.pixelSize: Appearance.font.pixelSize.larger
             color: Appearance.angelEverywhere ? Appearance.angel.colTextSecondary
                 : Appearance.regaliaEverywhere ? Appearance.regalia.onMuted
-                : Appearance.inirEverywhere ? Appearance.inir.colTextSecondary : Appearance.colors.colSubtext
+                : Appearance.lunanaEverywhere ? Appearance.lunana.colTextSecondary : Appearance.colors.colSubtext
             text: "•"
             visible: root.showSeparator && SystemTray.items.values.length > 0
         }

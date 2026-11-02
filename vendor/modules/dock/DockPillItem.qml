@@ -20,7 +20,7 @@ Item {
     property string surfaceDialect: Appearance.surfaceDialectFor("")
     readonly property bool zzzStyle: surfaceDialect === "zzz"
     readonly property bool angelStyle: surfaceDialect === "angel"
-    readonly property bool inirStyle: surfaceDialect === "inir"
+    readonly property bool lunanaStyle: surfaceDialect === "lunana"
     readonly property bool auroraStyle: surfaceDialect === "aurora" || angelStyle
     property int  windowCount: 1
     property int  focusedWindowIndex: 0
@@ -32,7 +32,7 @@ Item {
     // Standard rounding - not a full circle
     readonly property real pillRadius: root.zzzStyle ? Appearance.zzz.controlRadius
                                       : root.angelStyle ? Appearance.angel.roundingSmall
-                                      : root.inirStyle ? Appearance.inir.roundingSmall
+                                      : root.lunanaStyle ? Appearance.lunana.roundingSmall
                                       : Appearance.rounding.small
 
     // Background only visible when app is active/focused - translucent and aesthetic
@@ -42,7 +42,7 @@ Item {
             return Appearance.editorial.glassActive ? Appearance.editorial.glassSelection : Appearance.editorial.field
         if (root.zzzStyle) return Appearance.zzz.bg2
         if (root.angelStyle) return ColorUtils.transparentize(Appearance.angel.colGlassCard, 0.35)
-        if (root.inirStyle) return ColorUtils.transparentize(Appearance.inir.colLayer2, 0.45)
+        if (root.lunanaStyle) return ColorUtils.transparentize(Appearance.lunana.colLayer2, 0.45)
         if (root.auroraStyle) return ColorUtils.transparentize(Appearance.aurora.colSubSurface, 0.4)
         return ColorUtils.transparentize(Appearance.colors.colLayer1, 0.45)
     }
@@ -54,7 +54,7 @@ Item {
             return Appearance.editorial.glassSelectionEdge
         if (root.zzzStyle) return Appearance.zzz.hairlineStrong
         if (root.angelStyle) return ColorUtils.transparentize(Appearance.angel.colBorder, 0.5)
-        if (root.inirStyle) return ColorUtils.transparentize(Appearance.inir.colBorderAccent, 0.55)
+        if (root.lunanaStyle) return ColorUtils.transparentize(Appearance.lunana.colBorderAccent, 0.55)
         if (root.auroraStyle) return ColorUtils.transparentize(Appearance.colors.colPrimary, 0.7)
         return ColorUtils.transparentize(Appearance.colors.colPrimary, 0.65)
     }
@@ -111,12 +111,12 @@ Item {
                 color: isFocused
                     ? (root.zzzStyle ? Appearance.zzz.accent
                      : root.angelStyle ? Appearance.angel.colPrimary
-                     : root.inirStyle ? Appearance.inir.colPrimary
+                     : root.lunanaStyle ? Appearance.lunana.colPrimary
                      : Appearance.colors.colPrimary)
                     : ColorUtils.transparentize(
                         root.zzzStyle ? Appearance.zzz.ghostInk
                       : root.angelStyle ? Appearance.angel.colTextSecondary
-                      : root.inirStyle ? Appearance.inir.colText
+                      : root.lunanaStyle ? Appearance.lunana.colText
                       : Appearance.colors.colOnLayer0, 0.5)
 
                 Behavior on implicitWidth {
@@ -144,7 +144,7 @@ Item {
             color: ColorUtils.transparentize(
                 root.zzzStyle ? Appearance.zzz.ghostInk
               : root.angelStyle ? Appearance.angel.colTextSecondary
-              : root.inirStyle ? Appearance.inir.colText
+              : root.lunanaStyle ? Appearance.lunana.colText
               : Appearance.colors.colOnLayer0, 0.5)
 
             Behavior on opacity {

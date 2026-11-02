@@ -305,15 +305,15 @@ Item {
         screenHeight: root.QsWindow?.window?.screen?.height ?? implicitHeight
         radius: Appearance.zzzEverywhere ? Appearance.zzz.panelRadius
             : Appearance.angelEverywhere ? Appearance.angel.roundingNormal
-            : Appearance.inirEverywhere ? Appearance.inir.roundingNormal
+            : Appearance.lunanaEverywhere ? Appearance.lunana.roundingNormal
             : Appearance.rounding.normal
         fallbackColor: Appearance.colors.colLayer0
-        inirColor: Appearance.inir.colLayer1
+        lunanaColor: Appearance.lunana.colLayer1
         auroraTransparency: Appearance.aurora.popupTransparentize
         border.width: Appearance.zzzEverywhere ? Appearance.zzz.borderThick
-            : auroraEverywhere || inirEverywhere ? 1 : 0
+            : auroraEverywhere || lunanaEverywhere ? 1 : 0
         border.color: Appearance.angelEverywhere ? Appearance.angel.colCardBorder
-            : inirEverywhere ? Appearance.inir.colBorder
+            : lunanaEverywhere ? Appearance.lunana.colBorder
             : Appearance.auroraEverywhere ? Appearance.aurora.colTooltipBorder : Appearance.colors.colLayer0Border
         implicitWidth: root.cardWidth
         implicitHeight: root.cardHeight
@@ -334,7 +334,7 @@ Item {
                 Layout.alignment: Qt.AlignVCenter
                 radius: Appearance.zzzEverywhere ? Appearance.zzz.controlRadius
                     : Appearance.angelEverywhere ? Appearance.angel.roundingSmall
-                    : Appearance.inirEverywhere ? Appearance.inir.roundingSmall
+                    : Appearance.lunanaEverywhere ? Appearance.lunana.roundingSmall
                     : Appearance.rounding.small
                 color: Appearance.colors.colLayer1
                 clip: true
@@ -430,15 +430,15 @@ Item {
                 implicitHeight: mediaControls.implicitHeight + Appearance.sizes.spacingSmall * 0.5
                 radius: Appearance.zzzEverywhere ? Appearance.zzz.controlRadius
                     : Appearance.angelEverywhere ? Appearance.angel.roundingSmall
-                    : Appearance.inirEverywhere ? Appearance.inir.roundingSmall
+                    : Appearance.lunanaEverywhere ? Appearance.lunana.roundingSmall
                     : Appearance.rounding.full
                 color: Appearance.zzzEverywhere ? Appearance.zzz.paperAlt
                     : Appearance.angelEverywhere ? Appearance.angel.colGlassCard
-                    : Appearance.inirEverywhere ? Appearance.inir.colLayer2
+                    : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2
                     : Appearance.colors.colLayer1
-                border.width: Appearance.inirEverywhere || Appearance.angelEverywhere ? 1 : 0
+                border.width: Appearance.lunanaEverywhere || Appearance.angelEverywhere ? 1 : 0
                 border.color: Appearance.angelEverywhere
-                    ? Appearance.angel.colCardBorder : Appearance.inir.colBorder
+                    ? Appearance.angel.colCardBorder : Appearance.lunana.colBorder
 
                 PlayerControls {
                     id: mediaControls

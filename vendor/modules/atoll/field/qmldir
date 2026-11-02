@@ -1,0 +1,5 @@
+AtollBlurRegion 1.0 AtollBlurRegion.qml
+AtollField 1.0 AtollField.qml
+singleton AtollGlassBackdrops 1.0 AtollGlassBackdrops.qml
+AtollGlassSource 1.0 AtollGlassSource.qml
+AtollWaveBlur 1.0 AtollWaveBlur.qml

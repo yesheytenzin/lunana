@@ -16,7 +16,7 @@ StyledImage {
     required property string sourcePath
     property string thumbnailSizeName: Images.thumbnailSizeNameForDimensions(sourceSize.width, sourceSize.height)
     property bool isVideo: Images.isValidVideoByName(sourcePath)
-    // Videos use iNiR's own still: the shared freedesktop cache may hold a film-strip frame.
+    // Videos use Lunana's own still: the shared freedesktop cache may hold a film-strip frame.
     property bool cleanVideoStill: false
     readonly property bool _ownsStill: root.cleanVideoStill && root.isVideo
     property bool thumbnailAvailable: false

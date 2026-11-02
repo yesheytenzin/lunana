@@ -189,7 +189,7 @@ Scope {
                         reserve = Math.max(reserve, 12)
 
                     const orbitEnabled = CompositorService.isNiri
-                        && (Config.options?.panelFamily ?? "ii") === "ii"
+                        && (Config.options?.panelFamily ?? "drift") === "drift"
                         && (Config.options?.orbit?.enable ?? true)
                         && (Config.options?.orbit?.hotCornerEnable ?? true)
                     if (orbitEnabled && String(Config.options?.orbit?.hotCorner ?? "topRight") === corner)
@@ -395,7 +395,7 @@ Scope {
 
                     ShellEditSurfaceFrame {
                         anchors.fill: barContent
-                        surfaceId: "iiBar"
+                        surfaceId: "driftBar"
                         label: Translation.tr("Bar")
                         active: ShellEditSession.blocksNormalActions(surfaceId)
                         selected: ShellEditSession.selectedSurfaceId === surfaceId
@@ -450,15 +450,15 @@ Scope {
                             implicitHeight: Appearance.rounding.screenRounding
                             
                             readonly property bool isAurora: Appearance.auroraEverywhere
-                            readonly property bool isInir: Appearance.inirEverywhere
+                            readonly property bool isLunana: Appearance.lunanaEverywhere
                             readonly property bool isBottom: Config.options?.bar?.bottom ?? false
                             readonly property color solidColor: showBarBackground 
-                                ? (isInir ? Appearance.inir.colLayer0 
+                                ? (isLunana ? Appearance.lunana.colLayer0 
                                     : isAurora ? Appearance.aurora.colPopupSurface
                                     : Appearance.colors.colLayer0) 
                                 : "transparent"
                             
-                            // Left corner - solid for Material/Inir, blur for Aurora
+                            // Left corner - solid for Material/Lunana, blur for Aurora
                             RoundCorner {
                                 id: leftCorner
                                 visible: !hugDecorators.isAurora
@@ -481,7 +481,7 @@ Scope {
                                 }
                             }
                             
-                            // Right corner - solid for Material/Inir
+                            // Right corner - solid for Material/Lunana
                             RoundCorner {
                                 id: rightCorner
                                 visible: !hugDecorators.isAurora
@@ -619,7 +619,7 @@ Scope {
     }
 
     // IPC target "bar" is registered once in shell.qml (always loaded, family-
-    // agnostic). Both Bar and VerticalBar are instantiated under the ii family,
+    // agnostic). Both Bar and VerticalBar are instantiated under the drift family,
     // so a handler here would collide with VerticalBar's and Quickshell would
     // drop one with a "registered but will not be used" warning.
 

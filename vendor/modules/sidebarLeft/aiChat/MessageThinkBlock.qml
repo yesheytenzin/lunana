@@ -58,7 +58,7 @@ Item {
             id: header
             color: Appearance.editorialEverywhere ? (headerMouseArea.containsMouse ? Appearance.colors.colSecondaryContainerHover : Appearance.editorial.secondaryField)
                 : Appearance.angelEverywhere ? Appearance.angel.colGlassCard
-                : Appearance.inirEverywhere ? Appearance.inir.colLayer2 
+                : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2 
                 : Appearance.auroraEverywhere ? Appearance.aurora.colElevatedSurface : Appearance.colors.colSurfaceContainerHighest
             Layout.fillWidth: true
             implicitHeight: thinkBlockTitleBarRowLayout.implicitHeight + thinkBlockHeaderPaddingVertical * 2
@@ -158,7 +158,7 @@ Item {
                 anchors.bottom: parent.bottom
                 implicitHeight: messageTextBlock.implicitHeight
                 color: Appearance.angelEverywhere ? Appearance.angel.colGlassCard
-                    : Appearance.inirEverywhere ? Appearance.inir.colLayer2 : Appearance.auroraEverywhere ? Appearance.aurora.colElevatedSurface : Appearance.colors.colLayer2
+                    : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2 : Appearance.auroraEverywhere ? Appearance.aurora.colElevatedSurface : Appearance.colors.colLayer2
 
                 // Load data for the message at the correct scope
                 property bool editing: root.editing

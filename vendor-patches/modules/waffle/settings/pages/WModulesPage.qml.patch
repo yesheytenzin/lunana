@@ -1,0 +1,11 @@
+# vendor-patches/modules/waffle/settings/pages/WModulesPage.qml.patch
+#
+# Lunana family switching through the Omarchy shell (see the IrisOptions
+# patch for the full rationale): the Slate family picker calls
+# `omarchy-shell lunana.family set` instead of the unvendored upstream script.
+
+--- a/modules/waffle/settings/pages/WModulesPage.qml
++++ b/modules/waffle/settings/pages/WModulesPage.qml
+@@ -101,1 +101,1 @@
+-                    Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")), "panelFamily", "set", newValue])
++                    Quickshell.execDetached(["omarchy-shell", "lunana.family", "set", newValue])

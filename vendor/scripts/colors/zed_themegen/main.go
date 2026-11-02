@@ -1005,7 +1005,7 @@ func main() {
 	defaultSCSS := filepath.Join(home, ".local/state/quickshell/user/generated/material_colors.scss")
 	defaultPalette := filepath.Join(home, ".local/state/quickshell/user/generated/palette.json")
 	defaultTerminal := filepath.Join(home, ".local/state/quickshell/user/generated/terminal.json")
-	defaultOutput := filepath.Join(home, ".config/zed/themes/ii-theme.json")
+	defaultOutput := filepath.Join(home, ".config/zed/themes/drift-theme.json")
 	defaultTemplate := filepath.Join(".", "dots/.config/matugen/templates/zed-colors.json")
 	if _, err := os.Stat(defaultTemplate); err != nil {
 		defaultTemplate = ""
@@ -1072,7 +1072,7 @@ func main() {
 	altDark = deepCopyMap(altDark)
 	altLight = deepCopyMap(altLight)
 
-	// Keep default iNiR border tones aligned with the iNiR-alt border palette.
+	// Keep default Lunana border tones aligned with the Lunana-alt border palette.
 	applyBorderPalette(darkStyle, altDark)
 	applyBorderPalette(lightStyle, altLight)
 
@@ -1081,15 +1081,15 @@ func main() {
 
 	themeData := map[string]any{
 		"$schema": "https://zed.dev/schema/themes/v0.2.0.json",
-		"name":    "iNiR Material",
-		"author":  "iNiR Theme System",
+		"name":    "Lunana Material",
+		"author":  "Lunana Theme System",
 		"themes": []any{
-			map[string]any{"name": "iNiR Dark", "appearance": "dark", "style": darkStyle},
-			map[string]any{"name": "iNiR Light", "appearance": "light", "style": lightStyle},
-			map[string]any{"name": "iNiR Borderless Dark", "appearance": "dark", "style": makeBorderlessStyle(darkStyle)},
-			map[string]any{"name": "iNiR Borderless Light", "appearance": "light", "style": makeBorderlessStyle(lightStyle)},
-			map[string]any{"name": "iNiR-alt Dark", "appearance": "dark", "style": altDark},
-			map[string]any{"name": "iNiR-alt Light", "appearance": "light", "style": altLight},
+			map[string]any{"name": "Lunana Dark", "appearance": "dark", "style": darkStyle},
+			map[string]any{"name": "Lunana Light", "appearance": "light", "style": lightStyle},
+			map[string]any{"name": "Lunana Borderless Dark", "appearance": "dark", "style": makeBorderlessStyle(darkStyle)},
+			map[string]any{"name": "Lunana Borderless Light", "appearance": "light", "style": makeBorderlessStyle(lightStyle)},
+			map[string]any{"name": "Lunana-alt Dark", "appearance": "dark", "style": altDark},
+			map[string]any{"name": "Lunana-alt Light", "appearance": "light", "style": altLight},
 		},
 	}
 

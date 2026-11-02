@@ -118,16 +118,16 @@ PopupWindow {
 
             color: Appearance.zzzEverywhere ? Appearance.zzz.bg1
                 : Appearance.angelEverywhere ? Appearance.angel.colGlassPopup
-                : Appearance.inirEverywhere ? Appearance.inir.colLayer1
+                : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer1
                 : Appearance.colors.colLayer0
             radius: Appearance.zzzEverywhere ? Appearance.zzz.cornerRadius
                 : Appearance.angelEverywhere ? Appearance.angel.roundingNormal
-                : Appearance.inirEverywhere ? Appearance.inir.roundingLarge
+                : Appearance.lunanaEverywhere ? Appearance.lunana.roundingLarge
                 : Appearance.rounding.windowRounding
             border.width: Appearance.zzzEverywhere ? 0 : 1
             border.color: Appearance.zzzEverywhere ? "transparent"
                 : Appearance.angelEverywhere ? Appearance.angel.colBorder
-                : Appearance.inirEverywhere ? Appearance.inir.colBorder
+                : Appearance.lunanaEverywhere ? Appearance.lunana.colBorder
                 : Appearance.colors.colLayer0Border
             clip: true
 
@@ -243,13 +243,13 @@ PopupWindow {
             colBackground: "transparent"
             colBackgroundHover: Appearance.angelEverywhere
                 ? Appearance.angel.colGlassPopupHover
-                : Appearance.inirEverywhere
-                    ? Appearance.inir.colLayer1Hover
+                : Appearance.lunanaEverywhere
+                    ? Appearance.lunana.colLayer1Hover
                     : ColorUtils.transparentize(Appearance.colors.colPrimary, 0.85)
             colRipple: Appearance.angelEverywhere
                 ? Appearance.angel.colGlassPopupActive
-                : Appearance.inirEverywhere
-                    ? Appearance.inir.colLayer1Active
+                : Appearance.lunanaEverywhere
+                    ? Appearance.lunana.colLayer1Active
                     : ColorUtils.transparentize(Appearance.colors.colPrimary, 0.7)
             releaseAction: () => {
                 TrayService.togglePin(root.trayItemId)

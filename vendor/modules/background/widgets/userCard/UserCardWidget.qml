@@ -11,7 +11,7 @@ import "../../../common/functions"
 import "../../../common/widgets"
 import ".."
 import "../instrument"
-import "../../../iris/widgets"
+import "../../../atoll/widgets"
 
 AbstractBackgroundWidget {
     id: root
@@ -40,12 +40,12 @@ AbstractBackgroundWidget {
             y: 420
         })
 
-    implicitWidth: root.irisFaced ? root.irisFaceWidth : Math.round(Number(root._readConfigKey("contentWidth") ?? 280) * scaleFactor)
-    implicitHeight: root.irisFaced ? root.irisFaceHeight : Math.round(Math.max(170, Number(root._readConfigKey("contentHeight") ?? 176)) * scaleFactor)
-    irisFace: Component { IrisProfileFace { widget: root } }
-    irisSizes: ["small", "medium"]
-    irisDefaultSize: "medium"
-    irisOptions: [
+    implicitWidth: root.atollFaced ? root.atollFaceWidth : Math.round(Number(root._readConfigKey("contentWidth") ?? 280) * scaleFactor)
+    implicitHeight: root.atollFaced ? root.atollFaceHeight : Math.round(Math.max(170, Number(root._readConfigKey("contentHeight") ?? 176)) * scaleFactor)
+    atollFace: Component { AtollProfileFace { widget: root } }
+    atollSizes: ["small", "medium"]
+    atollDefaultSize: "medium"
+    atollOptions: [
         { key: "showAvatar", raw: true, label: Translation.tr("Picture"), icon: "account_circle", fallback: true },
         { key: "showWeather", raw: true, label: Translation.tr("Weather"), icon: "partly_cloudy_day", fallback: true },
         { key: "showHostname", raw: true, label: Translation.tr("Computer name"), icon: "computer", fallback: true }
@@ -99,7 +99,7 @@ AbstractBackgroundWidget {
     }
 
     function lockScreen(): void {
-        Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")), "lock", "activate"]);
+        Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/lunana")), "lock", "activate"]);
     }
 
     editPopoverContent: Component {
@@ -144,7 +144,7 @@ AbstractBackgroundWidget {
     }
 
     WidgetSurface {
-        irisPresentation: root.widgetIris
+        atollPresentation: root.widgetAtoll
         regionBrightness: root.regionBrightness
         anchors.fill: parent
         surfaceRadius: root.cornerRadiusOverride >= 0 ? root.cornerRadiusOverride : root.widgetCardRadius
@@ -160,12 +160,12 @@ AbstractBackgroundWidget {
         screenY: root.y
         screenWidth: root.scaledScreenWidth
         screenHeight: root.scaledScreenHeight
-        shown: !root.irisFaced && !root.instrument && (root.backgroundOpacity > 0 || root.borderWidth > 0 || root.effectiveBlur)
+        shown: !root.atollFaced && !root.instrument && (root.backgroundOpacity > 0 || root.borderWidth > 0 || root.effectiveBlur)
     }
 
     ColumnLayout {
         id: cardColumn
-        visible: !root.irisFaced && opacity > 0
+        visible: !root.atollFaced && opacity > 0
         opacity: root.instrument ? 0 : 1
         enabled: !root.instrument
         Behavior on opacity {
@@ -400,7 +400,7 @@ AbstractBackgroundWidget {
         anchors.fill: parent
         anchors.margins: Math.round(12 * root.scaleFactor)
         spacing: Math.round(12 * root.scaleFactor)
-        visible: !root.irisFaced && opacity > 0
+        visible: !root.atollFaced && opacity > 0
         opacity: root.instrument ? 1 : 0
         enabled: root.instrument
         Behavior on opacity {
@@ -457,7 +457,7 @@ AbstractBackgroundWidget {
             StyledText {
                 visible: root.showHostname && root.hostname.length > 0
                 Layout.fillWidth: true
-                text: root.widgetIris ? root.hostname : root.hostname.toUpperCase()
+                text: root.widgetAtoll ? root.hostname : root.hostname.toUpperCase()
                 color: root.widgetInkMuted
                 elide: Text.ElideRight
                 font.family: Appearance.font.family.monospace

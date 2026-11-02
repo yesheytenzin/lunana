@@ -5,12 +5,12 @@
 MIGRATION_ID="041-visualizer-app-filter-semantics"
 MIGRATION_TITLE="Fix visualizer app filter semantics"
 MIGRATION_DESCRIPTION="Visualizer App Filters now exclude selected applications, matching Notifications and the v2.30 changelog. Existing selected apps are preserved as blocked visualizer sources."
-MIGRATION_TARGET_FILE="~/.config/inir/config.json"
+MIGRATION_TARGET_FILE="~/.config/lunana/config.json"
 MIGRATION_REQUIRED=true
 
 _config_path() {
   local xdg_config_home="${XDG_CONFIG_HOME:-$HOME/.config}"
-  local config_new="${xdg_config_home}/inir/config.json"
+  local config_new="${xdg_config_home}/lunana/config.json"
   local config_legacy="${xdg_config_home}/illogical-impulse/config.json"
   if [[ -f "$config_legacy" ]]; then
     printf '%s\n' "$config_legacy"

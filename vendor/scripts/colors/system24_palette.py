@@ -50,14 +50,14 @@ OUTPUT_FILE = Path(
 MIDNIGHT_OUTPUT_FILE = Path(
     os.environ.get(
         "MIDNIGHT_DMS_CSS",
-        "~/.config/vesktop/themes/inir-midnight.theme.css",
+        "~/.config/vesktop/themes/lunana-midnight.theme.css",
     )
 ).expanduser()
 
 TUI_OUTPUT_FILE = Path(
     os.environ.get(
-        "INIR_TUI_CSS",
-        "~/.config/vesktop/themes/inir-tui.theme.css",
+        "LUNANA_TUI_CSS",
+        "~/.config/vesktop/themes/lunana-tui.theme.css",
     )
 ).expanduser()
 
@@ -93,11 +93,11 @@ def _resolve_output_files(env_var: str, default_path: Path) -> list[Path]:
 
 # Template for the full theme file
 THEME_TEMPLATE = """/**
- * @name iNiR Material
+ * @name Lunana Material
  * @description Material Design Discord theme with Material You colors.
- * @author refact0r (system24 base), iNiR (Material adaptation)
+ * @author refact0r (system24 base), Lunana (Material adaptation)
  * @version 2.2.0
- * @source https://github.com/snowarch/iNiR
+ * @source https://github.com/snowarch/Lunana
  */
 
 /*
@@ -155,9 +155,9 @@ body {{
 """
 
 TUI_THEME_TEMPLATE = """/**
- * @name iNiR TUI
- * @description System24 TUI layout with iNiR Material You colors.
- * @author refact0r (system24 base), iNiR (palette integration)
+ * @name Lunana TUI
+ * @description System24 TUI layout with Lunana Material You colors.
+ * @author refact0r (system24 base), Lunana (palette integration)
  * @version 2.2.0
  * @source https://github.com/snowarch/inir
  */
@@ -210,11 +210,11 @@ body {{
 """
 
 MIDNIGHT_THEME_TEMPLATE = """/**
- * @name iNiR Midnight
- * @description iNiR Midnight Discord theme with Material You colors.
- * @author iNiR (Material palette injection)
+ * @name Lunana Midnight
+ * @description Lunana Midnight Discord theme with Material You colors.
+ * @author Lunana (Material palette injection)
  * @version 2.2.0
- * @source https://github.com/snowarch/iNiR
+ * @source https://github.com/snowarch/Lunana
  */
 
 /*
@@ -365,7 +365,7 @@ def _build_palette(colors: Dict[str, str]) -> Dict[str, str]:
     palette["--accent-3"] = _adjust_lightness(primary, -0.05)
     palette["--accent-4"] = _adjust_lightness(primary, -0.10)
     palette["--accent-5"] = _adjust_lightness(primary, -0.15)
-    # Notification badges and NEW: the filled alert pigment when the palette has one (iRiS), else the accent.
+    # Notification badges and NEW: the filled alert pigment when the palette has one (Atoll), else the accent.
     palette["--accent-new"] = colors.get("error_fill") or primary
 
     # === MENTION/REPLY GRADIENTS ===
@@ -413,7 +413,7 @@ def _build_palette(colors: Dict[str, str]) -> Dict[str, str]:
         ]
 
     # Red ladder: Discord paints badges and danger buttons with it, so it starts from the filled alert when the
-    # palette has one (iRiS), the text red otherwise.
+    # palette has one (Atoll), the text red otherwise.
     for i, color in enumerate(make_ladder(colors.get("error_fill") or error), 1):
         palette[f"--red-{i}"] = color
 
@@ -492,7 +492,7 @@ def _write_palette(palette: Dict[str, str]) -> None:
 
     system24_outputs = _resolve_output_files("SYSTEM24_PALETTE_CSS", OUTPUT_FILE)
     midnight_outputs = _resolve_output_files("MIDNIGHT_DMS_CSS", MIDNIGHT_OUTPUT_FILE)
-    tui_outputs = _resolve_output_files("INIR_TUI_CSS", TUI_OUTPUT_FILE)
+    tui_outputs = _resolve_output_files("LUNANA_TUI_CSS", TUI_OUTPUT_FILE)
 
     for out in system24_outputs + midnight_outputs + tui_outputs:
         _ensure_parent(out)
@@ -502,7 +502,7 @@ def _write_palette(palette: Dict[str, str]) -> None:
 
     for out in midnight_outputs:
         _write_theme(out, MIDNIGHT_THEME_TEMPLATE, palette_css, "midnight-discord.local.css")
-        legacy_out = out.parent / "ii-midnight.theme.css"
+        legacy_out = out.parent / "drift-midnight.theme.css"
         if legacy_out != out:
             legacy_out.unlink(missing_ok=True)
 

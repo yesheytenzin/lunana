@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "lunana.dock",
+  "name": "Lunana Dock",
+  "version": "0.4.0",
+  "author": "lunana",
+  "license": "GPL-3.0",
+  "description": "Lunana exact drift dock (lunana tree, live Hyprland backing).",
+  "kinds": [
+    "service"
+  ],
+  "entryPoints": {
+    "service": "Dock.qml"
+  },
+  "x-lunana": {
+    "suiteId": "lunana",
+    "role": "dock",
+    "milestone": "M2",
+    "requires": [],
+    "recommends": []
+  }
+}

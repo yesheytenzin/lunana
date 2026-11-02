@@ -39,8 +39,8 @@ Singleton {
 
     function _basePath(widgetKey): string {
         const key = root._widgetKey(widgetKey)
-        if (key === "waffle.clock")
-            return "waffles.background.widgets.clock"
+        if (key === "slate.clock")
+            return "slate.background.widgets.clock"
         return key ? "background.widgets." + key : ""
     }
 
@@ -103,7 +103,7 @@ Singleton {
         return value && typeof value === "object" ? value : null
     }
 
-    // A widget in an iRiS stack shares its place and look with the stack: those values live in the
+    // A widget in an Atoll stack shares its place and look with the stack: those values live in the
     // stack's record, everything else in the widget's own.
     function _holder(outputName, widgetKey, key): string {
         return DesktopWidgetStacks.owner(root._outputName(outputName), root._widgetKey(widgetKey), String(key ?? ""))

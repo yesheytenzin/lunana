@@ -41,7 +41,7 @@ Item {
             NumberAnimation { duration: Appearance.animation.elementResize.duration; easing.type: Appearance.animation.elementResize.type; easing.bezierCurve: Appearance.animation.elementResize.bezierCurve }
         }
         radius: Appearance.angelEverywhere ? Appearance.angel.roundingNormal
-            : Appearance.inirEverywhere ? Appearance.inir.roundingNormal
+            : Appearance.lunanaEverywhere ? Appearance.lunana.roundingNormal
             : Appearance.rounding.normal
         color: "transparent"
 
@@ -83,7 +83,7 @@ Item {
                             ? (TimerService.pomodoroBreak ? "coffee" : "target")
                             : timerView.activeTimer === "stopwatch" ? "timer" : "hourglass_top"
                         iconSize: 16
-                        color: Appearance.inirEverywhere ? Appearance.inir.colPrimary : Appearance.colors.colPrimary
+                        color: Appearance.lunanaEverywhere ? Appearance.lunana.colPrimary : Appearance.colors.colPrimary
                     }
 
                     StyledText {
@@ -95,7 +95,7 @@ Item {
                             : Translation.tr("Timer")
                         font.pixelSize: Appearance.font.pixelSize.smaller
                         font.weight: Font.Medium
-                        color: Appearance.inirEverywhere ? Appearance.inir.colText : Appearance.colors.colOnLayer1
+                        color: Appearance.lunanaEverywhere ? Appearance.lunana.colText : Appearance.colors.colOnLayer1
                     }
 
                     // Cycle badge for pomodoro
@@ -109,7 +109,7 @@ Item {
                         implicitWidth: cycleText.implicitWidth + 8
                         implicitHeight: 16
                         radius: 8
-                        color: Appearance.inirEverywhere ? Appearance.inir.colLayer2
+                        color: Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2
                             : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurface
                             : Appearance.zzzEverywhere ? Appearance.colors.colLayer2
                             : Appearance.colors.colSecondaryContainer
@@ -119,7 +119,7 @@ Item {
                             anchors.centerIn: parent
                             text: "%1/%2".arg(TimerService.pomodoroCycle + 1).arg(TimerService.cyclesBeforeLongBreak)
                             font.pixelSize: Appearance.font.pixelSize.smallest
-                            color: Appearance.inirEverywhere ? Appearance.inir.colTextSecondary
+                            color: Appearance.lunanaEverywhere ? Appearance.lunana.colTextSecondary
                                 : Appearance.colors.colOnSecondaryContainer
                         }
                     }
@@ -165,8 +165,8 @@ Item {
                     font.family: Appearance.editorialEverywhere
                         ? Appearance.font.family.numbers : Appearance.font.family.monospace
                     color: timerView.isPaused 
-                        ? (Appearance.inirEverywhere ? Appearance.inir.colTextMuted : Appearance.colors.colSubtext)
-                        : (Appearance.inirEverywhere ? Appearance.inir.colText : Appearance.colors.colOnLayer1)
+                        ? (Appearance.lunanaEverywhere ? Appearance.lunana.colTextMuted : Appearance.colors.colSubtext)
+                        : (Appearance.lunanaEverywhere ? Appearance.lunana.colText : Appearance.colors.colOnLayer1)
                 }
 
                 // Progress
@@ -182,9 +182,9 @@ Item {
                         ? TimerService.pomodoroSecondsLeft / (TimerService.pomodoroLapDuration || 1)
                         : TimerService.countdownSecondsLeft / (TimerService.countdownDuration || 1)
                     highlightColor: timerView.isPaused 
-                        ? (Appearance.inirEverywhere ? Appearance.inir.colTextMuted : Appearance.colors.colSubtext)
-                        : (Appearance.inirEverywhere ? Appearance.inir.colPrimary : Appearance.colors.colPrimary)
-                    trackColor: Appearance.inirEverywhere ? Appearance.inir.colLayer2
+                        ? (Appearance.lunanaEverywhere ? Appearance.lunana.colTextMuted : Appearance.colors.colSubtext)
+                        : (Appearance.lunanaEverywhere ? Appearance.lunana.colPrimary : Appearance.colors.colPrimary)
+                    trackColor: Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2
                         : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurface
                         : Appearance.zzzEverywhere ? Appearance.colors.colLayer2
                         : Appearance.colors.colSecondaryContainer
@@ -205,7 +205,7 @@ Item {
                     MaterialSymbol {
                         text: Icons.getWeatherIcon(Weather.data.wCode, Weather.isNightNow()) ?? "cloud"
                         iconSize: 36
-                        color: Appearance.inirEverywhere ? Appearance.inir.colPrimary : Appearance.colors.colPrimary
+                        color: Appearance.lunanaEverywhere ? Appearance.lunana.colPrimary : Appearance.colors.colPrimary
                     }
 
                     StyledText {
@@ -213,7 +213,7 @@ Item {
                         font.pixelSize: Appearance.font.pixelSize.huge * (Appearance.editorialEverywhere ? 1.5 : 1.3)
                         font.weight: Appearance.editorialEverywhere ? Font.DemiBold : Font.Medium
                         font.family: Appearance.font.family.numbers
-                        color: Appearance.inirEverywhere ? Appearance.inir.colText : Appearance.colors.colOnLayer1
+                        color: Appearance.lunanaEverywhere ? Appearance.lunana.colText : Appearance.colors.colOnLayer1
                     }
 
                     ColumnLayout {
@@ -226,7 +226,7 @@ Item {
                             font.pixelSize: Appearance.font.pixelSize.small
                             font.weight: Appearance.editorialEverywhere ? Font.DemiBold : Font.Normal
                             font.letterSpacing: Appearance.editorialEverywhere ? 0.7 : 0
-                            color: Appearance.inirEverywhere ? Appearance.inir.colText : Appearance.colors.colOnLayer1
+                            color: Appearance.lunanaEverywhere ? Appearance.lunana.colText : Appearance.colors.colOnLayer1
                             elide: Text.ElideRight
                         }
 
@@ -241,7 +241,7 @@ Item {
                             }
                             font.pixelSize: Appearance.font.pixelSize.smallest
                             font.letterSpacing: Appearance.editorialEverywhere ? 0.5 : 0
-                            color: Appearance.inirEverywhere ? Appearance.inir.colTextSecondary : Appearance.colors.colSubtext
+                            color: Appearance.lunanaEverywhere ? Appearance.lunana.colTextSecondary : Appearance.colors.colSubtext
                             elide: Text.ElideRight
                         }
                     }
@@ -312,7 +312,7 @@ Item {
                         text: idleView.tabs[idleView.tab].icon
                         iconSize: 16
                         fill: 1
-                        color: Appearance.inirEverywhere ? Appearance.inir.colPrimary 
+                        color: Appearance.lunanaEverywhere ? Appearance.lunana.colPrimary 
                             : Appearance.auroraEverywhere ? Appearance.colors.colPrimary
                             : Appearance.colors.colPrimary
                     }
@@ -321,7 +321,7 @@ Item {
                         text: idleView.tabs[idleView.tab].label
                         font.pixelSize: Appearance.font.pixelSize.smaller
                         font.weight: Font.Medium
-                        color: Appearance.inirEverywhere ? Appearance.inir.colText : Appearance.colors.colOnLayer1
+                        color: Appearance.lunanaEverywhere ? Appearance.lunana.colText : Appearance.colors.colOnLayer1
                     }
 
                     Item { Layout.fillWidth: true }
@@ -379,7 +379,7 @@ Item {
                             font.pixelSize: Appearance.font.pixelSize.huge * 1.5
                             font.weight: Appearance.editorialEverywhere ? Appearance.editorial.titleWeight : Font.Light
                             font.family: Appearance.font.family.monospace
-                            color: Appearance.inirEverywhere ? Appearance.inir.colText : Appearance.colors.colOnLayer1
+                            color: Appearance.lunanaEverywhere ? Appearance.lunana.colText : Appearance.colors.colOnLayer1
                         }
 
                         Rectangle {
@@ -387,10 +387,10 @@ Item {
                             implicitHeight: playIcon.implicitHeight + 8
                             radius: height / 2
                             color: timeMouseArea.containsMouse
-                                ? (Appearance.inirEverywhere ? Appearance.inir.colPrimary
+                                ? (Appearance.lunanaEverywhere ? Appearance.lunana.colPrimary
                                     : Appearance.auroraEverywhere ? Appearance.colors.colPrimary
                                     : Appearance.colors.colPrimary)
-                                : (Appearance.inirEverywhere ? Appearance.inir.colLayer2
+                                : (Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2
                                     : Appearance.auroraEverywhere ? Appearance.aurora.colElevatedSurface
                                     : Appearance.zzzEverywhere ? Appearance.colors.colLayer2
                                     : Appearance.colors.colSecondaryContainer)
@@ -403,7 +403,7 @@ Item {
                                 iconSize: 18
                                 color: timeMouseArea.containsMouse
                                     ? Appearance.colors.colOnPrimary
-                                    : (Appearance.inirEverywhere ? Appearance.inir.colText
+                                    : (Appearance.lunanaEverywhere ? Appearance.lunana.colText
                                         : Appearance.auroraEverywhere ? Appearance.colors.colOnSecondaryContainer
                                         : Appearance.colors.colOnSecondaryContainer)
                                 Behavior on color { enabled: Appearance.animationsEnabled; animation: ColorAnimation { duration: Appearance.animation.elementMoveFast.duration; easing.type: Appearance.animation.elementMoveFast.type; easing.bezierCurve: Appearance.animation.elementMoveFast.bezierCurve } }
@@ -448,12 +448,12 @@ Item {
     component SmallIconButton: RippleButton {
         property string iconName
         implicitWidth: 26; implicitHeight: 26
-        buttonRadius: Appearance.inirEverywhere ? Appearance.inir.roundingSmall : 13
+        buttonRadius: Appearance.lunanaEverywhere ? Appearance.lunana.roundingSmall : 13
         colBackground: "transparent"
-        colBackgroundHover: Appearance.inirEverywhere ? Appearance.inir.colLayer2Hover
+        colBackgroundHover: Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2Hover
             : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurface 
             : Appearance.colLayer2Hover
-        colRipple: Appearance.inirEverywhere ? Appearance.inir.colLayer2Active
+        colRipple: Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2Active
             : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurfaceActive 
             : Appearance.colLayer2Active
 
@@ -461,7 +461,7 @@ Item {
             anchors.centerIn: parent
             text: iconName
             iconSize: 16
-            color: Appearance.inirEverywhere ? Appearance.inir.colTextSecondary : Appearance.colors.colSubtext
+            color: Appearance.lunanaEverywhere ? Appearance.lunana.colTextSecondary : Appearance.colors.colSubtext
         }
     }
 
@@ -479,13 +479,13 @@ Item {
             MaterialSymbol {
                 text: icon
                 iconSize: 14
-                color: Appearance.inirEverywhere ? Appearance.inir.colTextSecondary : Appearance.colors.colSubtext
+                color: Appearance.lunanaEverywhere ? Appearance.lunana.colTextSecondary : Appearance.colors.colSubtext
             }
             StyledText {
                 text: value
                 font.pixelSize: Appearance.font.pixelSize.small
                 font.family: Appearance.font.family.numbers
-                color: Appearance.inirEverywhere ? Appearance.inir.colText : Appearance.colors.colOnLayer1
+                color: Appearance.lunanaEverywhere ? Appearance.lunana.colText : Appearance.colors.colOnLayer1
             }
         }
 

@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "lunana.slate-background",
+  "name": "Lunana Slate Background",
+  "version": "0.4.0",
+  "author": "lunana",
+  "license": "GPL-3.0",
+  "description": "Lunana Slate backdrop/background host.",
+  "kinds": [
+    "service"
+  ],
+  "entryPoints": {
+    "service": "SBackground.qml"
+  },
+  "x-lunana": {
+    "suiteId": "lunana",
+    "role": "slate-background",
+    "milestone": "parity",
+    "requires": [],
+    "recommends": []
+  }
+}

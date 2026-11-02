@@ -207,11 +207,11 @@ Item {
         opacity: root.expanded ? 1 : 0
         visible: opacity > 0
         radius: Appearance.rounding.normal
-        color: Appearance.inirEverywhere ? Appearance.inir.colLayer2
+        color: Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2
             : Appearance.colors.colLayer3Base
         border.width: 1
         border.color: Appearance.angelEverywhere ? Appearance.angel.colCardBorder
-            : Appearance.inirEverywhere ? Appearance.inir.colBorder
+            : Appearance.lunanaEverywhere ? Appearance.lunana.colBorder
             : Appearance.auroraEverywhere ? Appearance.aurora.colPopupBorder
             : Appearance.colors.colLayer0Border
 

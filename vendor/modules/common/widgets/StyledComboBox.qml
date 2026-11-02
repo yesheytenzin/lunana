@@ -17,7 +17,7 @@ ComboBox {
     property real baseHeight: Appearance.regaliaEverywhere ? Appearance.regalia.controlHeight : 38
     property real radius: Appearance.regaliaEverywhere ? Appearance.regalia.roundSmall
         : Appearance.angelEverywhere ? Appearance.angel.roundingSmall
-        : Appearance.inirEverywhere ? Appearance.inir.roundingSmall
+        : Appearance.lunanaEverywhere ? Appearance.lunana.roundingSmall
         : Appearance.rounding.small
 
     hoverEnabled: true
@@ -25,50 +25,50 @@ ComboBox {
 
     readonly property color _bgColor: Appearance.editorialEverywhere ? Appearance.editorial.input : Appearance.regaliaEverywhere ? Appearance.regalia.controlPlate
         : Appearance.angelEverywhere ? Appearance.angel.colGlassCard
-        : Appearance.inirEverywhere ? Appearance.inir.colLayer2
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2
         : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurface
         : Appearance.colors.colLayer2
     readonly property color _bgHoverColor: Appearance.editorialEverywhere ? Appearance.editorial.inputHover : Appearance.regaliaEverywhere ? Appearance.regalia.controlPlateHover
         : Appearance.angelEverywhere ? Appearance.angel.colGlassCardHover
-        : Appearance.inirEverywhere ? Appearance.inir.colLayer2Hover
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2Hover
         : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurfaceHover
         : Appearance.colors.colLayer2Hover
     readonly property color _bgActiveColor: Appearance.editorialEverywhere ? Appearance.editorial.inputFocus : Appearance.regaliaEverywhere ? Appearance.regalia.controlPlateActive
         : Appearance.angelEverywhere ? Appearance.angel.colGlassCardActive
-        : Appearance.inirEverywhere ? Appearance.inir.colLayer2Active
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2Active
         : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurfaceActive
         : Appearance.colors.colLayer2Active
     readonly property color _textColor: Appearance.regaliaEverywhere ? Appearance.regalia.onColor
         : Appearance.angelEverywhere ? Appearance.angel.colText
-        : Appearance.inirEverywhere ? Appearance.inir.colText
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colText
         : Appearance.colors.colOnLayer2
     readonly property color _subtextColor: Appearance.regaliaEverywhere ? Appearance.regalia.onMuted
         : Appearance.angelEverywhere ? Appearance.angel.colTextSecondary
-        : Appearance.inirEverywhere ? Appearance.inir.colTextSecondary
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colTextSecondary
         : Appearance.colors.colSubtext
     readonly property color _borderColor: Appearance.editorialEverywhere ? Appearance.editorial.rule
         : Appearance.angelEverywhere ? Appearance.angel.colBorder
-        : Appearance.inirEverywhere ? Appearance.inir.colBorder
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colBorder
         : "transparent"
-    readonly property real _borderWidth: (Appearance.editorialEverywhere || Appearance.angelEverywhere || Appearance.inirEverywhere) ? 1 : 0
+    readonly property real _borderWidth: (Appearance.editorialEverywhere || Appearance.angelEverywhere || Appearance.lunanaEverywhere) ? 1 : 0
     readonly property color _popupColor: Appearance.regaliaEverywhere ? Appearance.regalia.bg2
-        : Appearance.inirEverywhere ? Appearance.inir.colLayer2
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2
         : Appearance.colors.colLayer3Base
     readonly property color _popupBorderColor: Appearance.regaliaEverywhere ? "transparent"
         : Appearance.editorialEverywhere ? Appearance.editorial.edge
         : Appearance.angelEverywhere ? Appearance.angel.colCardBorder
-        : Appearance.inirEverywhere ? Appearance.inir.colBorder
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colBorder
         : Appearance.auroraEverywhere ? Appearance.aurora.colPopupBorder
         : Appearance.colors.colLayer0Border
     // Dropdown row hover/selected — matched to _popupColor's own layer (Layer3, or
-    // inir's Layer2). The angel/aurora "glass card" tokens used here previously were
+    // lunana's Layer2). The angel/aurora "glass card" tokens used here previously were
     // tuned for card surfaces, not this opaque popup, and read as barely-there.
     readonly property color _popupHoverColor: Appearance.editorialEverywhere ? Appearance.editorial.controlHover : Appearance.regaliaEverywhere ? Appearance.regalia.controlPlateHover
-        : Appearance.inirEverywhere ? Appearance.inir.colLayer2Hover
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2Hover
         : Appearance.colors.colLayer3Hover
     readonly property color _selectedColor: Appearance.editorialEverywhere ? Appearance.editorial.field
         : Appearance.regaliaEverywhere ? Appearance.regalia.primaryPlate
-        : Appearance.inirEverywhere ? Appearance.inir.colPrimaryContainer
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colPrimaryContainer
         : Appearance.colors.colPrimaryContainer
 
     background: Rectangle {
@@ -82,7 +82,7 @@ ComboBox {
         border.color: root.activeFocus
             ? (Appearance.editorialEverywhere ? Appearance.editorial.focusRing
                 : Appearance.angelEverywhere ? Appearance.angel.colPrimary
-                : Appearance.inirEverywhere ? Appearance.inir.colBorderFocus
+                : Appearance.lunanaEverywhere ? Appearance.lunana.colBorderFocus
                 : root._borderColor)
             : root._borderColor
 
@@ -232,7 +232,7 @@ ComboBox {
             radius: Appearance.regaliaEverywhere ? Appearance.regalia.roundSmall
                 : Appearance.editorialEverywhere ? Appearance.rounding.small
                 : Appearance.angelEverywhere ? Appearance.angel.roundingSmall
-                : Appearance.inirEverywhere ? Appearance.inir.roundingSmall
+                : Appearance.lunanaEverywhere ? Appearance.lunana.roundingSmall
                 : Appearance.rounding.unsharpenmore
             color: Appearance.regaliaEverywhere ? "transparent"
                 : delegateItem.index === root.currentIndex ? root._selectedColor

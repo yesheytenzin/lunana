@@ -13,7 +13,7 @@ Singleton {
     // Discovered custom widgets: [{ id, name, icon, qmlPath, dirPath, ... }]
     property list<var> widgets: []
     readonly property bool ready: _scanDone
-    readonly property string widgetsDir: `${Directories.configPath}/inir/widgets`
+    readonly property string widgetsDir: `${Directories.configPath}/lunana/widgets`
 
     property bool _scanDone: false
 
@@ -87,8 +87,8 @@ Singleton {
                 if (warnings.length > 0)
                     console.warn("[CustomWidgets]", warnings.join("; "));
                 const qmlFile = m.main || (entry.id.charAt(0).toUpperCase() + entry.id.slice(1) + ".qml");
-                const iris = m.iris && typeof m.iris === "object" ? m.iris : {};
-                const irisFile = typeof iris.main === "string" ? iris.main.trim() : "";
+                const atoll = m.atoll && typeof m.atoll === "object" ? m.atoll : {};
+                const atollFile = typeof atoll.main === "string" ? atoll.main.trim() : "";
                 result.push({
                     id: entry.id,
                     name: m.name || entry.id,
@@ -98,8 +98,8 @@ Singleton {
                     description: m.description || "",
                     category: m.category || "",
                     qmlPath: `file://${entry.dir}/${qmlFile}`,
-                    irisQmlPath: irisFile.length > 0 ? `file://${entry.dir}/${irisFile}` : "",
-                    irisSlots: Array.isArray(iris.slots) ? iris.slots : [],
+                    atollQmlPath: atollFile.length > 0 ? `file://${entry.dir}/${atollFile}` : "",
+                    atollSlots: Array.isArray(atoll.slots) ? atoll.slots : [],
                     dirPath: entry.dir,
                     configKeys: m.configKeys || {},
                     resizableAxes: m.resizableAxes || {},
@@ -235,8 +235,8 @@ Singleton {
     "description": "Custom desktop widget",
     "category": "custom",
     "main": "${_createProcess._pascalName}.qml",
-    "iris": {
-        "main": "IrisCompact.qml",
+    "atoll": {
+        "main": "AtollCompact.qml",
         "slots": ["island.desktop"]
     },
     "defaultConfig": {
@@ -257,7 +257,7 @@ Singleton {
 }
 MANIFEST
             cat > "$dir/${_createProcess._pascalName}.qml" << 'QML'
-// ${_createProcess._pascalName} — custom iNiR desktop widget
+// ${_createProcess._pascalName} — custom Lunana desktop widget
 // Full SDK reference: defaults/widgets/WIDGET-SDK.md
 // Example widget: defaults/widgets/example-widget/
 
@@ -359,35 +359,35 @@ AbstractBackgroundWidget {
     //   root.colText adapts to wallpaper brightness automatically
 }
 QML
-            cat > "$dir/IrisCompact.qml" << 'IRIS_QML'
+            cat > "$dir/AtollCompact.qml" << 'ATOLL_QML'
 import QtQuick
 import QtQuick.Layouts
 import "."
-import "../modules/iris/style"
-import "../modules/iris/components"
+import "../modules/atoll/style"
+import "../modules/atoll/components"
 
 Item {
     id: root
-    property string irisSlot: ""
+    property string atollSlot: ""
     property var targetScreen
     implicitWidth: compactRow.implicitWidth
-    implicitHeight: Math.round(28 * IrisStyle.density)
+    implicitHeight: Math.round(28 * AtollStyle.density)
 
     RowLayout {
         id: compactRow
         anchors.centerIn: parent
-        spacing: IrisStyle.spaceSmall
+        spacing: AtollStyle.spaceSmall
 
-        IrisMark { implicitSize: Math.round(14 * IrisStyle.density) }
-        IrisText {
+        AtollMark { implicitSize: Math.round(14 * AtollStyle.density) }
+        AtollText {
             text: DateTime.timeDisplay
-            role: IrisText.Meta
-            font.family: IrisStyle.fontNumbers
-            color: IrisStyle.text
+            role: AtollText.Meta
+            font.family: AtollStyle.fontNumbers
+            color: AtollStyle.text
         }
     }
 }
-IRIS_QML
+ATOLL_QML
             echo "done"
         `]
         stdout: StdioCollector {

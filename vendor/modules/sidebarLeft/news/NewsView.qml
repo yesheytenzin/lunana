@@ -89,19 +89,19 @@ Item {
                         toggled: root.currentBoardIndex === index
                         bounce: true
                         colBackground: Appearance.angelEverywhere ? Appearance.angel.colGlassCard
-                            : Appearance.inirEverywhere ? Appearance.inir.colLayer2
+                            : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2
                             : Appearance.auroraEverywhere ? "transparent"
                             : Appearance.colors.colLayer1
                         colBackgroundHover: Appearance.angelEverywhere ? Appearance.angel.colGlassCardHover
-                            : Appearance.inirEverywhere ? Appearance.inir.colLayer2Hover
+                            : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2Hover
                             : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurface
                             : Appearance.colLayer1Hover
                         colBackgroundToggled: Appearance.angelEverywhere ? Appearance.angel.colGlassElevated
-                            : Appearance.inirEverywhere ? Appearance.inir.colSecondaryContainer
+                            : Appearance.lunanaEverywhere ? Appearance.lunana.colSecondaryContainer
                             : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurface
                             : Appearance.colors.colSecondaryContainer
                         colBackgroundToggledHover: Appearance.angelEverywhere ? Appearance.angel.colGlassCardHover
-                            : Appearance.inirEverywhere ? Appearance.inir.colPrimaryContainerHover
+                            : Appearance.lunanaEverywhere ? Appearance.lunana.colPrimaryContainerHover
                             : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurfaceHover
                             : Appearance.colors.colSecondaryContainerHover
 
@@ -123,15 +123,15 @@ Item {
             Layout.fillWidth: true
             Layout.fillHeight: true
             radius: Appearance.angelEverywhere ? Appearance.angel.roundingNormal
-                : Appearance.inirEverywhere ? Appearance.inir.roundingNormal : Appearance.rounding.normal
+                : Appearance.lunanaEverywhere ? Appearance.lunana.roundingNormal : Appearance.rounding.normal
             color: Appearance.angelEverywhere ? Appearance.angel.colGlassCard
-                : Appearance.inirEverywhere ? Appearance.inir.colLayer1
+                : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer1
                 : Appearance.auroraEverywhere ? "transparent"
                 : Appearance.colors.colLayer1
             border.width: Appearance.angelEverywhere ? Appearance.angel.cardBorderWidth
                 : Appearance.auroraEverywhere ? 0 : 1
             border.color: Appearance.angelEverywhere ? Appearance.angel.colCardBorder
-                : Appearance.inirEverywhere ? Appearance.inir.colBorderSubtle
+                : Appearance.lunanaEverywhere ? Appearance.lunana.colBorderSubtle
                 : Appearance.colors.colLayer0Border
             clip: true
 
@@ -211,10 +211,10 @@ Item {
                     required property var modelData
                     width: listView.width
                     implicitHeight: articleColumn.implicitHeight + 16
-                    buttonRadius: Appearance.inirEverywhere ? Appearance.inir.roundingSmall : Appearance.rounding.small
+                    buttonRadius: Appearance.lunanaEverywhere ? Appearance.lunana.roundingSmall : Appearance.rounding.small
                     colBackground: "transparent"
                     colBackgroundHover: Appearance.angelEverywhere ? Appearance.angel.colGlassCardHover
-                        : Appearance.inirEverywhere ? Appearance.inir.colLayer2Hover
+                        : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2Hover
                         : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurface
                         : Appearance.colLayer1Hover
 
@@ -296,7 +296,7 @@ Item {
                 buttonRadius: Appearance.editorialEverywhere ? Appearance.rounding.small : Appearance.rounding.full
                 enabled: !NewsService.loading && Network.online
 
-                colBackgroundHover: Appearance.inirEverywhere ? Appearance.inir.colLayer2Hover
+                colBackgroundHover: Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2Hover
                     : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurface
                     : Appearance.colLayer2Hover
 

@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "lunana.slate-osd",
+  "name": "Lunana Slate OSD",
+  "version": "0.4.0",
+  "author": "lunana",
+  "license": "GPL-3.0",
+  "description": "Lunana Slate OSD host.",
+  "kinds": [
+    "service"
+  ],
+  "entryPoints": {
+    "service": "SOsd.qml"
+  },
+  "x-lunana": {
+    "suiteId": "lunana",
+    "role": "slate-osd",
+    "milestone": "parity",
+    "requires": [],
+    "recommends": []
+  }
+}

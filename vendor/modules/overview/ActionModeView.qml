@@ -251,7 +251,7 @@ Item {
                         font.pixelSize: Appearance.font.pixelSize.smallest
                         font.family: Appearance.font.family.monospace
                         color: root.zzzEverywhere ? Appearance.zzz.accent
-                            : Appearance.inirEverywhere ? Appearance.inir.colPrimary : Appearance.colors.colPrimary
+                            : Appearance.lunanaEverywhere ? Appearance.lunana.colPrimary : Appearance.colors.colPrimary
                         Behavior on color { enabled: Appearance.animationsEnabled; ColorAnimation { duration: Appearance.animation.elementMoveFast.duration; easing.type: Appearance.animation.elementMoveFast.type; easing.bezierCurve: Appearance.animation.elementMoveFast.bezierCurve } }
                         opacity: root.zzzEverywhere ? 1 : 0.7
                     }
@@ -346,19 +346,19 @@ Item {
                 readonly property bool isHighlighted: delegateBtn.isCurrentItem
                 readonly property color normalTextColor: root.zzzEverywhere ? Appearance.zzz.ink
                     : Appearance.angelEverywhere ? Appearance.angel.colText
-                    : Appearance.inirEverywhere ? Appearance.inir.colText : Appearance.colors.colOnLayer1
+                    : Appearance.lunanaEverywhere ? Appearance.lunana.colText : Appearance.colors.colOnLayer1
                 readonly property color selectedTextColor: root.editorial ? Appearance.editorial.fieldInk
                     : root.zzzEverywhere ? Appearance.zzz.onSignal
                     : Appearance.angelEverywhere ? Appearance.angel.colText
-                    : Appearance.inirEverywhere ? Appearance.inir.colText
+                    : Appearance.lunanaEverywhere ? Appearance.lunana.colText
                     : Appearance.colors.colOnLayer1
                 readonly property color descriptionTextColor: delegateBtn.isHighlighted
                     ? (root.editorial ? Appearance.editorial.fieldInk : root.zzzEverywhere ? Appearance.zzz.onSignal
                         : Appearance.angelEverywhere ? Appearance.angel.colText
-                        : Appearance.inirEverywhere ? Appearance.inir.colTextSecondary
+                        : Appearance.lunanaEverywhere ? Appearance.lunana.colTextSecondary
                         : Appearance.colors.colOnLayer1)
                     : (root.zzzEverywhere ? Appearance.zzz.inkMuted
-                        : Appearance.inirEverywhere ? Appearance.inir.colTextSecondary : Appearance.colors.colSubtext)
+                        : Appearance.lunanaEverywhere ? Appearance.lunana.colTextSecondary : Appearance.colors.colSubtext)
                 readonly property color selectedBackgroundColor: root.editorial ? Appearance.editorial.field
                     : root.zzzEverywhere ? Appearance.zzz.signal
                     : Appearance.angelEverywhere
@@ -387,7 +387,7 @@ Item {
                 // Style tokens — exactly match SearchItem.qml
                 buttonRadius: root.editorial ? Appearance.rounding.small : root.zzzEverywhere ? Appearance.zzz.pillRadius
                     : Appearance.angelEverywhere ? Appearance.angel.roundingSmall
-                    : Appearance.inirEverywhere ? Appearance.inir.roundingSmall : Appearance.rounding.normal
+                    : Appearance.lunanaEverywhere ? Appearance.lunana.roundingSmall : Appearance.rounding.normal
                 colBackground: (delegateBtn.down || delegateBtn.keyboardDown)
                     ? delegateBtn.pressedBackgroundColor
                     : (delegateBtn.isHighlighted
@@ -456,7 +456,7 @@ Item {
                         scale: delegateBtn.isHighlighted ? 1 : 0.96
                         radius: root.zzzEverywhere ? Appearance.zzz.pillRadius
                             : Appearance.angelEverywhere ? Appearance.angel.roundingSmall
-                            : Appearance.inirEverywhere ? Appearance.inir.roundingSmall
+                            : Appearance.lunanaEverywhere ? Appearance.lunana.roundingSmall
                             : Appearance.rounding.full
                         Behavior on radius { enabled: Appearance.animationsEnabled; NumberAnimation { duration: Appearance.animation.elementResize.duration; easing.type: Appearance.animation.elementResize.type; easing.bezierCurve: Appearance.animation.elementResize.bezierCurve } }
                         color: {
@@ -464,10 +464,10 @@ Item {
                                 return delegateBtn.isHighlighted ? Appearance.zzz.accent : Appearance.zzz.paperAlt
                             if (isPackage && entry.pkg?.installed)
                                 return ColorUtils.transparentize(
-                                    Appearance.inirEverywhere ? Appearance.inir.colPrimary : Appearance.colors.colPrimary, 0.3)
+                                    Appearance.lunanaEverywhere ? Appearance.lunana.colPrimary : Appearance.colors.colPrimary, 0.3)
                             return delegateBtn.isHighlighted
                                 ? (Appearance.angelEverywhere ? Appearance.angel.colGlassElevatedHover : Appearance.colors.colLayer2Hover)
-                                : (Appearance.inirEverywhere ? Appearance.inir.colLayer2
+                                : (Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2
                                     : Appearance.angelEverywhere ? Appearance.angel.colGlassCard
                                     : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurface
                                     : Appearance.zzzEverywhere ? Appearance.colors.colLayer2
@@ -502,10 +502,10 @@ Item {
                                 if (root.zzzEverywhere)
                                     return delegateBtn.isHighlighted ? Appearance.zzz.onAccent : delegateBtn.normalTextColor
                                 if (isPackage && entry.pkg?.installed)
-                                    return Appearance.inirEverywhere ? Appearance.inir.colPrimary : Appearance.colors.colPrimary
+                                    return Appearance.lunanaEverywhere ? Appearance.lunana.colPrimary : Appearance.colors.colPrimary
                                 return delegateBtn.isHighlighted
                                     ? (Appearance.angelEverywhere ? Appearance.angel.colPrimary
-                                        : Appearance.inirEverywhere ? Appearance.inir.colPrimary
+                                        : Appearance.lunanaEverywhere ? Appearance.lunana.colPrimary
                                         : Appearance.colors.colPrimary)
                                     : delegateBtn.normalTextColor
                             }
@@ -584,8 +584,8 @@ Item {
                             color: root.zzzEverywhere
                                 ? ColorUtils.transparentize(Appearance.zzz.accent, 0.76)
                                 : entry?.pkg?.isAur
-                                ? ColorUtils.transparentize(Appearance.inirEverywhere ? Appearance.inir.colPrimary : Appearance.colors.colPrimary, 0.3)
-                                : (Appearance.inirEverywhere ? Appearance.inir.colLayer2 : Appearance.colors.colSecondaryContainer)
+                                ? ColorUtils.transparentize(Appearance.lunanaEverywhere ? Appearance.lunana.colPrimary : Appearance.colors.colPrimary, 0.3)
+                                : (Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2 : Appearance.colors.colSecondaryContainer)
 
                             StyledText {
                                 id: repoText
@@ -595,8 +595,8 @@ Item {
                                 font.weight: Font.Medium
                                 color: root.zzzEverywhere ? Appearance.zzz.ink
                                     : entry?.pkg?.isAur
-                                    ? (Appearance.inirEverywhere ? Appearance.inir.colPrimary : Appearance.colors.colPrimary)
-                                    : (Appearance.inirEverywhere ? Appearance.inir.colText : Appearance.colors.colOnSecondaryContainer)
+                                    ? (Appearance.lunanaEverywhere ? Appearance.lunana.colPrimary : Appearance.colors.colPrimary)
+                                    : (Appearance.lunanaEverywhere ? Appearance.lunana.colText : Appearance.colors.colOnSecondaryContainer)
                             }
                         }
 
@@ -606,7 +606,7 @@ Item {
                             implicitHeight: installedText.implicitHeight + 4
                             radius: height / 2
                             color: root.zzzEverywhere ? Appearance.zzz.signal : ColorUtils.transparentize(
-                                Appearance.inirEverywhere ? Appearance.inir.colPrimary : Appearance.colors.colPrimary, 0.2)
+                                Appearance.lunanaEverywhere ? Appearance.lunana.colPrimary : Appearance.colors.colPrimary, 0.2)
                             Behavior on color { enabled: Appearance.animationsEnabled; ColorAnimation { duration: Appearance.animation.elementMoveFast.duration; easing.type: Appearance.animation.elementMoveFast.type; easing.bezierCurve: Appearance.animation.elementMoveFast.bezierCurve } }
 
                             StyledText {
@@ -615,7 +615,7 @@ Item {
                                 text: Translation.tr("Installed")
                                 font.pixelSize: Appearance.font.pixelSize.smallest
                                 color: root.zzzEverywhere ? Appearance.zzz.onSignal
-                                    : Appearance.inirEverywhere ? Appearance.inir.colPrimary : Appearance.colors.colPrimary
+                                    : Appearance.lunanaEverywhere ? Appearance.lunana.colPrimary : Appearance.colors.colPrimary
                             }
                         }
                     }
@@ -729,7 +729,7 @@ Item {
                         implicitHeight: keyLabel.implicitHeight + 4
                         radius: Appearance.rounding.unsharpen
                         color: root.zzzEverywhere ? Appearance.zzz.paperAlt
-                            : Appearance.inirEverywhere ? Appearance.inir.colLayer2
+                            : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2
                             : Appearance.angelEverywhere ? Appearance.angel.colGlassCard
                             : Appearance.colors.colSecondaryContainer
                         Behavior on color { enabled: Appearance.animationsEnabled; ColorAnimation { duration: Appearance.animation.elementMoveFast.duration; easing.type: Appearance.animation.elementMoveFast.type; easing.bezierCurve: Appearance.animation.elementMoveFast.bezierCurve } }

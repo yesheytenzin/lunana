@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-inir_resolve_niri_service_environment() {
-    INIR_RESOLVED_NIRI_SOCKET=""
-    INIR_RESOLVED_WAYLAND_DISPLAY=""
+lunana_resolve_niri_service_environment() {
+    LUNANA_RESOLVED_NIRI_SOCKET=""
+    LUNANA_RESOLVED_WAYLAND_DISPLAY=""
 
     command -v systemctl >/dev/null 2>&1 || return 1
     [[ -S "${XDG_RUNTIME_DIR:-}/systemd/private" ]] || return 1
@@ -21,8 +21,8 @@ inir_resolve_niri_service_environment() {
         wayland_display="${wayland_display%.${main_pid}.sock}"
         [[ "$wayland_display" == wayland-* ]] || continue
         [[ -S "$runtime_dir/$wayland_display" ]] || continue
-        INIR_RESOLVED_NIRI_SOCKET="$candidate"
-        INIR_RESOLVED_WAYLAND_DISPLAY="$wayland_display"
+        LUNANA_RESOLVED_NIRI_SOCKET="$candidate"
+        LUNANA_RESOLVED_WAYLAND_DISPLAY="$wayland_display"
         ((found++)) || true
     done
 

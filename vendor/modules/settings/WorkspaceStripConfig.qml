@@ -25,14 +25,14 @@ ContentPage {
     }
 
     function isPanelEnabled(): bool {
-        return (Config.options?.enabledPanels ?? []).includes("iiWorkspaceStrip")
+        return (Config.options?.enabledPanels ?? []).includes("driftWorkspaceStrip")
     }
 
     function setPanelEnabled(enabled: bool): void {
         const panels = [...(Config.options?.enabledPanels ?? [])]
-        const index = panels.indexOf("iiWorkspaceStrip")
+        const index = panels.indexOf("driftWorkspaceStrip")
         if (enabled && index === -1)
-            panels.push("iiWorkspaceStrip")
+            panels.push("driftWorkspaceStrip")
         else if (!enabled && index !== -1)
             panels.splice(index, 1)
         Config.setNestedValue("enabledPanels", panels)

@@ -55,13 +55,13 @@ Item {
     
     readonly property bool zzzEverywhere: Appearance.zzzEverywhere
     readonly property bool regaliaEverywhere: Appearance.regaliaEverywhere
-    readonly property bool inirEverywhere: Appearance.inirEverywhere
+    readonly property bool lunanaEverywhere: Appearance.lunanaEverywhere
     readonly property bool angelEverywhere: Appearance.angelEverywhere
     readonly property bool auroraEverywhere: Appearance.auroraEverywhere
     readonly property bool editorial: Appearance.editorialEverywhere
     
     readonly property string wallpaperUrl: Wallpapers.effectiveWallpaperUrl
-    readonly property bool useWallpaperBackdrop: !root.islandStyle && root.auroraEverywhere && !root.inirEverywhere && !Appearance.gameModeMinimal && root.wallpaperUrl.length > 0
+    readonly property bool useWallpaperBackdrop: !root.islandStyle && root.auroraEverywhere && !root.lunanaEverywhere && !Appearance.gameModeMinimal && root.wallpaperUrl.length > 0
     
     ColorQuantizer {
         id: wallpaperColorQuantizer
@@ -78,7 +78,7 @@ Item {
     // Shadow
     StyledRectangularShadow {
         target: background
-        visible: !root.editorial && !root.islandStyle && !root.zzzEverywhere && (Appearance.angelEverywhere || (!root.inirEverywhere && !root.auroraEverywhere)) && !Appearance.gameModeMinimal
+        visible: !root.editorial && !root.islandStyle && !root.zzzEverywhere && (Appearance.angelEverywhere || (!root.lunanaEverywhere && !root.auroraEverywhere)) && !Appearance.gameModeMinimal
     }
 
     RicelinSurface {
@@ -99,7 +99,7 @@ Item {
              : root.zzzEverywhere ? Appearance.zzz.bg0
              : root.regaliaEverywhere ? "transparent"
              : root.editorial ? Appearance.editorial.paper
-             : root.inirEverywhere ? Appearance.inir.colLayer0
+             : root.lunanaEverywhere ? Appearance.lunana.colLayer0
              : root.auroraEverywhere ? ColorUtils.applyAlpha((root.blendedColors?.colLayer0 ?? Appearance.colors.colLayer0), 1)
              : Appearance.colors.colLayer0
         Behavior on color {
@@ -111,14 +111,14 @@ Item {
             : root.regaliaEverywhere ? Appearance.regalia.panelRadius
             : root.editorial ? Appearance.editorial.radius
             : root.angelEverywhere ? Appearance.angel.roundingLarge
-            : root.inirEverywhere ? Appearance.inir.roundingLarge
+            : root.lunanaEverywhere ? Appearance.lunana.roundingLarge
             : Appearance.rounding.large
 
-        border.width: root.islandStyle || root.regaliaEverywhere || root.zzzEverywhere ? 0 : (root.inirEverywhere ? 1 : (root.auroraEverywhere ? 1 : 1))
+        border.width: root.islandStyle || root.regaliaEverywhere || root.zzzEverywhere ? 0 : (root.lunanaEverywhere ? 1 : (root.auroraEverywhere ? 1 : 1))
         border.color: root.zzzEverywhere || root.regaliaEverywhere ? "transparent"
                     : root.editorial ? Appearance.editorial.rule
                     : root.angelEverywhere ? Appearance.angel.colBorder
-                    : root.inirEverywhere ? Appearance.inir.colBorder
+                    : root.lunanaEverywhere ? Appearance.lunana.colBorder
                     : root.auroraEverywhere ? Appearance.aurora.colTooltipBorder
                     : Appearance.colors.colLayer0Border
 
@@ -185,7 +185,7 @@ Item {
             sourceSize.height: root.screenHeight
             asynchronous: true
 
-            layer.enabled: Appearance.effectsEnabled && root.auroraEverywhere && !root.inirEverywhere
+            layer.enabled: Appearance.effectsEnabled && root.auroraEverywhere && !root.lunanaEverywhere
             layer.effect: MultiEffect {
                 source: blurredWallpaper
                 anchors.fill: source

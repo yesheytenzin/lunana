@@ -42,7 +42,7 @@ Item {
 
     // ── Style tokens ──────────────────────────────────────────────
     readonly property bool angelStyle: Appearance.angelEverywhere
-    readonly property bool inirStyle: Appearance.inirEverywhere
+    readonly property bool lunanaStyle: Appearance.lunanaEverywhere
     readonly property bool auroraStyle: Appearance.auroraEverywhere
     readonly property bool regaliaStyle: Appearance.regaliaEverywhere
     readonly property bool zzzStyle: Appearance.zzzEverywhere
@@ -55,14 +55,14 @@ Item {
         : zzzStyle ? Appearance.zzz.ink
         : cookieStyle ? Appearance.cookie.onColor
         : angelStyle ? Appearance.angel.colText
-        : inirStyle ? Appearance.inir.colText
+        : lunanaStyle ? Appearance.lunana.colText
         : (effectiveColors?.colOnLayer0 ?? Appearance.colors.colOnLayer0)
     readonly property color colTextSecondary: editorialStyle ? Appearance.editorial.accent
         : regaliaStyle ? Appearance.regalia.hardwareSecondary
         : zzzStyle ? Appearance.zzz.secondary
         : cookieStyle ? Appearance.cookie.inkMuted
         : angelStyle ? Appearance.angel.colSecondary
-        : inirStyle ? Appearance.inir.colSecondary
+        : lunanaStyle ? Appearance.lunana.colSecondary
         : ColorUtils.ensureReadable(
             Appearance.colors.colSecondary,
             effectiveColors?.colLayer0Base ?? Appearance.colors.colLayer0Base,
@@ -70,43 +70,43 @@ Item {
         )
     readonly property color colCard: (zzzStyle || cookieStyle) ? "transparent"
         : angelStyle ? Appearance.angel.colGlassCard
-        : inirStyle ? Appearance.inir.colLayer1
+        : lunanaStyle ? Appearance.lunana.colLayer1
         : auroraStyle ? ColorUtils.transparentize(
             effectiveColors?.colLayer0 ?? Appearance.aurora.colSubSurface, 0.7)
         : (effectiveColors?.colLayer0 ?? Appearance.colors.colLayer0)
     readonly property color colBorder: zzzStyle ? Appearance.zzz.hairlineStrong
         : cookieStyle ? Appearance.cookie.hairline
         : angelStyle ? Appearance.angel.colCardBorder
-        : inirStyle ? Appearance.inir.colBorder
+        : lunanaStyle ? Appearance.lunana.colBorder
         : auroraStyle ? Appearance.aurora.colTooltipBorder
         : ColorUtils.transparentize(
             effectiveColors?.colOnLayer0 ?? Appearance.colors.colOnLayer0, 0.88)
     readonly property real cardRadius: zzzStyle ? Appearance.zzz.cardRadius
         : cookieStyle ? Appearance.cookie.roundNormal
         : angelStyle ? Appearance.angel.roundingNormal
-        : inirStyle ? Appearance.inir.roundingNormal : Appearance.rounding.normal
+        : lunanaStyle ? Appearance.lunana.roundingNormal : Appearance.rounding.normal
     readonly property color colPrimary: editorialStyle ? Appearance.editorial.accent
         : regaliaStyle ? Appearance.regalia.hardwarePrimary
         : zzzStyle ? Appearance.zzz.accent
         : cookieStyle ? Appearance.cookie.primaryFace
         : angelStyle ? Appearance.angel.colPrimary
-        : inirStyle ? Appearance.inir.colPrimary : Appearance.colors.colPrimary
+        : lunanaStyle ? Appearance.lunana.colPrimary : Appearance.colors.colPrimary
     readonly property color colOnPrimary: editorialStyle ? Appearance.editorial.accentInk
         : regaliaStyle ? Appearance.regalia.hardwarePrimaryInk
         : zzzStyle ? Appearance.zzz.onSticker
         : cookieStyle ? Appearance.cookie.onFace
         : angelStyle ? Appearance.angel.colOnPrimary
-        : inirStyle ? Appearance.inir.colOnPrimary : Appearance.colors.colOnPrimary
+        : lunanaStyle ? Appearance.lunana.colOnPrimary : Appearance.colors.colOnPrimary
     readonly property color colAuxHover: zzzStyle ? Appearance.zzz.chrome
         : cookieStyle ? Appearance.cookie.bg3
         : angelStyle ? Appearance.angel.colGlassCardHover
-        : inirStyle ? Appearance.inir.colLayer2Hover
+        : lunanaStyle ? Appearance.lunana.colLayer2Hover
         : ColorUtils.transparentize(
             effectiveColors?.colLayer1 ?? Appearance.colors.colLayer1, 0.5)
     readonly property color colAuxActive: zzzStyle ? Appearance.zzz.sticker
         : cookieStyle ? Appearance.cookie.bg4
         : angelStyle ? Appearance.angel.colGlassCardActive
-        : inirStyle ? Appearance.inir.colLayer2Active
+        : lunanaStyle ? Appearance.lunana.colLayer2Active
         : (effectiveColors?.colLayer1Active ?? Appearance.colLayer1Active)
 
     // Album colors belong to Material and Aurora. Identity-heavy styles keep
@@ -120,7 +120,7 @@ Item {
 
     readonly property real artBgOpacity: Appearance.editorialEverywhere ? 0 : zzzStyle ? 0.20
         : cookieStyle ? 0.10
-        : inirStyle ? 0.14
+        : lunanaStyle ? 0.14
         : angelStyle ? 0.20
         : auroraStyle ? 0.28 : 0.48
     readonly property real artworkSize: compactNarrow ? 72 : (cookieStyle ? 84 : 82)
@@ -132,7 +132,7 @@ Item {
         target: playerCard
         visible: root.angelStyle || (Appearance.effectsEnabled
             && (root.cookieStyle
-                || (!root.zzzStyle && !root.auroraStyle && !root.inirStyle)))
+                || (!root.zzzStyle && !root.auroraStyle && !root.lunanaStyle)))
     }
 
     ZzzPlate {
@@ -175,7 +175,7 @@ Item {
 
         border.width: (root.zzzStyle || root.cookieStyle) ? 0
             : root.angelStyle ? Appearance.angel.cardBorderWidth
-            : (root.inirStyle || root.auroraStyle) ? 1 : 0
+            : (root.lunanaStyle || root.auroraStyle) ? 1 : 0
         border.color: root.angelStyle
             ? ColorUtils.transparentize(root.colBorder, 0.22)
             : root.colBorder
@@ -327,7 +327,7 @@ Item {
                 artRadius: root.zzzStyle ? Appearance.zzz.roundSmall
                     : root.cookieStyle ? Appearance.cookie.roundSmall
                     : root.angelStyle ? Appearance.angel.roundingSmall
-                    : root.inirStyle ? Appearance.inir.roundingSmall
+                    : root.lunanaStyle ? Appearance.lunana.roundingSmall
                     : Appearance.rounding.small
                 iconSize: 28
                 enableBlurTransition: true
@@ -507,7 +507,7 @@ Item {
                                     trackColor: root.zzzStyle ? Appearance.zzz.metricTrack
                                         : root.cookieStyle ? Appearance.cookie.bg4
                                         : root.angelStyle ? Appearance.angel.colBorderSubtle
-                                        : root.inirStyle ? Appearance.inir.colLayer2
+                                        : root.lunanaStyle ? Appearance.lunana.colLayer2
                                         : root.auroraStyle ? Appearance.colInactiveControlSurface
                                         : (root.effectiveColors?.colSecondaryContainer
                                             ?? Appearance.colors.colSecondaryContainer)
@@ -575,9 +575,9 @@ Item {
                             if (playMA.containsMouse) return Appearance.angel.colGlassCardHover
                             return "transparent"
                         }
-                        if (root.inirStyle) {
-                            if (playMA.containsPress) return Appearance.inir.colLayer2Active
-                            if (playMA.containsMouse) return Appearance.inir.colLayer2Hover
+                        if (root.lunanaStyle) {
+                            if (playMA.containsPress) return Appearance.lunana.colLayer2Active
+                            if (playMA.containsMouse) return Appearance.lunana.colLayer2Hover
                             return "transparent"
                         }
                         if (root.auroraStyle) {
@@ -605,7 +605,7 @@ Item {
                             ? Appearance.zzz.onSticker : Appearance.zzz.ink)
                         : root.cookieStyle ? Appearance.cookie.onFace
                         : root.angelStyle ? Appearance.angel.colPrimary
-                        : root.inirStyle ? Appearance.inir.colPrimary
+                        : root.lunanaStyle ? Appearance.lunana.colPrimary
                         : root.auroraStyle ? root.colText
                         : playerBase.effectiveIsPlaying ? root.onAccentColor
                         : (root.effectiveColors?.colOnSecondaryContainer
@@ -639,7 +639,7 @@ Item {
                         anchors.fill: parent
                         visible: !root.zzzStyle && !root.cookieStyle
                         radius: root.angelStyle ? Appearance.angel.roundingSmall
-                            : root.inirStyle ? Appearance.inir.roundingSmall
+                            : root.lunanaStyle ? Appearance.lunana.roundingSmall
                             : height / 2
                         color: playButton.faceColor
                         Behavior on color {
@@ -752,7 +752,7 @@ Item {
                 if (root.cookieStyle) return Appearance.cookie.primaryFace
                 if (root.angelStyle)
                     return ColorUtils.transparentize(root.accentColor, 0.64)
-                if (root.inirStyle) return Appearance.inir.colSecondaryContainer
+                if (root.lunanaStyle) return Appearance.lunana.colSecondaryContainer
                 return ColorUtils.transparentize(root.accentColor, 0.78)
             }
             return root.cookieStyle ? Appearance.cookie.bg2 : "transparent"
@@ -762,7 +762,7 @@ Item {
             ? Appearance.zzz.onSticker
             : tBtn.toggled
                 ? (root.cookieStyle ? Appearance.cookie.onFace
-                    : root.inirStyle ? Appearance.inir.colOnSecondaryContainer
+                    : root.lunanaStyle ? Appearance.lunana.colOnSecondaryContainer
                     : root.accentColor)
                 : (tBtn.enabled
                     ? ColorUtils.mix(root.colText, root.accentColor, 0.82)
@@ -802,7 +802,7 @@ Item {
             anchors.fill: parent
             visible: !root.zzzStyle && !root.cookieStyle
             radius: root.angelStyle ? Appearance.angel.roundingSmall
-                : root.inirStyle ? Appearance.inir.roundingSmall
+                : root.lunanaStyle ? Appearance.lunana.roundingSmall
                 : Appearance.rounding.full
             color: tBtn.faceColor
             Behavior on color {

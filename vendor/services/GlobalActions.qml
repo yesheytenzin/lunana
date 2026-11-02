@@ -16,7 +16,7 @@ import Quickshell.Io
  *
  * Provides a unified, categorized catalog of shell actions that can be:
  * - Searched via the overview launcher (action prefix)
- * - Invoked via IPC: `inir globalActions run <actionId> [args]`
+ * - Invoked via IPC: `lunana globalActions run <actionId> [args]`
  * - Extended by users via scripts in ~/.config/illogical-impulse/actions/
  *
  * Architecture:
@@ -33,29 +33,29 @@ Singleton {
     readonly property var allActions: _rebuildActions()
 
     function runLauncher(args): void {
-        Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir"))].concat(args ?? []))
+        Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/lunana"))].concat(args ?? []))
     }
 
     function applyGlobalStyle(styleId: string): void {
         ThemeService.setGlobalStyle(styleId)
     }
 
-    function irisMusicOn(mode: string): bool {
+    function atollMusicOn(mode: string): bool {
         const edge = Config.options?.background?.edgeWidgets?.organic ?? ({})
-        const surround = Config.options?.iris?.surround ?? ({})
+        const surround = Config.options?.atoll?.surround ?? ({})
         return Boolean(edge.enable) && String(surround.music ?? "widget") === mode
     }
 
     function toggleIrisMusic(mode: string): void {
-        if (root.irisMusicOn(mode)) {
+        if (root.atollMusicOn(mode)) {
             Config.setNestedValue("background.edgeWidgets.organic.enable", false)
             return
         }
         const updates = {
-            "iris.surround.music": mode,
+            "atoll.surround.music": mode,
             "background.edgeWidgets.organic.enable": true
         }
-        if (mode === "frame") updates["iris.surround.enable"] = true
+        if (mode === "frame") updates["atoll.surround.enable"] = true
         Config.setNestedValues(updates)
     }
 
@@ -360,13 +360,13 @@ Singleton {
             execute: () => { root.applyGlobalStyle("aurora") }
         },
         {
-            id: "style-inir",
-            name: Translation.tr("Style: iNiR"),
-            description: Translation.tr("Switch to iNiR style"),
+            id: "style-lunana",
+            name: Translation.tr("Style: Lunana"),
+            description: Translation.tr("Switch to Lunana style"),
             icon: "terminal",
             category: "appearance",
-            keywords: ["style", "inir", "theme"],
-            execute: () => { root.applyGlobalStyle("inir") }
+            keywords: ["style", "lunana", "theme"],
+            execute: () => { root.applyGlobalStyle("lunana") }
         },
         {
             id: "style-angel",
@@ -419,11 +419,11 @@ Singleton {
         {
             id: "frame-music",
             name: Translation.tr("Frame Music"),
-            description: Translation.tr("Toggle music on the iRiS frame"),
+            description: Translation.tr("Toggle music on the Atoll frame"),
             icon: "graphic_eq",
             category: "appearance",
-            keywords: ["iris", "frame", "chassis", "music", "visualizer"],
-            isOn: () => root.irisMusicOn("frame"),
+            keywords: ["atoll", "frame", "chassis", "music", "visualizer"],
+            isOn: () => root.atollMusicOn("frame"),
             execute: () => root.toggleIrisMusic("frame")
         },
         {
@@ -432,8 +432,8 @@ Singleton {
             description: Translation.tr("Toggle the Organic Edge music wave"),
             icon: "waves",
             category: "appearance",
-            keywords: ["iris", "edge", "music", "wave", "visualizer"],
-            isOn: () => root.irisMusicOn("widget"),
+            keywords: ["atoll", "edge", "music", "wave", "visualizer"],
+            isOn: () => root.atollMusicOn("widget"),
             execute: () => root.toggleIrisMusic("widget")
         }
     ]
@@ -807,36 +807,36 @@ Singleton {
             execute: () => { GlobalStates.screenZoom = 1.0 }
         },
         {
-            id: "switch-family-ii",
-            name: Translation.tr("Switch to ii Panel Family"),
-            description: Translation.tr("Use the Material ii panel layout"),
+            id: "switch-family-drift",
+            name: Translation.tr("Switch to drift Panel Family"),
+            description: Translation.tr("Use the Material drift panel layout"),
             icon: "dashboard",
             category: "settings",
-            keywords: ["family", "panel", "ii", "material", "layout"],
+            keywords: ["family", "panel", "drift", "material", "layout"],
             execute: () => {
-                root.runLauncher(["panelFamily", "set", "ii"])
+                root.runLauncher(["panelFamily", "set", "drift"])
             }
         },
         {
-            id: "switch-family-waffle",
-            name: Translation.tr("Switch to Waffle Panel Family"),
-            description: Translation.tr("Use the Windows 11 / Waffle panel layout"),
+            id: "switch-family-slate",
+            name: Translation.tr("Switch to Slate Panel Family"),
+            description: Translation.tr("Use the Slate / Slate panel layout"),
             icon: "grid_view",
             category: "settings",
-            keywords: ["family", "panel", "waffle", "win11", "windows", "layout"],
+            keywords: ["family", "panel", "slate", "win11", "windows", "layout"],
             execute: () => {
-                root.runLauncher(["panelFamily", "set", "waffle"])
+                root.runLauncher(["panelFamily", "set", "slate"])
             }
         },
         {
-            id: "switch-family-iris",
-            name: Translation.tr("Switch to iRiS Panel Family"),
-            description: Translation.tr("Use the minimal iRiS shell layout"),
+            id: "switch-family-atoll",
+            name: Translation.tr("Switch to Atoll Panel Family"),
+            description: Translation.tr("Use the minimal Atoll shell layout"),
             icon: "visibility",
             category: "settings",
-            keywords: ["family", "panel", "iris", "minimal", "lightweight", "layout"],
+            keywords: ["family", "panel", "atoll", "minimal", "lightweight", "layout"],
             execute: () => {
-                root.runLauncher(["panelFamily", "set", "iris"])
+                root.runLauncher(["panelFamily", "set", "atoll"])
             }
         },
         {
@@ -1023,7 +1023,7 @@ Singleton {
         let result = []
         if (cfg?.enableSystem ?? true)     result = result.concat(_systemActions)
         if (cfg?.enableAppearance ?? true) result = result.concat(_appearanceActions)
-        if ((cfg?.enableAppearance ?? true) && Config.options?.panelFamily === "iris") result = result.concat(_irisActions)
+        if ((cfg?.enableAppearance ?? true) && Config.options?.panelFamily === "atoll") result = result.concat(_irisActions)
         if (cfg?.enableTools ?? true)      result = result.concat(_toolActions)
         if (cfg?.enableMedia ?? true)      result = result.concat(_mediaActions)
         if (cfg?.enableSettings ?? true)   result = result.concat(_settingsActions)

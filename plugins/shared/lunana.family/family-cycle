@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """family-cycle — switch the live bar-family set for the Lunana suite.
 
-One step of the ii -> waffle -> iris family UX: select the family's bar host
+One step of the drift -> slate -> atoll family UX: select the family's bar host
 (shell.json -> bar.id; absent id means the stock omarchy.bar), ensure exactly
 that family's owned set is enabled, and record the choice in
 shell.json -> lunana.family. lunana.state mirrors that into the vendored
@@ -32,14 +32,14 @@ import tempfile
 import time
 from pathlib import Path
 
-# Coherence rule: exactly one family is fully active at a time. ii and iris
-# share the lunana.bar host (it stays installed throughout); while iris is
-# active the bar stands itself down (lunana.bar yields whenever lunana.iris
+# Coherence rule: exactly one family is fully active at a time. drift and atoll
+# share the lunana.bar host (it stays installed throughout); while atoll is
+# active the bar stands itself down (lunana.bar yields whenever lunana.atoll
 # is enabled — see lunana.bar/Bar.qml) so the island alone owns the top edge;
-# the ii dock likewise yields to lunana.iris-dock (see lunana.dock/Dock.qml).
+# the drift dock likewise yields to lunana.atoll (see drift/lunana.dock/Dock.qml).
 # (family name, bar plugin id ["" = stock omarchy.bar], owned plugin ids)
 FAMILIES = [
-    ("ii", "lunana.bar",
+    ("drift", "lunana.bar",
      ["lunana.dock",
       "lunana.sidebar-left", "lunana.sidebar-right",
       "lunana.overview", "lunana.control-center", "lunana.background",
@@ -47,22 +47,24 @@ FAMILIES = [
       "lunana.notifications", "lunana.wallpaper", "lunana.region",
       "lunana.session", "lunana.mascot", "lunana.altswitcher",
       "lunana.tiling", "lunana.closeconfirm", "lunana.settings"]),
-    ("waffle", "lunana.bar-waffle",
-     ["lunana.waffle-start", "lunana.waffle-action",
-      "lunana.waffle-notifications", "lunana.waffle-lock",
-      "lunana.waffle-osd", "lunana.waffle-background"]),
-    # Consolidated iRiS: every iRiS surface lives in the one lunana.iris plugin
+    ("slate", "lunana.bar-slate",
+     ["lunana.slate-start", "lunana.slate-action",
+      "lunana.slate-notifications", "lunana.slate-lock",
+      "lunana.slate-osd", "lunana.slate-background"]),
+    # Consolidated Atoll: every Atoll surface lives in the one lunana.atoll plugin
     # so they share a single GlobalStates (the island's own buttons reach the
     # settings/session/sidebar/control surfaces; the frame/dock/island fuse).
-    # The old split iris-* plugins stay in the repo but are no longer enabled.
-    ("iris", "lunana.bar", ["lunana.iris"]),
+    # The old split atoll-* plugins stay in the repo but are no longer enabled.
+    ("atoll", "lunana.bar", ["lunana.atoll"]),
     ("stock", "", []),
 ]
 
 # Plugins shared across families — never enabled/disabled here. The state
-# service and the family switcher itself are always on; every family owns its
-# own dock/lock/background/osd, so exactly one of each is active at a time.
-SHARED = {"lunana.state", "lunana.family"}
+# service and the family switcher are always on, as is the family widget:
+# it lives on every bar (including stock) so no family strands the user
+# without a way back. Every family owns its own dock/lock/background/osd,
+# so exactly one of each is active at a time.
+SHARED = {"lunana.state", "lunana.family", "lunana.family-switch"}
 
 
 def fail(msg: str) -> "NoReturn":  # type: ignore[valid-type]
@@ -169,7 +171,37 @@ def enabled_ids(shell: dict) -> set:
     return {e.get("id") for e in plugins if isinstance(e, dict)}
 
 
+# Brand migration (pre-rename installs): old family names and bar ids map
+# onto the new ones exactly once, so an update converges instead of
+# stranding the session on an unknown bar.
+LEGACY_FAMILIES = {"drift": "drift", "slate": "slate", "atoll": "atoll"}
+LEGACY_BARS = {"lunana.bar-slate": "lunana.bar-slate"}
+
+
+def normalize_shell(shell: dict) -> bool:
+    """Rewrite legacy family/bar ids in place. Returns True if changed."""
+    changed = False
+    lunana = shell.get("lunana")
+    if isinstance(lunana, dict) and lunana.get("family") in LEGACY_FAMILIES:
+        lunana["family"] = LEGACY_FAMILIES[lunana["family"]]
+        changed = True
+    bar = shell.get("bar")
+    if isinstance(bar, dict) and bar.get("id") in LEGACY_BARS:
+        bar["id"] = LEGACY_BARS[bar["id"]]
+        changed = True
+    plugins = shell.get("plugins")
+    if isinstance(plugins, list):
+        for entry in plugins:
+            if isinstance(entry, dict) and entry.get("id") in LEGACY_BARS:
+                entry["id"] = LEGACY_BARS[entry["id"]]
+                changed = True
+    return changed
+
+
 def current_family(shell: dict) -> tuple:
+    if normalize_shell(shell):
+        write_shell(shell)
+        info("migrated legacy family/bar names")
     bar = shell.get("bar")
     if not isinstance(bar, dict):
         fail("shell.json 'bar' is not an object; fix it before switching")
@@ -178,7 +210,7 @@ def current_family(shell: dict) -> tuple:
     cands = [f for f in installed_families() if f[1] == bar_id]
     if not cands:
         return ("stock", "", [])
-    # The bar host alone cannot tell ii from iris (shared host): prefer the
+    # The bar host alone cannot tell drift from atoll (shared host): prefer the
     # family whose full owned set is enabled; fall back to the first bar
     # match for mixed states so the next cycle still converges to coherence.
     for fam in cands:
@@ -221,15 +253,29 @@ def apply_family(shell: dict, fam: tuple) -> None:
 
 
 def main(argv: list) -> int:
-    if len(argv) != 2 or argv[1] not in ("cycle", "status"):
+    if len(argv) < 2 or argv[1] not in ("cycle", "status", "set"):
         print(__doc__.strip().splitlines()[0])
-        print("usage: family-cycle [cycle|status]")
+        print("usage: family-cycle [cycle|status|set <drift|slate|atoll|stock>]")
         return 2
     shell = read_shell()
     fams = installed_families()
     cur = current_family(shell)
     if argv[1] == "status":
         print(f"family: {cur[0]} (bar: {cur[1] or 'omarchy.bar (stock)'})")
+        return 0
+    if argv[1] == "set":
+        if len(argv) != 3:
+            print("usage: family-cycle set <drift|slate|atoll|stock>")
+            return 2
+        matches = [f for f in fams if f[0] == argv[2]]
+        if not matches:
+            fail(f"unknown family '{argv[2]}'; available: "
+                 + ", ".join(f[0] for f in fams))
+        if cur in fams and matches[0] == cur:
+            print(f"family: {cur[0]} (already active)")
+            return 0
+        apply_family(shell, matches[0])
+        print(f"family: {matches[0][0]}")
         return 0
     nxt = fams[(fams.index(cur) + 1) % len(fams)] if cur in fams else fams[0]
     apply_family(shell, nxt)

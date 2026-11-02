@@ -146,7 +146,7 @@ reload_terminal_colors() {
       konsole)
         if pgrep -x konsole &>/dev/null && command -v qdbus6 &>/dev/null; then
           while IFS= read -r session; do
-            qdbus6 org.kde.konsole "$session" org.kde.konsole.Session.setProfile 'ii-auto' 2>/dev/null || true
+            qdbus6 org.kde.konsole "$session" org.kde.konsole.Session.setProfile 'drift-auto' 2>/dev/null || true
           done < <(qdbus6 org.kde.konsole 2>/dev/null | grep -E '/Sessions/[0-9]+$' || true)
         fi
         ;;

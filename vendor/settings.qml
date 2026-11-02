@@ -1,6 +1,6 @@
 //@ pragma UseQApplication
 //@ pragma Env QS_NO_RELOAD_POPUP=1
-//@ pragma Env INIR_STANDALONE_WINDOW=1
+//@ pragma Env LUNANA_STANDALONE_WINDOW=1
 //@ pragma Env QT_QUICK_CONTROLS_STYLE=Basic
 //@ pragma Env QT_QUICK_FLICKABLE_WHEEL_DECELERATION=10000
 // Launcher keeps QT_SCALE_FACTOR=1; shell scaling lives in appearance.typography.sizeScale
@@ -39,13 +39,13 @@ ApplicationWindow {
 
     function _persistCurrentPage(): void {
         if (root._navigationInitialized && Persistent.ready && Persistent.states?.settings)
-            Persistent.states.settings.iiPage = Math.max(0, Math.min(root.currentPage, root.pages.length - 1))
+            Persistent.states.settings.driftPage = Math.max(0, Math.min(root.currentPage, root.pages.length - 1))
     }
 
     function initializeNavigation(): void {
         if (root._navigationInitialized || !Persistent.ready)
             return
-        const persisted = Persistent.states?.settings?.iiPage ?? 0
+        const persisted = Persistent.states?.settings?.driftPage ?? 0
         const requested = root._requestedStartPage >= 0 ? root._requestedStartPage : persisted
         root.currentPage = Math.max(0, Math.min(requested, root.pages.length - 1))
         root._navigationInitialized = true
@@ -124,8 +124,8 @@ ApplicationWindow {
 
     // Static section/option index — shared with the overlay via SettingsPageRegistry.
     function getFamilySettingsPageIndex(family: string) {
-        const componentName = family === "waffle" ? "WaffleConfig.qml"
-            : family === "iris" ? "IrisConfig.qml" : ""
+        const componentName = family === "slate" ? "SlateConfig.qml"
+            : family === "atoll" ? "AtollConfig.qml" : ""
         if (!componentName.length) return -1
         for (var i = 0; i < pages.length; i++) {
             if ((pages[i].component || "").indexOf(componentName) >= 0)
@@ -143,9 +143,9 @@ ApplicationWindow {
 
         var results = [];
 
-        var activeFamily = Config.options?.panelFamily ?? "ii";
-        var wafflePageIndex = getFamilySettingsPageIndex("waffle");
-        var irisPageIndex = getFamilySettingsPageIndex("iris");
+        var activeFamily = Config.options?.panelFamily ?? "drift";
+        var slatePageIndex = getFamilySettingsPageIndex("slate");
+        var atollPageIndex = getFamilySettingsPageIndex("atoll");
         var easyOn = root.easyMode;
 
         var staticResults = SettingsSearchRegistry.buildStaticResults(
@@ -154,9 +154,9 @@ ApplicationWindow {
             const family = String(entry.panelFamily || "")
             if (family.length > 0 && family !== activeFamily)
                 return false;
-            if (wafflePageIndex >= 0 && entry.pageIndex === wafflePageIndex && activeFamily !== "waffle")
+            if (slatePageIndex >= 0 && entry.pageIndex === slatePageIndex && activeFamily !== "slate")
                 return false;
-            if (irisPageIndex >= 0 && entry.pageIndex === irisPageIndex && activeFamily !== "iris")
+            if (atollPageIndex >= 0 && entry.pageIndex === atollPageIndex && activeFamily !== "atoll")
                 return false;
             return !(easyOn && entry.pageIndex >= 0 && entry.pageIndex < pages.length
                 && pages[entry.pageIndex].essential !== true);
@@ -166,11 +166,11 @@ ApplicationWindow {
         // 2. Buscar en el registro dinámico de widgets
         if (typeof SettingsSearchRegistry !== "undefined") {
             var widgetResults = SettingsSearchRegistry.buildResults(settingsSearchText);
-            if (activeFamily !== "waffle") {
-                widgetResults = widgetResults.filter(r => r.pageIndex !== wafflePageIndex);
+            if (activeFamily !== "slate") {
+                widgetResults = widgetResults.filter(r => r.pageIndex !== slatePageIndex);
             }
-            if (activeFamily !== "iris")
-                widgetResults = widgetResults.filter(r => r.pageIndex !== irisPageIndex);
+            if (activeFamily !== "atoll")
+                widgetResults = widgetResults.filter(r => r.pageIndex !== atollPageIndex);
             if (easyOn) {
                 widgetResults = widgetResults.filter(r =>
                     r.pageIndex >= 0 && r.pageIndex < pages.length
@@ -390,7 +390,7 @@ ApplicationWindow {
 
     visible: true
     onClosing: Qt.quit()
-    title: "Settings — iNiR"
+    title: "Settings — Lunana"
 
     Component.onCompleted: {
         Quickshell.watchFiles = false
@@ -421,7 +421,7 @@ ApplicationWindow {
     width: 1100
     height: 750
     color: root.uiReady
-        ? (Appearance.inirEverywhere ? Appearance.inir.colLayer0
+        ? (Appearance.lunanaEverywhere ? Appearance.lunana.colLayer0
           : Appearance.zzzEverywhere ? Appearance.colors.colLayer0
           : Appearance.m3colors.m3background)
         : "transparent"
@@ -719,18 +719,18 @@ ApplicationWindow {
                 color: settingsSearchField.activeFocus
                     ? (Appearance.angelEverywhere ? Appearance.angel.colGlassCard
                       : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurface
-                      : Appearance.inirEverywhere ? Appearance.inir.colLayer1
+                      : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer1
                       : Appearance.colors.colLayer1)
                     : (Appearance.angelEverywhere ? Appearance.angel.colGlassCard
                       : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurface
-                      : Appearance.inirEverywhere ? Appearance.inir.colLayer0
+                      : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer0
                       : Appearance.colors.colLayer0)
                 border.width: settingsSearchField.activeFocus ? 2
                     : (Appearance.angelEverywhere ? Appearance.angel.cardBorderWidth : 1)
                 border.color: settingsSearchField.activeFocus
                     ? Appearance.colors.colPrimary
                     : (Appearance.angelEverywhere ? Appearance.angel.colCardBorder
-                      : Appearance.inirEverywhere ? Appearance.inir.colBorderMuted
+                      : Appearance.lunanaEverywhere ? Appearance.lunana.colBorderMuted
                       : Appearance.m3colors.m3outlineVariant)
 
                 Behavior on color { ColorAnimation { duration: 150 } }
@@ -924,7 +924,7 @@ ApplicationWindow {
                         buttonRadius: Appearance.rounding.full
                         implicitWidth: 35
                         implicitHeight: 35
-                        onClicked: Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")), "lock", "activate"])
+                        onClicked: Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/lunana")), "lock", "activate"])
                         contentItem: MaterialSymbol {
                             anchors.centerIn: parent
                             horizontalAlignment: Text.AlignHCenter
@@ -1004,7 +1004,7 @@ ApplicationWindow {
                                 Layout.fillWidth: true
                                 spacing: 0
                                 readonly property color headerAccentColor: Appearance.angelEverywhere ? Appearance.angel.colPrimary
-                                    : Appearance.inirEverywhere ? Appearance.inir.colAccent
+                                    : Appearance.lunanaEverywhere ? Appearance.lunana.colAccent
                                     : Appearance.colors.colPrimary
 
                                 // ── Category header ──
@@ -1072,8 +1072,8 @@ ApplicationWindow {
                                         ? "transparent"
                                         : Appearance.angelEverywhere
                                         ? Appearance.angel.colGlassCardHover
-                                        : Appearance.inirEverywhere
-                                            ? Appearance.inir.colLayer1Hover
+                                        : Appearance.lunanaEverywhere
+                                            ? Appearance.lunana.colLayer1Hover
                                             : Appearance.auroraEverywhere
                                                 ? Appearance.aurora.colElevatedSurface
                                                 : CF.ColorUtils.transparentize(Appearance.colors.colLayer1Hover, 0.5)
@@ -1102,8 +1102,8 @@ ApplicationWindow {
                                                         ? Appearance.regalia.hardwarePrimary
                                                         : Appearance.zzzEverywhere
                                                         ? Appearance.zzz.ink
-                                                        : Appearance.inirEverywhere
-                                                        ? Appearance.inir.colAccent
+                                                        : Appearance.lunanaEverywhere
+                                                        ? Appearance.lunana.colAccent
                                                         : Appearance.colors.colPrimary)
                                                     : Appearance.colors.colOnSurfaceVariant
                                                 rotation: navItem.modelData.iconRotation || 0
@@ -1152,7 +1152,7 @@ ApplicationWindow {
                                 : Appearance.rounding.small
                             chamfer: Appearance.zzzEverywhere && !Appearance.zzz.round ? Appearance.zzz.cutCorner : 0
                             fillColor: Appearance.angelEverywhere ? Appearance.angel.colGlassCard
-                                 : Appearance.inirEverywhere ? Appearance.inir.colLayer2
+                                 : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2
                                  : Appearance.auroraEverywhere ? Appearance.aurora.colElevatedSurface
                                  : Appearance.zzzEverywhere ? Appearance.zzz.sticker
                                  : Appearance.colors.colPrimaryContainer
@@ -1228,7 +1228,7 @@ ApplicationWindow {
                                 visible: !Appearance.zzzEverywhere
                                 height: (parent.hasTarget && visible) ? parent.height * 0.5 : 0
                                 color: Appearance.angelEverywhere ? Appearance.angel.colPrimary
-                                     : Appearance.inirEverywhere ? Appearance.inir.colAccent
+                                     : Appearance.lunanaEverywhere ? Appearance.lunana.colAccent
                                      : Appearance.colors.colPrimary
                                 Behavior on height {
                                     enabled: Appearance.animationsEnabled
@@ -1414,7 +1414,7 @@ ApplicationWindow {
                         colBackgroundHover: Appearance.colors.colLayer1Hover
 
                         onClicked: {
-                            Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")),
+                            Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/lunana")),
                                 "ipc", "settings", "openOverlayAt", String(root.currentPage)])
                             Qt.quit()
                         }
@@ -1461,17 +1461,17 @@ ApplicationWindow {
                 color: Appearance.angelEverywhere ? Appearance.angel.colGlassCard
                      : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurface
                      : Appearance.zzzEverywhere ? Appearance.zzz.bg2
-                     : Appearance.inirEverywhere ? Appearance.inir.colLayer1
+                     : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer1
                      : Appearance.colors.colSurfaceContainerLow
                 radius: Appearance.angelEverywhere ? Appearance.angel.roundingNormal
-                      : Appearance.inirEverywhere ? Appearance.inir.roundingNormal
+                      : Appearance.lunanaEverywhere ? Appearance.lunana.roundingNormal
                       : Appearance.rounding.windowRounding - root.contentPadding
                 border.width: Appearance.angelEverywhere ? Appearance.angel.cardBorderWidth
                             : Appearance.zzzEverywhere ? Appearance.zzz.borderThick
-                            : Appearance.inirEverywhere ? 1 : 0
+                            : Appearance.lunanaEverywhere ? 1 : 0
                 border.color: Appearance.angelEverywhere ? Appearance.angel.colCardBorder
                             : Appearance.zzzEverywhere ? Appearance.zzz.hairline
-                            : Appearance.inirEverywhere ? Appearance.inir.colBorderSubtle
+                            : Appearance.lunanaEverywhere ? Appearance.lunana.colBorderSubtle
                             : "transparent"
 
                 // ── Page header: icon + name + description ──
@@ -1526,7 +1526,7 @@ ApplicationWindow {
                     Rectangle {
                         anchors { bottom: parent.bottom; left: parent.left; right: parent.right; leftMargin: 16; rightMargin: 16 }
                         height: 1
-                        color: Appearance.inirEverywhere ? Appearance.inir.colBorderSubtle : Appearance.m3colors.m3outlineVariant
+                        color: Appearance.lunanaEverywhere ? Appearance.lunana.colBorderSubtle : Appearance.m3colors.m3outlineVariant
                         opacity: 0.5
                     }
                 }
@@ -1590,13 +1590,13 @@ ApplicationWindow {
                             return Math.max(0, p.y)
                         }
                         radius: Appearance.angelEverywhere ? Appearance.angel.roundingNormal
-                             : Appearance.inirEverywhere ? Appearance.inir.roundingNormal
+                             : Appearance.lunanaEverywhere ? Appearance.lunana.roundingNormal
                              : Appearance.rounding.normal
                         color: "transparent"
                         border.width: Appearance.angelEverywhere ? Appearance.angel.cardBorderWidth
-                                    : Appearance.inirEverywhere ? 1 : 1
+                                    : Appearance.lunanaEverywhere ? 1 : 1
                         border.color: Appearance.angelEverywhere ? Appearance.angel.colCardBorder
-                            : Appearance.inirEverywhere ? Appearance.inir.colBorder
+                            : Appearance.lunanaEverywhere ? Appearance.lunana.colBorder
                             : Appearance.auroraEverywhere ? Appearance.aurora.colPopupBorder
                             : Appearance.m3colors.m3outlineVariant
 
@@ -1609,7 +1609,7 @@ ApplicationWindow {
                             screenHeight: Quickshell.screens[0]?.height ?? root.height
                             hovered: false
                             fallbackColor: Appearance.colors.colLayer1
-                            inirColor: Appearance.inir.colLayer2
+                            lunanaColor: Appearance.lunana.colLayer2
                             auroraTransparency: Math.max(0.22, Appearance.aurora.popupTransparentize - 0.12)
                         }
 
@@ -1664,17 +1664,17 @@ ApplicationWindow {
                                 width: resultsListView.width
                                 implicitHeight: 52
                                 buttonRadius: Appearance.angelEverywhere ? Appearance.angel.roundingSmall
-                                            : Appearance.inirEverywhere ? Appearance.inir.roundingSmall
+                                            : Appearance.lunanaEverywhere ? Appearance.lunana.roundingSmall
                                             : Appearance.rounding.small
 
                                 colBackground: ListView.isCurrentItem
                                     ? (Appearance.angelEverywhere ? Appearance.angel.colGlassCardHover
-                                      : Appearance.inirEverywhere ? Appearance.inir.colLayer1
+                                      : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer1
                                       : Appearance.auroraEverywhere ? Appearance.aurora.colElevatedSurface
                                       : Appearance.colors.colPrimaryContainer)
                                     : "transparent"
                                 colBackgroundHover: Appearance.angelEverywhere ? Appearance.angel.colGlassCardHover
-                                                  : Appearance.inirEverywhere ? Appearance.inir.colLayer1Hover
+                                                  : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer1Hover
                                                   : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurface
                                                   : Appearance.colors.colLayer2
 
@@ -1810,7 +1810,7 @@ ApplicationWindow {
                         screenHeight: Quickshell.screens[0]?.height ?? root.height
                         hovered: false
                         fallbackColor: Appearance.colors.colLayer1
-                        inirColor: Appearance.inir.colLayer2
+                        lunanaColor: Appearance.lunana.colLayer2
                         auroraTransparency: Math.max(0.22, Appearance.aurora.popupTransparentize - 0.12)
                     }
 

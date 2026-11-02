@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "lunana.atoll-background",
+  "name": "Lunana Atoll Background",
+  "version": "0.4.0",
+  "author": "lunana",
+  "license": "GPL-3.0",
+  "description": "Lunana Atoll background/afterglow host.",
+  "kinds": [
+    "service"
+  ],
+  "entryPoints": {
+    "service": "AtollBackground.qml"
+  },
+  "x-lunana": {
+    "suiteId": "lunana",
+    "role": "atoll-background",
+    "milestone": "parity",
+    "requires": [],
+    "recommends": []
+  }
+}

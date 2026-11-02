@@ -1,0 +1,165 @@
+pragma ComponentBehavior: Bound
+
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
+import Quickshell
+import Quickshell.Io
+import "../../../services"
+import "../../common"
+import "../components"
+import "../style"
+
+Flickable {
+    id: root
+
+    readonly property real d: AtollStyle.density
+    readonly property string version: versionFile.text().trim()
+    boundsBehavior: Flickable.StopAtBounds
+    clip: true
+    contentHeight: pageColumn.implicitHeight + 40 * root.d
+    ScrollBar.vertical: AtollScrollBar {}
+
+    readonly property string atollVersion: atollVersionFile.text().trim()
+
+    FileView {
+        id: versionFile
+        path: ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("VERSION"))
+    }
+    FileView {
+        id: atollVersionFile
+        path: ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("modules/atoll/VERSION"))
+    }
+
+    ColumnLayout {
+        id: pageColumn
+        width: Math.min(root.width - 32 * root.d, 640 * root.d)
+        x: Math.round((root.width - width) / 2)
+        y: Math.round(18 * root.d)
+        spacing: 18 * root.d
+
+        ColumnLayout {
+            Layout.fillWidth: true
+            Layout.maximumWidth: Number.POSITIVE_INFINITY
+            Layout.bottomMargin: 6 * root.d
+            spacing: 6 * root.d
+            AtollMark {
+                Layout.alignment: Qt.AlignHCenter
+                Layout.bottomMargin: 8 * root.d
+                implicitSize: Math.round(76 * root.d)
+            }
+            AtollText {
+                Layout.alignment: Qt.AlignHCenter
+                text: "Lunana"
+                font.family: AtollStyle.fontTitle
+                font.pixelSize: 26 * AtollStyle.typeScale
+                font.weight: AtollStyle.weight(Font.Bold)
+            }
+            AtollText {
+                Layout.alignment: Qt.AlignHCenter
+                text: root.version.length > 0 ? Translation.tr("Version %1").arg(root.version) : Translation.tr("A shell for Niri")
+                color: AtollStyle.muted
+                font.pixelSize: AtollStyle.typeLabel
+            }
+        }
+
+        InfoCard {
+            rows: [
+                { label: Translation.tr("Family"), value: Translation.tr("Atoll · Island family") },
+                { label: "Atoll", value: root.atollVersion },
+                { label: Translation.tr("Branch"), value: ShellUpdates.localCommit.length > 0 ? ShellUpdates.currentBranch : "", highlight: ShellUpdates.isNonMainBranch },
+                { label: Translation.tr("Commit"), value: ShellUpdates.localCommit },
+                { label: Translation.tr("System"), value: SystemInfo.distroName },
+                { label: Translation.tr("Compositor"), value: CompositorService.isNiri ? "Niri" : SystemInfo.desktopEnvironment },
+                { label: Translation.tr("Computer"), value: SystemInfo.hostname }
+            ].filter(row => String(row.value ?? "").length > 0 && row.value !== "Unknown")
+        }
+
+        Heading { text: Translation.tr("Lunana") }
+        AtollLinkCard {
+            tinted: true
+            links: [
+                { label: Translation.tr("Documentation"), icon: "menu_book", tint: AtollStyle.identity.sky, action: () => Qt.openUrlExternally("https://github.com/snowarch/inir/wiki") },
+                { label: Translation.tr("Report an issue"), icon: "bug_report", tint: AtollStyle.identity.red, action: () => Qt.openUrlExternally("https://github.com/snowarch/inir/issues") },
+                { label: Translation.tr("Source code"), value: "github.com/snowarch/inir", icon: "code", tint: AtollStyle.identity.lavender, action: () => Qt.openUrlExternally("https://github.com/snowarch/inir") }
+            ]
+        }
+
+        Heading {
+            visible: distroLinks.links.length > 0
+            text: SystemInfo.distroName
+        }
+        AtollLinkCard {
+            id: distroLinks
+            visible: links.length > 0
+            tinted: true
+            links: [
+                SystemInfo.homeUrl ? { label: Translation.tr("Website"), icon: "language", tint: AtollStyle.identity.blue, action: () => Qt.openUrlExternally(SystemInfo.homeUrl) } : null,
+                SystemInfo.documentationUrl ? { label: Translation.tr("Documentation"), icon: "auto_stories", tint: AtollStyle.identity.teal, action: () => Qt.openUrlExternally(SystemInfo.documentationUrl) } : null,
+                SystemInfo.supportUrl ? { label: Translation.tr("Help & Support"), icon: "support", tint: AtollStyle.identity.green, action: () => Qt.openUrlExternally(SystemInfo.supportUrl) } : null,
+                SystemInfo.bugReportUrl ? { label: Translation.tr("Report a Bug"), icon: "bug_report", tint: AtollStyle.identity.orange, action: () => Qt.openUrlExternally(SystemInfo.bugReportUrl) } : null
+            ].filter(link => link !== null)
+        }
+    }
+
+    component Heading: AtollText {
+        Layout.leftMargin: 16 * root.d
+        Layout.bottomMargin: -10 * root.d
+        color: AtollStyle.muted
+        font.family: AtollStyle.fontTitle
+        font.pixelSize: AtollStyle.typeMeta
+        font.weight: AtollStyle.weight(Font.DemiBold)
+    }
+
+    component InfoCard: Rectangle {
+        id: card
+        property var rows: []
+        Layout.fillWidth: true
+        implicitHeight: infoColumn.implicitHeight
+        radius: AtollStyle.radiusTile
+        color: AtollStyle.readingCard
+        Column {
+            id: infoColumn
+            width: parent.width
+            Repeater {
+                model: card.rows
+                Item {
+                    id: infoRow
+                    required property var modelData
+                    required property int index
+                    width: parent.width
+                    height: Math.round(40 * root.d)
+                    AtollText {
+                        id: infoLabel
+                        anchors.left: parent.left
+                        anchors.leftMargin: 16 * root.d
+                        anchors.verticalCenter: parent.verticalCenter
+                        text: infoRow.modelData.label
+                        font.pixelSize: AtollStyle.typeLabel
+                    }
+                    AtollText {
+                        anchors.left: infoLabel.right
+                        anchors.leftMargin: 16 * root.d
+                        anchors.right: parent.right
+                        anchors.rightMargin: 16 * root.d
+                        anchors.verticalCenter: parent.verticalCenter
+                        horizontalAlignment: Text.AlignRight
+                        text: infoRow.modelData.value
+                        color: infoRow.modelData.highlight ? AtollStyle.secondaryAccent : AtollStyle.muted
+                        font.pixelSize: AtollStyle.typeLabel
+                        elide: Text.ElideMiddle
+                    }
+                    Rectangle {
+                        anchors.left: parent.left
+                        anchors.leftMargin: 16 * root.d
+                        anchors.right: parent.right
+                        anchors.bottom: parent.bottom
+                        height: 1
+                        visible: infoRow.index < card.rows.length - 1
+                        color: AtollStyle.hairline
+                    }
+                }
+            }
+        }
+    }
+}

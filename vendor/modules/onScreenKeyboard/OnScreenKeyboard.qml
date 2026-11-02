@@ -36,12 +36,12 @@ Scope { // Scope
         + (GlobalStates.regionSelectorOpen    ? (1 << 12) : 0)
         + (GlobalStates.sessionOpen           ? (1 << 13) : 0)
         + (GlobalStates.searchOpen            ? (1 << 14) : 0)
-        + (GlobalStates.waffleActionCenterOpen        ? (1 << 15) : 0)
-        + (GlobalStates.waffleNotificationCenterOpen  ? (1 << 16) : 0)
-        + (GlobalStates.waffleWidgetsOpen             ? (1 << 17) : 0)
-        + (GlobalStates.waffleClipboardOpen           ? (1 << 18) : 0)
-        + (GlobalStates.waffleTaskViewOpen            ? (1 << 19) : 0)
-        + (GlobalStates.waffleAltSwitcherOpen         ? (1 << 20) : 0)
+        + (GlobalStates.slateActionCenterOpen        ? (1 << 15) : 0)
+        + (GlobalStates.slateNotificationCenterOpen  ? (1 << 16) : 0)
+        + (GlobalStates.slateWidgetsOpen             ? (1 << 17) : 0)
+        + (GlobalStates.slateClipboardOpen           ? (1 << 18) : 0)
+        + (GlobalStates.slateTaskViewOpen            ? (1 << 19) : 0)
+        + (GlobalStates.slateAltSwitcherOpen         ? (1 << 20) : 0)
 
     component OskControlButton: GroupButton {
         baseWidth: 40

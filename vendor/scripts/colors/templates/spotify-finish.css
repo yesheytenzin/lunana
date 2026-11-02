@@ -1,10 +1,10 @@
-/* iNiR for Spotify: Spotify's own layout in the shell's palette, face and shapes. Appended after the palette
-   bridge, which defines --spice-* and --inir-font (the face the shell shows). */
+/* Lunana for Spotify: Spotify's own layout in the shell's palette, face and shapes. Appended after the palette
+   bridge, which defines --spice-* and --lunana-font (the face the shell shows). */
 :root {
-  --inir-r-sheet: 26px; --inir-r-tile: 14px; --inir-r-row: 10px; --inir-r-chip: 7px; --inir-gap: 8px;
-  --encore-title-font-stack: var(--inir-font), sans-serif !important;
-  --encore-body-font-stack: var(--inir-font), sans-serif !important;
-  --encore-variable-font-stack: var(--inir-font), sans-serif !important;
+  --lunana-r-sheet: 26px; --lunana-r-tile: 14px; --lunana-r-row: 10px; --lunana-r-chip: 7px; --lunana-gap: 8px;
+  --encore-title-font-stack: var(--lunana-font), sans-serif !important;
+  --encore-body-font-stack: var(--lunana-font), sans-serif !important;
+  --encore-variable-font-stack: var(--lunana-font), sans-serif !important;
   --background-base: var(--spice-main) !important;
   --background-highlight: var(--spice-highlight) !important;
   --background-press: var(--spice-highlight-elevated) !important;
@@ -18,12 +18,12 @@
   --essential-subdued: rgba(var(--spice-rgb-text), 0.3) !important;
   --decorative-subdued: rgba(var(--spice-rgb-text), 0.1) !important;
 }
-body, input, button, textarea { font-family: var(--inir-font), sans-serif; }
+body, input, button, textarea { font-family: var(--lunana-font), sans-serif; }
 
 /* The field is the wallpaper's tone; panes are tiles on it */
-.Root__top-container { background: color-mix(in srgb, var(--spice-main) 72%, var(--spice-shadow)) !important; gap: 0; padding: var(--inir-gap) !important; padding-top: 0 !important; }
+.Root__top-container { background: color-mix(in srgb, var(--spice-main) 72%, var(--spice-shadow)) !important; gap: 0; padding: var(--lunana-gap) !important; padding-top: 0 !important; }
 .Root__main-view, .Root__nav-bar .main-yourLibraryX-entryPoints, .Root__right-sidebar aside {
-  border-radius: var(--inir-r-tile) !important; background: var(--spice-main) !important; border: 0 !important;
+  border-radius: var(--lunana-r-tile) !important; background: var(--spice-main) !important; border: 0 !important;
 }
 .Root__main-view { overflow: hidden; }
 .NowPlayingView::before { background: var(--spice-main) !important; }
@@ -43,17 +43,17 @@ hr, .main-trackList-trackListHeader { border-color: transparent !important; }
 
 /* Shapes on the shell's ladder */
 .main-card-card, .main-cardImage-imageWrapper, .main-cardImage-image, .main-card-imageContainer,
-.main-image-image.cover-art-image, .main-nowPlayingView-coverArt, .cover-art { border-radius: var(--inir-r-tile) !important; }
+.main-image-image.cover-art-image, .main-nowPlayingView-coverArt, .cover-art { border-radius: var(--lunana-r-tile) !important; }
 .view-homeShortcutsGrid-shortcut, .main-trackList-trackListRow, [class*="listRow-isInteractive"],
-.main-contextMenu-menu, .main-topBar-searchBar, .x-filterBox-filterInput { border-radius: var(--inir-r-row) !important; }
+.main-contextMenu-menu, .main-topBar-searchBar, .x-filterBox-filterInput { border-radius: var(--lunana-r-row) !important; }
 .view-homeShortcutsGrid-shortcut { background: var(--spice-highlight) !important; }
-.view-homeShortcutsGrid-imageContainer, .view-homeShortcutsGrid-imageContainer img { border-radius: var(--inir-r-row) 0 0 var(--inir-r-row) !important; }
-.main-coverSlotCollapsed-container img, .main-nowPlayingWidget-coverArt img, .main-nowPlayingWidget-coverArt .cover-art { border-radius: var(--inir-r-row) !important; }
+.view-homeShortcutsGrid-imageContainer, .view-homeShortcutsGrid-imageContainer img { border-radius: var(--lunana-r-row) 0 0 var(--lunana-r-row) !important; }
+.main-coverSlotCollapsed-container img, .main-nowPlayingWidget-coverArt img, .main-nowPlayingWidget-coverArt .cover-art { border-radius: var(--lunana-r-row) !important; }
 
 /* The player is an island over the field, like the shell's own */
-.Root__now-playing-bar { padding: 0 var(--inir-gap) var(--inir-gap) !important; background: transparent !important; }
+.Root__now-playing-bar { padding: 0 var(--lunana-gap) var(--lunana-gap) !important; background: transparent !important; }
 .main-nowPlayingBar-container, footer[data-testid="now-playing-bar"], .main-nowPlayingBar-nowPlayingBar {
-  border-radius: var(--inir-r-sheet) !important; background: var(--spice-player) !important; border: 0 !important;
+  border-radius: var(--lunana-r-sheet) !important; background: var(--spice-player) !important; border: 0 !important;
 }
 .main-nowPlayingBar-nowPlayingBar { padding: 0 14px !important; }
 .x-progressBar-fillColor { background-color: var(--spice-button) !important; }

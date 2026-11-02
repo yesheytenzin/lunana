@@ -270,7 +270,7 @@ Item {
                     anchors.rightMargin: 12
                     height: 3
                     radius: 1.5
-                    color: Appearance.inirEverywhere ? Appearance.inir.colPrimary
+                    color: Appearance.lunanaEverywhere ? Appearance.lunana.colPrimary
                          : Appearance.colors.colPrimary
                     opacity: widgetWrapper.isDropTarget && root.hoverIndex < root.dragIndex ? 0.85 : 0
                     visible: opacity > 0
@@ -281,9 +281,9 @@ Item {
                         NumberAnimation { duration: 160; easing.type: Easing.OutCubic }
                     }
 
-                    // Subtle glow (hidden in inir style)
+                    // Subtle glow (hidden in lunana style)
                     Rectangle {
-                        visible: !Appearance.inirEverywhere
+                        visible: !Appearance.lunanaEverywhere
                         anchors.centerIn: parent
                         width: parent.width + 6
                         height: 10
@@ -303,7 +303,7 @@ Item {
                     anchors.rightMargin: 12
                     height: 3
                     radius: 1.5
-                    color: Appearance.inirEverywhere ? Appearance.inir.colPrimary
+                    color: Appearance.lunanaEverywhere ? Appearance.lunana.colPrimary
                          : Appearance.colors.colPrimary
                     opacity: widgetWrapper.isDropTarget && root.hoverIndex > root.dragIndex ? 0.85 : 0
                     visible: opacity > 0
@@ -315,7 +315,7 @@ Item {
                     }
 
                     Rectangle {
-                        visible: !Appearance.inirEverywhere
+                        visible: !Appearance.lunanaEverywhere
                         anchors.centerIn: parent
                         width: parent.width + 6
                         height: 10
@@ -384,7 +384,7 @@ Item {
                     Rectangle {
                         anchors.fill: contentLoader
                         radius: contentLoader.item?.radius ?? Appearance.rounding.small
-                        color: Appearance.inirEverywhere ? Appearance.inir.colPrimary
+                        color: Appearance.lunanaEverywhere ? Appearance.lunana.colPrimary
                              : Appearance.colors.colPrimary
                         opacity: widgetWrapper.isBeingDragged ? 0.05 : 0
 
@@ -400,8 +400,8 @@ Item {
                         radius: contentLoader.item?.radius ?? Appearance.rounding.small
                         color: "transparent"
                         border.width: widgetWrapper.isBeingDragged ? 1.5 : 0
-                        border.color: Appearance.inirEverywhere
-                            ? Appearance.inir.colBorderFocus
+                        border.color: Appearance.lunanaEverywhere
+                            ? Appearance.lunana.colBorderFocus
                             : ColorUtils.transparentize(Appearance.colors.colPrimary, 0.4)
 
                         Behavior on border.width {
@@ -421,22 +421,22 @@ Item {
                         anchors.rightMargin: 4
                         width: 30
                         height: 22
-                        radius: Appearance.inirEverywhere ? Appearance.inir.roundingSmall
+                        radius: Appearance.lunanaEverywhere ? Appearance.lunana.roundingSmall
                               : Appearance.rounding.verysmall
                         z: 10
 
                         color: handleMouseArea.containsMouse || widgetWrapper.isBeingDragged
                             ? (Appearance.angelEverywhere ? Appearance.angel.colGlassCardHover
-                               : Appearance.inirEverywhere ? Appearance.inir.colLayer1Hover
+                               : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer1Hover
                                : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurface
                                : Appearance.colLayer1Hover)
                             : ColorUtils.transparentize(
                                 Appearance.angelEverywhere ? Appearance.angel.colGlassCard
-                                    : Appearance.inirEverywhere ? Appearance.inir.colLayer1
+                                    : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer1
                                     : Appearance.colors.colLayer1, 0.15)
 
-                        border.width: Appearance.inirEverywhere ? 1 : 0
-                        border.color: Appearance.inirEverywhere ? Appearance.inir.colBorder : "transparent"
+                        border.width: Appearance.lunanaEverywhere ? 1 : 0
+                        border.color: Appearance.lunanaEverywhere ? Appearance.lunana.colBorder : "transparent"
 
                         opacity: (handleHoverDetector.containsMouse || root.editMode) ? 1 : 0
                         visible: opacity > 0
@@ -455,9 +455,9 @@ Item {
                             text: "drag_indicator"
                             iconSize: 14
                             color: handleMouseArea.containsMouse || widgetWrapper.isBeingDragged
-                                ? (Appearance.inirEverywhere ? Appearance.inir.colOnLayer1
+                                ? (Appearance.lunanaEverywhere ? Appearance.lunana.colOnLayer1
                                     : Appearance.colors.colOnLayer1)
-                                : (Appearance.inirEverywhere ? Appearance.inir.colTextSecondary
+                                : (Appearance.lunanaEverywhere ? Appearance.lunana.colTextSecondary
                                     : Appearance.colors.colSubtext)
                         }
 

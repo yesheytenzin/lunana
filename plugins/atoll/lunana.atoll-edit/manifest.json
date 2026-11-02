@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "lunana.atoll-edit",
+  "name": "Lunana Atoll Edit",
+  "version": "0.4.0",
+  "author": "lunana",
+  "license": "GPL-3.0",
+  "description": "Lunana Atoll edit-mode host (interim: AtollEditBar gated panel).",
+  "kinds": [
+    "overlay"
+  ],
+  "entryPoints": {
+    "overlay": "AtollEdit.qml"
+  },
+  "x-lunana": {
+    "suiteId": "lunana",
+    "role": "atoll-edit",
+    "milestone": "parity",
+    "requires": [],
+    "recommends": []
+  }
+}

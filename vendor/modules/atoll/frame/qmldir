@@ -1,0 +1,3 @@
+singleton AtollFrame 1.0 AtollFrame.qml
+AtollFramePulse 1.0 AtollFramePulse.qml
+AtollReservations 1.0 AtollReservations.qml

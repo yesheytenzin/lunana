@@ -10,7 +10,7 @@ import "../../../common/widgets"
 import "../../../common/widgets/widgetCanvas"
 import ".."
 import "../instrument"
-import "../../../iris/widgets"
+import "../../../atoll/widgets"
 
 AbstractBackgroundWidget {
     id: root
@@ -38,11 +38,11 @@ AbstractBackgroundWidget {
     readonly property real cardHeight: Math.round((root.instrument ? 132 : 120) * root.scaleFactor)
     readonly property real cardSpacing: Math.round(12 * root.scaleFactor)
 
-    implicitWidth: root.irisFaced ? root.irisFaceWidth : timerGrid.implicitWidth
-    implicitHeight: root.irisFaced ? root.irisFaceHeight : timerGrid.implicitHeight
-    irisFace: Component { IrisTimerFace { widget: root } }
-    irisSizes: ["small", "medium"]
-    irisDefaultSize: "medium"
+    implicitWidth: root.atollFaced ? root.atollFaceWidth : timerGrid.implicitWidth
+    implicitHeight: root.atollFaced ? root.atollFaceHeight : timerGrid.implicitHeight
+    atollFace: Component { AtollTimerFace { widget: root } }
+    atollSizes: ["small", "medium"]
+    atollDefaultSize: "medium"
     visibleWhenLocked: true
     needsColText: true
     draggable: GlobalStates.widgetEditMode && !GlobalStates.screenLocked && !root.locked
@@ -369,7 +369,7 @@ AbstractBackgroundWidget {
     Grid {
         id: timerGrid
         opacity: 1
-        visible: !root.irisFaced
+        visible: !root.atollFaced
         enabled: !GlobalStates.widgetEditMode
         move: Transition {
             enabled: root.animateGeometry

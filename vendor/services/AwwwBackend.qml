@@ -27,11 +27,11 @@ Singleton {
         && root.isInternalShaderTransitionType(transitionType)
     readonly property string fillMode: Config.options?.background?.fillMode ?? "fill"
     readonly property bool animationEnabled: Config.options?.background?.enableAnimation ?? true
-    readonly property string panelFamily: Config.options?.panelFamily ?? "ii"
-    readonly property bool waffleUsesMainWallpaper: Config.options?.waffles?.background?.useMainWallpaper ?? true
-    readonly property string waffleWallpaperPath: Config.options?.waffles?.background?.wallpaperPath ?? ""
-    readonly property bool hideMainWallpaper: panelFamily === "waffle"
-        ? ((Config.options?.waffles?.background?.backdrop?.enable ?? false) && (Config.options?.waffles?.background?.backdrop?.hideWallpaper ?? false))
+    readonly property string panelFamily: Config.options?.panelFamily ?? "drift"
+    readonly property bool slateUsesMainWallpaper: Config.options?.slate?.background?.useMainWallpaper ?? true
+    readonly property string slateWallpaperPath: Config.options?.slate?.background?.wallpaperPath ?? ""
+    readonly property bool hideMainWallpaper: panelFamily === "slate"
+        ? ((Config.options?.slate?.background?.backdrop?.enable ?? false) && (Config.options?.slate?.background?.backdrop?.hideWallpaper ?? false))
         : ((Config.options?.background?.backdrop?.enable ?? false) && (Config.options?.background?.backdrop?.hideWallpaper ?? false))
     readonly property bool multiMonitorEnabled: WallpaperListener.multiMonitorEnabled
     readonly property var effectivePerMonitor: WallpaperListener.effectivePerMonitor
@@ -256,8 +256,8 @@ Singleton {
         return [
             "circlePit", "circleSelect", "magic", "Doom", "Peel", "transition",
             "pixelate", "stripes", "crt", "dissolve", "glitch", "ripple",
-            "shatter", "inirMelt", "inirVeil", "inirFracture", "inirInk",
-            "inirPrism", "shaderRandom"
+            "shatter", "lunanaMelt", "lunanaVeil", "lunanaFracture", "lunanaInk",
+            "lunanaPrism", "shaderRandom"
         ].includes(String(type ?? ""))
     }
 
@@ -347,10 +347,10 @@ Singleton {
                 continue
 
             const monitorData = multiMonitorEnabled ? (effectivePerMonitor[monitorName] ?? null) : null
-            const waffleOwnPath = (!multiMonitorEnabled && panelFamily === "waffle" && !(waffleUsesMainWallpaper ?? true))
-                ? (waffleWallpaperPath || globalWallpaperPath)
+            const slateOwnPath = (!multiMonitorEnabled && panelFamily === "slate" && !(slateUsesMainWallpaper ?? true))
+                ? (slateWallpaperPath || globalWallpaperPath)
                 : ""
-            const rawPath = waffleOwnPath || ((monitorData && monitorData.path) ? monitorData.path : globalWallpaperPath)
+            const rawPath = slateOwnPath || ((monitorData && monitorData.path) ? monitorData.path : globalWallpaperPath)
             const cleanPath = FileUtils.trimFileProtocol(String(rawPath ?? ""))
             if (!supportsMainWallpaper(cleanPath))
                 continue
@@ -417,7 +417,7 @@ Singleton {
                     if [ -S "\${XDG_RUNTIME_DIR:-}/systemd/private" ] &&
                        command -v systemd-run >/dev/null 2>&1 &&
                        timeout 3s systemctl --user show-environment >/dev/null 2>&1; then
-                        if ! systemd-run --user --quiet --collect --property=Description="iNiR wallpaper daemon" --setenv="WAYLAND_DISPLAY=$WAYLAND_DISPLAY" --setenv="XDG_RUNTIME_DIR=$XDG_RUNTIME_DIR" -- "$daemon_bin" >/dev/null 2>&1; then
+                        if ! systemd-run --user --quiet --collect --property=Description="Lunana wallpaper daemon" --setenv="WAYLAND_DISPLAY=$WAYLAND_DISPLAY" --setenv="XDG_RUNTIME_DIR=$XDG_RUNTIME_DIR" -- "$daemon_bin" >/dev/null 2>&1; then
                             nohup "$daemon_bin" >/dev/null 2>&1 &
                         fi
                     else
@@ -659,8 +659,8 @@ Singleton {
         syncDebounce.restart()
     }
     onPanelFamilyChanged: syncDebounce.restart()
-    onWaffleUsesMainWallpaperChanged: syncDebounce.restart()
-    onWaffleWallpaperPathChanged: syncDebounce.restart()
+    onSlateUsesMainWallpaperChanged: syncDebounce.restart()
+    onSlateWallpaperPathChanged: syncDebounce.restart()
     onEffectivePerMonitorChanged: {
         if (root.internalShaderTransitionActive)
             root.shaderHandoffPending = true

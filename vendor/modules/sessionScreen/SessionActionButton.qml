@@ -18,7 +18,7 @@ RippleButton {
         : editorial ? Appearance.rounding.small
         : (button.focus || button.down) ? size / 2
         : (Appearance.angelEverywhere ? Appearance.angel.roundingLarge
-            : Appearance.inirEverywhere ? Appearance.inir.roundingLarge : Appearance.rounding.verylarge)
+            : Appearance.lunanaEverywhere ? Appearance.lunana.roundingLarge : Appearance.rounding.verylarge)
     colBackground: Appearance.zzzEverywhere
         ? (button.keyboardDown
             ? Appearance.zzz.signal
@@ -26,26 +26,26 @@ RippleButton {
         : editorial
             ? ((button.keyboardDown || button.focus) ? Appearance.editorial.accent : Appearance.editorial.paper)
         : button.keyboardDown
-        ? (Appearance.inirEverywhere ? Appearance.inir.colPrimaryActive : Appearance.colors.colSecondaryContainerActive)
+        ? (Appearance.lunanaEverywhere ? Appearance.lunana.colPrimaryActive : Appearance.colors.colSecondaryContainerActive)
         : button.focus
-            ? (Appearance.inirEverywhere ? Appearance.inir.colPrimary : Appearance.colors.colPrimary)
+            ? (Appearance.lunanaEverywhere ? Appearance.lunana.colPrimary : Appearance.colors.colPrimary)
             : (Appearance.angelEverywhere ? Appearance.angel.colGlassCard
-                : Appearance.inirEverywhere ? Appearance.inir.colLayer2
+                : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2
                 : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurface
                 : Appearance.colors.colSecondaryContainer)
     colBackgroundHover: Appearance.zzzEverywhere ? ColorUtils.applyAlpha(Appearance.zzz.sticker, 0.88)
         : editorial ? Appearance.editorial.field
-        : Appearance.inirEverywhere ? Appearance.inir.colPrimaryHover : Appearance.colors.colPrimary
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colPrimaryHover : Appearance.colors.colPrimary
     colRipple: Appearance.zzzEverywhere ? ColorUtils.applyAlpha(Appearance.zzz.accent, 0.30)
         : editorial ? Appearance.colors.colPrimaryActive
-        : Appearance.inirEverywhere ? Appearance.inir.colPrimaryActive : Appearance.colors.colPrimaryActive
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colPrimaryActive : Appearance.colors.colPrimaryActive
     property color colText: Appearance.zzzEverywhere
         ? ((button.down || button.keyboardDown) ? Appearance.zzz.onSignal
             : (button.focus || button.hovered) ? Appearance.zzz.onSticker : Appearance.zzz.ink)
         : editorial ? ((button.down || button.keyboardDown || button.focus) ? Appearance.editorial.accentInk : Appearance.editorial.ink)
         : (button.down || button.keyboardDown || button.focus || button.hovered) ?
-        (Appearance.inirEverywhere ? Appearance.inir.colOnPrimary : Appearance.colors.colOnPrimary)
-        : (Appearance.inirEverywhere ? Appearance.inir.colText : Appearance.colors.colOnLayer0)
+        (Appearance.lunanaEverywhere ? Appearance.lunana.colOnPrimary : Appearance.colors.colOnPrimary)
+        : (Appearance.lunanaEverywhere ? Appearance.lunana.colText : Appearance.colors.colOnLayer0)
 
     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
     background.implicitHeight: size

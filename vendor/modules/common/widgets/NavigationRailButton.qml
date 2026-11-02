@@ -134,7 +134,7 @@ TabButton {
                 : Appearance.zzzEverywhere ? Appearance.zzz.controlRadius
                 : Appearance.editorialEverywhere ? Appearance.rounding.small
                 : Appearance.angelEverywhere ? Appearance.angel.roundingSmall
-                : Appearance.inirEverywhere ? Appearance.inir.roundingSmall : Appearance.rounding.full
+                : Appearance.lunanaEverywhere ? Appearance.lunana.roundingSmall : Appearance.rounding.full
             // Organic morph on style/shape switch (organic-transitions)
             Behavior on radius { enabled: Appearance.animationsEnabled; NumberAnimation { duration: Appearance.animation.elementResize.duration; easing.type: Appearance.animation.elementResize.type; easing.bezierCurve: Appearance.animation.elementResize.bezierCurve } }
             // Regalia turns navigation into compact semantic tiles. Other styles
@@ -212,8 +212,8 @@ TabButton {
                     ? (toggled ? Appearance.zzz.accent : (root.hovered ? Appearance.zzz.ink : Appearance.zzz.inkMuted))
                     : Appearance.angelEverywhere
                     ? (toggled ? Appearance.angel.colPrimary : (root.hovered ? Appearance.angel.colText : Appearance.angel.colTextSecondary))
-                    : Appearance.inirEverywhere
-                    ? (toggled ? Appearance.inir.colPrimary : (root.hovered ? Appearance.inir.colText : Appearance.inir.colTextSecondary))
+                    : Appearance.lunanaEverywhere
+                    ? (toggled ? Appearance.lunana.colPrimary : (root.hovered ? Appearance.lunana.colText : Appearance.lunana.colTextSecondary))
                     : Appearance.editorialEverywhere
                     ? (toggled ? Appearance.editorial.accent : (root.hovered ? Appearance.editorial.ink : Appearance.editorial.muted))
                     : (toggled ? Appearance.colors.colPrimary : Appearance.colors.colOnLayer1)

@@ -162,7 +162,7 @@ Scope {
 
                     ShellEditSurfaceFrame {
                         anchors.fill: barContent
-                        surfaceId: "iiBar"
+                        surfaceId: "driftBar"
                         label: Translation.tr("Bar")
                         active: ShellEditSession.blocksNormalActions(surfaceId)
                         selected: ShellEditSession.selectedSurfaceId === surfaceId
@@ -217,17 +217,17 @@ Scope {
                             id: hugDecorators
                             implicitHeight: Appearance.rounding.screenRounding
 
-                            readonly property bool isInir: Appearance.inirEverywhere
+                            readonly property bool isLunana: Appearance.lunanaEverywhere
                             readonly property bool isAurora: Appearance.auroraEverywhere
                             readonly property bool isRight: Config.options?.bar?.bottom ?? false
                             // Color must match the bar background color exactly
                             readonly property color solidColor: showBarBackground
-                                ? (isInir ? Appearance.inir.colLayer0
+                                ? (isLunana ? Appearance.lunana.colLayer0
                                     : isAurora ? Appearance.aurora.colPopupSurface
                                     : Appearance.colors.colLayer0)
                                 : "transparent"
 
-                            // Top corner - solid for Material/Inir
+                            // Top corner - solid for Material/Lunana
                             RoundCorner {
                                 id: topCorner
                                 visible: !hugDecorators.isAurora
@@ -250,7 +250,7 @@ Scope {
                                 }
                             }
 
-                            // Bottom corner - solid for Material/Inir
+                            // Bottom corner - solid for Material/Lunana
                             RoundCorner {
                                 id: bottomCorner
                                 visible: !hugDecorators.isAurora
@@ -371,7 +371,7 @@ Scope {
     }
 
     // IPC target "bar" is registered once in shell.qml (always loaded, family-
-    // agnostic). See the note in Bar.qml — both bars coexist under the ii
+    // agnostic). See the note in Bar.qml — both bars coexist under the drift
     // family, so a handler here would collide with the horizontal bar's.
 
     Loader {

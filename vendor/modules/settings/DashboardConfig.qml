@@ -10,11 +10,11 @@ ContentPage {
     settingsPageIndex: 16
     settingsPageName: Translation.tr("Dashboard")
 
-    property bool isIiActive: (Config.options?.panelFamily ?? "ii") === "ii"
+    property bool isDriftActive: (Config.options?.panelFamily ?? "drift") === "drift"
     property string activeSection: "general"
 
     SettingsTaskNavigator {
-        visible: root.isIiActive
+        visible: root.isDriftActive
         icon: "space_dashboard"
         title: Translation.tr("Dashboard")
         description: Translation.tr("Set the dashboard behavior first, then tune its visual density or arrange its cards.")
@@ -29,7 +29,7 @@ ContentPage {
     }
 
     SettingsCardSection {
-        visible: !root.isIiActive
+        visible: !root.isDriftActive
         expanded: true
         icon: "info"
         title: Translation.tr("Not Active")
@@ -37,7 +37,7 @@ ContentPage {
         SettingsGroup {
             StyledText {
                 Layout.fillWidth: true
-                text: Translation.tr("The dashboard only applies when using the Material (ii) panel style. Go to Modules → Panel Style to switch.")
+                text: Translation.tr("The dashboard only applies when using the Material (drift) panel style. Go to Modules → Panel Style to switch.")
                 color: Appearance.colors.colSubtext
                 font.pixelSize: Appearance.font.pixelSize.small
                 wrapMode: Text.WordWrap
@@ -46,7 +46,7 @@ ContentPage {
     }
 
     SettingsTaskLoader {
-        requested: root.isIiActive && root.activeSection === "general"
+        requested: root.isDriftActive && root.activeSection === "general"
         sourceComponent: Component {
     SettingsCardSection {
         settingsTaskSection: "general"
@@ -136,7 +136,7 @@ ContentPage {
                 }
                 StyledText {
                     Layout.fillWidth: true
-                    text: Translation.tr("Toggle with a keybinding running: %1").arg("inir ipc dashboard toggle")
+                    text: Translation.tr("Toggle with a keybinding running: %1").arg("lunana ipc dashboard toggle")
                     color: Appearance.colors.colSubtext
                     font.pixelSize: Appearance.font.pixelSize.smaller
                     wrapMode: Text.WordWrap
@@ -148,7 +148,7 @@ ContentPage {
     }
 
     SettingsTaskLoader {
-        requested: root.isIiActive && root.activeSection === "appearance"
+        requested: root.isDriftActive && root.activeSection === "appearance"
         sourceComponent: Component {
     SettingsCardSection {
         settingsTaskSection: "appearance"
@@ -188,7 +188,7 @@ ContentPage {
     }
 
     SettingsTaskLoader {
-        requested: root.isIiActive && root.activeSection === "layout"
+        requested: root.isDriftActive && root.activeSection === "layout"
         sourceComponent: Component {
     SettingsCardSection {
         settingsTaskSection: "layout"

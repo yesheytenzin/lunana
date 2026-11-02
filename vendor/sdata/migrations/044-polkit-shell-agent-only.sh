@@ -6,8 +6,8 @@
 # 50-startup.kdl or a monolithic config.kdl; a line anywhere else (90-user-extra.kdl) is the user's and stays.
 
 MIGRATION_ID="044-polkit-shell-agent-only"
-MIGRATION_TITLE="iNiR answers polkit itself"
-MIGRATION_DESCRIPTION="Password prompts for installs, mounts and settings now come from iNiR's own dialog, in the look of the family you use. The external agent setup started from Niri is commented out; nothing else in the Niri config changes."
+MIGRATION_TITLE="Lunana answers polkit itself"
+MIGRATION_DESCRIPTION="Password prompts for installs, mounts and settings now come from Lunana's own dialog, in the look of the family you use. The external agent setup started from Niri is commented out; nothing else in the Niri config changes."
 MIGRATION_TARGET_FILE="~/.config/niri/config.d/50-startup.kdl"
 MIGRATION_REQUIRED=true
 
@@ -51,7 +51,7 @@ _polkit_line_re() {
 
 # Someone who turned the shell's agent off relies on the external one.
 _polkit_shell_agent_off() {
-  local config="${XDG_CONFIG_HOME:-$HOME/.config}/inir/config.json"
+  local config="${XDG_CONFIG_HOME:-$HOME/.config}/lunana/config.json"
   [[ -f "$config" ]] && command -v jq >/dev/null 2>&1 \
     && [[ "$(jq -r '.modules.polkit == false' "$config" 2>/dev/null)" == "true" ]]
 }
@@ -75,7 +75,7 @@ migration_preview() {
     done
   done < <(_polkit_files)
   echo ""
-  echo "iNiR's own dialog answers password prompts from now on."
+  echo "Lunana's own dialog answers password prompts from now on."
 }
 
 migration_apply() {
@@ -85,7 +85,7 @@ migration_apply() {
     grep -Eq "$re" "$file" || continue
     # The framework backs up 50-startup.kdl; a monolithic config.kdl gets its own copy.
     [[ "$(basename "$file")" == "config.kdl" ]] && create_backup "$file" "config.kdl" >/dev/null
-    sed -E -i "s#${re}#// & // iNiR is the polkit agent now#" "$file" || return 1
+    sed -E -i "s#${re}#// & // Lunana is the polkit agent now#" "$file" || return 1
     changed=1
   done < <(_polkit_files)
   [[ "$changed" == 1 ]] || return 0

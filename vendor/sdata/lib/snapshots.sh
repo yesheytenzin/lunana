@@ -1,4 +1,4 @@
-# Snapshot system for iNiR
+# Snapshot system for Lunana
 # Time-machine style backups before updates
 # This script is meant to be sourced.
 
@@ -6,12 +6,12 @@
 
 SNAPSHOTS_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/quickshell/snapshots"
 MAX_SNAPSHOTS=10
-INIR_CONFIG_DIR="${DOTS_CORE_CONFDIR:-${XDG_CONFIG_HOME}/illogical-impulse}"
+LUNANA_CONFIG_DIR="${DOTS_CORE_CONFDIR:-${XDG_CONFIG_HOME}/illogical-impulse}"
 
 # Paths to snapshot
 SNAPSHOT_PATHS=(
-    "${XDG_CONFIG_HOME}/quickshell/inir"
-    "${INIR_CONFIG_DIR}/config.json"
+    "${XDG_CONFIG_HOME}/quickshell/lunana"
+    "${LUNANA_CONFIG_DIR}/config.json"
     "${XDG_CONFIG_HOME}/niri/config.kdl"
     "${XDG_STATE_HOME:-$HOME/.local/state}/quickshell/user/desktop-items.json"
 )
@@ -33,17 +33,17 @@ create_snapshot() {
     mkdir -p "$snapshot_dir"
     
     # Copy QML code
-    if [[ -d "${XDG_CONFIG_HOME}/quickshell/inir" ]]; then
-        rsync -a --exclude='.inir-manifest' "${XDG_CONFIG_HOME}/quickshell/inir/" "${snapshot_dir}/inir/"
+    if [[ -d "${XDG_CONFIG_HOME}/quickshell/lunana" ]]; then
+        rsync -a --exclude='.lunana-manifest' "${XDG_CONFIG_HOME}/quickshell/lunana/" "${snapshot_dir}/lunana/"
     fi
 
-    if [[ -d "${XDG_CONFIG_HOME}/quickshell/ii" ]]; then
-        rsync -a --exclude='.ii-manifest' "${XDG_CONFIG_HOME}/quickshell/ii/" "${snapshot_dir}/ii/"
+    if [[ -d "${XDG_CONFIG_HOME}/quickshell/drift" ]]; then
+        rsync -a --exclude='.drift-manifest' "${XDG_CONFIG_HOME}/quickshell/drift/" "${snapshot_dir}/drift/"
     fi
     
     # Copy user config
-    if [[ -f "${INIR_CONFIG_DIR}/config.json" ]]; then
-        cp "${INIR_CONFIG_DIR}/config.json" "${snapshot_dir}/"
+    if [[ -f "${LUNANA_CONFIG_DIR}/config.json" ]]; then
+        cp "${LUNANA_CONFIG_DIR}/config.json" "${snapshot_dir}/"
     fi
     
     # Copy niri config
@@ -52,8 +52,8 @@ create_snapshot() {
     fi
     
     # Copy migrations state
-    if [[ -f "${INIR_CONFIG_DIR}/migrations.json" ]]; then
-        cp "${INIR_CONFIG_DIR}/migrations.json" "${snapshot_dir}/"
+    if [[ -f "${LUNANA_CONFIG_DIR}/migrations.json" ]]; then
+        cp "${LUNANA_CONFIG_DIR}/migrations.json" "${snapshot_dir}/"
     fi
 
     # Copy managed desktop-item state. It lives in XDG state, not the config
@@ -155,8 +155,8 @@ restore_snapshot() {
     
     # Stop through the runtime launcher so a supervisor cannot respawn the shell
     # while the snapshot files are being restored.
-    local runtime_target="${XDG_CONFIG_HOME}/quickshell/inir"
-    local runtime_launcher="${runtime_target}/scripts/inir"
+    local runtime_target="${XDG_CONFIG_HOME}/quickshell/lunana"
+    local runtime_launcher="${runtime_target}/scripts/lunana"
     if [[ ! -f "$runtime_launcher" ]]; then
         log_error "Runtime launcher not found: ${runtime_launcher}"
         return 1
@@ -167,19 +167,19 @@ restore_snapshot() {
     fi
     
     # Restore QML code
-    if [[ -d "${snapshot_dir}/inir" ]]; then
+    if [[ -d "${snapshot_dir}/lunana" ]]; then
         log_info "Restoring QML code..."
-        rsync -a --delete "${snapshot_dir}/inir/" "${XDG_CONFIG_HOME}/quickshell/inir/"
-    elif [[ -d "${snapshot_dir}/ii" ]]; then
+        rsync -a --delete "${snapshot_dir}/lunana/" "${XDG_CONFIG_HOME}/quickshell/lunana/"
+    elif [[ -d "${snapshot_dir}/drift" ]]; then
         log_info "Restoring QML code..."
-        rsync -a --delete "${snapshot_dir}/ii/" "${XDG_CONFIG_HOME}/quickshell/inir/"
+        rsync -a --delete "${snapshot_dir}/drift/" "${XDG_CONFIG_HOME}/quickshell/lunana/"
     fi
     
     # Restore user config
     if [[ -f "${snapshot_dir}/config.json" ]]; then
         log_info "Restoring user config..."
-        mkdir -p "${INIR_CONFIG_DIR}"
-        cp "${snapshot_dir}/config.json" "${INIR_CONFIG_DIR}/"
+        mkdir -p "${LUNANA_CONFIG_DIR}"
+        cp "${snapshot_dir}/config.json" "${LUNANA_CONFIG_DIR}/"
     fi
     
     # Restore niri config
@@ -190,8 +190,8 @@ restore_snapshot() {
     
     # Restore migrations state
     if [[ -f "${snapshot_dir}/migrations.json" ]]; then
-        mkdir -p "${INIR_CONFIG_DIR}"
-        cp "${snapshot_dir}/migrations.json" "${INIR_CONFIG_DIR}/"
+        mkdir -p "${LUNANA_CONFIG_DIR}"
+        cp "${snapshot_dir}/migrations.json" "${LUNANA_CONFIG_DIR}/"
     fi
 
     if [[ -f "${snapshot_dir}/desktop-items.json" ]]; then
@@ -223,16 +223,16 @@ restore_snapshot() {
         log_info "Restarting shell..."
         if [[ ! -f "$runtime_launcher" ]]; then
             tui_warn "Snapshot restored, but its runtime launcher is missing"
-            tui_info "Run: inir doctor"
+            tui_info "Run: lunana doctor"
         elif bash "$runtime_launcher" restart -c "$runtime_target"; then
             tui_success "Snapshot restored and shell restarted"
         else
             tui_warn "Snapshot restored, but the shell did not restart cleanly"
-            tui_info "Run: inir logs"
+            tui_info "Run: lunana logs"
         fi
     else
         tui_warn "Not in graphical session - shell restart skipped"
-        tui_info "Run: inir start (in your Niri session)"
+        tui_info "Run: lunana start (in your Niri session)"
         tui_success "Snapshot restored"
     fi
 }
@@ -399,7 +399,7 @@ create_repo_recovery_ref() {
     local stamp sha ref
     stamp="$(date +%Y%m%d-%H%M%S)"
     sha="$(git -C "$REPO_ROOT" rev-parse HEAD 2>/dev/null)" || return 1
-    ref="refs/inir/recovery/${branch}-${stamp}-${sha:0:8}"
+    ref="refs/lunana/recovery/${branch}-${stamp}-${sha:0:8}"
     git -C "$REPO_ROOT" update-ref "$ref" "$sha" || return 1
     printf '%s' "$ref"
 }
@@ -414,14 +414,14 @@ realign_repo_to_remote() {
     repo_checkout_matches_rewritten_remote_history "$branch" || return 6
     recovery_ref="$(create_repo_recovery_ref "$branch")" || return 4
     git -C "$REPO_ROOT" reset --hard "$remote" >/dev/null 2>&1 || return 5
-    INIR_REPO_RECOVERY_REF="$recovery_ref"
+    LUNANA_REPO_RECOVERY_REF="$recovery_ref"
     return 0
 }
 
 show_repo_realign_guidance() {
     local branch="${1:-$(get_update_tracking_branch)}"
-    tui_info "Recovery check: inir update --realign"
-    tui_dim "  iNiR realigns only a clean ${branch} checkout that Git can prove still belongs to the previous origin/${branch} history."
+    tui_info "Recovery check: lunana update --realign"
+    tui_dim "  Lunana realigns only a clean ${branch} checkout that Git can prove still belongs to the previous origin/${branch} history."
     tui_dim "  Stash uncommitted changes first. Local commits and detached checkouts are never reset by this recovery path."
 }
 

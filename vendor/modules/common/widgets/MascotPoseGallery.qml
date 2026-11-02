@@ -11,8 +11,8 @@ import "."
  * assets/images/mascot/manifest.json): [{ displayName, value, image }],
  * where image is a resolved file path ("" renders the auto/dice cell).
  *
- * Shared by both families (registered in this folder's qmldir): ii pages
- * use it directly inside SettingsGroup, waffle pages inside WSettingsCard.
+ * Shared by both families (registered in this folder's qmldir): drift pages
+ * use it directly inside SettingsGroup, slate pages inside SSettingsCard.
  * Styling is Appearance-token based on purpose so one component serves
  * every global style. Usage:
  *
@@ -33,9 +33,9 @@ ColumnLayout {
     signal selected(string value)
 
     // Chrome is parameterised so the same component can wear either family's
-    // skin. Defaults are the ii/Material tokens; waffle call sites override
+    // skin. Defaults are the drift/Material tokens; slate call sites override
     // them with Looks-derived values so the gallery stops looking like a
-    // Material widget dropped into a waffle card.
+    // Material widget dropped into a slate card.
     property real surfaceRadius: Appearance.rounding.small
     property real cellRadius: Appearance.rounding.verysmall
     property color surfaceColor: Appearance.colors.colLayer2

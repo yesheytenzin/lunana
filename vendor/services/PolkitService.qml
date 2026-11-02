@@ -89,7 +89,7 @@ Singleton {
             return
         }
 
-        // iNiR is the agent. One the person runs on purpose still wins: registering beside it fails and spams warnings.
+        // Lunana is the agent. One the person runs on purpose still wins: registering beside it fails and spams warnings.
         polkitAgentCheck.running = true
     }
 

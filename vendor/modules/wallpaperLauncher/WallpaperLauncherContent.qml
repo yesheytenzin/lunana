@@ -89,7 +89,7 @@ FocusScope {
         const target = root.selectionTarget
         Wallpapers.applySelectionTarget(path, root.selectionTarget,
             Appearance.m3colors.darkmode, root.selectionMonitorName)
-        if (target === "backdrop" || target === "waffle-backdrop") {
+        if (target === "backdrop" || target === "slate-backdrop") {
             // Backdrop selection previews against the visible desktop. Applying
             // it must restore that desktop because its configured path did not change.
             Wallpapers.cancelWallpaperPreview()
@@ -214,7 +214,7 @@ FocusScope {
 
     StyledRectangularShadow {
         target: panel
-        visible: !root.editorial && !Appearance.inirEverywhere && !Appearance.zzzEverywhere
+        visible: !root.editorial && !Appearance.lunanaEverywhere && !Appearance.zzzEverywhere
     }
 
     GlassBackground {
@@ -224,19 +224,19 @@ FocusScope {
             Appearance.zzzEverywhere ? Appearance.zzz.paper
                 : root.editorial ? Appearance.editorial.paper
                 : Appearance.colors.colLayer0, 1)
-        inirColor: Appearance.inir.colLayer0
+        lunanaColor: Appearance.lunana.colLayer0
         auroraTransparency: Appearance.aurora.overlayTransparentize
         wallpaperBackdropEnabled: !root.editorial
         radius: Appearance.zzzEverywhere ? Appearance.zzz.panelRadius
             : root.editorial ? Appearance.editorial.radius
             : Appearance.angelEverywhere ? Appearance.angel.roundingLarge
-            : Appearance.inirEverywhere ? Appearance.inir.roundingLarge
+            : Appearance.lunanaEverywhere ? Appearance.lunana.roundingLarge
             : Appearance.rounding.large
         border.width: 1
         border.color: Appearance.zzzEverywhere ? Appearance.zzz.hairlineStrong
             : root.editorial ? Appearance.editorial.rule
             : Appearance.angelEverywhere ? Appearance.angel.colCardBorder
-            : Appearance.inirEverywhere ? Appearance.inir.colBorder
+            : Appearance.lunanaEverywhere ? Appearance.lunana.colBorder
             : Appearance.auroraEverywhere ? Appearance.aurora.colTooltipBorder
             : Appearance.colors.colLayer0Border
 

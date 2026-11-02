@@ -6,7 +6,7 @@ import (
 )
 
 // Material reads like Material You: for a blue seed, Tonal spot lands near materialyoucolor's own roles (measured
-// from scheme_tonal_spot, in OKLCH lightness), so iRiS in Material and the other families wear one palette.
+// from scheme_tonal_spot, in OKLCH lightness), so Atoll in Material and the other families wear one palette.
 func TestMaterialTracksM3(t *testing.T) {
 	seeds := Seeds{Wallpaper: "#0a60d1", Primary: "#0a60d1", Secondary: "#565e71", Tertiary: "#705575", Background: "#111318"}
 	req := Request{Language: "material", Variant: "tonalSpot", Material: "wallpaper", Accent: "wallpaper", Highlight: "theme", Seeds: seeds}
@@ -55,10 +55,10 @@ func TestVariantsDiffer(t *testing.T) {
 // Apps read Material's ladder by name in every language: Dim darker, Bright lighter, containers toward the ink.
 func TestEveryLanguageKeepsAppOrder(t *testing.T) {
 	l := func(hex string) float64 { c, _ := parseHex(hex); return c.LCH().L }
-	for _, v := range append([]variant{{name: "iris"}}, variants...) {
+	for _, v := range append([]variant{{name: "atoll"}}, variants...) {
 		language := "material"
-		if v.name == "iris" {
-			language = "iris"
+		if v.name == "atoll" {
+			language = "atoll"
 		}
 		lang := languageOf(Request{Language: language, Variant: v.name})
 		for _, s := range lang.schemes {

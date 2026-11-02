@@ -62,16 +62,16 @@ Item {
 
     property QtObject blendedColors: AdaptedMaterialScheme { color: root.artDominantColor }
 
-    // Inir uses fixed colors instead of adaptive
-    readonly property color jiraColText: Appearance.inir.colText
-    readonly property color jiraColTextSecondary: Appearance.inir.colTextSecondary
-    readonly property color jiraColPrimary: Appearance.inir.colPrimary
-    readonly property color jiraColLayer1: Appearance.inir.colLayer1
-    readonly property color jiraColLayer2: Appearance.inir.colLayer2
+    // Lunana uses fixed colors instead of adaptive
+    readonly property color jiraColText: Appearance.lunana.colText
+    readonly property color jiraColTextSecondary: Appearance.lunana.colTextSecondary
+    readonly property color jiraColPrimary: Appearance.lunana.colPrimary
+    readonly property color jiraColLayer1: Appearance.lunana.colLayer1
+    readonly property color jiraColLayer2: Appearance.lunana.colLayer2
 
     StyledRectangularShadow {
         target: card
-        visible: !root.editorial && (Appearance.angelEverywhere || (!Appearance.inirEverywhere && !Appearance.auroraEverywhere))
+        visible: !root.editorial && (Appearance.angelEverywhere || (!Appearance.lunanaEverywhere && !Appearance.auroraEverywhere))
     }
 
     Rectangle {
@@ -81,20 +81,20 @@ Item {
         implicitHeight: 130
         radius: root.editorial ? Appearance.editorial.radius
             : Appearance.angelEverywhere ? Appearance.angel.roundingNormal
-            : Appearance.inirEverywhere ? Appearance.inir.roundingNormal : Appearance.rounding.normal
+            : Appearance.lunanaEverywhere ? Appearance.lunana.roundingNormal : Appearance.rounding.normal
         color: root.editorial ? Appearance.editorial.layer(1)
              : Appearance.angelEverywhere ? Appearance.angel.colGlassCard
-             : Appearance.inirEverywhere ? Appearance.inir.colLayer1
+             : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer1
              : Appearance.auroraEverywhere ? ColorUtils.transparentize(blendedColors?.colLayer0 ?? Appearance.colors.colLayer0, 0.7)
              : (blendedColors?.colLayer0 ?? Appearance.colors.colLayer0)
         border.width: root.editorial ? 1
             : Appearance.angelEverywhere ? Appearance.angel.cardBorderWidth
             : Appearance.zzzEverywhere ? 1
-            : Appearance.inirEverywhere ? 1 : 0
+            : Appearance.lunanaEverywhere ? 1 : 0
         border.color: root.editorial ? Appearance.editorial.rule
             : Appearance.angelEverywhere ? Appearance.angel.colCardBorder
             : Appearance.zzzEverywhere ? Appearance.zzz.hairline
-            : Appearance.inirEverywhere ? Appearance.inir.colBorder : "transparent"
+            : Appearance.lunanaEverywhere ? Appearance.lunana.colBorder : "transparent"
         Behavior on border.width {
             enabled: Appearance.animationsEnabled
             NumberAnimation { duration: Appearance.animation.elementMoveFast.duration; easing.type: Appearance.animation.elementMoveFast.type; easing.bezierCurve: Appearance.animation.elementMoveFast.bezierCurve }
@@ -118,15 +118,15 @@ Item {
             fillMode: Image.PreserveAspectCrop
             asynchronous: true
             cache: false
-            opacity: root.editorial ? 0 : (Appearance.inirEverywhere ? 0.2 : (Appearance.auroraEverywhere ? 0.3 : 0.6))
+            opacity: root.editorial ? 0 : (Appearance.lunanaEverywhere ? 0.2 : (Appearance.auroraEverywhere ? 0.3 : 0.6))
             visible: !root.editorial && root.displayedArtFilePath !== ""
 
             layer.enabled: Appearance.effectsEnabled
             layer.effect: MultiEffect {
                 blurEnabled: true
-                blur: Appearance.inirEverywhere ? 0.5 : 0.4
+                blur: Appearance.lunanaEverywhere ? 0.5 : 0.4
                 blurMax: 32
-                saturation: Appearance.inirEverywhere ? 0.1 : 0.4
+                saturation: Appearance.lunanaEverywhere ? 0.1 : 0.4
             }
         }
 
@@ -154,7 +154,7 @@ Item {
             smoothing: 2
             color: ColorUtils.transparentize(
                 root.editorial ? Appearance.editorial.accent
-                    : Appearance.inirEverywhere ? root.jiraColPrimary
+                    : Appearance.lunanaEverywhere ? root.jiraColPrimary
                     : (blendedColors?.colPrimary ?? Appearance.colors.colPrimary),
                 0.6
             )
@@ -172,7 +172,7 @@ Item {
                 Layout.preferredHeight: 110
                 Layout.alignment: Qt.AlignVCenter
                 radius: root.editorial ? Appearance.rounding.small
-                    : Appearance.inirEverywhere ? Appearance.inir.roundingSmall : Appearance.rounding.small
+                    : Appearance.lunanaEverywhere ? Appearance.lunana.roundingSmall : Appearance.rounding.small
                 color: "transparent"
                 clip: true
 
@@ -182,7 +182,7 @@ Item {
                         width: 110
                         height: 110
                         radius: root.editorial ? Appearance.rounding.small
-                            : Appearance.inirEverywhere ? Appearance.inir.roundingSmall : Appearance.rounding.small
+                            : Appearance.lunanaEverywhere ? Appearance.lunana.roundingSmall : Appearance.rounding.small
                     }
                 }
 
@@ -253,7 +253,7 @@ Item {
                 Rectangle {
                     anchors.fill: parent
                     color: root.editorial ? Appearance.editorial.layer(2)
-                        : Appearance.inirEverywhere ? root.jiraColLayer2
+                        : Appearance.lunanaEverywhere ? root.jiraColLayer2
                         : (blendedColors?.colLayer1 ?? Appearance.colors.colLayer1)
                     visible: !root.downloaded || coverArt.status !== Image.Ready
 
@@ -262,7 +262,7 @@ Item {
                         text: "music_note"
                         iconSize: 32
                         color: root.editorial ? Appearance.editorial.muted
-                            : Appearance.inirEverywhere ? root.jiraColTextSecondary
+                            : Appearance.lunanaEverywhere ? root.jiraColTextSecondary
                             : (blendedColors?.colSubtext ?? Appearance.colors.colSubtext)
                     }
                 }
@@ -283,7 +283,7 @@ Item {
                     font.weight: root.editorial ? Appearance.editorial.titleWeight : Font.Medium
                     font.letterSpacing: root.editorial ? Appearance.editorial.titleTracking * 0.5 : 0
                     color: root.editorial ? Appearance.editorial.ink
-                        : Appearance.inirEverywhere ? root.jiraColText
+                        : Appearance.lunanaEverywhere ? root.jiraColText
                         : (blendedColors?.colOnLayer0 ?? Appearance.colors.colOnLayer0)
                     elide: Text.ElideRight
                     animateChange: true
@@ -296,7 +296,7 @@ Item {
                     text: MprisController.artistOf(root.player) || ""
                     font.pixelSize: Appearance.font.pixelSize.smaller
                     color: root.editorial ? Appearance.editorial.muted
-                        : Appearance.inirEverywhere ? root.jiraColTextSecondary
+                        : Appearance.lunanaEverywhere ? root.jiraColTextSecondary
                         : (blendedColors?.colSubtext ?? Appearance.colors.colSubtext)
                     elide: Text.ElideRight
                     visible: text !== ""
@@ -313,9 +313,9 @@ Item {
                     canSeek: root.player?.canSeek ?? false
                     isPlaying: root.player?.isPlaying ?? false
                     highlightColor: root.editorial ? Appearance.editorial.accent
-                        : Appearance.inirEverywhere ? root.jiraColPrimary : (blendedColors?.colPrimary ?? Appearance.colors.colPrimary)
+                        : Appearance.lunanaEverywhere ? root.jiraColPrimary : (blendedColors?.colPrimary ?? Appearance.colors.colPrimary)
                     trackColor: root.editorial ? Appearance.editorial.field
-                        : Appearance.inirEverywhere ? Appearance.inir.colLayer2 : Appearance.zzzEverywhere ? Appearance.colors.colLayer2 : (blendedColors?.colSecondaryContainer ?? Appearance.colors.colSecondaryContainer)
+                        : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2 : Appearance.zzzEverywhere ? Appearance.colors.colLayer2 : (blendedColors?.colSecondaryContainer ?? Appearance.colors.colSecondaryContainer)
                     onSeekRequested: seconds => MprisController.seek(root.player, seconds)
                 }
 
@@ -329,7 +329,7 @@ Item {
                         font.pixelSize: Appearance.font.pixelSize.smallest
                         font.family: Appearance.font.family.numbers
                         color: root.editorial ? Appearance.editorial.muted
-                            : Appearance.inirEverywhere ? root.jiraColText : (blendedColors?.colOnLayer0 ?? Appearance.colors.colOnLayer0)
+                            : Appearance.lunanaEverywhere ? root.jiraColText : (blendedColors?.colOnLayer0 ?? Appearance.colors.colOnLayer0)
                     }
 
                     Item { Layout.fillWidth: true }
@@ -340,10 +340,10 @@ Item {
                         implicitHeight: 32
                         enabled: MprisController.canGoPrevious
                         buttonRadius: root.editorial ? Appearance.rounding.small
-                            : Appearance.inirEverywhere ? Appearance.inir.roundingSmall : Appearance.rounding.full
+                            : Appearance.lunanaEverywhere ? Appearance.lunana.roundingSmall : Appearance.rounding.full
                         colBackground: "transparent"
-                        colBackgroundHover: Appearance.inirEverywhere ? Appearance.inir.colLayer2Hover : ColorUtils.transparentize(blendedColors?.colLayer1 ?? Appearance.colors.colLayer1, 0.5)
-                        colRipple: Appearance.inirEverywhere ? Appearance.inir.colLayer2Active : (blendedColors?.colLayer1Active ?? Appearance.colors.colLayer1Active)
+                        colBackgroundHover: Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2Hover : ColorUtils.transparentize(blendedColors?.colLayer1 ?? Appearance.colors.colLayer1, 0.5)
+                        colRipple: Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2Active : (blendedColors?.colLayer1Active ?? Appearance.colors.colLayer1Active)
                         onClicked: MprisController.previous()
 
                         contentItem: Item {
@@ -353,7 +353,7 @@ Item {
                                 iconSize: 22
                                 fill: 1
                                 color: root.editorial ? Appearance.editorial.ink
-                                    : Appearance.inirEverywhere ? root.jiraColText : (blendedColors?.colOnLayer0 ?? Appearance.colors.colOnLayer0)
+                                    : Appearance.lunanaEverywhere ? root.jiraColText : (blendedColors?.colOnLayer0 ?? Appearance.colors.colOnLayer0)
                             }
                         }
                     }
@@ -363,11 +363,11 @@ Item {
                         implicitWidth: 40
                         implicitHeight: 40
                         buttonRadius: root.editorial ? Appearance.rounding.small
-                            : Appearance.inirEverywhere
-                            ? Appearance.inir.roundingSmall
+                            : Appearance.lunanaEverywhere
+                            ? Appearance.lunana.roundingSmall
                             : (root.player?.isPlaying ? Appearance.rounding.normal : Appearance.rounding.full)
                         colBackground: root.editorial ? Appearance.editorial.accent
-                            : Appearance.inirEverywhere
+                            : Appearance.lunanaEverywhere
                             ? "transparent"
                             : Appearance.auroraEverywhere
                                 ? "transparent"
@@ -375,16 +375,16 @@ Item {
                                     ? (blendedColors?.colPrimary ?? Appearance.colors.colPrimary)
                                     : (blendedColors?.colSecondaryContainer ?? Appearance.colors.colSecondaryContainer))
                         colBackgroundHover: root.editorial ? Appearance.colors.colPrimaryHover
-                            : Appearance.inirEverywhere
-                            ? Appearance.inir.colLayer2Hover
+                            : Appearance.lunanaEverywhere
+                            ? Appearance.lunana.colLayer2Hover
                             : Appearance.auroraEverywhere
                                 ? ColorUtils.transparentize(blendedColors?.colLayer1 ?? Appearance.colors.colLayer1, 0.5)
                                 : (root.player?.isPlaying
                                     ? (blendedColors?.colPrimaryHover ?? Appearance.colors.colPrimaryHover)
                                     : (blendedColors?.colSecondaryContainerHover ?? Appearance.colors.colSecondaryContainerHover))
                         colRipple: root.editorial ? Appearance.colors.colPrimaryActive
-                            : Appearance.inirEverywhere
-                            ? Appearance.inir.colLayer2Active
+                            : Appearance.lunanaEverywhere
+                            ? Appearance.lunana.colLayer2Active
                             : Appearance.auroraEverywhere
                                 ? (blendedColors?.colLayer1Active ?? Appearance.colors.colLayer1Active)
                                 : (root.player?.isPlaying
@@ -393,7 +393,7 @@ Item {
                         onClicked: MprisController.togglePlaying()
 
                         Behavior on buttonRadius {
-                            enabled: Appearance.animationsEnabled && !Appearance.inirEverywhere
+                            enabled: Appearance.animationsEnabled && !Appearance.lunanaEverywhere
                             NumberAnimation { duration: Appearance.animation.elementMoveFast.duration }
                         }
 
@@ -404,7 +404,7 @@ Item {
                                 iconSize: 24
                                 fill: 1
                                 color: root.editorial ? Appearance.editorial.accentInk
-                                    : Appearance.inirEverywhere
+                                    : Appearance.lunanaEverywhere
                                     ? root.jiraColPrimary
                                     : Appearance.auroraEverywhere
                                         ? (blendedColors?.colOnLayer0 ?? Appearance.colors.colOnLayer0)
@@ -425,10 +425,10 @@ Item {
                         implicitHeight: 32
                         enabled: MprisController.canGoNext
                         buttonRadius: root.editorial ? Appearance.rounding.small
-                            : Appearance.inirEverywhere ? Appearance.inir.roundingSmall : Appearance.rounding.full
+                            : Appearance.lunanaEverywhere ? Appearance.lunana.roundingSmall : Appearance.rounding.full
                         colBackground: "transparent"
-                        colBackgroundHover: Appearance.inirEverywhere ? Appearance.inir.colLayer2Hover : ColorUtils.transparentize(blendedColors?.colLayer1 ?? Appearance.colors.colLayer1, 0.5)
-                        colRipple: Appearance.inirEverywhere ? Appearance.inir.colLayer2Active : (blendedColors?.colLayer1Active ?? Appearance.colors.colLayer1Active)
+                        colBackgroundHover: Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2Hover : ColorUtils.transparentize(blendedColors?.colLayer1 ?? Appearance.colors.colLayer1, 0.5)
+                        colRipple: Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2Active : (blendedColors?.colLayer1Active ?? Appearance.colors.colLayer1Active)
                         onClicked: MprisController.next()
 
                         contentItem: Item {
@@ -438,7 +438,7 @@ Item {
                                 iconSize: 22
                                 fill: 1
                                 color: root.editorial ? Appearance.editorial.ink
-                                    : Appearance.inirEverywhere ? root.jiraColText : (blendedColors?.colOnLayer0 ?? Appearance.colors.colOnLayer0)
+                                    : Appearance.lunanaEverywhere ? root.jiraColText : (blendedColors?.colOnLayer0 ?? Appearance.colors.colOnLayer0)
                             }
                         }
                     }
@@ -450,7 +450,7 @@ Item {
                         font.pixelSize: Appearance.font.pixelSize.smallest
                         font.family: Appearance.font.family.numbers
                         color: root.editorial ? Appearance.editorial.muted
-                            : Appearance.inirEverywhere ? root.jiraColText : (blendedColors?.colOnLayer0 ?? Appearance.colors.colOnLayer0)
+                            : Appearance.lunanaEverywhere ? root.jiraColText : (blendedColors?.colOnLayer0 ?? Appearance.colors.colOnLayer0)
                     }
                 }
             }

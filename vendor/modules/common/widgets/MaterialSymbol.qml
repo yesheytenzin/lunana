@@ -11,7 +11,7 @@ Item {
     property int horizontalAlignment: Text.AlignHCenter
     property int verticalAlignment: Text.AlignVCenter
 
-    // Opt-in gradient down the glyph's own colour (the iRiS tile pack uses it so a
+    // Opt-in gradient down the glyph's own colour (the Atoll tile pack uses it so a
     // glyph keeps its identity hue). Off, the glyph is one flat colour as always.
     property bool glyphGradient: false
     readonly property bool gradientActive: root.glyphGradient && !root.useJp && !root.useNerd && root.text.length > 0

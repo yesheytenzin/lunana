@@ -524,7 +524,7 @@ PanelWindow {
                 /usr/bin/notify-send "Edit failed" "Could not copy to screenshots folder" -a "Screenshot" -i camera-photo -t 4000;
                 exit 2;
             fi;
-            # Clipboard ownership lives outside inir.service so editing/copying
+            # Clipboard ownership lives outside lunana.service so editing/copying
             # never leaves a wl-copy process behind when the shell restarts.
             _clip_msg="";
             _clip_helper='${StringUtils.shellSingleQuoteEscape(((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/clipboard-copy.sh")))}';

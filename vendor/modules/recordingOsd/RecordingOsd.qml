@@ -218,7 +218,7 @@ Scope {
                     fallbackColor: Appearance.zzzEverywhere ? Appearance.zzz.bg1
                         : root.editorial ? Appearance.editorial.layer(1)
                         : Appearance.colors.colLayer2
-                    inirColor: Appearance.inir.colLayer1
+                    lunanaColor: Appearance.lunana.colLayer1
                     auroraTransparency: Appearance.aurora.popupTransparentize
                     wallpaperBackdropEnabled: !root.editorial
 
@@ -229,7 +229,7 @@ Scope {
                     border.color: Appearance.zzzEverywhere ? Appearance.zzz.borderColor
                                 : root.editorial ? Appearance.editorial.rule
                                 : Appearance.angelEverywhere ? Appearance.angel.colCardBorder
-                                : Appearance.inirEverywhere ? Appearance.inir.colBorder
+                                : Appearance.lunanaEverywhere ? Appearance.lunana.colBorder
                                 : Appearance.colors.colOutlineVariant
                     Behavior on radius { enabled: Appearance.animationsEnabled; NumberAnimation { duration: Appearance.animation.elementResize.duration; easing.type: Appearance.animation.elementResize.type; easing.bezierCurve: Appearance.animation.elementResize.bezierCurve } }
                     Behavior on color { enabled: Appearance.animationsEnabled; ColorAnimation { duration: Appearance.animation.elementMoveFast.duration; easing.type: Appearance.animation.elementMoveFast.type; easing.bezierCurve: Appearance.animation.elementMoveFast.bezierCurve } }

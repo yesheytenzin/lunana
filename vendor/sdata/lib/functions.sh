@@ -1,4 +1,4 @@
-# Core functions for iNiR installer
+# Core functions for Lunana installer
 # This is NOT a script for execution, but for loading functions
 
 # shellcheck shell=bash
@@ -150,7 +150,7 @@ cp_file(){
   x mkdir -p "$(dirname "$dst")"
 
   # Avoid failing when source and destination are the same file
-  # (e.g. when ~/.config/quickshell/inir points into the repo).
+  # (e.g. when ~/.config/quickshell/lunana points into the repo).
   if [[ -e "$dst" ]]; then
     local src_real dst_real
     src_real="$(realpath -se "$src" 2>/dev/null || echo "$src")"
@@ -171,14 +171,14 @@ cp_file(){
 
 # Generate rsync exclusions from the same policy used by package delivery and manifests.
 # Resolve relative paths against the source checkout, not the copied directory's basename.
-INIR_PAYLOAD_TOOL="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/runtime-payload.py"
+LUNANA_PAYLOAD_TOOL="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/runtime-payload.py"
 _runtime_rsync() {
   local source_path payload_root relative filters
   source_path="$(realpath -e -- "$1")" || return
-  payload_root="$(cd "$(dirname "$INIR_PAYLOAD_TOOL")/../.." && pwd)" || return
+  payload_root="$(cd "$(dirname "$LUNANA_PAYLOAD_TOOL")/../.." && pwd)" || return
   relative="${source_path#"$payload_root"/}"
   [[ "$relative" != "$source_path" ]] || { echo "Install source is outside repository" >&2; return 1; }
-  filters="$(python3 "$INIR_PAYLOAD_TOOL" filters --root "$payload_root" --subdir "$relative")" || return
+  filters="$(python3 "$LUNANA_PAYLOAD_TOOL" filters --root "$payload_root" --subdir "$relative")" || return
   local -a exclusions
   mapfile -t exclusions <<< "$filters"
   local target="$2"
@@ -276,8 +276,8 @@ function ensure_launcher_path_in_shells(){
   local launcher_dir="$1"
   [[ -n "$launcher_dir" ]] || return 0
 
-  local marker="# iNiR launcher PATH"
-  local end_marker="# end iNiR launcher PATH"
+  local marker="# Lunana launcher PATH"
+  local end_marker="# end Lunana launcher PATH"
   local sh_block="
 ${marker}
 case \":\$PATH:\" in
@@ -297,7 +297,7 @@ ${end_marker}
 
   local fish_conf_dir="${XDG_CONFIG_HOME}/fish/conf.d"
   mkdir -p "$fish_conf_dir"
-  cat > "${fish_conf_dir}/inir-path.fish" << EOF
+  cat > "${fish_conf_dir}/lunana-path.fish" << EOF
 if not contains -- "${launcher_dir}" \$PATH
     set -gx PATH "${launcher_dir}" \$PATH
 end
@@ -317,16 +317,16 @@ EOF
 }
 
 repair_legacy_niri_shell_startup() {
-  INIR_LEGACY_NIRI_STARTUP_REPAIRED=0
+  LUNANA_LEGACY_NIRI_STARTUP_REPAIRED=0
   local file tmp line changed
 
   for file in "${XDG_CONFIG_HOME}/niri/config.d/50-startup.kdl" "${XDG_CONFIG_HOME}/niri/config.kdl"; do
     [[ -f "$file" ]] || continue
-    tmp="${file}.inir-repair.$$"
+    tmp="${file}.lunana-repair.$$"
     changed=0
     : > "$tmp"
     while IFS= read -r line || [[ -n "$line" ]]; do
-      if grep -Eq '^[[:space:]]*spawn-at-startup[[:space:]]+"([^"]*/)?inir"[[:space:]]+"start"([[:space:]]*//.*)?[[:space:]]*$|^[[:space:]]*spawn-at-startup[[:space:]]+"qs"[[:space:]]+"-c"[[:space:]]+"(ii|inir)"([[:space:]]*//.*)?[[:space:]]*$' <<< "$line"; then
+      if grep -Eq '^[[:space:]]*spawn-at-startup[[:space:]]+"([^"]*/)?lunana"[[:space:]]+"start"([[:space:]]*//.*)?[[:space:]]*$|^[[:space:]]*spawn-at-startup[[:space:]]+"qs"[[:space:]]+"-c"[[:space:]]+"(drift|lunana)"([[:space:]]*//.*)?[[:space:]]*$' <<< "$line"; then
         changed=1
         continue
       fi
@@ -334,7 +334,7 @@ repair_legacy_niri_shell_startup() {
     done < "$file"
     if [[ "$changed" -eq 1 ]]; then
       mv "$tmp" "$file"
-      ((INIR_LEGACY_NIRI_STARTUP_REPAIRED++)) || true
+      ((LUNANA_LEGACY_NIRI_STARTUP_REPAIRED++)) || true
     else
       rm -f "$tmp"
     fi
@@ -342,11 +342,11 @@ repair_legacy_niri_shell_startup() {
 }
 
 sync_user_desktop_integration_from_repo() {
-  INIR_DESKTOP_INTEGRATION_CHANGED=0
+  LUNANA_DESKTOP_INTEGRATION_CHANGED=0
 
-  local launcher_target="${XDG_BIN_HOME}/inir"
+  local launcher_target="${XDG_BIN_HOME}/lunana"
   local icon_source="${REPO_ROOT}/assets/icons/desktop-symbolic.svg"
-  local icon_target="${XDG_DATA_HOME}/icons/hicolor/scalable/apps/inir.svg"
+  local icon_target="${XDG_DATA_HOME}/icons/hicolor/scalable/apps/lunana.svg"
   local applications_dir="${XDG_DATA_HOME}/applications"
   local name source target tmp command
 
@@ -354,22 +354,22 @@ sync_user_desktop_integration_from_repo() {
     mkdir -p "$(dirname "$icon_target")"
     if [[ ! -f "$icon_target" ]] || ! cmp -s "$icon_source" "$icon_target"; then
       cp -f "$icon_source" "$icon_target" || return 1
-      ((INIR_DESKTOP_INTEGRATION_CHANGED++)) || true
+      ((LUNANA_DESKTOP_INTEGRATION_CHANGED++)) || true
     fi
   fi
 
   mkdir -p "$applications_dir" "${XDG_CACHE_HOME:-$HOME/.cache}"
-  for name in inir inir-settings; do
+  for name in lunana lunana-settings; do
     source="${REPO_ROOT}/assets/applications/${name}.desktop"
     [[ -f "$source" ]] || continue
     target="${applications_dir}/${name}.desktop"
     command="service restart"
-    [[ "$name" == "inir-settings" ]] && command="settings"
+    [[ "$name" == "lunana-settings" ]] && command="settings"
     tmp="${XDG_CACHE_HOME:-$HOME/.cache}/${name}.desktop.$$"
     sed "s|^Exec=.*|Exec=${launcher_target//&/\\&} ${command}|" "$source" > "$tmp" || { rm -f "$tmp"; return 1; }
     if [[ ! -f "$target" ]] || ! cmp -s "$tmp" "$target"; then
       cp -f "$tmp" "$target" || { rm -f "$tmp"; return 1; }
-      ((INIR_DESKTOP_INTEGRATION_CHANGED++)) || true
+      ((LUNANA_DESKTOP_INTEGRATION_CHANGED++)) || true
     fi
     rm -f "$tmp"
   done
@@ -474,8 +474,8 @@ function can_elevate() {
   fi
 }
 
-inir_user_service_is_masked() {
-  local service_path="${XDG_CONFIG_HOME:-$HOME/.config}/systemd/user/inir.service"
+lunana_user_service_is_masked() {
+  local service_path="${XDG_CONFIG_HOME:-$HOME/.config}/systemd/user/lunana.service"
   local state
 
   if [[ -L "$service_path" ]] && [[ "$(readlink -f "$service_path" 2>/dev/null || true)" == "/dev/null" ]]; then
@@ -483,7 +483,7 @@ inir_user_service_is_masked() {
   fi
 
   has_usable_systemd_user_manager || return 1
-  state="$(systemctl --user is-enabled inir.service 2>/dev/null || true)"
+  state="$(systemctl --user is-enabled lunana.service 2>/dev/null || true)"
   [[ "$state" == "masked" || "$state" == "masked-runtime" ]]
 }
 
@@ -491,17 +491,17 @@ repair_legacy_quickshell_malloc_environment() {
   local conf="${XDG_CONFIG_HOME:-$HOME/.config}/environment.d/quickshell-mem.conf"
   local repaired=0
 
-  INIR_LEGACY_MALLOC_ENV_REPAIRED=0
-  INIR_LEGACY_MALLOC_ENV_CURRENT_PROCESS=0
+  LUNANA_LEGACY_MALLOC_ENV_REPAIRED=0
+  LUNANA_LEGACY_MALLOC_ENV_CURRENT_PROCESS=0
 
   if [[ -f "$conf" ]] && grep -Eq \
       '^[[:space:]]*MALLOC_ARENA_MAX=2[[:space:]]*$|^[[:space:]]*MALLOC_MMAP_THRESHOLD_=131072[[:space:]]*$' \
       "$conf" 2>/dev/null; then
-    local tmp="${conf}.inir-repair.$$"
+    local tmp="${conf}.lunana-repair.$$"
 
     local filter_rc=0
     grep -Ev \
-        '^[[:space:]]*MALLOC_ARENA_MAX=2[[:space:]]*$|^[[:space:]]*MALLOC_MMAP_THRESHOLD_=131072[[:space:]]*$|^# Quickshell/iNiR memory optimization[[:space:]]*$|^# Prevents glibc malloc arenas from retaining freed wallpaper textures\.[[:space:]]*$|^# See: scripts/quickshell-env\.sh for details\.[[:space:]]*$' \
+        '^[[:space:]]*MALLOC_ARENA_MAX=2[[:space:]]*$|^[[:space:]]*MALLOC_MMAP_THRESHOLD_=131072[[:space:]]*$|^# Quickshell/Lunana memory optimization[[:space:]]*$|^# Prevents glibc malloc arenas from retaining freed wallpaper textures\.[[:space:]]*$|^# See: scripts/quickshell-env\.sh for details\.[[:space:]]*$' \
         "$conf" > "$tmp" || filter_rc=$?
     # grep returns 1 when every line matched the removal filter. That is the
     # expected "delete the now-empty legacy file" case, not a read/filter error.
@@ -524,12 +524,12 @@ repair_legacy_quickshell_malloc_environment() {
   # keep inheriting the retired allocator policy.
   if [[ "${MALLOC_ARENA_MAX:-}" == "2" ]]; then
     unset MALLOC_ARENA_MAX
-    INIR_LEGACY_MALLOC_ENV_CURRENT_PROCESS=1
+    LUNANA_LEGACY_MALLOC_ENV_CURRENT_PROCESS=1
     ((repaired++)) || true
   fi
   if [[ "${MALLOC_MMAP_THRESHOLD_:-}" == "131072" ]]; then
     unset MALLOC_MMAP_THRESHOLD_
-    INIR_LEGACY_MALLOC_ENV_CURRENT_PROCESS=1
+    LUNANA_LEGACY_MALLOC_ENV_CURRENT_PROCESS=1
     ((repaired++)) || true
   fi
 
@@ -548,7 +548,7 @@ repair_legacy_quickshell_malloc_environment() {
     fi
   fi
 
-  INIR_LEGACY_MALLOC_ENV_REPAIRED=$repaired
+  LUNANA_LEGACY_MALLOC_ENV_REPAIRED=$repaired
   return 0
 }
 
@@ -563,7 +563,7 @@ function has_usable_systemd_user_manager() {
 }
 
 has_active_turnstile() {
-  local service_path="${INIR_TURNSTILED_SERVICE_PATH:-/var/service/turnstiled}"
+  local service_path="${LUNANA_TURNSTILED_SERVICE_PATH:-/var/service/turnstiled}"
   [[ -e "$service_path" ]] || return 1
   if command -v sv >/dev/null 2>&1 && sv status "$service_path" 2>/dev/null | grep -q '^run:'; then
     return 0
@@ -573,7 +573,7 @@ has_active_turnstile() {
 
 configure_turnstile_user_services() {
   local service_root="${XDG_CONFIG_HOME:-$HOME/.config}/service"
-  local examples="${INIR_TURNSTILE_EXAMPLES:-/usr/share/examples/turnstile}"
+  local examples="${LUNANA_TURNSTILE_EXAMPLES:-/usr/share/examples/turnstile}"
   local target
 
   [[ -f "$examples/dbus.run" && -f "$examples/dbus.check" ]] || {
@@ -597,7 +597,7 @@ configure_turnstile_user_services() {
   fi
 }
 
-inir_supervisor() {
+lunana_supervisor() {
   if has_usable_systemd_user_manager; then
     printf 'systemd\n'
   elif has_active_turnstile; then
@@ -611,8 +611,8 @@ configure_void_ydotool_uinput() {
   [[ "${OS_GROUP_ID:-}" == void && "${INSTALL_TOOLKIT:-true}" == true ]] || return 0
   command -v ydotoold >/dev/null 2>&1 || return 0
 
-  local module_conf=/etc/modules-load.d/inir-ydotool.conf
-  local udev_rule=/etc/udev/rules.d/80-inir-ydotool.rules
+  local module_conf=/etc/modules-load.d/lunana-ydotool.conf
+  local udev_rule=/etc/udev/rules.d/80-lunana-ydotool.rules
   local rule='KERNEL=="uinput", GROUP="input", MODE="0660", OPTIONS+="static_node=uinput"'
   if [[ "$(cat "$module_conf" 2>/dev/null)" == uinput ]] \
       && grep -Fxq "$rule" "$udev_rule" 2>/dev/null \
@@ -625,7 +625,7 @@ configure_void_ydotool_uinput() {
 
   if [[ "${ask:-true}" != true ]] \
       || tui_confirm "Configure uinput permissions for ydotool?" "yes"; then
-    if elevate sh -c 'mkdir -p /etc/udev/rules.d && printf "%s\n" uinput > /etc/modules-load.d/inir-ydotool.conf && printf "%s\n" '\''KERNEL=="uinput", GROUP="input", MODE="0660", OPTIONS+="static_node=uinput"'\'' > /etc/udev/rules.d/80-inir-ydotool.rules && udevadm control --reload-rules && modprobe uinput && udevadm trigger --name-match=uinput && udevadm settle'; then
+    if elevate sh -c 'mkdir -p /etc/udev/rules.d && printf "%s\n" uinput > /etc/modules-load.d/lunana-ydotool.conf && printf "%s\n" '\''KERNEL=="uinput", GROUP="input", MODE="0660", OPTIONS+="static_node=uinput"'\'' > /etc/udev/rules.d/80-lunana-ydotool.rules && udevadm control --reload-rules && modprobe uinput && udevadm trigger --name-match=uinput && udevadm settle'; then
       if [[ -c /dev/uinput ]] \
           && [[ "$(stat -c %G /dev/uinput 2>/dev/null)" == input ]] \
           && [[ "$(stat -c %a /dev/uinput 2>/dev/null)" == 660 ]]; then
@@ -637,7 +637,7 @@ configure_void_ydotool_uinput() {
     return 1
   fi
 
-  log_info "Configure ydotool with: echo uinput | sudo tee /etc/modules-load.d/inir-ydotool.conf"
+  log_info "Configure ydotool with: echo uinput | sudo tee /etc/modules-load.d/lunana-ydotool.conf"
   log_info "Then add a udev rule granting group input mode 0660 on /dev/uinput and load the uinput module"
 }
 
@@ -645,11 +645,11 @@ configure_void_ydotool_uinput() {
 configure_void_sddm_service() {
   [[ "${OS_GROUP_ID:-}" == void ]] || return 0
 
-  local service_dir="${INIR_SDDM_SERVICE_DIR:-/etc/sv/sddm}"
-  local service_root="${INIR_RUNIT_SERVICE_ROOT:-/var/service}"
+  local service_dir="${LUNANA_SDDM_SERVICE_DIR:-/etc/sv/sddm}"
+  local service_root="${LUNANA_RUNIT_SERVICE_ROOT:-/var/service}"
   local service_link="${service_root}/sddm"
-  local niri_session_entry="${INIR_NIRI_SESSION_ENTRY:-/usr/share/wayland-sessions/niri.desktop}"
-  local dbus_system_socket="${INIR_DBUS_SYSTEM_SOCKET:-/run/dbus/system_bus_socket}"
+  local niri_session_entry="${LUNANA_NIRI_SESSION_ENTRY:-/usr/share/wayland-sessions/niri.desktop}"
+  local dbus_system_socket="${LUNANA_DBUS_SYSTEM_SOCKET:-/run/dbus/system_bus_socket}"
   local dm competitor attempt
   local dbus_ready=false
 
@@ -731,8 +731,8 @@ configure_void_sddm_service() {
 configure_void_networkmanager_service() {
   [[ "${OS_GROUP_ID:-}" == void ]] || return 0
 
-  local service_dir="${INIR_NETWORKMANAGER_SERVICE_DIR:-/etc/sv/NetworkManager}"
-  local service_root="${INIR_RUNIT_SERVICE_ROOT:-/var/service}"
+  local service_dir="${LUNANA_NETWORKMANAGER_SERVICE_DIR:-/etc/sv/NetworkManager}"
+  local service_root="${LUNANA_RUNIT_SERVICE_ROOT:-/var/service}"
   local service_link="${service_root}/NetworkManager"
   local competitor link index rollback_index
   local networkmanager_enabled=false
@@ -822,7 +822,7 @@ configure_void_networkmanager_service() {
   return 0
 }
 
-# Install only iNiR-owned service files; never replace a local WARP service.
+# Install only Lunana-owned service files; never replace a local WARP service.
 configure_void_warp_service() {
   [[ "${OS_GROUP_ID:-}" == void ]] || return 0
   [[ -x /usr/local/bin/warp-svc ]] || return 0
@@ -832,26 +832,26 @@ configure_void_warp_service() {
   local service_link=/var/service/warp-svc
   local temp_dir run_tmp log_tmp
   if [[ -e /etc/sv/warp-svc && ! -f "$run_file" ]]; then
-    log_warning "Existing WARP service directory is not managed by iNiR; leaving it unchanged"
+    log_warning "Existing WARP service directory is not managed by Lunana; leaving it unchanged"
     return 0
   fi
-  if [[ -e "$run_file" ]] && ! grep -q '^# Managed by iNiR\.' "$run_file"; then
-    log_warning "Existing WARP service is not managed by iNiR; leaving it unchanged"
+  if [[ -e "$run_file" ]] && ! grep -q '^# Managed by Lunana\.' "$run_file"; then
+    log_warning "Existing WARP service is not managed by Lunana; leaving it unchanged"
     return 0
   fi
   if [[ -e "$service_link" || -L "$service_link" ]] \
       && [[ ! -L "$service_link" || "$(readlink "$service_link")" != /etc/sv/warp-svc ]]; then
-    log_warning "Existing WARP service link is not managed by iNiR; leaving it unchanged"
+    log_warning "Existing WARP service link is not managed by Lunana; leaving it unchanged"
     return 0
   fi
-  if [[ -e "$log_run_file" ]] && ! grep -q '^# Managed by iNiR\.' "$log_run_file"; then
+  if [[ -e "$log_run_file" ]] && ! grep -q '^# Managed by Lunana\.' "$log_run_file"; then
     if [[ ! -x "$log_run_file" ]]; then
-      log_warning "Existing WARP logger is not managed by iNiR and is not executable; leaving it unchanged"
+      log_warning "Existing WARP logger is not managed by Lunana and is not executable; leaving it unchanged"
       return 0
     fi
     log_info "Keeping existing custom WARP runit logger"
   fi
-  if [[ -f "$run_file" ]] && grep -q '^# Managed by iNiR\.' "$run_file" \
+  if [[ -f "$run_file" ]] && grep -q '^# Managed by Lunana\.' "$run_file" \
       && [[ -x "$log_run_file" ]] \
       && [[ -L "$service_link" ]] && [[ "$(readlink "$service_link")" == /etc/sv/warp-svc ]]; then
     log_success "Cloudflare WARP runit service already enabled"
@@ -862,15 +862,15 @@ configure_void_warp_service() {
     temp_dir="$(mktemp -d)" || return 1
     run_tmp="$temp_dir/run"
     log_tmp="$temp_dir/log-run"
-    printf '%s\n' '#!/bin/sh' '# Managed by iNiR.' \
+    printf '%s\n' '#!/bin/sh' '# Managed by Lunana.' \
       'mkdir -p /var/lib/cloudflare-warp /run/cloudflare-warp /var/log/cloudflare-warp' \
       'exec /usr/local/bin/warp-svc' > "$run_tmp"
-    printf '%s\n' '#!/bin/sh' '# Managed by iNiR.' \
+    printf '%s\n' '#!/bin/sh' '# Managed by Lunana.' \
       'exec vlogger -t warp-svc -p daemon' > "$log_tmp"
     if elevate mkdir -p /etc/sv/warp-svc/log /var/lib/cloudflare-warp /run/cloudflare-warp /var/log/cloudflare-warp \
         && elevate install -m 0755 "$run_tmp" "$run_file" \
         && {
-          if [[ ! -e "$log_run_file" ]] || grep -q '^# Managed by iNiR\.' "$log_run_file"; then
+          if [[ ! -e "$log_run_file" ]] || grep -q '^# Managed by Lunana\.' "$log_run_file"; then
             elevate install -m 0755 "$log_tmp" "$log_run_file"
           else
             true
@@ -892,7 +892,7 @@ configure_void_warp_service() {
   fi
 }
 
-# Void does not activate PipeWire user services; only replace files marked as iNiR-owned.
+# Void does not activate PipeWire user services; only replace files marked as Lunana-owned.
 reconcile_audio_user_services() {
   local supervisor="$1"
   local service_root="${XDG_CONFIG_HOME:-$HOME/.config}/service"
@@ -903,7 +903,7 @@ reconcile_audio_user_services() {
     svc_dir="$service_root/$svc"
     run_file="$svc_dir/run"
     if [[ "$supervisor" == systemd ]]; then
-      if [[ -f "$run_file" ]] && grep -q '^# Managed by iNiR\.' "$run_file"; then
+      if [[ -f "$run_file" ]] && grep -q '^# Managed by Lunana\.' "$run_file"; then
         command -v sv >/dev/null 2>&1 && sv down "$svc_dir" >/dev/null 2>&1 || true
         rm -rf "$svc_dir" || failed=1
       fi
@@ -911,12 +911,12 @@ reconcile_audio_user_services() {
     fi
     bin="$(command -v "$svc" 2>/dev/null || true)"
     if [[ -z "$bin" ]]; then
-      if [[ -f "$run_file" ]] && grep -q '^# Managed by iNiR\.' "$run_file"; then
+      if [[ -f "$run_file" ]] && grep -q '^# Managed by Lunana\.' "$run_file"; then
         rm -rf "$svc_dir" || failed=1
       fi
       continue
     fi
-    if [[ -f "$run_file" ]] && ! grep -q '^# Managed by iNiR\.' "$run_file"; then
+    if [[ -f "$run_file" ]] && ! grep -q '^# Managed by Lunana\.' "$run_file"; then
       continue
     fi
     mkdir -p "$svc_dir" || {
@@ -925,9 +925,9 @@ reconcile_audio_user_services() {
     }
     bin_quoted="$(printf '%s' "$bin" | sed "s/'/'\\\\''/g")"
     if [[ "$supervisor" == turnstile ]]; then
-      printf '#!/bin/sh\n# Managed by iNiR.\nexec chpst -e "$TURNSTILE_ENV_DIR" '\''%s'\''\n' "$bin_quoted" > "$run_file" || failed=1
+      printf '#!/bin/sh\n# Managed by Lunana.\nexec chpst -e "$TURNSTILE_ENV_DIR" '\''%s'\''\n' "$bin_quoted" > "$run_file" || failed=1
     else
-      printf '#!/bin/sh\n# Managed by iNiR.\nexec '\''%s'\''\n' "$bin_quoted" > "$run_file" || failed=1
+      printf '#!/bin/sh\n# Managed by Lunana.\nexec '\''%s'\''\n' "$bin_quoted" > "$run_file" || failed=1
     fi
     chmod +x "$run_file" || failed=1
   done
@@ -948,11 +948,11 @@ reconcile_ydotool_user_service() {
   version="$(ydotoold --version 2>/dev/null || true)"
 
   if [[ "$enabled" != true || -z "$bin" ]]; then
-    if [[ -f "$run_file" ]] && grep -q '^# Managed by iNiR\.' "$run_file"; then
+    if [[ -f "$run_file" ]] && grep -q '^# Managed by Lunana\.' "$run_file"; then
       command -v sv >/dev/null 2>&1 && sv down "$service_dir" >/dev/null 2>&1 || true
       rm -rf "$service_dir"
     fi
-    if [[ -f "$unit_file" ]] && grep -q '^# Managed by iNiR\.' "$unit_file"; then
+    if [[ -f "$unit_file" ]] && grep -q '^# Managed by Lunana\.' "$unit_file"; then
       has_usable_systemd_user_manager && systemctl --user disable --now ydotool.service >/dev/null 2>&1 || true
       rm -f "$unit_file" "$wants_link"
     fi
@@ -960,17 +960,17 @@ reconcile_ydotool_user_service() {
   fi
 
   if [[ "$supervisor" == systemd ]]; then
-    if [[ -f "$run_file" ]] && grep -q '^# Managed by iNiR\.' "$run_file"; then
+    if [[ -f "$run_file" ]] && grep -q '^# Managed by Lunana\.' "$run_file"; then
       command -v sv >/dev/null 2>&1 && sv down "$service_dir" >/dev/null 2>&1 || true
       rm -rf "$service_dir"
     fi
-    if [[ -f "$unit_file" ]] && grep -q '^# Managed by iNiR\.' "$unit_file" \
+    if [[ -f "$unit_file" ]] && grep -q '^# Managed by Lunana\.' "$unit_file" \
         && ! grep -Fxq "# Version: $version" "$unit_file"; then
       service_changed=true
     fi
-    if [[ ! -f "$unit_file" ]] || grep -q '^# Managed by iNiR\.' "$unit_file"; then
+    if [[ ! -f "$unit_file" ]] || grep -q '^# Managed by Lunana\.' "$unit_file"; then
       mkdir -p "$unit_dir"
-      printf '# Managed by iNiR.\n# Version: %s\n[Unit]\nDescription=ydotool input daemon\n\n[Service]\nExecStart=%s\nRestart=always\n\n[Install]\nWantedBy=default.target\n' "$version" "$bin" > "$unit_file" || return 1
+      printf '# Managed by Lunana.\n# Version: %s\n[Unit]\nDescription=ydotool input daemon\n\n[Service]\nExecStart=%s\nRestart=always\n\n[Install]\nWantedBy=default.target\n' "$version" "$bin" > "$unit_file" || return 1
     fi
     if ! systemctl --user daemon-reload >/dev/null 2>&1 \
         || ! systemctl --user enable --now ydotool.service >/dev/null 2>&1; then
@@ -982,10 +982,10 @@ reconcile_ydotool_user_service() {
     return
   fi
 
-  if [[ -f "$unit_file" ]] && grep -q '^# Managed by iNiR\.' "$unit_file"; then
+  if [[ -f "$unit_file" ]] && grep -q '^# Managed by Lunana\.' "$unit_file"; then
     rm -f "$unit_file" "$wants_link"
   fi
-  if [[ -f "$run_file" ]] && ! grep -q '^# Managed by iNiR\.' "$run_file"; then
+  if [[ -f "$run_file" ]] && ! grep -q '^# Managed by Lunana\.' "$run_file"; then
     return 0
   fi
   if [[ -f "$run_file" ]] && ! grep -Fxq "# Version: $version" "$run_file"; then
@@ -993,9 +993,9 @@ reconcile_ydotool_user_service() {
   fi
   mkdir -p "$service_dir" || return 1
   if [[ "$supervisor" == turnstile ]]; then
-    printf '#!/bin/sh\n# Managed by iNiR.\n# Version: %s\nexec chpst -e "$TURNSTILE_ENV_DIR" %s\n' "$version" "$bin" > "$run_file" || return 1
+    printf '#!/bin/sh\n# Managed by Lunana.\n# Version: %s\nexec chpst -e "$TURNSTILE_ENV_DIR" %s\n' "$version" "$bin" > "$run_file" || return 1
   else
-    printf '#!/bin/sh\n# Managed by iNiR.\n# Version: %s\nexec %s\n' "$version" "$bin" > "$run_file" || return 1
+    printf '#!/bin/sh\n# Managed by Lunana.\n# Version: %s\nexec %s\n' "$version" "$bin" > "$run_file" || return 1
   fi
   chmod +x "$run_file" || return 1
   if $service_changed && command -v sv >/dev/null 2>&1 \
@@ -1004,17 +1004,17 @@ reconcile_ydotool_user_service() {
   fi
 }
 
-reconcile_inir_supervisor() {
-  local launcher_path="${XDG_BIN_HOME:-$HOME/.local/bin}/inir"
-  local runit_service_dir="${XDG_CONFIG_HOME:-$HOME/.config}/service/inir"
+reconcile_lunana_supervisor() {
+  local launcher_path="${XDG_BIN_HOME:-$HOME/.local/bin}/lunana"
+  local runit_service_dir="${XDG_CONFIG_HOME:-$HOME/.config}/service/lunana"
   local runit_run_file="${runit_service_dir}/run"
-  local xembed_service_dir="${XDG_CONFIG_HOME:-$HOME/.config}/service/inir-xembedsniproxy"
+  local xembed_service_dir="${XDG_CONFIG_HOME:-$HOME/.config}/service/lunana-xembedsniproxy"
   local xembed_run_file="${xembed_service_dir}/run"
   local startup_target="${XDG_CONFIG_HOME:-$HOME/.config}/niri/config.d/50-startup.kdl"
   [[ -f "$startup_target" ]] || startup_target="${XDG_CONFIG_HOME:-$HOME/.config}/niri/config.kdl"
 
   local supervisor
-  supervisor="$(inir_supervisor)"
+  supervisor="$(lunana_supervisor)"
 
   if [[ -x "$launcher_path" ]]; then
     mkdir -p "$runit_service_dir"
@@ -1034,7 +1034,7 @@ reconcile_inir_supervisor() {
       if [[ "$supervisor" == turnstile ]]; then
         cat > "$xembed_run_file" <<'RUN_EOF'
 #!/bin/sh
-# Managed by iNiR.
+# Managed by Lunana.
 exec chpst -e "$TURNSTILE_ENV_DIR" sh -c '
   [ -n "${DISPLAY:-}" ] || exec pause
   xembed_bin="$(command -v xembedsniproxy 2>/dev/null || true)"
@@ -1045,7 +1045,7 @@ RUN_EOF
       else
         cat > "$xembed_run_file" <<'RUN_EOF'
 #!/bin/sh
-# Managed by iNiR.
+# Managed by Lunana.
 [ -n "${DISPLAY:-}" ] || exec pause
 xembed_bin="$(command -v xembedsniproxy 2>/dev/null || true)"
 [ -n "$xembed_bin" ] || exec pause
@@ -1054,7 +1054,7 @@ RUN_EOF
       fi
       chmod +x "$xembed_run_file"
     fi
-  elif [[ -f "$xembed_run_file" ]] && grep -q '^# Managed by iNiR\.' "$xembed_run_file"; then
+  elif [[ -f "$xembed_run_file" ]] && grep -q '^# Managed by Lunana\.' "$xembed_run_file"; then
     command -v sv >/dev/null 2>&1 && sv down "$xembed_service_dir" >/dev/null 2>&1 || true
     rm -rf "$xembed_service_dir"
   fi
@@ -1066,7 +1066,7 @@ RUN_EOF
     reconcile_ydotool_user_service "$supervisor" "${INSTALL_TOOLKIT:-true}" || return 1
   fi
 
-  update_inir_startup_supervisor() {
+  update_lunana_startup_supervisor() {
     local file="$1"
     local supervisor="$2"
     python3 - "$file" "$supervisor" <<'PY'
@@ -1079,8 +1079,8 @@ supervisor = sys.argv[2]
 text = path.read_text()
 
 text = re.sub(
-    r'(?ms)^[ \t]*// BEGIN inir-(?:systemd-environment|runsvdir-fallback|turnstile-environment)\n'
-    r'.*?^[ \t]*// END inir-(?:systemd-environment|runsvdir-fallback|turnstile-environment)\n?',
+    r'(?ms)^[ \t]*// BEGIN lunana-(?:systemd-environment|runsvdir-fallback|turnstile-environment)\n'
+    r'.*?^[ \t]*// END lunana-(?:systemd-environment|runsvdir-fallback|turnstile-environment)\n?',
     '',
     text,
 )
@@ -1093,37 +1093,37 @@ text = re.sub(
 )
 # Remove all supervisor comment variants.
 text = re.sub(
-    r'(?m)^[ \t]*// iNiR is managed by the (?:user systemd service \(inir\.service\)|runit user service \(service/inir\)|turnstile user service \(service/inir\))\.\n'
+    r'(?m)^[ \t]*// Lunana is managed by the (?:user systemd service \(lunana\.service\)|runit user service \(service/lunana\)|turnstile user service \(service/lunana\))\.\n'
     r'^[ \t]*// Do not add a compositor startup entry here or you\'ll get two shells\.\n?',
     '',
     text,
 )
 
 if supervisor == "systemd":
-    supervisor_comment = '''// iNiR is managed by the user systemd service (inir.service).
+    supervisor_comment = '''// Lunana is managed by the user systemd service (lunana.service).
 // Do not add a compositor startup entry here or you'll get two shells.'''
-    block = '''// BEGIN inir-systemd-environment
+    block = '''// BEGIN lunana-systemd-environment
 // Export XDG_MENU_PREFIX into the systemd user session and rebuild the
 // sycoca database so KDE/Qt apps see the correct .desktop entries.
 spawn-at-startup "bash" "-c" "systemctl --user import-environment XDG_MENU_PREFIX && kbuildsycoca6"
-// END inir-systemd-environment'''
+// END lunana-systemd-environment'''
 elif supervisor == "runsvdir":
-    supervisor_comment = '''// iNiR is managed by the runit user service (service/inir).
+    supervisor_comment = '''// Lunana is managed by the runit user service (service/lunana).
 // Do not add a compositor startup entry here or you'll get two shells.'''
-    block = '''// BEGIN inir-runsvdir-fallback
-// iNiR shell supervisor (runsvdir fallback for non-systemd).
+    block = '''// BEGIN lunana-runsvdir-fallback
+// Lunana shell supervisor (runsvdir fallback for non-systemd).
 // Do not add a compositor startup entry here or you'll get two shells.
 spawn-sh-at-startup "exec runsvdir ~/.config/service"
-// END inir-runsvdir-fallback'''
+// END lunana-runsvdir-fallback'''
 else:
-    supervisor_comment = '''// iNiR is managed by the turnstile user service (service/inir).
+    supervisor_comment = '''// Lunana is managed by the turnstile user service (service/lunana).
 // Do not add a compositor startup entry here or you'll get two shells.'''
-    block = r'''// BEGIN inir-turnstile-environment
+    block = r'''// BEGIN lunana-turnstile-environment
 // Publish Niri's session environment to Turnstile-managed user services.
-spawn-sh-at-startup "export PATH=\"$HOME/.local/bin:$PATH\"; export INIR_VENV=\"$HOME/.local/state/quickshell/.venv\"; export ILLOGICAL_IMPULSE_VIRTUAL_ENV=\"$INIR_VENV\"; if command -v turnstile-update-runit-env >/dev/null 2>&1 && [ -n \"${WAYLAND_DISPLAY:-}\" ] && [ -n \"${XDG_RUNTIME_DIR:-}\" ] && [ -n \"${DBUS_SESSION_BUS_ADDRESS:-}\" ]; then turnstile-update-runit-env PATH INIR_VENV ILLOGICAL_IMPULSE_VIRTUAL_ENV WAYLAND_DISPLAY XDG_RUNTIME_DIR DBUS_SESSION_BUS_ADDRESS NIRI_SOCKET; if command -v sv >/dev/null 2>&1 && [ -d \"$HOME/.config/service/inir\" ]; then sv restart \"$HOME/.config/service/inir\" >/dev/null 2>&1 || true; fi; fi"
+spawn-sh-at-startup "export PATH=\"$HOME/.local/bin:$PATH\"; export LUNANA_VENV=\"$HOME/.local/state/quickshell/.venv\"; export ILLOGICAL_IMPULSE_VIRTUAL_ENV=\"$LUNANA_VENV\"; if command -v turnstile-update-runit-env >/dev/null 2>&1 && [ -n \"${WAYLAND_DISPLAY:-}\" ] && [ -n \"${XDG_RUNTIME_DIR:-}\" ] && [ -n \"${DBUS_SESSION_BUS_ADDRESS:-}\" ]; then turnstile-update-runit-env PATH LUNANA_VENV ILLOGICAL_IMPULSE_VIRTUAL_ENV WAYLAND_DISPLAY XDG_RUNTIME_DIR DBUS_SESSION_BUS_ADDRESS NIRI_SOCKET; if command -v sv >/dev/null 2>&1 && [ -d \"$HOME/.config/service/lunana\" ]; then sv restart \"$HOME/.config/service/lunana\" >/dev/null 2>&1 || true; fi; fi"
 // The shell runs outside this session on Turnstile (QS_DISABLE_POLKIT=1), so Niri starts the agent that answers password prompts.
 spawn-sh-at-startup "for agent in /usr/libexec/polkit-gnome-authentication-agent-1 /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1; do if [ -x \"$agent\" ]; then exec \"$agent\"; fi; done"
-// END inir-turnstile-environment'''
+// END lunana-turnstile-environment'''
 
 suffix = f"\n\n{supervisor_comment}\n"
 if block:
@@ -1132,7 +1132,7 @@ path.write_text(text.rstrip() + suffix)
 PY
   }
 
-  [[ -f "$startup_target" ]] && update_inir_startup_supervisor "$startup_target" "$supervisor"
+  [[ -f "$startup_target" ]] && update_lunana_startup_supervisor "$startup_target" "$supervisor"
   printf '%s\n' "$supervisor"
   return 0
 }

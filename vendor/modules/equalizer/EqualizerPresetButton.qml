@@ -18,7 +18,7 @@ RippleButton {
         : Appearance.zzzEverywhere ? Appearance.zzz.controlRadius
         : editorial ? Appearance.rounding.small
         : Appearance.angelEverywhere ? Appearance.rounding.full
-        : Appearance.inirEverywhere ? Appearance.inir.roundingSmall
+        : Appearance.lunanaEverywhere ? Appearance.lunana.roundingSmall
         : Appearance.cookieEverywhere ? Appearance.cookie.roundSmall
         : Appearance.rounding.full
     buttonRadiusPressed: buttonRadius
@@ -29,7 +29,7 @@ RippleButton {
         : editorial ? Appearance.editorial.layer(1)
         : Appearance.angelEverywhere ? Appearance.angel.colGlassCard
         : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurface
-        : Appearance.inirEverywhere ? Appearance.inir.colLayer2
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2
         : Appearance.cookieEverywhere ? Appearance.cookie.bg1
         : "transparent"
     colBackgroundHover: Appearance.regaliaEverywhere ? Appearance.regalia.controlPlateHover
@@ -37,7 +37,7 @@ RippleButton {
         : editorial ? Appearance.colors.colLayer1Hover
         : Appearance.angelEverywhere ? Appearance.angel.colGlassCardHover
         : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurfaceHover
-        : Appearance.inirEverywhere ? Appearance.inir.colLayer2Hover
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2Hover
         : Appearance.cookieEverywhere ? Appearance.cookie.bg2
         : Appearance.colors.colSurfaceContainerHigh
     colBackgroundToggled: Appearance.regaliaEverywhere ? Appearance.regalia.primaryPlate
@@ -45,7 +45,7 @@ RippleButton {
         : editorial ? Appearance.editorial.accent
         : Appearance.angelEverywhere ? Appearance.angel.colGlassElevated
         : Appearance.auroraEverywhere ? Appearance.aurora.colElevatedSurface
-        : Appearance.inirEverywhere ? Appearance.inir.colPrimaryContainer
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colPrimaryContainer
         : Appearance.cookieEverywhere ? Appearance.cookie.primaryFace
         : Appearance.colors.colSecondaryContainer
     colBackgroundToggledHover: Appearance.regaliaEverywhere ? Appearance.regalia.primaryPlateHover
@@ -53,20 +53,20 @@ RippleButton {
         : editorial ? Appearance.colors.colPrimaryHover
         : Appearance.angelEverywhere ? Appearance.angel.colGlassElevatedHover
         : Appearance.auroraEverywhere ? Appearance.aurora.colElevatedSurfaceHover
-        : Appearance.inirEverywhere ? Appearance.inir.colPrimaryContainerHover
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colPrimaryContainerHover
         : Appearance.cookieEverywhere ? Appearance.cookie.primaryFace
         : Appearance.colors.colSecondaryContainerHover
     colRipple: Appearance.regaliaEverywhere ? Appearance.regalia.controlPlateActive
         : Appearance.zzzEverywhere ? Appearance.colors.colLayer1Active
         : Appearance.angelEverywhere ? Appearance.angel.colGlassCardActive
         : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurfaceActive
-        : Appearance.inirEverywhere ? Appearance.inir.colLayer2Active
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2Active
         : Appearance.colors.colLayer2Active
     colRippleToggled: Appearance.regaliaEverywhere ? Appearance.regalia.primaryPlateActive
         : Appearance.zzzEverywhere ? Appearance.colors.colPrimaryActive
         : Appearance.angelEverywhere ? Appearance.angel.colGlassCardActive
         : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurfaceActive
-        : Appearance.inirEverywhere ? Appearance.inir.colPrimaryActive
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colPrimaryActive
         : Appearance.cookieEverywhere ? Appearance.cookie.primaryFace
         : Appearance.colors.colSecondaryContainerActive
 
@@ -76,8 +76,8 @@ RippleButton {
             ? (root.selected ? Appearance.zzz.onSticker : Appearance.zzz.ink)
         : editorial ? (root.selected ? Appearance.editorial.accentInk : Appearance.editorial.ink)
         : Appearance.angelEverywhere ? Appearance.angel.colText
-        : Appearance.inirEverywhere
-            ? (root.selected ? Appearance.inir.colOnPrimaryContainer : Appearance.inir.colText)
+        : Appearance.lunanaEverywhere
+            ? (root.selected ? Appearance.lunana.colOnPrimaryContainer : Appearance.lunana.colText)
         : Appearance.cookieEverywhere
             ? (root.selected ? Appearance.cookie.onFace : Appearance.cookie.onColor)
         : root.selected ? Appearance.colors.colOnSecondaryContainer : Appearance.colors.colOnSurfaceVariant
@@ -86,7 +86,7 @@ RippleButton {
         : Appearance.zzzEverywhere ? (root.selected ? Appearance.zzz.onSticker : Appearance.zzz.accent)
         : editorial ? Appearance.editorial.accent
         : Appearance.angelEverywhere ? Appearance.angel.colPrimary
-        : Appearance.inirEverywhere ? Appearance.inir.colPrimary
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colPrimary
         : Appearance.colors.colPrimary
 
     Rectangle {
@@ -100,7 +100,7 @@ RippleButton {
             : Appearance.zzzEverywhere ? Appearance.zzz.hairline
             : root.editorial ? Appearance.editorial.rule
             : Appearance.angelEverywhere ? Appearance.angel.colCardBorder
-            : Appearance.inirEverywhere ? Appearance.inir.colBorderSubtle
+            : Appearance.lunanaEverywhere ? Appearance.lunana.colBorderSubtle
             : Appearance.auroraEverywhere ? Appearance.aurora.colPopupBorder
             : root.selected ? ColorUtils.applyAlpha(root._accentColor, 0.52)
             : Appearance.colors.colOutlineVariant
@@ -147,7 +147,7 @@ RippleButton {
                 : root.selected ? Font.DemiBold : Font.Medium
             font.letterSpacing: root.editorial ? 0.35
                 : Appearance.zzzEverywhere ? 0.35
-                : Appearance.inirEverywhere ? 0.2 : 0
+                : Appearance.lunanaEverywhere ? 0.2 : 0
             font.italic: Appearance.zzzEverywhere && root.selected
             color: root._textColor
 

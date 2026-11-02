@@ -104,7 +104,7 @@ Scope {
 
                 function beginDockResize(): void {
                     const baseline = Config.options?.dock?.height ?? 70
-                    if (!ShellEditSession.beginGesture("iiDock", "resize-thickness",
+                    if (!ShellEditSession.beginGesture("driftDock", "resize-thickness",
                             { thickness: baseline }))
                         return
                     dockRoot._editResizeBaseline = baseline
@@ -123,7 +123,7 @@ Scope {
 
                 function finishDockResize(): void {
                     if (dockRoot.editThicknessPreview >= 0)
-                        ShellLayoutController.setProperty("iiDock", "thickness",
+                        ShellLayoutController.setProperty("driftDock", "thickness",
                             dockRoot.editThicknessPreview, dockRoot.screen?.name ?? "")
                     dockRoot.editThicknessPreview = -1
                     dockRoot._editResizeBaseline = -1
@@ -305,7 +305,7 @@ Scope {
                                     readonly property bool regaliaEverywhere: !root.isM3Style && root.surfaceDialect === "regalia"
                                     readonly property bool angelEverywhere: !root.isM3Style && root.surfaceDialect === "angel"
                                     readonly property bool auroraEverywhere: !root.isM3Style && (root.surfaceDialect === "aurora" || angelEverywhere)
-                                    readonly property bool inirEverywhere: !root.isM3Style && root.surfaceDialect === "inir"
+                                    readonly property bool lunanaEverywhere: !root.isM3Style && root.surfaceDialect === "lunana"
                                     readonly property bool gameModeMinimal: Appearance.gameModeMinimal
                                     readonly property bool editorialGlassActive: Appearance.editorialEverywhere
                                         && Appearance.editorial.glassActive
@@ -354,7 +354,7 @@ Scope {
                                     : auroraEverywhere ? ColorUtils.applyAlpha(
                                         (blendedColors?.colLayer0 ?? Appearance.colors.colLayer0),
                                         dockRoot.nativeBlurActive ? 0.46 : 1)
-                                    : inirEverywhere ? Appearance.inir.colLayer1
+                                    : lunanaEverywhere ? Appearance.lunana.colLayer1
                                     : (cardStyle ? Appearance.colors.colLayer1 : Appearance.colors.colLayer0)
                                 border.width: root.isM3Style ? 1
                                     : root.zzzEverywhere || regaliaEverywhere ? 0
@@ -362,14 +362,14 @@ Scope {
                                 border.color: root.isM3Style ? Appearance.colors.colLayer0Border
                                     : root.zzzEverywhere || regaliaEverywhere ? "transparent"
                                     : angelEverywhere ? Appearance.angel.colPanelBorder
-                                    : inirEverywhere ? Appearance.inir.colBorder
+                                    : lunanaEverywhere ? Appearance.lunana.colBorder
                                     : Appearance.colors.colLayer0Border
                                 radius: root.isM3Style ? Appearance.rounding.normal + 6
                                     : root.zzzEverywhere ? Appearance.zzz.panelRadius
                                     : regaliaEverywhere && root.isPanelStyle ? Appearance.regalia.roundLarge
                                     : regaliaEverywhere ? Appearance.regalia.panelRadius
                                     : angelEverywhere ? Appearance.angel.roundingNormal
-                                    : inirEverywhere ? Appearance.inir.roundingNormal
+                                    : lunanaEverywhere ? Appearance.lunana.roundingNormal
                                     : cardStyle ? Appearance.rounding.normal : Appearance.rounding.large
                                 EditorialPaperStack {
                                     anchors.fill: parent
@@ -435,7 +435,7 @@ Scope {
 
                                 clip: true
                                 layer.enabled: (auroraEverywhere || dockVisualBackground.editorialGlassActive)
-                                    && !inirEverywhere && !root.zzzEverywhere
+                                    && !lunanaEverywhere && !root.zzzEverywhere
                                     && !gameModeMinimal && !dockRoot.nativeBlurActive
                                 layer.effect: GE.OpacityMask {
                                     maskSource: Rectangle {
@@ -448,7 +448,7 @@ Scope {
                                 Image {
                                     id: dockBlurredWallpaper
                                     readonly property bool requested: (dockVisualBackground.auroraEverywhere || dockVisualBackground.editorialGlassActive)
-                                        && !dockVisualBackground.inirEverywhere
+                                        && !dockVisualBackground.lunanaEverywhere
                                         && !root.zzzEverywhere
                                         && !dockVisualBackground.gameModeMinimal
                                         && !dockRoot.nativeBlurActive
@@ -473,7 +473,7 @@ Scope {
                                     // See #159 — skip QML blur when compositor blur covers this layer
                                     layer.enabled: Appearance.effectsEnabled
                                         && (dockVisualBackground.auroraEverywhere || dockVisualBackground.editorialGlassActive)
-                                        && !dockVisualBackground.inirEverywhere && !dockVisualBackground.gameModeMinimal && !dockRoot.nativeBlurActive
+                                        && !dockVisualBackground.lunanaEverywhere && !dockVisualBackground.gameModeMinimal && !dockRoot.nativeBlurActive
                                     layer.effect: MultiEffect {
                                         source: dockBlurredWallpaper
                                         anchors.fill: source
@@ -602,7 +602,7 @@ Scope {
                         y: Math.round(dockBackground.y + visualTarget.y)
                         width: Math.round(visualTarget.width)
                         height: Math.round(visualTarget.height)
-                        surfaceId: "iiDock"
+                        surfaceId: "driftDock"
                         label: Translation.tr("Dock")
                         active: ShellEditSession.blocksNormalActions(surfaceId)
                         selected: ShellEditSession.selectedSurfaceId === surfaceId
@@ -640,7 +640,7 @@ Scope {
                         }
                         axis: root.isVertical ? "horizontal" : "vertical"
                         active: ShellEditSession.active
-                            && ShellEditSession.selectedSurfaceId === "iiDock"
+                            && ShellEditSession.selectedSurfaceId === "driftDock"
                             && ShellEditSession.liftedSurfaceId.length === 0
                         accentColor: Appearance.colors.colPrimary
                         surfaceColor: Appearance.colors.colLayer2

@@ -15,7 +15,7 @@ Item {
     implicitHeight: 56
     Layout.fillWidth: true
     
-    readonly property bool inirEverywhere: Appearance.inirEverywhere
+    readonly property bool lunanaEverywhere: Appearance.lunanaEverywhere
     readonly property bool auroraEverywhere: Appearance.auroraEverywhere
 
     readonly property string greeting: {
@@ -33,7 +33,7 @@ Item {
 
     function lockScreen(): void {
         GlobalStates.controlPanelOpen = false
-        Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")), "lock", "activate"])
+        Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/lunana")), "lock", "activate"])
     }
 
     RowLayout {
@@ -62,7 +62,7 @@ Item {
                 color: "transparent"
                 border.width: 2
                 border.color: Appearance.angelEverywhere ? Appearance.angel.colPrimary
-                            : root.inirEverywhere ? Appearance.inir.colPrimary
+                            : root.lunanaEverywhere ? Appearance.lunana.colPrimary
                             : root.auroraEverywhere ? Appearance.colors.colPrimary
                             : Appearance.colors.colPrimary
             }
@@ -127,7 +127,7 @@ Item {
                     anchors.fill: parent
                     radius: width / 2
                     color: Appearance.angelEverywhere ? Appearance.angel.colGlassCard
-                         : root.inirEverywhere ? Appearance.inir.colLayer2 
+                         : root.lunanaEverywhere ? Appearance.lunana.colLayer2 
                          : root.auroraEverywhere ? Appearance.aurora.colSubSurface
                          : Appearance.colors.colLayer2
                     opacity: avatarImg.status !== Image.Ready ? 1 : 0
@@ -142,7 +142,7 @@ Item {
                         text: "person"
                         iconSize: 22
                         color: Appearance.angelEverywhere ? Appearance.angel.colPrimary
-                             : root.inirEverywhere ? Appearance.inir.colPrimary 
+                             : root.lunanaEverywhere ? Appearance.lunana.colPrimary 
                              : root.auroraEverywhere ? Appearance.colors.colPrimary
                              : Appearance.colors.colPrimary
                     }
@@ -157,7 +157,7 @@ Item {
                 text: root.greeting
                 font.pixelSize: Appearance.font.pixelSize.smaller
                 color: Appearance.angelEverywhere ? Appearance.angel.colPrimary
-                     : root.inirEverywhere ? Appearance.inir.colPrimary 
+                     : root.lunanaEverywhere ? Appearance.lunana.colPrimary 
                      : root.auroraEverywhere ? Appearance.colors.colPrimary
                      : Appearance.colors.colPrimary
             }
@@ -167,7 +167,7 @@ Item {
                 font.weight: Font.Medium
                 font.capitalization: Font.Capitalize
                 color: Appearance.angelEverywhere ? Appearance.angel.colText
-                     : root.inirEverywhere ? Appearance.inir.colText 
+                     : root.lunanaEverywhere ? Appearance.lunana.colText 
                      : root.auroraEverywhere ? Appearance.colors.colOnSurface
                      : Appearance.colors.colOnLayer0
             }
@@ -183,10 +183,10 @@ Item {
                 implicitWidth: 32
                 implicitHeight: 32
                 buttonRadius: Appearance.angelEverywhere ? Appearance.angel.roundingSmall
-                            : root.inirEverywhere ? Appearance.inir.roundingSmall : Appearance.rounding.full
+                            : root.lunanaEverywhere ? Appearance.lunana.roundingSmall : Appearance.rounding.full
                 colBackground: "transparent"
                 colBackgroundHover: Appearance.angelEverywhere ? Appearance.angel.colGlassCardHover
-                                  : root.inirEverywhere ? Appearance.inir.colLayer2Hover 
+                                  : root.lunanaEverywhere ? Appearance.lunana.colLayer2Hover 
                                   : root.auroraEverywhere ? Appearance.aurora.colSubSurfaceHover
                                   : Appearance.colors.colLayer2Hover
                 onClicked: root.lockScreen()
@@ -195,7 +195,7 @@ Item {
                     text: "lock"
                     iconSize: 18
                     color: Appearance.angelEverywhere ? Appearance.angel.colText
-                         : root.inirEverywhere ? Appearance.inir.colText 
+                         : root.lunanaEverywhere ? Appearance.lunana.colText 
                          : root.auroraEverywhere ? Appearance.colors.colOnSurface
                          : Appearance.colors.colOnLayer0
                 }
@@ -206,10 +206,10 @@ Item {
                 implicitWidth: 32
                 implicitHeight: 32
                 buttonRadius: Appearance.angelEverywhere ? Appearance.angel.roundingSmall
-                            : root.inirEverywhere ? Appearance.inir.roundingSmall : Appearance.rounding.full
+                            : root.lunanaEverywhere ? Appearance.lunana.roundingSmall : Appearance.rounding.full
                 colBackground: "transparent"
                 colBackgroundHover: Appearance.angelEverywhere ? Appearance.angel.colGlassCardHover
-                                  : root.inirEverywhere ? Appearance.inir.colLayer2Hover 
+                                  : root.lunanaEverywhere ? Appearance.lunana.colLayer2Hover 
                                   : root.auroraEverywhere ? Appearance.aurora.colSubSurfaceHover
                                   : Appearance.colors.colLayer2Hover
                 onClicked: root.openAccountSettings()
@@ -218,7 +218,7 @@ Item {
                     text: "manage_accounts"
                     iconSize: 18
                     color: Appearance.angelEverywhere ? Appearance.angel.colText
-                         : root.inirEverywhere ? Appearance.inir.colText
+                         : root.lunanaEverywhere ? Appearance.lunana.colText
                          : root.auroraEverywhere ? Appearance.colors.colOnSurface
                          : Appearance.colors.colOnLayer0
                 }
@@ -229,10 +229,10 @@ Item {
                 implicitWidth: 32
                 implicitHeight: 32
                 buttonRadius: Appearance.angelEverywhere ? Appearance.angel.roundingSmall
-                            : root.inirEverywhere ? Appearance.inir.roundingSmall : Appearance.rounding.full
+                            : root.lunanaEverywhere ? Appearance.lunana.roundingSmall : Appearance.rounding.full
                 colBackground: "transparent"
                 colBackgroundHover: Appearance.angelEverywhere ? Appearance.angel.colGlassCardHover
-                                  : root.inirEverywhere ? Appearance.inir.colLayer2Hover 
+                                  : root.lunanaEverywhere ? Appearance.lunana.colLayer2Hover 
                                   : root.auroraEverywhere ? Appearance.aurora.colSubSurfaceHover
                                   : Appearance.colors.colLayer2Hover
                 onClicked: {
@@ -243,7 +243,7 @@ Item {
                     anchors.centerIn: parent
                     text: "power_settings_new"
                     iconSize: 18
-                    color: root.inirEverywhere ? Appearance.inir.colError ?? Appearance.colors.colError
+                    color: root.lunanaEverywhere ? Appearance.lunana.colError ?? Appearance.colors.colError
                          : root.auroraEverywhere ? Appearance.colors.colError
                          : Appearance.colors.colError 
                 }
@@ -254,10 +254,10 @@ Item {
                 implicitWidth: 32
                 implicitHeight: 32
                 buttonRadius: Appearance.angelEverywhere ? Appearance.angel.roundingSmall
-                            : root.inirEverywhere ? Appearance.inir.roundingSmall : Appearance.rounding.full
+                            : root.lunanaEverywhere ? Appearance.lunana.roundingSmall : Appearance.rounding.full
                 colBackground: "transparent"
                 colBackgroundHover: Appearance.angelEverywhere ? Appearance.angel.colGlassCardHover
-                                  : root.inirEverywhere ? Appearance.inir.colLayer2Hover 
+                                  : root.lunanaEverywhere ? Appearance.lunana.colLayer2Hover 
                                   : root.auroraEverywhere ? Appearance.aurora.colSubSurfaceHover
                                   : Appearance.colors.colLayer2Hover
                 onClicked: GlobalStates.controlPanelOpen = false
@@ -266,7 +266,7 @@ Item {
                     text: "close"
                     iconSize: 18
                     color: Appearance.angelEverywhere ? Appearance.angel.colTextSecondary
-                         : root.inirEverywhere ? Appearance.inir.colTextSecondary 
+                         : root.lunanaEverywhere ? Appearance.lunana.colTextSecondary 
                          : root.auroraEverywhere ? Appearance.colors.colOutline
                          : Appearance.colors.colSubtext
                 }

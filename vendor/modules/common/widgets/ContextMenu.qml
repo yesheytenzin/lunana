@@ -21,7 +21,7 @@ Loader {
     property bool closeOnFocusLost: true
     property bool closeOnHoverLost: true
     property bool closeOnHoverLostAfterEntered: false
-    property int closeOnHoverLostDelay: 500  // ms before closing when hover lost (waffle uses 500)
+    property int closeOnHoverLostDelay: 500  // ms before closing when hover lost (slate uses 500)
     property bool anchorHovered: false
     property bool closeOnOutsideClick: false
     property var anchorRect: null
@@ -249,15 +249,15 @@ Loader {
                 rightMargin: popupWindow.isHorizontalPopup && popupWindow.isLeftSide ? popupWindow.sourceEdgeMargin : (root.ambientShadowWidth + root.visualMargin)
             }
             fallbackColor: Appearance.regaliaEverywhere ? "transparent" : Appearance.colors.colSurfaceContainer
-            inirColor: Appearance.inir.colLayer2
+            lunanaColor: Appearance.lunana.colLayer2
             auroraTransparency: Appearance.aurora.popupTransparentize
             radius: Appearance.angelEverywhere ? Appearance.angel.roundingNormal
-                : Appearance.inirEverywhere ? Appearance.inir.roundingNormal
+                : Appearance.lunanaEverywhere ? Appearance.lunana.roundingNormal
                 : Appearance.rounding.normal
             border.width: Appearance.regaliaEverywhere ? 0 : 1
             border.color: Appearance.editorialEverywhere ? Appearance.editorial.rule : Appearance.regaliaEverywhere ? "transparent"
                         : Appearance.angelEverywhere ? Appearance.angel.colBorder
-                        : Appearance.inirEverywhere ? Appearance.inir.colBorder
+                        : Appearance.lunanaEverywhere ? Appearance.lunana.colBorder
                         : Appearance.auroraEverywhere
                             ? Appearance.aurora.colTooltipBorder
                             : Appearance.colors.colSurfaceContainerHighest
@@ -333,7 +333,7 @@ Loader {
                                 implicitHeight: 1
                                 color: Appearance.editorialEverywhere ? Appearance.editorial.rule
                                     : Appearance.angelEverywhere ? Appearance.angel.colBorderSubtle
-                                    : Appearance.inirEverywhere ? Appearance.inir.colBorderSubtle
+                                    : Appearance.lunanaEverywhere ? Appearance.lunana.colBorderSubtle
                                     : Appearance.colors.colOutlineVariant
                             }
                         }
@@ -353,22 +353,22 @@ Loader {
                                 implicitHeight: Appearance.regaliaEverywhere ? Appearance.regalia.compactControlHeight : 32
                                 buttonRadius: Appearance.regaliaEverywhere ? Appearance.regalia.controlRadius
                                     : Appearance.angelEverywhere ? Appearance.angel.roundingSmall
-                                    : Appearance.inirEverywhere ? Appearance.inir.roundingSmall
+                                    : Appearance.lunanaEverywhere ? Appearance.lunana.roundingSmall
                                     : Appearance.rounding.small
                                 colBackground: "transparent"
                                 colBackgroundHover: Appearance.regaliaEverywhere
                                     ? Appearance.regalia.controlPlateHover
                                     : Appearance.angelEverywhere
                                         ? Appearance.angel.colGlassPopupHover
-                                        : Appearance.inirEverywhere
-                                            ? Appearance.inir.colLayer2Hover
+                                        : Appearance.lunanaEverywhere
+                                            ? Appearance.lunana.colLayer2Hover
                                             : ColorUtils.transparentize(Appearance.colors.colPrimary, 0.85)
                                 colRipple: Appearance.regaliaEverywhere
                                     ? Appearance.regalia.controlPlateActive
                                     : Appearance.angelEverywhere
                                         ? Appearance.angel.colGlassPopupActive
-                                        : Appearance.inirEverywhere
-                                            ? Appearance.inir.colLayer2Active
+                                        : Appearance.lunanaEverywhere
+                                            ? Appearance.lunana.colLayer2Active
                                             : ColorUtils.transparentize(Appearance.colors.colPrimary, 0.7)
 
                                 onClicked: {
@@ -406,7 +406,7 @@ Loader {
                                                 text: menuBtn.modelData.iconName ?? ""
                                                 iconSize: Appearance.font.pixelSize.normal
                                                 color: Appearance.angelEverywhere ? Appearance.angel.colText
-                                                    : Appearance.inirEverywhere ? Appearance.inir.colText : Appearance.colors.colOnSurface
+                                                    : Appearance.lunanaEverywhere ? Appearance.lunana.colText : Appearance.colors.colOnSurface
                                             }
                                         }
 
@@ -422,7 +422,7 @@ Loader {
                                     StyledText {
                                         text: menuBtn.modelData.text ?? ""
                                         color: Appearance.angelEverywhere ? Appearance.angel.colText
-                                            : Appearance.inirEverywhere ? Appearance.inir.colText : Appearance.colors.colOnSurface
+                                            : Appearance.lunanaEverywhere ? Appearance.lunana.colText : Appearance.colors.colOnSurface
                                         font.pixelSize: Appearance.font.pixelSize.small
                                         Layout.fillWidth: true
                                         Layout.alignment: Qt.AlignVCenter

@@ -915,7 +915,7 @@ ContentPage {
             ContentSubsection {
                 visible: Config.options?.lock?.notifications?.enable ?? false
                 title: Translation.tr("Notification position")
-                tooltip: Translation.tr("Auto centres on Material, right-aligns on Waffle.")
+                tooltip: Translation.tr("Auto centres on Material, right-aligns on Slate.")
 
                 ConfigSelectionArray {
                     currentValue: Config.options?.lock?.notifications?.position ?? "auto"
@@ -1127,14 +1127,14 @@ ContentPage {
             ContentSubsection {
                 visible: MaterialThemeLoader.loginScreenInstalled
                 title: Translation.tr("Login screen")
-                tooltip: Translation.tr("Where you sign in after starting the computer. Automatic shows iRiS while you use iRiS.")
+                tooltip: Translation.tr("Where you sign in after starting the computer. Automatic shows Atoll while you use Atoll.")
 
                 ConfigSelectionArray {
                     currentValue: Config.options?.lock?.loginScreen ?? "auto"
                     options: [
                         { displayName: Translation.tr("Automatic"), icon: "auto_awesome", value: "auto" },
                         { displayName: Translation.tr("Classic"), icon: "lock", value: "classic" },
-                        { displayName: Translation.tr("iRiS"), icon: "blur_on", value: "iris" }
+                        { displayName: Translation.tr("Atoll"), icon: "blur_on", value: "atoll" }
                     ]
                     onSelected: (newValue) => Config.setNestedValue("lock.loginScreen", newValue)
                 }
@@ -1143,7 +1143,7 @@ ContentPage {
             ContentSubsection {
                 readonly property string look: Config.options?.lock?.loginScreen ?? "auto"
                 visible: MaterialThemeLoader.loginScreenInstalled
-                    && (look === "iris" || (look === "auto" && (Config.options?.panelFamily ?? "ii") === "iris"))
+                    && (look === "atoll" || (look === "auto" && (Config.options?.panelFamily ?? "drift") === "atoll"))
                 title: Translation.tr("Login style")
                 tooltip: Translation.tr("Cover shows your picture sharp, Frame hangs it in a mat, Lens cuts the time out of it.")
 

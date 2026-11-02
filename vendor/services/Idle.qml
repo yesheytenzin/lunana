@@ -29,7 +29,7 @@ Singleton {
     readonly property int suspendTimeout: batteryProfileActive
         ? (Config.options?.idle?.onBattery?.suspendTimeout ?? 600)
         : (Config.options?.idle?.suspendTimeout ?? 0)
-    readonly property string launcherPath: ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir"))
+    readonly property string launcherPath: ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/lunana"))
 
     onScreenOffTimeoutChanged: _restartSwayidle()
     onLockTimeoutChanged: _restartSwayidle()
@@ -69,13 +69,13 @@ Singleton {
         const lockBeforeSleep = Config.options?.idle?.lockBeforeSleep !== false
 
         if (screenOffTimeout > 0 && CompositorService.isNiri) {
-            const inir = StringUtils.shellSingleQuoteEscape(root.launcherPath);
-            cmd.push("timeout", screenOffTimeout.toString(), IdlePolicy.niriOffCommand(inir), "resume", IdlePolicy.niriResumeCommand(inir))
+            const lunana = StringUtils.shellSingleQuoteEscape(root.launcherPath);
+            cmd.push("timeout", screenOffTimeout.toString(), IdlePolicy.niriOffCommand(lunana), "resume", IdlePolicy.niriResumeCommand(lunana))
         }
 
         if (screenOffTimeout > 0 && CompositorService.isHyprland) {
-            const inir = StringUtils.shellSingleQuoteEscape(root.launcherPath);
-            cmd.push("timeout", screenOffTimeout.toString(), IdlePolicy.hyprOffCommand(inir), "resume", IdlePolicy.hyprResumeCommand(inir))
+            const lunana = StringUtils.shellSingleQuoteEscape(root.launcherPath);
+            cmd.push("timeout", screenOffTimeout.toString(), IdlePolicy.hyprOffCommand(lunana), "resume", IdlePolicy.hyprResumeCommand(lunana))
         }
 
         // Determine effective lock timeout

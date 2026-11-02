@@ -8,8 +8,8 @@ import "../../../services"
 import "../../common"
 import "../../common/widgets"
 import "../../common/functions"
-import "../../iris/style"
-import "../../iris/components"
+import "../../atoll/style"
+import "../../atoll/components"
 
 Item {
     id: root
@@ -21,12 +21,12 @@ Item {
     signal closeRequested()
     signal focusWidgetRequested(string layoutKey)
 
-    // iRiS dresses the manager in the Island material; other families keep their
+    // Atoll dresses the manager in the Island material; other families keep their
     // layer tokens untouched.
-    readonly property bool iris: (Config.options?.panelFamily ?? "ii") === "iris"
-    readonly property color ink: root.iris ? IrisStyle.text : Appearance.colors.colOnLayer1
-    readonly property color accentInk: root.iris ? IrisStyle.accent : Appearance.colors.colPrimary
-    readonly property color dangerInk: root.iris ? IrisStyle.danger : Appearance.colors.colError
+    readonly property bool atoll: (Config.options?.panelFamily ?? "drift") === "atoll"
+    readonly property color ink: root.atoll ? AtollStyle.text : Appearance.colors.colOnLayer1
+    readonly property color accentInk: root.atoll ? AtollStyle.accent : Appearance.colors.colPrimary
+    readonly property color dangerInk: root.atoll ? AtollStyle.danger : Appearance.colors.colError
 
     property string searchText: ""
     readonly property string filterMode: Persistent.states?.desktopWidgets?.managerFilter ?? "all"
@@ -53,9 +53,9 @@ Item {
         { key: "japaneseTypography", icon: "translate", label: "Japanese Typography", defaultEnabled: false },
         { key: "worldClock", icon: "public", label: "World clock", defaultEnabled: false },
         { key: "userCard", icon: "account_circle", label: "User card", defaultEnabled: false },
-        { key: "controls", icon: "toggle_on", label: "Controls", defaultEnabled: false, irisOnly: true },
-        { key: "screenTime", icon: "hourglass_bottom", label: "Screen Time", defaultEnabled: false, irisOnly: true }
-    ].filter(item => !item.irisOnly || (Config.options?.panelFamily ?? "ii") === "iris")
+        { key: "controls", icon: "toggle_on", label: "Controls", defaultEnabled: false, atollOnly: true },
+        { key: "screenTime", icon: "hourglass_bottom", label: "Screen Time", defaultEnabled: false, atollOnly: true }
+    ].filter(item => !item.atollOnly || (Config.options?.panelFamily ?? "drift") === "atoll")
 
     function _setFilter(value: string): void {
         const next = ["all", "active", "locked", "custom"].includes(value) ? value : "all"
@@ -204,10 +204,10 @@ Item {
     property real screenHeight: 1080
     readonly property bool _widgetBlurAvailable: Appearance.effectsEnabled
         && (Appearance.angelEverywhere
-            || (Appearance.auroraEverywhere && !Appearance.inirEverywhere)
+            || (Appearance.auroraEverywhere && !Appearance.lunanaEverywhere)
             || (!Appearance.zzzEverywhere && !Appearance.cookieEverywhere
                 && !Appearance.angelEverywhere && !Appearance.auroraEverywhere
-                && !Appearance.inirEverywhere
+                && !Appearance.lunanaEverywhere
                 && (Config.options?.background?.widgets?.style ?? "panel") === "island"
                 && (Config.options?.appearance?.island?.glass ?? true)
                 && (Config.options?.appearance?.island?.opacity ?? 1) < 0.999))
@@ -280,13 +280,13 @@ Item {
     // ── Shadow + Background card ──
     StyledRectangularShadow {
         target: _bgCard
-        visible: !root.iris && !Appearance.zzzEverywhere && !Appearance.auroraEverywhere
+        visible: !root.atoll && !Appearance.zzzEverywhere && !Appearance.auroraEverywhere
     }
 
     PanelSurface {
         id: _bgCard
         anchors.fill: parent
-        visible: !root.iris
+        visible: !root.atoll
         elevation: 1
         wallpaperBackdrop: true
         // mapToItem is a plain call, not a tracked dependency: the panel is
@@ -302,7 +302,7 @@ Item {
         backdropScreenHeight: root.screenHeight
         radiusOverride: Appearance.zzzEverywhere ? Appearance.zzz.controlRadius
             : Appearance.angelEverywhere ? Appearance.angel.roundingNormal
-            : Appearance.inirEverywhere ? Appearance.inir.roundingNormal
+            : Appearance.lunanaEverywhere ? Appearance.lunana.roundingNormal
             : Appearance.rounding.normal
         // No frameLabel: the header right below already titles the panel; the
         // corner tape label overlapped it (registration marks alone suffice).
@@ -311,9 +311,9 @@ Item {
 
     Rectangle {
         anchors.fill: parent
-        visible: root.iris
-        radius: Math.round(22 * IrisStyle.density)
-        color: IrisStyle.surface
+        visible: root.atoll
+        radius: Math.round(22 * AtollStyle.density)
+        color: AtollStyle.surface
     }
 
     // ZZZ alone owns the technical drafting language. Other global styles
@@ -409,51 +409,51 @@ Item {
             }
 
             Rectangle {
-                visible: root.iris
+                visible: root.atoll
                 Layout.fillWidth: true
-                Layout.preferredHeight: Math.round(36 * IrisStyle.density)
+                Layout.preferredHeight: Math.round(36 * AtollStyle.density)
                 radius: height / 2
-                color: ColorUtils.applyAlpha(IrisStyle.text, irisSearch.activeFocus ? 0.12 : 0.075)
-                Behavior on color { ColorAnimation { duration: IrisStyle.duration(120) } }
+                color: ColorUtils.applyAlpha(AtollStyle.text, atollSearch.activeFocus ? 0.12 : 0.075)
+                Behavior on color { ColorAnimation { duration: AtollStyle.duration(120) } }
 
                 MaterialSymbol {
-                    id: irisSearchGlyph
+                    id: atollSearchGlyph
                     anchors.left: parent.left
-                    anchors.leftMargin: Math.round(12 * IrisStyle.density)
+                    anchors.leftMargin: Math.round(12 * AtollStyle.density)
                     anchors.verticalCenter: parent.verticalCenter
                     text: "search"
-                    iconSize: Math.round(16 * IrisStyle.density)
-                    color: irisSearch.text.length > 0 ? IrisStyle.accent : IrisStyle.subtext
+                    iconSize: Math.round(16 * AtollStyle.density)
+                    color: atollSearch.text.length > 0 ? AtollStyle.accent : AtollStyle.subtext
                 }
 
                 TextInput {
-                    id: irisSearch
-                    anchors.left: irisSearchGlyph.right
-                    anchors.leftMargin: Math.round(8 * IrisStyle.density)
+                    id: atollSearch
+                    anchors.left: atollSearchGlyph.right
+                    anchors.leftMargin: Math.round(8 * AtollStyle.density)
                     anchors.right: parent.right
-                    anchors.rightMargin: Math.round(12 * IrisStyle.density)
+                    anchors.rightMargin: Math.round(12 * AtollStyle.density)
                     anchors.verticalCenter: parent.verticalCenter
                     text: root.searchText
-                    color: IrisStyle.text
-                    selectionColor: IrisStyle.accentContainer
-                    selectedTextColor: IrisStyle.inkOnAccentContainer
-                    font.family: IrisStyle.fontMain
-                    font.pixelSize: 13 * IrisStyle.typeScale
+                    color: AtollStyle.text
+                    selectionColor: AtollStyle.accentContainer
+                    selectedTextColor: AtollStyle.inkOnAccentContainer
+                    font.family: AtollStyle.fontMain
+                    font.pixelSize: 13 * AtollStyle.typeScale
                     clip: true
                     onTextChanged: if (root.searchText !== text) root.searchText = text
 
-                    IrisText {
+                    AtollText {
                         anchors.verticalCenter: parent.verticalCenter
-                        visible: irisSearch.text.length === 0
+                        visible: atollSearch.text.length === 0
                         text: Translation.tr("Search widgets")
-                        color: IrisStyle.muted
-                        font.pixelSize: irisSearch.font.pixelSize
+                        color: AtollStyle.muted
+                        font.pixelSize: atollSearch.font.pixelSize
                     }
                 }
             }
 
             RowLayout {
-                visible: !root.iris
+                visible: !root.atoll
                 Layout.fillWidth: true
                 Layout.preferredHeight: 34
                 spacing: 6
@@ -475,16 +475,16 @@ Item {
             }
 
             Rectangle {
-                id: irisFilterSwitch
-                visible: root.iris
+                id: atollFilterSwitch
+                visible: root.atoll
                 Layout.fillWidth: true
-                Layout.preferredHeight: Math.round(34 * IrisStyle.density)
+                Layout.preferredHeight: Math.round(34 * AtollStyle.density)
                 radius: height / 2
-                color: ColorUtils.applyAlpha(IrisStyle.text, 0.06)
+                color: ColorUtils.applyAlpha(AtollStyle.text, 0.06)
 
                 Row {
                     anchors.fill: parent
-                    anchors.margins: Math.round(3 * IrisStyle.density)
+                    anchors.margins: Math.round(3 * AtollStyle.density)
                     Repeater {
                         model: [
                             { key: "all", label: Translation.tr("All") },
@@ -492,9 +492,9 @@ Item {
                             { key: "locked", label: Translation.tr("Locked") },
                             { key: "custom", label: Translation.tr("Custom") }
                         ]
-                        IrisButton {
+                        AtollButton {
                             required property var modelData
-                            width: irisFilterSwitch.width / 4 - Math.round(1.5 * IrisStyle.density)
+                            width: atollFilterSwitch.width / 4 - Math.round(1.5 * AtollStyle.density)
                             height: parent.height
                             text: modelData.label
                             selected: root.filterMode === modelData.key
@@ -508,7 +508,7 @@ Item {
             }
 
             Flow {
-                visible: !root.iris
+                visible: !root.atoll
                 Layout.fillWidth: true
                 spacing: 4
 
@@ -852,7 +852,7 @@ Item {
                     }
                     StyledText {
                         anchors.horizontalCenter: parent.horizontalCenter
-                        text: "~/.config/inir/widgets/"
+                        text: "~/.config/lunana/widgets/"
                         color: ColorUtils.applyAlpha(root.ink, 0.48)
                         font.pixelSize: Appearance.font.pixelSize.smaller
                         font.family: Appearance.font.family.monospace
@@ -940,16 +940,16 @@ Item {
         width: parent.width
         implicitHeight: visible ? _cardCol.implicitHeight : 0
         height: implicitHeight
-        radius: root.iris ? Math.round(14 * IrisStyle.density) : Appearance.rounding.small
-        color: root.iris
-            ? (card._selected ? ColorUtils.applyAlpha(IrisStyle.accent, 0.16)
-                : card._enabled ? ColorUtils.applyAlpha(IrisStyle.text, 0.055)
-                : ColorUtils.applyAlpha(IrisStyle.text, 0.025))
+        radius: root.atoll ? Math.round(14 * AtollStyle.density) : Appearance.rounding.small
+        color: root.atoll
+            ? (card._selected ? ColorUtils.applyAlpha(AtollStyle.accent, 0.16)
+                : card._enabled ? ColorUtils.applyAlpha(AtollStyle.text, 0.055)
+                : ColorUtils.applyAlpha(AtollStyle.text, 0.025))
             : card._selected ? ColorUtils.applyAlpha(root.accentInk, 0.12) : card._enabled
                 ? ColorUtils.applyAlpha(root.accentInk, 0.04)
                 : ColorUtils.applyAlpha(root.ink, 0.02)
         border {
-            width: root.iris ? 0 : card._selected ? 2 : card._enabled ? 1 : 0
+            width: root.atoll ? 0 : card._selected ? 2 : card._enabled ? 1 : 0
             color: ColorUtils.applyAlpha(root.accentInk, card._selected ? 0.55 : 0.10)
         }
 
@@ -979,15 +979,15 @@ Item {
                     spacing: 10
 
                     Rectangle {
-                        width: root.iris ? 40 : 52
-                        height: root.iris ? 40 : 38
-                        radius: root.iris ? Math.round(width * 0.26)
+                        width: root.atoll ? 40 : 52
+                        height: root.atoll ? 40 : 38
+                        radius: root.atoll ? Math.round(width * 0.26)
                             : Appearance.regaliaEverywhere ? Appearance.regalia.controlRadius
                             : Appearance.zzzEverywhere ? Appearance.zzz.controlRadius
                             : Appearance.editorialEverywhere ? Appearance.rounding.verysmall
                             : Appearance.rounding.small
-                        color: root.iris
-                            ? (card._enabled ? ColorUtils.applyAlpha(IrisStyle.accent, 0.18) : IrisStyle.surfaceHighest)
+                        color: root.atoll
+                            ? (card._enabled ? ColorUtils.applyAlpha(AtollStyle.accent, 0.18) : AtollStyle.surfaceHighest)
                             : card._enabled ? ColorUtils.applyAlpha(root.accentInk, 0.08)
                                 : ColorUtils.applyAlpha(root.ink, 0.035)
                         anchors.verticalCenter: parent.verticalCenter
@@ -1269,7 +1269,7 @@ Item {
                     }
 
                     // Blur toggle (only meaningful when current style supports blur —
-                    // aurora / angel. Hidden on material/inir to avoid a no-op control.)
+                    // aurora / angel. Hidden on material/lunana to avoid a no-op control.)
                     RowLayout {
                         width: parent.width
                         spacing: 8

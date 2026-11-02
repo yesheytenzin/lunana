@@ -25,7 +25,7 @@ Variants {
         screen: modelData
 
         WlrLayershell.layer: WlrLayer.Background
-        WlrLayershell.namespace: "quickshell:iiBackdrop"
+        WlrLayershell.namespace: "quickshell:driftBackdrop"
         WlrLayershell.exclusionMode: ExclusionMode.Ignore
 
         anchors.top: true
@@ -36,10 +36,10 @@ Variants {
         color: "transparent"
         visible: true
 
-        // Material ii backdrop config (independent)
-        readonly property var iiBackdrop: Config.options?.background?.backdrop ?? {}
+        // Material drift backdrop config (independent)
+        readonly property var driftBackdrop: Config.options?.background?.backdrop ?? {}
 
-        readonly property int backdropBlurRadius: iiBackdrop.blurRadius ?? 32
+        readonly property int backdropBlurRadius: driftBackdrop.blurRadius ?? 32
 
         // Backdrop still needs a full-quality source before blur is applied. A
         // half-resolution decode was noticeably soft on low-resolution images and
@@ -57,20 +57,20 @@ Variants {
             return !path ? "" : path.startsWith("file://") ? path : ("file://" + path)
         }
         readonly property int thumbnailBlurStrength: Config.options?.background?.effects?.thumbnailBlurStrength ?? 50
-        readonly property bool enableAnimatedBlur: iiBackdrop.enableAnimatedBlur ?? false
+        readonly property bool enableAnimatedBlur: driftBackdrop.enableAnimatedBlur ?? false
         // Niri's backdrop is a full-screen visual layer, not a photo viewer. It
         // must always cover the output; persisted legacy `fit` values are ignored.
         readonly property int imageFillMode: Image.PreserveAspectCrop
         readonly property int videoFillMode: VideoOutput.PreserveAspectCrop
-        readonly property int backdropDim: iiBackdrop.dim ?? 35
-        readonly property real backdropSaturation: iiBackdrop.saturation ?? 0
-        readonly property real backdropContrast: iiBackdrop.contrast ?? 0
-        readonly property bool vignetteEnabled: iiBackdrop.vignetteEnabled ?? false
-        readonly property real vignetteIntensity: iiBackdrop.vignetteIntensity ?? 0.5
-        readonly property real vignetteRadius: iiBackdrop.vignetteRadius ?? 0.7
-        readonly property bool useAuroraStyle: iiBackdrop.useAuroraStyle ?? false
-        readonly property real auroraOverlayOpacity: iiBackdrop.auroraOverlayOpacity ?? 0.38
-        readonly property bool enableAnimation: iiBackdrop.enableAnimation ?? false
+        readonly property int backdropDim: driftBackdrop.dim ?? 35
+        readonly property real backdropSaturation: driftBackdrop.saturation ?? 0
+        readonly property real backdropContrast: driftBackdrop.contrast ?? 0
+        readonly property bool vignetteEnabled: driftBackdrop.vignetteEnabled ?? false
+        readonly property real vignetteIntensity: driftBackdrop.vignetteIntensity ?? 0.5
+        readonly property real vignetteRadius: driftBackdrop.vignetteRadius ?? 0.7
+        readonly property bool useAuroraStyle: driftBackdrop.useAuroraStyle ?? false
+        readonly property real auroraOverlayOpacity: driftBackdrop.auroraOverlayOpacity ?? 0.38
+        readonly property bool enableAnimation: driftBackdrop.enableAnimation ?? false
 
         // Per-monitor main wallpaper path (resolves per-monitor when multi-monitor enabled)
         readonly property string _perMonitorMainPath: {
@@ -94,13 +94,13 @@ Variants {
 
         // Raw wallpaper path (before thumbnail substitution)
         readonly property string wallpaperPathRaw: {
-            const useMain = iiBackdrop.useMainWallpaper ?? true;
+            const useMain = driftBackdrop.useMainWallpaper ?? true;
             const mainPath = _perMonitorMainPath;
             // Per-monitor backdrop takes priority, then global backdrop, then main wallpaper
             if (!useMain) {
                 const perMonBd = _perMonitorBackdropPath
                 if (perMonBd) return perMonBd
-                const globalBd = iiBackdrop.wallpaperPath || ""
+                const globalBd = driftBackdrop.wallpaperPath || ""
                 if (globalBd) return globalBd
             }
             return mainPath;

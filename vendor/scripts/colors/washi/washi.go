@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-// Request is everything iRiS chose that colours it, resolved by the shell (a colour theme it follows already
+// Request is everything Atoll chose that colours it, resolved by the shell (a colour theme it follows already
 // names "theme" here) plus the seeds it read from the wallpaper and the colour theme.
 type Request struct {
 	Language string `json:"language,omitempty"` // the aesthetic; empty is washi
@@ -347,7 +347,7 @@ func (v solver) far() RGB {
 }
 
 // glassGrounds are what a paper body can become as glass: Lume lets the frost sit 0.1 (in gamma levels) under the
-// paper over a dark region (IrisStyle.paperFloor), and a group sits on that. Colours are solved on those too.
+// paper over a dark region (AtollStyle.paperFloor), and a group sits on that. Colours are solved on those too.
 func glassGrounds(paper RGB, ink RGB) []RGB {
 	f := func(c float64) float64 { return math.Max(0, c-0.1) }
 	frost := clamp(RGB{f(paper.R), f(paper.G), f(paper.B)})
@@ -595,7 +595,7 @@ func build(req Request, name string) Palette {
 	// meanings read as one family on this paper. Never the colour slider: their meaning does not fade.
 	p.Identity = map[string]string{}
 	idC := s.markC * map[string]float64{"dark": 0.86, "ink": 0.8, "light": 0.86}[name]
-	// A language that keeps its own colours (iRiS's system colours) solves each from where it is, softer on paper.
+	// A language that keeps its own colours (Atoll's system colours) solves each from where it is, softer on paper.
 	for _, id := range lang.identityHex {
 		c, _ := seedLCH(id.hex)
 		k := map[string]float64{"dark": 1, "ink": 0.75, "light": 0.9}[name]
@@ -840,14 +840,14 @@ type StyleSwatch struct {
 
 // styleIDs are the styles Settings offers, in its order: a language, or Material You with its variant.
 func styleIDs() []string {
-	out := []string{"iris", "washi"}
+	out := []string{"atoll", "washi"}
 	for _, v := range variants {
 		out = append(out, "material:"+v.name)
 	}
 	return out
 }
 
-// Version changes whenever a solve would give other colours for the same request; IrisWashi.qml asks again when it
+// Version changes whenever a solve would give other colours for the same request; AtollWashi.qml asks again when it
 // differs (TestShellKnowsVersion keeps the two equal).
 const Version = 23
 

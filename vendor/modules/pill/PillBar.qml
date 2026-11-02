@@ -250,7 +250,7 @@ Scope {
                 if (CompositorService.isNiri && NiriService.isOverviewHotCornerActive(modelData?.name ?? "", corner))
                     reserve = Math.max(reserve, 12)
                 const orbitEnabled = CompositorService.isNiri
-                    && (Config.options?.panelFamily ?? "ii") === "ii"
+                    && (Config.options?.panelFamily ?? "drift") === "drift"
                     && (Config.options?.orbit?.enable ?? true)
                     && (Config.options?.orbit?.hotCornerEnable ?? true)
                 if (orbitEnabled && String(Config.options?.orbit?.hotCorner ?? "topRight") === corner)
@@ -376,7 +376,7 @@ Scope {
             WlrLayershell.layer: overlayPresentation ? WlrLayer.Overlay : WlrLayer.Top
             WlrLayershell.keyboardFocus: surfaceOpen || pill.held
                 ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
-            WlrLayershell.namespace: "inir-pill"
+            WlrLayershell.namespace: "lunana-pill"
 
             anchors { top: true; left: true; right: true; bottom: true }
 

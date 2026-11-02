@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "lunana.atoll-sidebar-right",
+  "name": "Lunana Atoll Today",
+  "version": "0.4.0",
+  "author": "lunana",
+  "license": "GPL-3.0",
+  "description": "Lunana Atoll right sidebar (today) host.",
+  "kinds": [
+    "overlay"
+  ],
+  "entryPoints": {
+    "overlay": "AtollSidebarRight.qml"
+  },
+  "x-lunana": {
+    "suiteId": "lunana",
+    "role": "atoll-sidebar-right",
+    "milestone": "parity",
+    "requires": [],
+    "recommends": []
+  }
+}

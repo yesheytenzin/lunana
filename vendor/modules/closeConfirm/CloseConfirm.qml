@@ -2,7 +2,7 @@ import QtQuick
 import "../.."
 import "../../services"
 import "../common"
-import "../iris/closeConfirm"
+import "../atoll/closeConfirm"
 import Quickshell
 import Quickshell.Io
 import Quickshell.Wayland
@@ -148,12 +148,12 @@ Scope {
                 // instantiated from an inline Component. A Loader source URL cannot
                 // initialize required properties and fails to Loader.Error, leaving
                 // this keyboard-exclusive fullscreen window with no way out.
-                sourceComponent: Config.options?.panelFamily === "waffle" ? waffleContent
-                    : Config.options?.panelFamily === "iris" ? irisContent : iiContent
+                sourceComponent: Config.options?.panelFamily === "slate" ? slateContent
+                    : Config.options?.panelFamily === "atoll" ? atollContent : driftContent
                 onLoaded: if (item) item.forceActiveFocus()
 
                 Component {
-                    id: iiContent
+                    id: driftContent
                     CloseConfirmContent {
                         targetWindow: root.targetWindow
                         onConfirm: root.confirmClose()
@@ -162,8 +162,8 @@ Scope {
                 }
 
                 Component {
-                    id: waffleContent
-                    WCloseConfirmContent {
+                    id: slateContent
+                    SCloseConfirmContent {
                         targetWindow: root.targetWindow
                         onConfirm: root.confirmClose()
                         onCancel: root.cancel()
@@ -171,8 +171,8 @@ Scope {
                 }
 
                 Component {
-                    id: irisContent
-                    IrisCloseConfirmContent {
+                    id: atollContent
+                    AtollCloseConfirmContent {
                         targetWindow: root.targetWindow
                         onConfirm: root.confirmClose()
                         onCancel: root.cancel()

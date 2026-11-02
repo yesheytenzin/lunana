@@ -16,20 +16,20 @@ Item {
         : Appearance.regaliaEverywhere ? Appearance.regalia.hardwarePrimary
         : Appearance.zzzEverywhere ? Appearance.zzz.accent
         : Appearance.angelEverywhere ? Appearance.angel.colPrimary
-        : Appearance.inirEverywhere ? Appearance.inir.colPrimary
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colPrimary
         : Appearance.colors.colPrimary
     readonly property color secondaryAccent: Appearance.editorialEverywhere ? Appearance.colors.colSecondary
         : Appearance.regaliaEverywhere ? Appearance.regalia.hardwareSecondary
         : Appearance.zzzEverywhere ? Appearance.zzz.secondary
         : Appearance.angelEverywhere ? Appearance.angel.colSecondary
-        : Appearance.inirEverywhere ? Appearance.inir.colSecondary
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colSecondary
         : Appearance.colors.colSecondary
     readonly property color metadataText: Appearance.editorialEverywhere ? Appearance.editorial.muted
         : Appearance.regaliaEverywhere ? Appearance.regalia.onMuted
         : Appearance.cookieEverywhere ? Appearance.cookie.inkMuted
         : Appearance.zzzEverywhere ? Appearance.zzz.inkMuted
         : Appearance.angelEverywhere ? Appearance.angel.colTextSecondary
-        : Appearance.inirEverywhere ? Appearance.inir.colTextSecondary
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colTextSecondary
         : Appearance.colors.colSubtext
 
     readonly property var locale: {
@@ -46,7 +46,7 @@ Item {
         // Breathing room between the clock and the card's top edge in every
         // style — the header used to sit flush against the border in material.
         anchors.topMargin: 12
-        spacing: (Appearance.angelEverywhere || Appearance.inirEverywhere) ? 2 : 4
+        spacing: (Appearance.angelEverywhere || Appearance.lunanaEverywhere) ? 2 : 4
 
         RowLayout {
             Layout.fillWidth: true
@@ -69,7 +69,7 @@ Item {
 
             Item { Layout.fillWidth: true }
 
-            // Buttons container with inir styling
+            // Buttons container with lunana styling
             Row {
                 spacing: 6
 
@@ -78,12 +78,12 @@ Item {
                     implicitWidth: 36
                     implicitHeight: 36
                     buttonRadius: Appearance.editorialEverywhere ? Appearance.rounding.small
-                        : Appearance.inirEverywhere ? Appearance.inir.roundingSmall : Appearance.rounding.full
-                    colBackground: Appearance.inirEverywhere ? "transparent"
+                        : Appearance.lunanaEverywhere ? Appearance.lunana.roundingSmall : Appearance.rounding.full
+                    colBackground: Appearance.lunanaEverywhere ? "transparent"
                         : Appearance.auroraEverywhere ? "transparent" : Appearance.colors.colTertiaryContainer
-                    colBackgroundHover: Appearance.inirEverywhere ? Appearance.inir.colLayer1Hover
+                    colBackgroundHover: Appearance.lunanaEverywhere ? Appearance.lunana.colLayer1Hover
                         : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurfaceHover : (Appearance.colors.colTertiaryContainerHover ?? Appearance.colors.colTertiaryContainer)
-                    colRipple: Appearance.inirEverywhere ? Appearance.inir.colLayer1Active
+                    colRipple: Appearance.lunanaEverywhere ? Appearance.lunana.colLayer1Active
                         : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurfaceActive : (Appearance.colors.colTertiaryContainerActive ?? Appearance.colors.colTertiaryContainer)
                     opacity: GameMode.active && (Config.options?.sidebar?.widgets?.glance?.showGameMode ?? true) ? 1 : 0
                     visible: opacity > 0
@@ -98,7 +98,7 @@ Item {
                             text: "sports_esports"
                             iconSize: 18
                             fill: 1
-                            color: Appearance.inirEverywhere ? Appearance.inir.colPrimary : Appearance.colors.colOnTertiaryContainer
+                            color: Appearance.lunanaEverywhere ? Appearance.lunana.colPrimary : Appearance.colors.colOnTertiaryContainer
                         }
                     }
 
@@ -111,12 +111,12 @@ Item {
                     implicitHeight: 36
                     buttonRadius: Appearance.editorialEverywhere ? Appearance.rounding.small
                         : Appearance.zzzEverywhere ? Appearance.zzz.controlRadius
-                        : (Appearance.inirEverywhere ? Appearance.inir.roundingSmall : Appearance.rounding.full)
-                    colBackground: Appearance.zzzEverywhere ? Appearance.zzz.sticker : Appearance.inirEverywhere ? "transparent"
+                        : (Appearance.lunanaEverywhere ? Appearance.lunana.roundingSmall : Appearance.rounding.full)
+                    colBackground: Appearance.zzzEverywhere ? Appearance.zzz.sticker : Appearance.lunanaEverywhere ? "transparent"
                         : Appearance.auroraEverywhere ? "transparent" : Appearance.colors.colPrimaryContainer
-                    colBackgroundHover: Appearance.zzzEverywhere ? Appearance.colors.colPrimaryHover : Appearance.inirEverywhere ? Appearance.inir.colLayer1Hover
+                    colBackgroundHover: Appearance.zzzEverywhere ? Appearance.colors.colPrimaryHover : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer1Hover
                         : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurfaceHover : Appearance.colors.colPrimaryContainerHover
-                    colRipple: Appearance.zzzEverywhere ? Appearance.colors.colPrimaryActive : Appearance.inirEverywhere ? Appearance.inir.colLayer1Active
+                    colRipple: Appearance.zzzEverywhere ? Appearance.colors.colPrimaryActive : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer1Active
                         : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurfaceActive : Appearance.colors.colPrimaryContainerActive
                     opacity: Notifications.silent && (Config.options?.sidebar?.widgets?.glance?.showDnd ?? true) ? 1 : 0
                     visible: opacity > 0
@@ -131,7 +131,7 @@ Item {
                             text: "do_not_disturb_on"
                             iconSize: 18
                             fill: 1
-                            color: Appearance.zzzEverywhere ? Appearance.zzz.onSticker : (Appearance.inirEverywhere ? Appearance.inir.colPrimary : Appearance.colors.colOnPrimaryContainer)
+                            color: Appearance.zzzEverywhere ? Appearance.zzz.onSticker : (Appearance.lunanaEverywhere ? Appearance.lunana.colPrimary : Appearance.colors.colOnPrimaryContainer)
                             Behavior on color {
                                 enabled: Appearance.animationsEnabled
                                 ColorAnimation { duration: Appearance.animation.elementMoveFast.duration }
@@ -156,11 +156,11 @@ Item {
                         implicitWidth: 60
                         implicitHeight: 36
                         buttonRadius: Appearance.editorialEverywhere ? Appearance.rounding.small
-                            : Appearance.inirEverywhere ? Appearance.inir.roundingSmall : Appearance.rounding.full
+                            : Appearance.lunanaEverywhere ? Appearance.lunana.roundingSmall : Appearance.rounding.full
                         colBackground: "transparent"
-                        colBackgroundHover: Appearance.inirEverywhere ? Appearance.inir.colLayer1Hover
+                        colBackgroundHover: Appearance.lunanaEverywhere ? Appearance.lunana.colLayer1Hover
                             : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurfaceHover : Appearance.colLayer1Hover
-                        colRipple: Appearance.inirEverywhere ? Appearance.inir.colLayer1Active
+                        colRipple: Appearance.lunanaEverywhere ? Appearance.lunana.colLayer1Active
                             : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurfaceActive : Appearance.colLayer1Active
                         onClicked: Audio.toggleMute()
 
@@ -216,19 +216,19 @@ Item {
                     implicitWidth: 36
                     implicitHeight: 36
                     buttonRadius: Appearance.editorialEverywhere ? Appearance.rounding.small
-                        : Appearance.inirEverywhere ? Appearance.inir.roundingSmall : Appearance.rounding.full
+                        : Appearance.lunanaEverywhere ? Appearance.lunana.roundingSmall : Appearance.rounding.full
                     colBackground: "transparent"
-                    colBackgroundHover: Appearance.inirEverywhere ? Appearance.inir.colLayer1Hover
+                    colBackgroundHover: Appearance.lunanaEverywhere ? Appearance.lunana.colLayer1Hover
                         : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurfaceHover : Appearance.colLayer1Hover
-                    colRipple: Appearance.inirEverywhere ? Appearance.inir.colLayer1Active
+                    colRipple: Appearance.lunanaEverywhere ? Appearance.lunana.colLayer1Active
                         : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurfaceActive : Appearance.colLayer1Active
 
                     onClicked: {
-                        const isWaffle = (Config.options?.panelFamily === "waffle" && Config.options?.waffles?.settings?.useMaterialStyle !== true);
-                        if (isWaffle) {
+                        const isSlate = (Config.options?.panelFamily === "slate" && Config.options?.slate?.settings?.useMaterialStyle !== true);
+                        if (isSlate) {
                             Quickshell.execDetached(["/usr/bin/env", "QS_SETTINGS_PAGE=6",
                                 "QS_SETTINGS_SECTION=" + Translation.tr("Widgets Panel"),
-                                ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")), "waffle-settings-window"]);
+                                ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/lunana")), "slate-settings-window"]);
                             return;
                         }
                         GlobalStates.openSettingsPage(5, Translation.tr("Widgets"));
@@ -256,12 +256,12 @@ Item {
         // Subtitle with complementary info
         RowLayout {
             Layout.fillWidth: true
-            Layout.bottomMargin: Appearance.inirEverywhere ? 10 : 0
+            Layout.bottomMargin: Appearance.lunanaEverywhere ? 10 : 0
             spacing: 8
 
             StyledText {
                 readonly property string _configFormat: Config.options?.time?.dateFormat ?? ""
-                readonly property string _defaultFormat: Appearance.inirEverywhere ? "dddd, MMMM yyyy" : "dddd, d MMMM"
+                readonly property string _defaultFormat: Appearance.lunanaEverywhere ? "dddd, MMMM yyyy" : "dddd, d MMMM"
                 text: root.locale.toString(DateTime.clock.date, _configFormat.length > 0 ? _configFormat : _defaultFormat)
                 font.pixelSize: Appearance.editorialEverywhere ? Appearance.font.pixelSize.small : Appearance.font.pixelSize.normal
                 font.weight: Appearance.editorialEverywhere ? Appearance.editorial.labelWeight : Font.Medium

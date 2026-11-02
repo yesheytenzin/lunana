@@ -1,0 +1,7 @@
+AtollEditBar 1.0 AtollEditBar.qml
+singleton AtollEditHistory 1.0 AtollEditHistory.qml
+AtollEditRows 1.0 AtollEditRows.qml
+AtollPieceLibrary 1.0 AtollPieceLibrary.qml
+AtollPresetTile 1.0 AtollPresetTile.qml
+AtollThemeCard 1.0 AtollThemeCard.qml
+AtollWidgetBar 1.0 AtollWidgetBar.qml

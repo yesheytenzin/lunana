@@ -15,12 +15,12 @@ Rectangle {
     required property bool downloaded
     
     // Optional properties
-    property real artRadius: Appearance.inirEverywhere ? Appearance.inir.roundingSmall : Appearance.rounding.small
-    property color placeholderColor: Appearance.inirEverywhere 
-        ? Appearance.inir.colLayer2 
+    property real artRadius: Appearance.lunanaEverywhere ? Appearance.lunana.roundingSmall : Appearance.rounding.small
+    property color placeholderColor: Appearance.lunanaEverywhere 
+        ? Appearance.lunana.colLayer2 
         : Appearance.colors.colLayer1
-    property color iconColor: Appearance.inirEverywhere 
-        ? Appearance.inir.colTextSecondary 
+    property color iconColor: Appearance.lunanaEverywhere 
+        ? Appearance.lunana.colTextSecondary 
         : Appearance.colors.colSubtext
     property int iconSize: 32
     property bool enableBlurTransition: true

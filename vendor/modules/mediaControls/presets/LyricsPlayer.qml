@@ -29,9 +29,9 @@ Item {
     readonly property QtObject effectiveColors: Appearance.editorialEverywhere && Appearance.colors
         ? Appearance.colors : root.blendedColors
 
-    readonly property color ink: Appearance.zzzEverywhere ? Appearance.zzz.ink : Appearance.inirEverywhere ? playerBase.inirText : (root.effectiveColors?.colOnLayer0 ?? Appearance.colors.colOnLayer0)
+    readonly property color ink: Appearance.zzzEverywhere ? Appearance.zzz.ink : Appearance.lunanaEverywhere ? playerBase.lunanaText : (root.effectiveColors?.colOnLayer0 ?? Appearance.colors.colOnLayer0)
     readonly property color accent: Appearance.zzzEverywhere ? Appearance.zzz.accent
-        : Appearance.inirEverywhere ? playerBase.inirPrimary
+        : Appearance.lunanaEverywhere ? playerBase.lunanaPrimary
         : root.themeSourceColor
 
     readonly property string vizType: Config.getNestedValue("background.widgets.mediaControls.visualizerType", "wave")
@@ -39,7 +39,7 @@ Item {
 
     StyledRectangularShadow {
         target: card
-        visible: !Appearance.zzzEverywhere && (Appearance.angelEverywhere || (!Appearance.inirEverywhere && !Appearance.auroraEverywhere))
+        visible: !Appearance.zzzEverywhere && (Appearance.angelEverywhere || (!Appearance.lunanaEverywhere && !Appearance.auroraEverywhere))
     }
 
     Rectangle {
@@ -47,8 +47,8 @@ Item {
         anchors.centerIn: parent
         width: parent.width - Appearance.sizes.elevationMargin
         height: parent.height - Appearance.sizes.elevationMargin
-        radius: Appearance.zzzEverywhere ? Appearance.zzz.panelRadius : Appearance.inirEverywhere ? Appearance.inir.roundingNormal : root.radius
-        color: Appearance.zzzEverywhere ? Appearance.zzz.paper : Appearance.inirEverywhere ? playerBase.inirLayer1 : (root.effectiveColors?.colLayer0 ?? Appearance.colors.colLayer0)
+        radius: Appearance.zzzEverywhere ? Appearance.zzz.panelRadius : Appearance.lunanaEverywhere ? Appearance.lunana.roundingNormal : root.radius
+        color: Appearance.zzzEverywhere ? Appearance.zzz.paper : Appearance.lunanaEverywhere ? playerBase.lunanaLayer1 : (root.effectiveColors?.colLayer0 ?? Appearance.colors.colLayer0)
         border.width: root.vizType === "organic" && root.vizPosition !== "none"
             ? 0 : (Appearance.zzzEverywhere ? Appearance.zzz.borderThick : 0)
         border.color: Appearance.zzzEverywhere ? Appearance.zzz.hairlineStrong : "transparent"
@@ -158,7 +158,7 @@ Item {
             lineSpacing: 12
             baseSize: Appearance.font.pixelSize.large
             activeScale: 1.22
-            activeColor: Appearance.zzzEverywhere ? (root.effectiveColors?.colPrimary ?? Appearance.zzz.accent) : Appearance.inirEverywhere ? playerBase.inirPrimary : (root.effectiveColors?.colPrimary ?? Appearance.colors.colPrimary)
+            activeColor: Appearance.zzzEverywhere ? (root.effectiveColors?.colPrimary ?? Appearance.zzz.accent) : Appearance.lunanaEverywhere ? playerBase.lunanaPrimary : (root.effectiveColors?.colPrimary ?? Appearance.colors.colPrimary)
             textColor: ColorUtils.applyAlpha(root.ink, 0.75)
             indicatorColor: root.effectiveColors?.colPrimaryContainer ?? Appearance.colors.colPrimaryContainer
         }

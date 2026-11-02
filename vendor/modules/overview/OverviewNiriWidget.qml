@@ -129,7 +129,7 @@ Item {
         Math.min(4, root.orbitSurfaceOptions.satelliteElevation ?? 1))
     readonly property real orbitSurfaceRadiusScale: Math.max(0.55,
         Math.min(1.6, (root.orbitSurfaceOptions.radiusPercent ?? 100) / 100))
-    property color activeBorderColor: Appearance.inirEverywhere ? Appearance.inir.colPrimary : Appearance.colors.colSecondary
+    property color activeBorderColor: Appearance.lunanaEverywhere ? Appearance.lunana.colPrimary : Appearance.colors.colSecondary
     property bool focusAnimEnabled: root.overviewFocusAnimEnabled
     property int focusAnimDuration: root.overviewFocusAnimDurationMs
     property bool keepOverviewOpenOnWindowClick: root.overviewKeepOpenOnWindowClick
@@ -565,7 +565,7 @@ Item {
 
     StyledRectangularShadow {
         target: overviewBackground
-        visible: Appearance.angelEverywhere || (!Appearance.inirEverywhere && !Appearance.auroraEverywhere)
+        visible: Appearance.angelEverywhere || (!Appearance.lunanaEverywhere && !Appearance.auroraEverywhere)
     }
 
     Rectangle {
@@ -577,16 +577,16 @@ Item {
         implicitWidth: workspaceColumnLayout.implicitWidth + padding * 2
         implicitHeight: workspaceColumnLayout.implicitHeight + padding * 2
         radius: Appearance.angelEverywhere ? Appearance.angel.roundingLarge
-            : Appearance.inirEverywhere ? Appearance.inir.roundingLarge
+            : Appearance.lunanaEverywhere ? Appearance.lunana.roundingLarge
             : (Appearance.rounding.large + padding)
         clip: false
         color: Appearance.angelEverywhere ? Appearance.angel.colGlassCard
-             : Appearance.inirEverywhere ? Appearance.inir.colLayer1
+             : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer1
              : Appearance.auroraEverywhere ? Appearance.aurora.colPopupSurface
              : Appearance.colors.colBackgroundSurfaceContainer
         border.width: Appearance.angelEverywhere ? Appearance.angel.cardBorderWidth : 1
         border.color: Appearance.angelEverywhere ? Appearance.angel.colBorder
-            : Appearance.inirEverywhere ? Appearance.inir.colBorder
+            : Appearance.lunanaEverywhere ? Appearance.lunana.colBorder
             : Appearance.auroraEverywhere ? ColorUtils.transparentize(Appearance.colors.colOutlineVariant, 0.72)
             : ColorUtils.transparentize(Appearance.colors.colOutlineVariant, 0.68)
 
@@ -628,18 +628,18 @@ Item {
                             property bool isActive: workspaceObj && workspaceObj.is_active
                             property color defaultWorkspaceColor: workspaceExists
                                 ? (Appearance.angelEverywhere ? Appearance.angel.colGlassPopup
-                                    : Appearance.inirEverywhere ? Appearance.inir.colLayer2 
+                                    : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2 
                                     : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurface 
                                     : Appearance.colors.colBackgroundSurfaceContainer)
                                 : ColorUtils.transparentize(Appearance.angelEverywhere ? Appearance.angel.colGlassPopup
-                                    : Appearance.inirEverywhere ? Appearance.inir.colLayer2 
+                                    : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2 
                                     : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurface 
                                     : Appearance.colors.colBackgroundSurfaceContainer, 0.3)
                             property color hoveredWorkspaceColor: ColorUtils.mix(defaultWorkspaceColor, 
                                 Appearance.angelEverywhere ? Appearance.angel.colGlassPopupHover
-                                : Appearance.inirEverywhere ? Appearance.inir.colLayer2Hover : Appearance.colors.colLayer1Hover, 0.1)
+                                : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2Hover : Appearance.colors.colLayer1Hover, 0.1)
                             property color hoveredBorderColor: Appearance.angelEverywhere ? Appearance.angel.colBorderHover
-                                : Appearance.inirEverywhere ? Appearance.inir.colBorder : Appearance.colors.colLayer2Hover
+                                : Appearance.lunanaEverywhere ? Appearance.lunana.colBorder : Appearance.colors.colLayer2Hover
                             property bool hoveredWhileDragging: false
 
                             implicitWidth: root.workspaceImplicitWidth
@@ -656,10 +656,10 @@ Item {
                                 : Appearance.rounding.normal) * root.orbitSurfaceRadiusScale
                             property real largeWorkspaceRadius: root.orbitMode ? orbitWorkspaceRadius
                                 : Appearance.angelEverywhere ? Appearance.angel.roundingNormal
-                                : Appearance.inirEverywhere ? Appearance.inir.roundingNormal : Appearance.rounding.large
+                                : Appearance.lunanaEverywhere ? Appearance.lunana.roundingNormal : Appearance.rounding.large
                             property real smallWorkspaceRadius: root.orbitMode ? orbitWorkspaceRadius
                                 : Appearance.angelEverywhere ? Appearance.angel.roundingSmall
-                                : Appearance.inirEverywhere ? Appearance.inir.roundingSmall : Appearance.rounding.verysmall
+                                : Appearance.lunanaEverywhere ? Appearance.lunana.roundingSmall : Appearance.rounding.verysmall
                             topLeftRadius: (workspaceAtLeft && workspaceAtTop) ? largeWorkspaceRadius : smallWorkspaceRadius
                             topRightRadius: (workspaceAtRight && workspaceAtTop) ? largeWorkspaceRadius : smallWorkspaceRadius
                             bottomLeftRadius: (workspaceAtLeft && workspaceAtBottom) ? largeWorkspaceRadius : smallWorkspaceRadius
@@ -821,7 +821,7 @@ Item {
                                         ? ColorUtils.applyAlpha(root.activeBorderColor,
                                             root.orbitSurfaceOutlineOpacity * 0.62)
                                     : (Appearance.angelEverywhere ? ColorUtils.transparentize(Appearance.angel.colBorder, 0.64)
-                                        : Appearance.inirEverywhere ? ColorUtils.transparentize(Appearance.inir.colBorder, 0.45)
+                                        : Appearance.lunanaEverywhere ? ColorUtils.transparentize(Appearance.lunana.colBorder, 0.45)
                                         : Appearance.auroraEverywhere ? ColorUtils.transparentize(Appearance.colors.colOutlineVariant, 0.78)
                                         : ColorUtils.transparentize(Appearance.colors.colOutlineVariant, 0.74))
                                 topLeftRadius: workspace.topLeftRadius
@@ -840,7 +840,7 @@ Item {
                                 }
                                 color: ColorUtils.transparentize(
                                     Appearance.angelEverywhere ? Appearance.angel.colText
-                                    : Appearance.inirEverywhere ? Appearance.inir.colText
+                                    : Appearance.lunanaEverywhere ? Appearance.lunana.colText
                                     : Appearance.auroraEverywhere ? Appearance.colors.colOnLayer1
                                     : Appearance.colors.colOnLayer1,
                                     0.7
@@ -1627,10 +1627,10 @@ Item {
                     : Appearance.rounding.normal) * root.orbitSurfaceRadiusScale
                 property real largeWorkspaceRadius: root.orbitMode ? orbitWorkspaceRadius
                     : Appearance.angelEverywhere ? Appearance.angel.roundingNormal
-                    : Appearance.inirEverywhere ? Appearance.inir.roundingNormal : Appearance.rounding.large
+                    : Appearance.lunanaEverywhere ? Appearance.lunana.roundingNormal : Appearance.rounding.large
                 property real smallWorkspaceRadius: root.orbitMode ? orbitWorkspaceRadius
                     : Appearance.angelEverywhere ? Appearance.angel.roundingSmall
-                    : Appearance.inirEverywhere ? Appearance.inir.roundingSmall : Appearance.rounding.verysmall
+                    : Appearance.lunanaEverywhere ? Appearance.lunana.roundingSmall : Appearance.rounding.verysmall
                 topLeftRadius: (workspaceAtLeft && workspaceAtTop) ? largeWorkspaceRadius : smallWorkspaceRadius
                 topRightRadius: (workspaceAtRight && workspaceAtTop) ? largeWorkspaceRadius : smallWorkspaceRadius
                 bottomLeftRadius: (workspaceAtLeft && workspaceAtBottom) ? largeWorkspaceRadius : smallWorkspaceRadius

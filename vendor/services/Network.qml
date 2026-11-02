@@ -34,7 +34,7 @@ Singleton {
     // configured, NM absent, not read yet) counts as online so nothing is hidden on a guess.
     property string connectivity: "unknown"
     property string simulatedConnectivity: ""
-    // `inir network simulateLink "wifi 40"` stands in for NetworkManager's link state (wifi strength, searching,
+    // `lunana network simulateLink "wifi 40"` stands in for NetworkManager's link state (wifi strength, searching,
     // connecting, radio off, cable, no adapter) until `off` or a restart; the probes stop writing while it holds.
     property string simulatedLink: ""
     readonly property string effectiveConnectivity: simulatedConnectivity || connectivity

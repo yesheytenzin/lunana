@@ -81,24 +81,24 @@ Item {
     readonly property QtObject effectiveColors: Appearance.editorialEverywhere && Appearance.colors
         ? Appearance.colors : root.blendedColors
     
-    // Inir uses fixed colors instead of adaptive
-    readonly property color jiraColText: Appearance.inir.colText
-    readonly property color jiraColTextSecondary: Appearance.inir.colTextSecondary
-    readonly property color jiraColPrimary: Appearance.inir.colPrimary
-    readonly property color jiraColLayer1: Appearance.inir.colLayer1
-    readonly property color jiraColLayer2: Appearance.inir.colLayer2
+    // Lunana uses fixed colors instead of adaptive
+    readonly property color jiraColText: Appearance.lunana.colText
+    readonly property color jiraColTextSecondary: Appearance.lunana.colTextSecondary
+    readonly property color jiraColPrimary: Appearance.lunana.colPrimary
+    readonly property color jiraColLayer1: Appearance.lunana.colLayer1
+    readonly property color jiraColLayer2: Appearance.lunana.colLayer2
     readonly property color mediaAccent: Appearance.editorialEverywhere ? Appearance.editorial.accent
         : Appearance.regaliaEverywhere ? Appearance.regalia.hardwarePrimary
         : Appearance.zzzEverywhere ? Appearance.zzz.accent
         : Appearance.angelEverywhere ? Appearance.angel.colPrimary
-        : Appearance.inirEverywhere ? root.jiraColPrimary
+        : Appearance.lunanaEverywhere ? root.jiraColPrimary
         : Appearance.cookieEverywhere ? Appearance.colors.colPrimary
         : Appearance.colors.colPrimary
     readonly property color mediaSecondaryAccent: Appearance.editorialEverywhere ? Appearance.colors.colSecondary
         : Appearance.regaliaEverywhere ? Appearance.regalia.hardwareSecondary
         : Appearance.zzzEverywhere ? Appearance.zzz.secondary
         : Appearance.angelEverywhere ? Appearance.angel.colSecondary
-        : Appearance.inirEverywhere ? Appearance.inir.colSecondary
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colSecondary
         : Appearance.cookieEverywhere ? Appearance.colors.colSecondary
         : Appearance.colors.colSecondary
     readonly property color mediaTertiaryAccent: Appearance.regaliaEverywhere ? Appearance.regalia.hardwareTertiary
@@ -108,14 +108,14 @@ Item {
         : Appearance.cookieEverywhere ? Appearance.cookie.onColor
         : Appearance.zzzEverywhere ? Appearance.zzz.ink
         : Appearance.angelEverywhere ? Appearance.angel.colText
-        : Appearance.inirEverywhere ? root.jiraColText
+        : Appearance.lunanaEverywhere ? root.jiraColText
         : (effectiveColors?.colOnLayer0 ?? Appearance.colors.colOnLayer0)
     readonly property color mediaMetadata: Appearance.editorialEverywhere ? Appearance.editorial.muted
         : Appearance.regaliaEverywhere ? Appearance.regalia.onMuted
         : Appearance.cookieEverywhere ? Appearance.cookie.inkMuted
         : Appearance.zzzEverywhere ? Appearance.zzz.inkMuted
         : Appearance.angelEverywhere ? Appearance.angel.colTextSecondary
-        : Appearance.inirEverywhere ? root.jiraColTextSecondary
+        : Appearance.lunanaEverywhere ? root.jiraColTextSecondary
         : root.mediaSecondaryAccent
 
     StyledRectangularShadow { target: card }
@@ -127,17 +127,17 @@ Item {
         implicitHeight: Appearance.editorialEverywhere ? Math.max(130, 142 * Appearance.fontSizeScale) : 130
         radius: Appearance.zzzEverywhere ? Appearance.zzz.cardRadius
             : Appearance.angelEverywhere ? Appearance.angel.roundingNormal
-            : Appearance.inirEverywhere ? Appearance.inir.roundingNormal
+            : Appearance.lunanaEverywhere ? Appearance.lunana.roundingNormal
             : Appearance.rounding.normal
         color: Appearance.zzzEverywhere ? "transparent"
              : Appearance.angelEverywhere ? Appearance.angel.colGlassCard
-             : Appearance.inirEverywhere ? Appearance.inir.colLayer1
+             : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer1
              : Appearance.auroraEverywhere ? ColorUtils.transparentize(effectiveColors?.colLayer0 ?? Appearance.colors.colLayer0, 0.7)
              : (effectiveColors?.colLayer0 ?? Appearance.colors.colLayer0)
-        border.width: Appearance.zzzEverywhere ? 0 : (Appearance.angelEverywhere ? 0 : (Appearance.inirEverywhere ? 1 : 0))
+        border.width: Appearance.zzzEverywhere ? 0 : (Appearance.angelEverywhere ? 0 : (Appearance.lunanaEverywhere ? 1 : 0))
         border.color: Appearance.zzzEverywhere ? "transparent"
             : Appearance.angelEverywhere ? "transparent"
-            : Appearance.inirEverywhere ? Appearance.inir.colBorder : "transparent"
+            : Appearance.lunanaEverywhere ? Appearance.lunana.colBorder : "transparent"
         clip: true
         Behavior on radius { enabled: Appearance.animationsEnabled; NumberAnimation { duration: Appearance.animation.elementResize.duration; easing.type: Appearance.animation.elementResize.type; easing.bezierCurve: Appearance.animation.elementResize.bezierCurve } }
         Behavior on color { enabled: Appearance.animationsEnabled; ColorAnimation { duration: Appearance.animation.elementMoveFast.duration; easing.type: Appearance.animation.elementMoveFast.type; easing.bezierCurve: Appearance.animation.elementMoveFast.bezierCurve } }
@@ -151,7 +151,7 @@ Item {
             maskSource: Rectangle { width: card.width; height: card.height; radius: card.radius }
         }
 
-        // Cover art background - subtle for inir, more transparent for aurora
+        // Cover art background - subtle for lunana, more transparent for aurora
         Image {
             id: bgArt
             anchors.fill: parent
@@ -159,22 +159,22 @@ Item {
             fillMode: Image.PreserveAspectCrop
             asynchronous: true
             cache: false
-            opacity: Appearance.angelEverywhere ? 0.2 : (Appearance.inirEverywhere ? 0.15 : (Appearance.auroraEverywhere ? 0.25 : 0.5))
+            opacity: Appearance.angelEverywhere ? 0.2 : (Appearance.lunanaEverywhere ? 0.15 : (Appearance.auroraEverywhere ? 0.25 : 0.5))
             visible: !Appearance.editorialEverywhere && root.displayedArtFilePath !== ""
 
             layer.enabled: Appearance.effectsEnabled
             layer.effect: MultiEffect {
                 blurEnabled: true
-                blur: Appearance.inirEverywhere ? 0.3 : 0.15
+                blur: Appearance.lunanaEverywhere ? 0.3 : 0.15
                 blurMax: 16
-                saturation: Appearance.inirEverywhere ? 0.1 : 0.3
+                saturation: Appearance.lunanaEverywhere ? 0.1 : 0.3
             }
         }
 
         // Dark overlay for controls visibility - only for Material
         Rectangle {
             anchors.fill: parent
-            visible: !Appearance.editorialEverywhere && !Appearance.inirEverywhere && !Appearance.auroraEverywhere
+            visible: !Appearance.editorialEverywhere && !Appearance.lunanaEverywhere && !Appearance.auroraEverywhere
             gradient: Gradient {
                 orientation: Gradient.Horizontal
                 GradientStop { position: 0.0; color: "transparent" }
@@ -195,7 +195,7 @@ Item {
             smoothing: 2
             color: ColorUtils.transparentize(
                 Appearance.angelEverywhere ? Appearance.angel.colPrimary
-                : Appearance.inirEverywhere ? root.jiraColPrimary : (effectiveColors?.colPrimary ?? Appearance.colors.colPrimary),
+                : Appearance.lunanaEverywhere ? root.jiraColPrimary : (effectiveColors?.colPrimary ?? Appearance.colors.colPrimary),
                 0.6
             )
         }
@@ -212,12 +212,12 @@ Item {
                 Layout.preferredHeight: 110
                 artRadius: Appearance.zzzEverywhere ? Appearance.zzz.roundNormal
                     : Appearance.angelEverywhere ? Appearance.angel.roundingSmall
-                    : Appearance.inirEverywhere ? Appearance.inir.roundingSmall : Appearance.rounding.small
+                    : Appearance.lunanaEverywhere ? Appearance.lunana.roundingSmall : Appearance.rounding.small
                 source: root.displayedArtFilePath
                 downloaded: root.downloaded
                 slideDirection: root.slideDirection
                 placeholderColor: Appearance.angelEverywhere ? Appearance.angel.colGlassCard
-                    : Appearance.inirEverywhere ? root.jiraColLayer2
+                    : Appearance.lunanaEverywhere ? root.jiraColLayer2
                     : (effectiveColors?.colLayer1 ?? Appearance.colors.colLayer1)
                 iconColor: root.mediaMetadata
                 iconSize: 32
@@ -276,7 +276,7 @@ Item {
                         animateWave: !Appearance.editorialEverywhere && root.effectiveIsPlaying
                         highlightColor: root.mediaAccent
                         trackColor: Appearance.angelEverywhere ? Appearance.angel.colGlassCard
-                            : Appearance.inirEverywhere ? Appearance.inir.colLayer2
+                            : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2
                             : Appearance.auroraEverywhere ? Appearance.colInactiveControlSurface
                             : (effectiveColors?.colSecondaryContainer ?? Appearance.colors.colSecondaryContainer)
                         handleColor: root.mediaAccent
@@ -363,7 +363,7 @@ Item {
                         implicitHeight: 32
                         enabled: MprisController.canGoPrevious
                         buttonRadius: Appearance.editorialEverywhere ? Appearance.rounding.small : Appearance.zzzEverywhere ? Appearance.zzz.controlRadius : Appearance.angelEverywhere ? Appearance.angel.roundingSmall
-                            : Appearance.inirEverywhere ? Appearance.inir.roundingSmall : Appearance.rounding.full
+                            : Appearance.lunanaEverywhere ? Appearance.lunana.roundingSmall : Appearance.rounding.full
                         colBackground: "transparent"
                         colBackgroundHover: Appearance.colLayer1Hover
                         colRipple: Appearance.colLayer1Active
@@ -390,14 +390,14 @@ Item {
                         implicitWidth: 40
                         implicitHeight: 40
                         buttonRadius: Appearance.editorialEverywhere ? Appearance.rounding.small : Appearance.angelEverywhere ? Appearance.angel.roundingSmall
-                            : Appearance.inirEverywhere 
-                            ? Appearance.inir.roundingSmall 
+                            : Appearance.lunanaEverywhere 
+                            ? Appearance.lunana.roundingSmall 
                             : (root.effectiveIsPlaying ? Appearance.rounding.normal : Appearance.rounding.full)
                         colBackground: Appearance.zzzEverywhere
                             ? (root.effectiveIsPlaying ? Appearance.zzz.sticker : Appearance.colors.colLayer1)
                             : Appearance.angelEverywhere
                             ? "transparent"
-                            : Appearance.inirEverywhere
+                            : Appearance.lunanaEverywhere
                             ? "transparent"
                             : Appearance.auroraEverywhere
                                 ? "transparent"
@@ -408,8 +408,8 @@ Item {
                             ? (root.effectiveIsPlaying ? Appearance.colors.colPrimaryHover : Appearance.colLayer1Hover)
                             : Appearance.angelEverywhere
                             ? Appearance.angel.colGlassCardHover
-                            : Appearance.inirEverywhere
-                            ? Appearance.inir.colLayer2Hover
+                            : Appearance.lunanaEverywhere
+                            ? Appearance.lunana.colLayer2Hover
                             : Appearance.auroraEverywhere
                                 ? ColorUtils.transparentize(effectiveColors?.colLayer1 ?? Appearance.colors.colLayer1, 0.5)
                                 : (root.effectiveIsPlaying 
@@ -419,8 +419,8 @@ Item {
                             ? (root.effectiveIsPlaying ? Appearance.colors.colPrimaryActive : Appearance.colLayer1Active)
                             : Appearance.angelEverywhere
                             ? Appearance.angel.colGlassCardActive
-                            : Appearance.inirEverywhere
-                            ? Appearance.inir.colLayer2Active
+                            : Appearance.lunanaEverywhere
+                            ? Appearance.lunana.colLayer2Active
                             : Appearance.auroraEverywhere
                                 ? (effectiveColors?.colLayer1Active ?? Appearance.colLayer1Active)
                                 : (root.effectiveIsPlaying 
@@ -429,7 +429,7 @@ Item {
                         onClicked: MprisController.togglePlaying()
 
                         Behavior on buttonRadius {
-                            enabled: Appearance.animationsEnabled && !Appearance.inirEverywhere
+                            enabled: Appearance.animationsEnabled && !Appearance.lunanaEverywhere
                             NumberAnimation { duration: Appearance.animation.elementMoveFast.duration }
                         }
 
@@ -443,7 +443,7 @@ Item {
                                     ? (root.effectiveIsPlaying ? Appearance.zzz.onSticker : Appearance.colors.colOnLayer1)
                                     : Appearance.angelEverywhere
                                     ? Appearance.angel.colPrimary
-                                    : Appearance.inirEverywhere
+                                    : Appearance.lunanaEverywhere
                                     ? root.jiraColPrimary
                                     : Appearance.auroraEverywhere
                                         ? root.mediaAccent
@@ -466,7 +466,7 @@ Item {
                         implicitHeight: 32
                         enabled: MprisController.canGoNext
                         buttonRadius: Appearance.editorialEverywhere ? Appearance.rounding.small : Appearance.angelEverywhere ? Appearance.angel.roundingSmall
-                            : Appearance.inirEverywhere ? Appearance.inir.roundingSmall : Appearance.rounding.full
+                            : Appearance.lunanaEverywhere ? Appearance.lunana.roundingSmall : Appearance.rounding.full
                         colBackground: "transparent"
                         colBackgroundHover: Appearance.colLayer1Hover
                         colRipple: Appearance.colLayer1Active

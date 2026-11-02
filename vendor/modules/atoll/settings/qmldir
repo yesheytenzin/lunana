@@ -1,0 +1,16 @@
+AtollAboutPage 1.0 AtollAboutPage.qml
+AtollGameModeCard 1.0 AtollGameModeCard.qml
+AtollLinkCard 1.0 AtollLinkCard.qml
+AtollLinkRow 1.0 AtollLinkRow.qml
+singleton AtollNiri 1.0 AtollNiri.qml
+AtollNiriMotionGallery 1.0 AtollNiriMotionGallery.qml
+singleton AtollOptions 1.0 AtollOptions.qml
+singleton AtollSearch 1.0 AtollSearch.qml
+AtollSetting 1.0 AtollSetting.qml
+AtollSettings 1.0 AtollSettings.qml
+AtollSettingsOverlay 1.0 AtollSettingsOverlay.qml
+AtollSettingsWindow 1.0 AtollSettingsWindow.qml
+AtollShortcutsPage 1.0 AtollShortcutsPage.qml
+AtollSquircle 1.0 AtollSquircle.qml
+singleton AtollThemes 1.0 AtollThemes.qml
+AtollWallpaperCard 1.0 AtollWallpaperCard.qml

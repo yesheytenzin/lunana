@@ -5,7 +5,7 @@
   "version": "0.4.0",
   "author": "lunana",
   "license": "GPL-3.0",
-  "description": "Wave-0 foundation probe: renders a vendored inir PanelSurface to prove the token system + widget library load inside Omarchy. Dev-only.",
+  "description": "Wave-0 foundation probe: renders a vendored lunana PanelSurface to prove the token system + widget library load inside Omarchy. Dev-only.",
   "kinds": [
     "service"
   ],

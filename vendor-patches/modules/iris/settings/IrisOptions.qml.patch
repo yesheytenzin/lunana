@@ -1,0 +1,31 @@
+# vendor-patches/modules/iris/settings/IrisOptions.qml.patch
+#
+# Lunana family switching through the Omarchy shell.
+#
+# Why a patch and not an upstream change: under lunana the families are
+# Omarchy plugin sets switched by `family-cycle` (bar host + enabled set),
+# not upstream config values. Upstream's `scripts/inir panelFamily set` script
+# is not even vendored, so every upstream-side family button is dead here — and
+# upstream has no Omarchy stock target at all. This behavior lives here,
+# applied by `scripts/vendor.py --patch` after vendoring (and before
+# `scripts/vendor-rename.py`, so hunks match the pre-rename upstream text).
+# Re-vendoring modules/atoll/settings/AtollOptions.qml requires re-running
+# `--patch` (it fails loudly on drift instead of misapplying silently).
+#
+# What it changes: the panelFamily commit routes through
+# `omarchy-shell lunana.family set` (which switches bar host + plugin set
+# and mirrors back into the vendored panelFamily via lunana.state), the
+# Shell-family choice row uses Lunana's Drift/Slate/Atoll names and gains the
+# Omarchy stock target, and the switch-shortcut row lists the same names.
+
+--- a/modules/iris/settings/IrisOptions.qml
++++ b/modules/iris/settings/IrisOptions.qml
+@@ -47,1 +47,1 @@
+-        if (spec.path === "panelFamily") Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")), "panelFamily", "set", String(next)])
++        if (spec.path === "panelFamily") Quickshell.execDetached(["omarchy-shell", "lunana.family", "set", String(next)])
+@@ -849,1 +849,1 @@
+-        { section: "general", group: "Shell family", label: "Family", description: "The whole shell's look. Each family keeps its own settings, so you can come back.", path: "panelFamily", kind: "choice", fallback: "iris", choices: [{label:"iRiS",value:"iris",glyph:"visibility"},{label:"Material",value:"ii",glyph:"dashboard"},{label:"Windows 11",value:"waffle",glyph:"window"}], keywords: ["family", "material", "waffle", "windows", "ii", "switch", "familia"] },
++        { section: "general", group: "Shell family", label: "Family", description: "The whole shell's look. Each family keeps its own settings, so you can come back — or go back to stock Omarchy.", path: "panelFamily", kind: "choice", fallback: "atoll", choices: [{label:"Atoll",value:"atoll",glyph:"visibility"},{label:"Drift",value:"drift",glyph:"dashboard"},{label:"Slate",value:"slate",glyph:"window"},{label:"Omarchy stock",value:"stock",glyph:"desktop_windows"}], keywords: ["family", "drift", "slate", "atoll", "switch", "familia", "stock", "omarchy", "back"] },
+@@ -850,1 +850,1 @@
+-        { section: "general", group: "Shell family", label: "Switch shortcut goes through", description: "The families the switch keybind steps through, in the order you turn them on.", path: "familyCycle", kind: "pieces", fallback: ["ii", "waffle", "iris"], choices: [{label:"iRiS",value:"iris"},{label:"Material",value:"ii"},{label:"Windows 11",value:"waffle"}], keywords: ["family", "cycle", "shortcut", "keybind", "switch"] },
++        { section: "general", group: "Shell family", label: "Switch shortcut goes through", description: "The families the switch keybind steps through, in the order you turn them on.", path: "familyCycle", kind: "pieces", fallback: ["drift", "slate", "atoll"], choices: [{label:"Atoll",value:"atoll"},{label:"Drift",value:"drift"},{label:"Slate",value:"slate"}], keywords: ["family", "cycle", "shortcut", "keybind", "switch"] },

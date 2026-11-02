@@ -1,0 +1,6 @@
+AtollAppsSync 1.0 AtollAppsSync.qml
+singleton AtollCompositorBlur 1.0 AtollCompositorBlur.qml
+singleton AtollGate 1.0 AtollGate.qml
+singleton AtollMood 1.0 AtollMood.qml
+singleton AtollStyle 1.0 AtollStyle.qml
+singleton AtollWashi 1.0 AtollWashi.qml

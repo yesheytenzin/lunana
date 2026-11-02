@@ -19,7 +19,7 @@ Item {
     // Easter egg: long-press the clock → bedtime lecture, whatever the hour
     TapHandler {
         enabled: Config.options?.mascot?.enable ?? false
-        onLongPressed: Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")), "mascot", "appear", "late-night", "top"])
+        onLongPressed: Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/lunana")), "mascot", "appear", "late-night", "top"])
     }
 
     RowLayout {
@@ -36,7 +36,7 @@ Item {
             font.letterSpacing: Appearance.editorialEverywhere ? Appearance.editorial.titleTracking : 0
             font.features: { "tnum": 1 }
             color: Appearance.editorialEverywhere ? Appearance.editorial.accent : Appearance.angelEverywhere ? Appearance.angel.colText
-                : Appearance.inirEverywhere ? Appearance.inir.colText : Appearance.colors.colOnLayer1
+                : Appearance.lunanaEverywhere ? Appearance.lunana.colText : Appearance.colors.colOnLayer1
             text: DateTime.timeDisplay
         }
 
@@ -45,7 +45,7 @@ Item {
             StyledText {
                 font.pixelSize: Appearance.font.pixelSize.small
                 color: Appearance.editorialEverywhere ? Appearance.editorial.rule : Appearance.angelEverywhere ? Appearance.angel.colTextSecondary
-                    : Appearance.inirEverywhere ? Appearance.inir.colText : Appearance.colors.colOnLayer1
+                    : Appearance.lunanaEverywhere ? Appearance.lunana.colText : Appearance.colors.colOnLayer1
                 text: "•"
             }
         }
@@ -58,7 +58,7 @@ Item {
                 font.pixelSize: root._datePixelSize > 0
                     ? root._datePixelSize : Appearance.font.pixelSize.small
                 color: Appearance.editorialEverywhere ? Appearance.editorial.muted : Appearance.angelEverywhere ? Appearance.angel.colText
-                    : Appearance.inirEverywhere ? Appearance.inir.colText : Appearance.colors.colOnLayer1
+                    : Appearance.lunanaEverywhere ? Appearance.lunana.colText : Appearance.colors.colOnLayer1
                 text: DateTime.date
             }
         }

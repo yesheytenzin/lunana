@@ -7,8 +7,8 @@ import "../../lunana-vendor/modules/dock" as LnDock
 
 // Wave-0 foundation probe (kind: service, dev-only).
 //
-// Renders one vendored inir PanelSurface inside Omarchy's shell process. If this
-// maps and paints, the whole foundation works: inir's token system (Appearance),
+// Renders one vendored lunana PanelSurface inside Omarchy's shell process. If this
+// maps and paints, the whole foundation works: lunana's token system (Appearance),
 // the Config/ThemePresets/MaterialThemeLoader shims, and the widget library all
 // load under relative-path imports in Omarchy's `qs`-claimed engine.
 Item {
@@ -16,7 +16,7 @@ Item {
     property var shell: null
     property var manifest: null
 
-    // Wave-A 2a: the exact vendored ii dock. Window-dependent parts render
+    // Wave-A 2a: the exact vendored drift dock. Window-dependent parts render
     // empty (service stubs) — this unit proves the tree loads and paints.
     LnDock.Dock {
     }
@@ -46,7 +46,7 @@ Item {
                         Text {
                             anchors.horizontalCenter: parent.horizontalCenter
                             horizontalAlignment: Text.AlignHCenter
-                            text: "lunana × inir\nvendored PanelSurface\nstyle: " + LnCommon.Appearance.globalStyle
+                            text: "lunana × lunana\nvendored PanelSurface\nstyle: " + LnCommon.Appearance.globalStyle
                             color: LnCommon.Appearance.m3colors.m3onSurface
                             font.pixelSize: 16
                             font.bold: true

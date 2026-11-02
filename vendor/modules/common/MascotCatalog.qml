@@ -70,7 +70,7 @@ Singleton {
     FileView {
         id: packStateProbe
         path: (Quickshell.env("XDG_STATE_HOME") || (Quickshell.env("HOME") + "/.local/state"))
-            + "/inir/mascot-pack-state.json"
+            + "/lunana/mascot-pack-state.json"
         watchChanges: true
         printErrors: false
         onLoaded: root._refreshPackState()
@@ -81,19 +81,19 @@ Singleton {
     // Optional art profiles are valid only when their published assets are installed.
     FileView {
         id: presenceProbe
-        path: ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("assets/images/mascot/inir-mascot-presence-idle-loop.gif"))
+        path: ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("assets/images/mascot/lunana-mascot-presence-idle-loop.gif"))
         watchChanges: true
         printErrors: false
     }
     FileView {
         id: jrpgProbe
-        path: ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("assets/images/mascot/inir-mascot-jrpg-idle-loop.gif"))
+        path: ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("assets/images/mascot/lunana-mascot-jrpg-idle-loop.gif"))
         watchChanges: true
         printErrors: false
     }
     FileView {
         id: codexProbe
-        path: ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("assets/images/mascot/inir-mascot-codex-idle-loop.gif"))
+        path: ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("assets/images/mascot/lunana-mascot-codex-idle-loop.gif"))
         watchChanges: true
         printErrors: false
     }
@@ -156,7 +156,7 @@ Singleton {
         if (!pose || pose.length === 0)
             return ""
         const ext = root.isAnimated(pose) ? "gif" : "png"
-        return ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + (`assets/images/mascot/inir-mascot-${pose}.${ext}`))
+        return ((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + (`assets/images/mascot/lunana-mascot-${pose}.${ext}`))
     }
 
     function displayName(pose) {

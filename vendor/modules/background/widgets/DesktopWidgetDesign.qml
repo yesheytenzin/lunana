@@ -10,14 +10,14 @@ QtObject {
     // A design overlays only presentation keys; stored sizes, content and each widget's own styles
     // stay in the config. Choosing a design moves every widget onto it and keeps the exceptions it
     // cleared in `background.widgets.designUndo`, so the change can be taken back.
-    readonly property string family: Config.options?.panelFamily ?? "ii"
+    readonly property string family: Config.options?.panelFamily ?? "drift"
     readonly property string shared: Config.options?.background?.widgets?.design ?? "individual"
-    readonly property var irisDesigns: ["iris", "material", "instrument", "readout"]
-    readonly property string irisGlobal: {
-        const own = String(Config.options?.iris?.widgets?.design ?? "iris")
-        return root.irisDesigns.includes(own) ? own : "iris"
+    readonly property var atollDesigns: ["atoll", "material", "instrument", "readout"]
+    readonly property string atollGlobal: {
+        const own = String(Config.options?.atoll?.widgets?.design ?? "atoll")
+        return root.atollDesigns.includes(own) ? own : "atoll"
     }
-    readonly property string current: root.family === "iris" ? root.irisGlobal
+    readonly property string current: root.family === "atoll" ? root.atollGlobal
         : root.shared === "individual" ? "material" : root.shared
     readonly property var choices: [
         { label: "Individual", value: "individual", icon: "widgets" },
@@ -51,20 +51,20 @@ QtObject {
         return ({})
     }
 
-    // What one widget draws: `face` is the iRiS face, `design` the overlay on the Material widget.
-    function resolve(widget: string, ownIris: string, ownShared: string, hasFace: bool): var {
-        if (root.family === "iris") {
-            const design = root.irisDesigns.includes(ownIris) ? ownIris : root.irisGlobal
+    // What one widget draws: `face` is the Atoll face, `design` the overlay on the Material widget.
+    function resolve(widget: string, ownAtoll: string, ownShared: string, hasFace: bool): var {
+        if (root.family === "atoll") {
+            const design = root.atollDesigns.includes(ownAtoll) ? ownAtoll : root.atollGlobal
             const overlaid = ["instrument", "readout"].includes(design)
             if (overlaid && !root.supports(widget) && hasFace) return { face: true, design: "individual" }
-            return { face: design === "iris", design: overlaid ? design : "individual" }
+            return { face: design === "atoll", design: overlaid ? design : "individual" }
         }
-        if (!["ii"].includes(root.family)) return { face: false, design: "individual" }
+        if (!["drift"].includes(root.family)) return { face: false, design: "individual" }
         return { face: false, design: ["individual", "instrument", "readout"].includes(ownShared) ? ownShared : root.shared }
     }
 
     // Per-widget exceptions: the look one widget chose for itself, which a design change clears.
-    readonly property var exceptionKeys: root.family === "iris" ? ["iris.design"] : ["design"]
+    readonly property var exceptionKeys: root.family === "atoll" ? ["atoll.design"] : ["design"]
     function _own(value): bool {
         return value !== undefined && value !== null && String(value) !== "auto" && String(value) !== ""
     }
@@ -112,18 +112,18 @@ QtObject {
     }
 
     function apply(design: string): string {
-        const name = design === "individual" && root.family === "iris" ? "material" : design
-        if (!["iris", "material", "individual", "instrument", "readout"].includes(name))
-            return "Choose iris, material, individual, instrument or readout"
-        if (name === "iris" && root.family !== "iris") return "iRiS faces need the iRiS family"
+        const name = design === "individual" && root.family === "atoll" ? "material" : design
+        if (!["atoll", "material", "individual", "instrument", "readout"].includes(name))
+            return "Choose atoll, material, individual, instrument or readout"
+        if (name === "atoll" && root.family !== "atoll") return "Atoll faces need the Atoll family"
         const cleared = root.exceptions
         const updates = root._clearExceptions(cleared)
         const undo = cleared.slice()
-        const iris = root.family === "iris"
-        const key = iris ? "iris.widgets.design" : "background.widgets.design"
-        const before = iris ? String(Config.options?.iris?.widgets?.design ?? "iris") : root.shared
+        const atoll = root.family === "atoll"
+        const key = atoll ? "atoll.widgets.design" : "background.widgets.design"
+        const before = atoll ? String(Config.options?.atoll?.widgets?.design ?? "atoll") : root.shared
         undo.push({ output: "", widget: "", key: key, value: before })
-        updates[key] = iris ? (name === "individual" ? "material" : name)
+        updates[key] = atoll ? (name === "individual" ? "material" : name)
             : ["instrument", "readout"].includes(name) ? name : "individual"
         const changed = cleared.length > 0 || updates[key] !== before
         // Trying designs one after another keeps the first snapshot: undo returns to the looks from
@@ -133,9 +133,9 @@ QtObject {
         return name
     }
 
-    readonly property var surfaceKeys: ["iris.material", "iris.opacity"]
+    readonly property var surfaceKeys: ["atoll.material", "atoll.opacity"]
     function _ownSurface(key: string, value): bool {
-        if (key === "iris.opacity") return Number(value) >= 20
+        if (key === "atoll.opacity") return Number(value) >= 20
         return ["glass", "clear", "solid", "tinted"].includes(String(value))
     }
     readonly property var ownSurfaces: {
@@ -166,7 +166,7 @@ QtObject {
         const updates = ({})
         for (const entry of list) {
             if (entry.output === "") {
-                updates["background.widgets." + entry.widget + "." + entry.key] = entry.key === "iris.opacity" ? -1 : "auto"
+                updates["background.widgets." + entry.widget + "." + entry.key] = entry.key === "atoll.opacity" ? -1 : "auto"
                 continue
             }
             for (const record of records)

@@ -8,18 +8,18 @@ import (
 )
 
 func TestShellKnowsVersion(t *testing.T) {
-	qml, err := os.ReadFile("../../../modules/iris/style/IrisWashi.qml")
+	qml, err := os.ReadFile("../../../modules/atoll/style/AtollWashi.qml")
 	if err != nil {
 		t.Fatal(err)
 	}
 	if want := fmt.Sprintf("readonly property int version: %d", Version); !strings.Contains(string(qml), want) {
-		t.Errorf("IrisWashi.qml must declare %q", want)
+		t.Errorf("AtollWashi.qml must declare %q", want)
 	}
 }
 
 // Settings' paper tiles write the same tone and warmth the solver swatches them with.
 func TestShellKnowsPaperLevels(t *testing.T) {
-	qml, err := os.ReadFile("../../../modules/iris/settings/IrisOptions.qml")
+	qml, err := os.ReadFile("../../../modules/atoll/settings/AtollOptions.qml")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -27,7 +27,7 @@ func TestShellKnowsPaperLevels(t *testing.T) {
 		for _, l := range levels {
 			want := fmt.Sprintf("\"%s\", %g, %g]", l.name, l.tone, l.warmth)
 			if !strings.Contains(string(qml), want) {
-				t.Errorf("IrisOptions.paperChoices must carry %s", want)
+				t.Errorf("AtollOptions.paperChoices must carry %s", want)
 			}
 		}
 	}
@@ -35,7 +35,7 @@ func TestShellKnowsPaperLevels(t *testing.T) {
 
 // Paper levels keep the language's paper at its own warmth, read on every level, and Ink wears washi unless asked.
 func TestPaperLevels(t *testing.T) {
-	for _, lang := range []string{"iris", "washi", "material"} {
+	for _, lang := range []string{"atoll", "washi", "material"} {
 		for scheme, levels := range paperLevels {
 			plain := build(Request{Language: lang, Material: "black"}, scheme)
 			own := ownWarmth[scheme]
@@ -57,10 +57,10 @@ func TestPaperLevels(t *testing.T) {
 		}
 	}
 	washiInk := build(Request{Language: "washi", Material: "black"}, "ink").Surface
-	if got := build(Request{Language: "iris", Material: "black"}, "ink").Surface; got != washiInk {
-		t.Errorf("Ink under iRiS wears %s, want washi's %s", got, washiInk)
+	if got := build(Request{Language: "atoll", Material: "black"}, "ink").Surface; got != washiInk {
+		t.Errorf("Ink under Atoll wears %s, want washi's %s", got, washiInk)
 	}
-	if got := build(Request{Language: "iris", Material: "black", InkStyle: "style"}, "ink").Surface; got == washiInk {
+	if got := build(Request{Language: "atoll", Material: "black", InkStyle: "style"}, "ink").Surface; got == washiInk {
 		t.Errorf("Ink following the style still wears washi's %s", got)
 	}
 }
@@ -70,7 +70,7 @@ func TestPaperLevels(t *testing.T) {
 // Washi runs every accent; each Material variant every third, in parallel.
 func TestEveryCombinationReads(t *testing.T) {
 	type lang struct{ name, variant string }
-	langs := []lang{{"washi", ""}, {"iris", ""}}
+	langs := []lang{{"washi", ""}, {"atoll", ""}}
 	for _, v := range variants {
 		langs = append(langs, lang{"material", v.name})
 	}

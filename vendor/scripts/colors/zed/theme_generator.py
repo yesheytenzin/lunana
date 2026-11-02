@@ -998,24 +998,24 @@ def generate_zed_config(
 
     theme_data = {
         "$schema": "https://zed.dev/schema/themes/v0.2.0.json",
-        "name": "iNiR Material",
-        "author": "iNiR Theme System",
+        "name": "Lunana Material",
+        "author": "Lunana Theme System",
         "themes": [
-            {"name": "iNiR Dark", "appearance": "dark", "style": dark_style},
-            {"name": "iNiR Light", "appearance": "light", "style": light_style},
+            {"name": "Lunana Dark", "appearance": "dark", "style": dark_style},
+            {"name": "Lunana Light", "appearance": "light", "style": light_style},
             {
-                "name": "iNiR Borderless Dark",
+                "name": "Lunana Borderless Dark",
                 "appearance": "dark",
                 "style": borderless_dark_style,
             },
             {
-                "name": "iNiR Borderless Light",
+                "name": "Lunana Borderless Light",
                 "appearance": "light",
                 "style": borderless_light_style,
             },
-            {"name": "iNiR-alt Dark", "appearance": "dark", "style": alt_dark_style},
+            {"name": "Lunana-alt Dark", "appearance": "dark", "style": alt_dark_style},
             {
-                "name": "iNiR-alt Light",
+                "name": "Lunana-alt Light",
                 "appearance": "light",
                 "style": alt_light_style,
             },

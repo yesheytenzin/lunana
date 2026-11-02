@@ -28,7 +28,7 @@ Item {
     Loader {
         active: root.enableShadow && !root.transparent && !Appearance.zzzEverywhere
             && !Appearance.editorialEverywhere
-            && (Appearance.angelEverywhere || (!Appearance.inirEverywhere && !Appearance.auroraEverywhere))
+            && (Appearance.angelEverywhere || (!Appearance.lunanaEverywhere && !Appearance.auroraEverywhere))
         anchors.fill: background
         sourceComponent: StyledRectangularShadow {
             target: background
@@ -52,7 +52,7 @@ Item {
         fallbackColor: Appearance.zzzEverywhere ? "transparent"
             : Appearance.editorialEverywhere ? Appearance.editorial.layer(1)
             : Appearance.colors.colSurfaceContainer
-        inirColor: Appearance.inir.colLayer2
+        lunanaColor: Appearance.lunana.colLayer2
         auroraTransparency: Appearance.aurora.overlayTransparentize
         screenX: root.screenX
         screenY: root.screenY
@@ -60,7 +60,7 @@ Item {
         screenHeight: Quickshell.screens[0]?.height ?? 1080
         border.width: Appearance.zzzEverywhere ? 0
             : Appearance.editorialEverywhere ? 1
-            : (Appearance.angelEverywhere || Appearance.inirEverywhere || Appearance.auroraEverywhere) ? 1 : 0
+            : (Appearance.angelEverywhere || Appearance.lunanaEverywhere || Appearance.auroraEverywhere) ? 1 : 0
         Behavior on border.width {
             enabled: Appearance.animationsEnabled
             NumberAnimation { duration: Appearance.animation.elementMoveFast.duration; easing.type: Appearance.animation.elementMoveFast.type; easing.bezierCurve: Appearance.animation.elementMoveFast.bezierCurve }
@@ -68,7 +68,7 @@ Item {
         border.color: Appearance.zzzEverywhere ? Appearance.zzz.hairlineStrong
             : Appearance.editorialEverywhere ? Appearance.editorial.rule
             : Appearance.angelEverywhere ? Appearance.angel.colBorder
-            : Appearance.inirEverywhere ? Appearance.inir.colBorder 
+            : Appearance.lunanaEverywhere ? Appearance.lunana.colBorder 
             : Appearance.auroraEverywhere ? Appearance.aurora.colTooltipBorder : "transparent"
         Behavior on border.color {
             enabled: Appearance.animationsEnabled
@@ -79,7 +79,7 @@ Item {
         radius: Appearance.regaliaEverywhere ? Appearance.regalia.roundNormal
             : Appearance.zzzEverywhere ? Appearance.zzz.controlRadius
             : Appearance.angelEverywhere ? Appearance.angel.roundingNormal
-            : Appearance.inirEverywhere ? Appearance.inir.roundingNormal
+            : Appearance.lunanaEverywhere ? Appearance.lunana.roundingNormal
             : Appearance.editorialEverywhere ? Appearance.rounding.small : (height / 2)
         Behavior on radius {
             enabled: Appearance.animationsEnabled

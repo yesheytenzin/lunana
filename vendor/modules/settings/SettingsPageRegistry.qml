@@ -11,7 +11,7 @@ import "../common"
  * (settings.qml): page list, sidebar categories and the static search index.
  * Component paths are relative to the modules tree — resolve with
  * resolveComponent(page.component), which anchors at this registry's own
- * module directory. That matches Quickshell.shellPath under inir's own
+ * module directory. That matches Quickshell.shellPath under lunana's own
  * shell, and keeps working when the tree is re-hosted (e.g. vendored under
  * Omarchy, whose shell root owns no copy of these files).
  */
@@ -120,12 +120,12 @@ Singleton {
             component: "modules/settings/ModulesConfig.qml"
         },
         {
-            key: "waffle-style",
-            name: Translation.tr("Waffle Style"),
+            key: "slate-style",
+            name: Translation.tr("Slate Style"),
             icon: "window",
-            desc: Translation.tr("Win11-style taskbar"),
+            desc: Translation.tr("Slate-style taskbar"),
             essential: false,
-            component: "modules/settings/WaffleConfig.qml"
+            component: "modules/settings/SlateConfig.qml"
         },
         {
             key: "compositor",
@@ -171,7 +171,7 @@ Singleton {
             key: "autostart",
             name: Translation.tr("Autostart"),
             icon: "rocket_launch",
-            desc: Translation.tr("Apps that start with iNiR"),
+            desc: Translation.tr("Apps that start with Lunana"),
             essential: false,
             component: "modules/settings/AutostartConfig.qml"
         },
@@ -256,12 +256,12 @@ Singleton {
             component: "modules/settings/OrbitConfig.qml"
         },
         {
-            key: "iris",
-            name: "iRiS",
+            key: "atoll",
+            name: "Atoll",
             icon: "visibility",
             desc: Translation.tr("Apple-inspired Island shell and modules"),
             essential: true,
-            component: "modules/settings/IrisConfig.qml"
+            component: "modules/settings/AtollConfig.qml"
         }
     ]
 
@@ -453,7 +453,7 @@ Singleton {
             pageIndex: 0, pageName: root.pages[0].name,
             section: Translation.tr("Capture locations"),
             label: Translation.tr("Screenshots folder"),
-            description: Translation.tr("Where iNiR screenshots are saved"),
+            description: Translation.tr("Where Lunana screenshots are saved"),
             keywords: ["capture", "screenshot", "snip", "save", "path", "folder", "directory", "picture"]
         },
         {
@@ -924,8 +924,8 @@ Singleton {
             pageIndex: 4, pageName: root.pages[4].name,
             section: Translation.tr("Global Style"),
             label: Translation.tr("Global Style"),
-            description: Translation.tr("Material, Cards, Aurora glass effect, Inir TUI style"),
-            keywords: ["global", "style", "aurora", "inir", "material", "cards", "glass", "tui", "transparency", "blur"]
+            description: Translation.tr("Material, Cards, Aurora glass effect, Lunana TUI style"),
+            keywords: ["global", "style", "aurora", "lunana", "material", "cards", "glass", "tui", "transparency", "blur"]
         },
         {
             pageIndex: 4, pageName: root.pages[4].name,
@@ -944,9 +944,9 @@ Singleton {
         {
             pageIndex: 4, pageName: root.pages[4].name,
             section: Translation.tr("Global Style"),
-            label: Translation.tr("Inir"),
+            label: Translation.tr("Lunana"),
             description: Translation.tr("TUI-inspired style with accent borders"),
-            keywords: ["inir", "tui", "terminal", "borders", "style", "minimal"]
+            keywords: ["lunana", "tui", "terminal", "borders", "style", "minimal"]
         },
         {
             pageIndex: 4, pageName: root.pages[4].name,
@@ -1090,19 +1090,19 @@ Singleton {
             pageIndex: 5, pageName: root.pages[5].name,
             section: Translation.tr("Alt+Tab"),
             label: Translation.tr("Alt+Tab opens"),
-            description: Translation.tr("Niri's Recent Windows or the iNiR switcher"),
-            keywords: ["alt", "tab", "alt+tab", "switcher", "window", "windows", "recent", "niri", "inir", "switch", "cycle", "keybind", "shortcut"]
+            description: Translation.tr("Niri's Recent Windows or the Lunana switcher"),
+            keywords: ["alt", "tab", "alt+tab", "switcher", "window", "windows", "recent", "niri", "lunana", "switch", "cycle", "keybind", "shortcut"]
         },
         {
             pageIndex: 5, pageName: root.pages[5].name,
-            section: Translation.tr("Alt-Tab switcher (Material ii)"),
+            section: Translation.tr("Alt-Tab switcher (Material drift)"),
             label: Translation.tr("Alt+Tab Switcher"),
             description: Translation.tr("Window switcher preset and behavior"),
             keywords: ["alt", "tab", "switcher", "window", "preset", "default", "list", "compact"]
         },
         {
             pageIndex: 5, pageName: root.pages[5].name,
-            section: Translation.tr("Alt-Tab switcher (Material ii)"),
+            section: Translation.tr("Alt-Tab switcher (Material drift)"),
             label: Translation.tr("Alt+Tab preset"),
             description: Translation.tr("Switcher style: default sidebar or centered list"),
             keywords: ["alt", "tab", "preset", "style", "sidebar", "list", "compact"]
@@ -1437,7 +1437,7 @@ Singleton {
             pageIndex: 6, pageName: root.pages[6].name,
             section: Translation.tr("Region selector (screen snipping/Google Lens)"),
             label: Translation.tr("Screenshots folder"),
-            description: Translation.tr("Choose where iNiR screenshots are saved"),
+            description: Translation.tr("Choose where Lunana screenshots are saved"),
             keywords: ["screenshot", "snip", "capture", "save", "path", "folder", "directory", "destination"]
         },
         {
@@ -1673,7 +1673,7 @@ Singleton {
             pageIndex: 9, pageName: root.pages[9].name,
             section: Translation.tr("Add keybind"),
             label: Translation.tr("Keyboard Shortcuts"),
-            description: Translation.tr("Niri and ii keybindings reference"),
+            description: Translation.tr("Niri and drift keybindings reference"),
             keywords: ["shortcuts", "keybindings", "hotkeys", "keyboard", "cheatsheet",
                        "terminal", "clipboard", "volume", "brightness", "screenshot", "lock",
                        "workspace", "window", "focus", "move", "fullscreen", "floating",
@@ -1727,56 +1727,56 @@ Singleton {
         },
 
         // =====================================================================
-        // Waffle Style (page 11)
+        // Slate Style (page 11)
         // =====================================================================
         {
             pageIndex: 11, pageName: root.pages[11].name,
             section: Translation.tr("Taskbar"),
-            label: Translation.tr("Waffle Taskbar"),
-            description: Translation.tr("Windows 11 style taskbar settings"),
-            keywords: ["waffle", "taskbar", "windows", "bottom", "tray"]
+            label: Translation.tr("Slate Taskbar"),
+            description: Translation.tr("Slate style taskbar settings"),
+            keywords: ["slate", "taskbar", "windows", "bottom", "tray"]
         },
         {
             pageIndex: 11, pageName: root.pages[11].name,
             section: Translation.tr("Start Menu"),
-            label: Translation.tr("Waffle Start Menu"),
+            label: Translation.tr("Slate Start Menu"),
             description: Translation.tr("Start menu size and behavior"),
-            keywords: ["waffle", "start", "menu", "apps", "pinned"]
+            keywords: ["slate", "start", "menu", "apps", "pinned"]
         },
         {
             pageIndex: 11, pageName: root.pages[11].name,
             section: Translation.tr("Widgets Panel"),
-            label: Translation.tr("Waffle Action Center"),
+            label: Translation.tr("Slate Action Center"),
             description: Translation.tr("Quick toggles and action center"),
-            keywords: ["waffle", "action", "center", "toggles", "quick"]
+            keywords: ["slate", "action", "center", "toggles", "quick"]
         },
         {
             pageIndex: 11, pageName: root.pages[11].name,
             section: Translation.tr("Widgets Panel"),
-            label: Translation.tr("Waffle Widgets"),
+            label: Translation.tr("Slate Widgets"),
             description: Translation.tr("Widgets panel settings"),
-            keywords: ["waffle", "widgets", "panel", "weather", "calendar"]
+            keywords: ["slate", "widgets", "panel", "weather", "calendar"]
         },
         {
             pageIndex: 11, pageName: root.pages[11].name,
             section: Translation.tr("Alt+Tab Switcher"),
-            label: Translation.tr("Waffle Alt+Tab"),
-            description: Translation.tr("Waffle window switcher with thumbnails"),
-            keywords: ["waffle", "alt", "tab", "switcher", "thumbnails", "carousel"]
+            label: Translation.tr("Slate Alt+Tab"),
+            description: Translation.tr("Slate window switcher with thumbnails"),
+            keywords: ["slate", "alt", "tab", "switcher", "thumbnails", "carousel"]
         },
         {
             pageIndex: 11, pageName: root.pages[11].name,
             section: Translation.tr("Wallpaper"),
-            label: Translation.tr("Waffle Background"),
-            description: Translation.tr("Waffle-specific wallpaper and backdrop settings"),
-            keywords: ["waffle", "background", "wallpaper", "backdrop", "effects"]
+            label: Translation.tr("Slate Background"),
+            description: Translation.tr("Slate-specific wallpaper and backdrop settings"),
+            keywords: ["slate", "background", "wallpaper", "backdrop", "effects"]
         },
         {
             pageIndex: 11, pageName: root.pages[11].name,
             section: Translation.tr("Wallpaper"),
             label: Translation.tr("Hide main wallpaper in fullscreen"),
-            description: Translation.tr("Hide the Waffle wallpaper while keeping the Task View backdrop available"),
-            keywords: ["waffle", "fullscreen", "wallpaper", "background", "gaming", "performance", "task view", "backdrop", "hide"]
+            description: Translation.tr("Hide the Slate wallpaper while keeping the Task View backdrop available"),
+            keywords: ["slate", "fullscreen", "wallpaper", "background", "gaming", "performance", "task view", "backdrop", "hide"]
         },
 
         // =====================================================================
@@ -1908,7 +1908,7 @@ Singleton {
         {
             pageIndex: 13, pageName: root.pages[13].name,
             section: Translation.tr("System"),
-            label: Translation.tr("About ii"),
+            label: Translation.tr("About drift"),
             description: Translation.tr("Version info, credits and links"),
             keywords: ["about", "version", "credits", "github", "info"]
         },
@@ -1923,7 +1923,7 @@ Singleton {
         { pageIndex: 14, pageName: root.pages[14].name, section: Translation.tr("Date badge"), label: Translation.tr("Date badge"), description: Translation.tr("Desktop date in ticket, stacked or seal styles"), keywords: ["date", "badge", "day", "month", "year", "ticket", "stacked", "seal", "desktop", "widget"] },
         { pageIndex: 14, pageName: root.pages[14].name, section: Translation.tr("Decorative shape"), label: Translation.tr("Decorative shape"), description: Translation.tr("Desktop shapes with fill, outline and rotation controls"), keywords: ["shape", "decorative", "decoration", "flower", "circle", "fill", "outline", "rotation", "desktop", "widget"] },
         { pageIndex: 14, pageName: root.pages[14].name, section: Translation.tr("Edit Mode"), label: Translation.tr("Widget edit mode"), description: Translation.tr("Grid overlay and snap-to-grid for widget placement"), keywords: ["widget", "edit", "grid", "snap", "placement", "drag"] },
-        { pageIndex: 14, pageName: root.pages[14].name, section: Translation.tr("Appearance"), label: Translation.tr("Desktop widgets"), description: Translation.tr("Current iNiR palette"), keywords: ["widget", "color", "colour", "palette", "preset", "primary", "secondary", "tertiary", "signal", "surface", "wallpaper"] },
+        { pageIndex: 14, pageName: root.pages[14].name, section: Translation.tr("Appearance"), label: Translation.tr("Desktop widgets"), description: Translation.tr("Current Lunana palette"), keywords: ["widget", "color", "colour", "palette", "preset", "primary", "secondary", "tertiary", "signal", "surface", "wallpaper"] },
         { pageIndex: 14, pageName: root.pages[14].name, section: Translation.tr("Clock"), label: Translation.tr("Desktop clock"), description: Translation.tr("Clock widget on the desktop background"), keywords: ["clock", "widget", "cookie", "digital", "background", "desktop", "wallpaper", "adaptive", "colors"] },
         { pageIndex: 14, pageName: root.pages[14].name, section: Translation.tr("Clock"), label: Translation.tr("Clock style"), description: Translation.tr("Cookie, digital or Android stacked clock"), keywords: ["clock", "style", "cookie", "digital", "android", "stacked", "analog", "hands"] },
         { pageIndex: 14, pageName: root.pages[14].name, section: Translation.tr("Japanese Typography"), label: Translation.tr("Japanese typography widget"), description: Translation.tr("Vertical editorial lettering with layout, font, palette, seal, and footer controls"), keywords: ["japanese", "typography", "vertical", "text", "kanji", "kana", "poster", "magazine", "editorial", "seal", "widget", "font", "mincho", "gothic", "color", "palette", "sumi", "outline"] },
@@ -1963,7 +1963,7 @@ Singleton {
             pageIndex: 17, pageName: root.pages[17].name,
             section: Translation.tr("How autostart works"),
             label: Translation.tr("Autostart"),
-            description: Translation.tr("Launch apps when iNiR starts"),
+            description: Translation.tr("Launch apps when Lunana starts"),
             keywords: ["autostart", "startup", "launch", "apps", "boot", "discord", "steam", "telegram"]
         },
 

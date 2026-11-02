@@ -8,7 +8,7 @@ import "../../../common/functions"
 import "../../../common/widgets"
 import "../../../common/widgets/widgetCanvas"
 import ".."
-import "../../../iris/widgets"
+import "../../../atoll/widgets"
 
 AbstractBackgroundWidget {
     id: root
@@ -56,13 +56,13 @@ AbstractBackgroundWidget {
             ? androidStackedClockLoader.height : digitalClockLoader.height
     readonly property bool statusShown: root.wallpaperSafetyTriggered
         || (root.shellLocked && (Config.options?.lock?.showLockedText ?? false))
-    implicitHeight: root.irisFaced ? root.irisFaceHeight : root.activeClockHeight
+    implicitHeight: root.atollFaced ? root.atollFaceHeight : root.activeClockHeight
         + (root.statusShown ? contentColumn.spacing + statusText.implicitHeight : 0)
-    implicitWidth: root.irisFaced ? root.irisFaceWidth : Math.max(root.activeClockWidth,
+    implicitWidth: root.atollFaced ? root.atollFaceWidth : Math.max(root.activeClockWidth,
         root.statusShown ? statusText.implicitWidth : 0)
-    irisFace: Component { IrisClockFace { widget: root } }
-    irisSizes: ["small", "medium"]
-    irisOptions: [
+    atollFace: Component { AtollClockFace { widget: root } }
+    atollSizes: ["small", "medium"]
+    atollOptions: [
         { key: "face", label: Translation.tr("Face"), fallback: "analog", choices: [
             { label: Translation.tr("Analog"), icon: "schedule", value: "analog" },
             { label: Translation.tr("Digital"), icon: "timer_10", value: "digital" }] },
@@ -170,7 +170,7 @@ AbstractBackgroundWidget {
     readonly property bool textClockStyle: root.clockStyle === "digital"
         || root.clockStyle === "androidStacked"
     property bool adaptDigitalToWallpaper: root._readConfigKey("digital.adaptToWallpaper") ?? true
-    readonly property bool shellLocked: GlobalStates.screenLocked && Config.options?.panelFamily !== "iris"
+    readonly property bool shellLocked: GlobalStates.screenLocked && Config.options?.panelFamily !== "atoll"
     property bool forceCenter: (root.shellLocked && (Config.options?.lock?.centerClock ?? false))
     property bool wallpaperSafetyTriggered: false
     property bool debugRegionActive: false
@@ -229,7 +229,7 @@ AbstractBackgroundWidget {
     readonly property bool clockMotion: root.motionActive || (root.shellLocked && root.powerActive)
     SystemClock {
         id: displayClock
-        precision: !root.irisFaced && (root.showSeconds || root.clockStyle === "instrument"
+        precision: !root.atollFaced && (root.showSeconds || root.clockStyle === "instrument"
             || GlobalStates.screenLocked) && root.clockMotion
             ? SystemClock.Seconds : SystemClock.Minutes
     }
@@ -367,7 +367,7 @@ AbstractBackgroundWidget {
 
     // Card background (mainly for digital mode)
     WidgetSurface {
-        irisPresentation: root.widgetIris
+        atollPresentation: root.widgetAtoll
         id: clockSurface
         regionBrightness: root.regionBrightness
         anchors.fill: parent
@@ -385,13 +385,13 @@ AbstractBackgroundWidget {
         screenY: root.y + Math.round(8 * root.scaleFactor)
         screenWidth: root.scaledScreenWidth
         screenHeight: root.scaledScreenHeight
-        shown: !root.irisFaced && root.textClockStyle
+        shown: !root.atollFaced && root.textClockStyle
             && (root.backgroundOpacity > 0 || root.borderWidth > 0 || root.effectiveBlur)
     }
 
     Column {
         id: contentColumn
-        visible: !root.irisFaced
+        visible: !root.atollFaced
         anchors.centerIn: parent
         width: root.implicitWidth
         height: root.implicitHeight
@@ -400,7 +400,7 @@ AbstractBackgroundWidget {
         FadeLoader {
             id: cookieClockLoader
             x: Math.round((parent.width - width) / 2)
-            shown: !root.irisFaced && root.clockStyle === "cookie"
+            shown: !root.atollFaced && root.clockStyle === "cookie"
             width: item?.desiredImplicitWidth ?? 0
             height: item?.desiredImplicitHeight ?? 0
             sourceComponent: Column {
@@ -438,7 +438,7 @@ AbstractBackgroundWidget {
         FadeLoader {
             id: digitalClockLoader
             x: Math.round((parent.width - width) / 2)
-            shown: !root.irisFaced && root.clockStyle === "digital"
+            shown: !root.atollFaced && root.clockStyle === "digital"
             width: item?.desiredImplicitWidth ?? 0
             height: item?.desiredImplicitHeight ?? 0
             sourceComponent: ColumnLayout {
@@ -500,7 +500,7 @@ AbstractBackgroundWidget {
         FadeLoader {
             id: instrumentClockLoader
             x: Math.round((parent.width - width) / 2)
-            shown: !root.irisFaced && root.clockStyle === "instrument"
+            shown: !root.atollFaced && root.clockStyle === "instrument"
             // Known before Loader construction: no zero-size frame on entry.
             width: Math.round(230 * root.scaleFactor * root.timeScale / 100)
             height: width
@@ -647,7 +647,7 @@ AbstractBackgroundWidget {
                             family: root.widgetBodyFamily
                             pixelSize: Math.round(Math.max(9, dialClock.side * 0.048))
                             weight: root.widgetLabelWeight
-                            letterSpacing: root.widgetIris ? 0 : Math.max(1, Math.round(1.6 * root.scaleFactor))
+                            letterSpacing: root.widgetAtoll ? 0 : Math.max(1, Math.round(1.6 * root.scaleFactor))
                             capitalization: root.widgetCapitalization
                         }
                     }
@@ -658,7 +658,7 @@ AbstractBackgroundWidget {
         FadeLoader {
             id: androidStackedClockLoader
             x: Math.round((parent.width - width) / 2)
-            shown: !root.irisFaced && root.clockStyle === "androidStacked"
+            shown: !root.atollFaced && root.clockStyle === "androidStacked"
             width: item?.desiredImplicitWidth ?? 0
             height: item?.desiredImplicitHeight ?? 0
             sourceComponent: AndroidStackedClock {
@@ -680,7 +680,7 @@ AbstractBackgroundWidget {
         FadeLoader {
             id: pixelClockLoader
             x: Math.round((parent.width - width) / 2)
-            shown: !root.irisFaced && root.clockStyle === "pixel"
+            shown: !root.atollFaced && root.clockStyle === "pixel"
             width: item?.desiredImplicitWidth ?? 0
             height: item?.desiredImplicitHeight ?? 0
             sourceComponent: PixelClock {

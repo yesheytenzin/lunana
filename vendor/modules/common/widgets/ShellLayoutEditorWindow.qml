@@ -36,18 +36,18 @@ Scope {
     readonly property color hairColor: ColorUtils.applyAlpha(root.textColor, 0.12)
     readonly property color frameBgColor: ColorUtils.applyAlpha(root.textColor, 0.06)
     readonly property color frameBgHoverColor: ColorUtils.applyAlpha(root.textColor, 0.11)
-    readonly property bool compactChrome: root.styleKey === "inir"
+    readonly property bool compactChrome: root.styleKey === "lunana"
         || root.styleKey === "zzz"
-    readonly property bool strongOutline: root.styleKey === "inir"
+    readonly property bool strongOutline: root.styleKey === "lunana"
         || root.styleKey === "angel"
 
     function surfaceLabel(surfaceId: string): string {
         switch (surfaceId) {
         case "featureSidebar": return Translation.tr("Feature sidebar")
         case "systemSidebar": return Translation.tr("System sidebar")
-        case "iiBar": return Translation.tr("Bar")
-        case "iiDock": return Translation.tr("Dock")
-        case "waffleBar": return Translation.tr("Taskbar")
+        case "driftBar": return Translation.tr("Bar")
+        case "driftDock": return Translation.tr("Dock")
+        case "slateBar": return Translation.tr("Taskbar")
         default: return surfaceId
         }
     }

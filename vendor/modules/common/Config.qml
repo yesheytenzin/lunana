@@ -10,7 +10,7 @@ Singleton {
     property alias options: configOptionsJsonAdapter
     property bool ready: false
     property int revision: 0
-    property bool isSettingsProcess: (Quickshell.env("INIR_STANDALONE_WINDOW") ?? "") === "1"
+    property bool isSettingsProcess: (Quickshell.env("LUNANA_STANDALONE_WINDOW") ?? "") === "1"
     property int readWriteDelay: 50 // milliseconds
     property bool blockWrites: false
     // Custom widget data stored outside JsonAdapter to avoid VME crash on property var
@@ -696,11 +696,11 @@ Singleton {
             id: configOptionsJsonAdapter
 
             // Panel system
-            property list<string> enabledPanels: ["iiBar", "iiBackground", "iiBackdrop", "iiCheatsheet", "iiControlPanel", "iiDock", "iiLock", "iiMediaControls", "iiNotificationPopup", "iiOnScreenDisplay", "iiOnScreenKeyboard", "iiOverlay", "iiOverview", "iiPolkit", "iiRegionSelector", "iiScreenCorners", "iiSessionScreen", "iiSidebarLeft", "iiSidebarRight", "iiTilingOverlay", "iiVerticalBar", "iiWallpaperSelector", "iiWallpaperLauncher", "iiCoverflowSelector", "iiClipboard", "iiShellUpdate", "iiDashboard", "iiMascotCompanion"]
+            property list<string> enabledPanels: ["driftBar", "driftBackground", "driftBackdrop", "driftCheatsheet", "driftControlPanel", "driftDock", "driftLock", "driftMediaControls", "driftNotificationPopup", "driftOnScreenDisplay", "driftOnScreenKeyboard", "driftOverlay", "driftOverview", "driftPolkit", "driftRegionSelector", "driftScreenCorners", "driftSessionScreen", "driftSidebarLeft", "driftSidebarRight", "driftTilingOverlay", "driftVerticalBar", "driftWallpaperSelector", "driftWallpaperLauncher", "driftCoverflowSelector", "driftClipboard", "driftShellUpdate", "driftDashboard", "driftMascotCompanion"]
             property list<string> knownPanels: [] // Tracks panels the user has seen; used to distinguish "user disabled" from "new in update"
-            property string panelFamily: "ii" // "ii", "waffle", or "iris"
+            property string panelFamily: "drift" // "drift", "slate", or "atoll"
             property bool familyTransitionAnimation: true // Show animated overlay when switching families
-            property list<string> familyCycle: ["ii", "waffle", "iris"] // Families the switch shortcut (panelFamily cycle) walks through
+            property list<string> familyCycle: ["drift", "slate", "atoll"] // Families the switch shortcut (panelFamily cycle) walks through
 
             property JsonObject policies: JsonObject {
                 property int ai: 0 // 0: No | 1: Yes | 2: Local
@@ -731,7 +731,7 @@ Singleton {
             }
 
             property JsonObject mascot: JsonObject {
-                property bool enable: false // Show the iNiR mascot illustration across shell surfaces (empty states, About, etc.)
+                property bool enable: false // Show the Lunana mascot illustration across shell surfaces (empty states, About, etc.)
                 property JsonObject surfaces: JsonObject {
                     // Where the static mascot may appear; each maps to a group of placements
                     property bool emptyStates: true // Notifications, clipboard, todo, media, calendar, wallpapers, search results
@@ -836,7 +836,7 @@ Singleton {
 
             property JsonObject appearance: JsonObject {
                 property string theme: "auto" // Theme preset ID: "auto" for wallpaper-based, or preset name like "gruvbox-dark", "catppuccin-mocha", "custom", etc.
-                property string globalStyle: "material" // "material" | "cards" | "aurora" | "inir" | "angel" | "regalia" | "zzz" | "cookie" | "editorial"
+                property string globalStyle: "material" // "material" | "cards" | "aurora" | "lunana" | "angel" | "regalia" | "zzz" | "cookie" | "editorial"
                 // Shared skin for every island surface (islands bar, island dock,
                 // island sidebars, island search). Consumed by IslandPanel.
                 property JsonObject island: JsonObject {
@@ -989,7 +989,7 @@ Singleton {
                     property int material: 1
                     property int cards: 3
                     property int aurora: 0
-                    property int inir: 1
+                    property int lunana: 1
                     property int angel: 1
                     property int regalia: 1
                     property int zzz: 0
@@ -1075,7 +1075,7 @@ Singleton {
                     property bool enableChrome: true
                     property bool enableFirefox: true
                     property bool enableSpicetify: true
-                    property string spicetifyTheme: "Inir"
+                    property string spicetifyTheme: "Lunana"
                     property bool enableSteam: true
                     property bool enablePearDesktop: true
                     property bool enableLimusic: false
@@ -1164,7 +1164,7 @@ Singleton {
                 property string iconTheme: "WhiteSur-dark" // System icon theme (tray, GTK/Qt apps)
                 property string dockIconTheme: "" // Dock icon theme (overrides system for dock only)
                 property real shellScale: 1.0 // Legacy compatibility key. Launcher keeps QT_SCALE_FACTOR=1; use appearance.typography.sizeScale.
-                property string iiMotionProfile: "contextual" // "classic" | "contextual"
+                property string driftMotionProfile: "contextual" // "classic" | "contextual"
                 property JsonObject desaturation: JsonObject {
                     property bool enable: false
                     property real saturation: -0.7  // -1 to 0 (0 = normal, -1 = full grayscale)
@@ -1198,7 +1198,7 @@ Singleton {
             property JsonObject performance: JsonObject {
                 property bool lowPower: false
                 property bool reduceAnimations: false
-                // JSGCHeap watchdog (#164). Stats stay on `inir memory`;
+                // JSGCHeap watchdog (#164). Stats stay on `lunana memory`;
                 // the restart notification is opt-in.
                 property bool memoryMonitoring: true
                 property int jsgcThreshold: 300
@@ -1333,7 +1333,7 @@ Singleton {
                     // output-qualified ("OUTPUT::configEntryName") so each screen
                     // keeps its own overlap order after edit mode closes/restarts.
                     property list<string> layerOrder: []
-                    // iRiS widget stacks: [{ id, members: [widget keys], rotate, interval (seconds) }].
+                    // Atoll widget stacks: [{ id, members: [widget keys], rotate, interval (seconds) }].
                     // A stack's place and look live in outputOverrides under "stack:<id>".
                     property list<var> stacks: []
                     property JsonObject clock: JsonObject {
@@ -2467,7 +2467,7 @@ Singleton {
                         property bool battery: true
                         property bool inbox: true
                         property bool mixer: true
-                        property bool sidebars: true // The two shortcuts into iNiR's own sidebars
+                        property bool sidebars: true // The two shortcuts into Lunana's own sidebars
                         property bool power: true
                     }
                     // Optional hover-row surfaces; the stock ones are always available.
@@ -2491,7 +2491,7 @@ Singleton {
                 // keeps its own layout/appearance contract instead of reusing
                 // bar.layout/bar.modules/bar.borderless, because its grouping
                 // model (three flat layouts of widget names, string grouping
-                // style, per-position pill radii) is incompatible with iNiR's
+                // style, per-position pill radii) is incompatible with Lunana's
                 // five-zone registry. Nothing here changes any other bar.
                 property JsonObject m3: JsonObject {
                     // 0: Hug | 1: Float | 2: Plain rectangle | 3: Material 3
@@ -2616,7 +2616,7 @@ Singleton {
                 property int customRounding: -1 // -1: use global theme rounding | 0+: override bar rounding (px)
                 property bool floatStyleShadow: true // Show shadow behind bar when cornerStyle == 1 (Float)
                 property bool borderless: true // true for no grouping of items
-                property string topLeftIcon: "distro" // Options: "distro", "avatar" or any icon name in ~/.config/quickshell/inir/assets/icons
+                property string topLeftIcon: "distro" // Options: "distro", "avatar" or any icon name in ~/.config/quickshell/lunana/assets/icons
                 property bool showBackground: true
                 property bool showScrollHints: true // Show brightness/volume scroll hints on hover
                 property string leftScrollAction: "brightness" // "brightness", "volume", "workspace", "none"
@@ -2861,7 +2861,7 @@ Singleton {
                 property bool showBackground: true
                 property bool minimizeUnfocused: false // Show dot for unfocused apps
                 property bool enableBlurGlass: true
-                property bool separatePinnedFromRunning: true // Waffle-style: pinned-only apps on left, running on right
+                property bool separatePinnedFromRunning: true // Slate-style: pinned-only apps on left, running on right
                 property bool notificationBadge: true // Count of pending notifications on the app icon
                 property list<string> pinnedApps: [ // IDs of pinned entries
                     "org.gnome.Nautilus", "firefox", "kitty",]
@@ -2893,7 +2893,7 @@ Singleton {
                 property bool showWallpaperSchemeChips: false
             }
 
-            // Dashboard hub panel (ii family). Widget ids per column:
+            // Dashboard hub panel (drift family). Widget ids per column:
             //   welcome, clock, weather, calendar, agenda, media, notifications,
             //   todo, system, github. Columns collapse when empty.
             property JsonObject dashboard: JsonObject {
@@ -2969,8 +2969,8 @@ Singleton {
                     property bool requirePasswordToPower: false
                 }
                 property bool materialShapeChars: true
-                property string loginScreen: "auto" // SDDM look: "auto" (iris under the iRiS family, else classic), "classic" or "iris"
-                property string loginStyle: "lens" // the iRiS login's composition: "cover", "frame" or "lens"
+                property string loginScreen: "auto" // SDDM look: "auto" (atoll under the Atoll family, else classic), "classic" or "atoll"
+                property string loginStyle: "lens" // the Atoll login's composition: "cover", "frame" or "lens"
                 property bool enableAnimation: false // Play video/GIF wallpapers on lock screen (default: show first frame)
                 property JsonObject dim: JsonObject {
                     property bool enable: false
@@ -2984,7 +2984,7 @@ Singleton {
                     property bool enable: false
                     property int maxCount: 3
                     property bool showBody: true
-                    property string position: "auto" // "auto" (center ii, right waffle), "center", "left", "right"
+                    property string position: "auto" // "auto" (center drift, right slate), "center", "left", "right"
                 }
                 property JsonObject status: JsonObject {
                     property bool enable: true
@@ -3006,7 +3006,7 @@ Singleton {
             }
 
             property JsonObject hotspot: JsonObject {
-                property string ssid: "iNiR Hotspot"
+                property string ssid: "Lunana Hotspot"
                 property string password: ""
                 property string band: "bg" // "bg" = 2.4GHz, "a" = 5GHz
             }
@@ -3274,7 +3274,7 @@ Singleton {
                 }
             }
 
-            // Settings for the custom Alt-Tab switcher in ii
+            // Settings for the custom Alt-Tab switcher in drift
             property JsonObject altSwitcher: JsonObject {
                 // Preset style: "default" (sidebar) or "list" (centered list)
                 property string preset: "default"
@@ -3925,7 +3925,7 @@ Singleton {
                 property int scrollNavigationDebounceMs: 180
             }
 
-            property JsonObject iris: JsonObject {
+            property JsonObject atoll: JsonObject {
                 property JsonObject sidebars: JsonObject {
                     property JsonObject left: JsonObject {
                         property bool enable: true
@@ -3955,10 +3955,10 @@ Singleton {
                 property JsonObject widgets: JsonObject {
                     property int radius: 22
                     property int opacity: 100
-                    property string tint: "wallpaper" // accents: "wallpaper", "system" (iRiS), "spectrum" or "mono"
+                    property string tint: "wallpaper" // accents: "wallpaper", "system" (Atoll), "spectrum" or "mono"
                     property int vibrance: 85 // how strong widget accents are (0-100)
                     property bool legibleAlways: false // Lume backs every widget as if the wallpaper under it were bright and busy
-                    property string design: "iris" // "iris" faces, "material" (each widget's own style), "instrument" or "readout"
+                    property string design: "atoll" // "atoll" faces, "material" (each widget's own style), "instrument" or "readout"
                     property string material: "glass" // "glass", "clear", "solid" or "tinted"
                     property string weight: "regular" // "light", "regular" or "bold"
                     property bool rim: false
@@ -3974,7 +3974,7 @@ Singleton {
                     property bool autoHide: true
                     property bool reserveSpace: true
                     property bool blur: false // legacy: read as material "blur" while material is "inherit"
-                    property string material: "inherit" // "inherit" (iRiS glass), "solid", "glass" or "blur" (Niri blurs what is below)
+                    property string material: "inherit" // "inherit" (Atoll glass), "solid", "glass" or "blur" (Niri blurs what is below)
                     property int iconSize: 40
                     property bool notch: true
                     property string shape: "auto" // "auto" (capsule when notched, else the bubbles' shape), "round", "squircle" or "square"
@@ -3988,19 +3988,19 @@ Singleton {
                     property string position: "auto" // "auto" (opposite the Island), "top", "bottom", "left" or "right"
                 }
                 property JsonObject appearance: JsonObject {
-                    property string preset: "iris" // IrisStyle.presets: iris, soft, round, crisp, angular, contrast
-                    property string morph: "direct" // IrisStyle.morphStyles: direct, liquid, glide, snap, elastic, instant
+                    property string preset: "atoll" // AtollStyle.presets: atoll, soft, round, crisp, angular, contrast
+                    property string morph: "direct" // AtollStyle.morphStyles: direct, liquid, glide, snap, elastic, instant
                     property string accent: "blue" // "blue", "mint", "rose", "lilac" or "wallpaper"
                     property string scheme: "auto" // "auto" (follows the system), "dark", "ink" or "light"
-                    property string language: "iris" // the palette's style: "iris" (iRiS's own), "washi" (paper and pigment) or "material" (Material You)
+                    property string language: "atoll" // the palette's style: "atoll" (Atoll's own), "washi" (paper and pigment) or "material" (Material You)
                     property string variant: "tonalSpot" // Material You's scheme: "tonalSpot", "vibrant", "expressive", "fidelity" or "monochrome"
                     property string inkStyle: "washi" // Ink's own style: "washi" (paper and sumi, whatever the style) or "style" (follows language)
                     property string darkStyle: "style" // Dark's: "style" (the style's own night) or "ink" (washi, a sumi night paper)
                     property bool followTheme: true // with a colour theme chosen, the shell wears its accent, highlight and material
                     property bool materialForApps: true // with the wallpaper colour theme, terminals and apps sit on the shell's material
                     property bool accentForApps: true // with the wallpaper colour theme, apps take the shell's own accent when it has one
-                    property string controlPlate: "none" // rows of round controls: "none", "veil", "glass" or "solid" (IrisControlPlate)
-                    property string texture: "solid" // what the material is drawn as: "solid" or "afterglow" (IrisField.frag)
+                    property string controlPlate: "none" // rows of round controls: "none", "veil", "glass" or "solid" (AtollControlPlate)
+                    property string texture: "solid" // what the material is drawn as: "solid" or "afterglow" (AtollField.frag)
                     // Afterglow: grade "dusk", "cyber", "fog" or "wallpaper"; the rest 0..100 %; wallpaper grades the desktop too.
                     property JsonObject afterglow: JsonObject {
                         property string grade: "dusk"
@@ -4021,26 +4021,31 @@ Singleton {
                     property string highlight: "orange" // "orange", "yellow", "red", "pink", "green", "accent" or "wallpaper"
                     property JsonObject anime: JsonObject {
                         property bool enabled: false
-                        property string palette: "sakura" // IrisStyle.animePalettes
+                        property string palette: "sakura" // AtollStyle.animePalettes
                         property int strength: 60 // 0 = the configured accent, 100 = the palette
                         property bool highlight: false
                     }
                     // How much of the wallpaper's hue the black surfaces carry.
-                    // 0 keeps iRiS pure black; 1 is a few percent of the wallpaper
+                    // 0 keeps Atoll pure black; 1 is a few percent of the wallpaper
                     // in the raised surfaces and the neutral fills, never in the
                     // primary surface.
                     property int tint: 0
+                    // How far the shell's chrome (Island, Dock, Surround band,
+                    // side panels) lifts off the content: 0 keeps one material,
+                    // 100 gives the bodies the palette's first step and their
+                    // controls the second (AtollStyle.chromeSurface).
+                    property int chromeContrast: 100
                     // The light a body carries from what it is — its content's
                     // colour, or the wallpaper's when it has none: "off",
-                    // "subtle" or "vivid" (IrisStyle.aura).
+                    // "subtle" or "vivid" (AtollStyle.aura).
                     property string aura: "subtle"
-                    property int adaptive: 0 // how much the wallpaper's brightness, contrast and colour shape iRiS (0-100)
+                    property int adaptive: 0 // how much the wallpaper's brightness, contrast and colour shape Atoll (0-100)
                     property string figureWeight: "bold" // "light", "regular" or "bold"
-                    // The pack every iRiS plate wears: "iris" (the family's tinted squircle)
+                    // The pack every Atoll plate wears: "atoll" (the family's tinted squircle)
                     // or "tile" (the app-icon look: a plate with the glyph in a gradient of
                     // its own colour). `plate` picks that plate's colour.
                     property JsonObject icons: JsonObject {
-                        property string style: "iris"
+                        property string style: "atoll"
                         property string plate: "black" // "black", "white", "tint" or "surface"
                     }
                     property int expandedRadius: 28
@@ -4050,7 +4055,7 @@ Singleton {
                     property string numbersFontFamily: "" // Empty = Rubik (bundled; clocks, timers, levels)
                     property real density: 1.0
                     property bool motion: true
-                    // iRiS Studio: the user's own tweaks on top of the preset. Every
+                    // Atoll Studio: the user's own tweaks on top of the preset. Every
                     // number is a percentage of what the preset gives (100 = as the
                     // preset has it), so switching presets keeps the character of
                     // the tweaks.
@@ -4064,8 +4069,8 @@ Singleton {
                         property int shape: 100     // every corner radius
                         property int melt: 0        // how deeply bodies fuse where they meet (100 = the style's own depth)
                         property int bounce: 100    // how much arrivals and moves bounce (100 = the motion style's own)
-                        property int text: 100      // iRiS type size
-                        property string weight: "regular" // iRiS type weight: "light", "regular" or "bold"
+                        property int text: 100      // Atoll type size
+                        property string weight: "regular" // Atoll type weight: "light", "regular" or "bold"
                         property bool rim: true     // the hairline around the field's silhouette
                         property string edges: "line" // the edge every body wears: "line" (the hairline) or "light" (lit from above like glass); rim false turns it off
                         property string rimTint: "neutral" // that hairline's ink: "neutral", "accent" or "highlight"
@@ -4086,18 +4091,18 @@ Singleton {
                         property string pieceShape: "circle" // bubbles, bars and satellites: "circle", "squircle" or "square"
                         property bool linkShapes: false // the Island and the Dock take the bubbles' shape
                     }
-                    // Animated previews in iRiS Settings and Studio; off builds none of them.
+                    // Animated previews in Atoll Settings and Studio; off builds none of them.
                     property bool previews: true
                     // How Customize opens: "shell" (on the shell itself) or "studio" (a panel beside it).
                     property string customize: "shell"
                     // Choosing a theme takes only its colours; its shapes, layout and motion stay as they are.
                     property bool themeColoursOnly: false
-                    // How iRiS Settings is laid out: "sidebar", "rail" (icons only) or "home" (a grid of areas to open).
+                    // How Atoll Settings is laid out: "sidebar", "rail" (icons only) or "home" (a grid of areas to open).
                     property string settingsLayout: "sidebar"
                     property string settingsHost: "overlay"
-                    // Looks saved from iRiS Studio: [{ name, values: { "iris.…": value } }].
+                    // Looks saved from Atoll Studio: [{ name, values: { "atoll.…": value } }].
                     property list<var> saved: []
-                    property string themeId: "iris" // the iRiS theme last applied (curated id or a file in ~/.config/inir/iris/themes)
+                    property string themeId: "atoll" // the Atoll theme last applied (curated id or a file in ~/.config/lunana/atoll/themes)
                     property JsonObject glass: JsonObject {
                         property string mode: "off" // "off", "wallpaper" (the output's wallpaper, blurred) or "compositor" (Niri blurs what is below)
                         property int tint: 58       // how much of the material stays over the glass, 0-100
@@ -4454,7 +4459,7 @@ Singleton {
                 // every edge, turning the screen's corners inward.
                 property JsonObject surround: JsonObject {
                     property bool enable: true
-                    property string music: "widget" // Organic Edge under iRiS: "widget" (its own wave) or "frame" (the frame breathes)
+                    property string music: "widget" // Organic Edge under Atoll: "widget" (its own wave) or "frame" (the frame breathes)
                     property string musicEdges: "sides" // "sides" | "horizontal" | "all"
                     property int musicStrength: 160 // 50-300 %, maximum inward swell
                     property int musicSensitivity: 140 // 50-250 %, response to quiet music
@@ -4474,7 +4479,7 @@ Singleton {
                     property int width: 360
                     // 2.31's composition, read only to seed `modules` for configs that changed it.
                     property list<string> sections: ["connectivity", "media", "shortcuts", "levels", "notifications"]
-                    property string preset: "iris"
+                    property string preset: "atoll"
                     property int columns: 4
                     property bool labels: true
                     property list<string> modules: ["platter", "media", "darkMode", "nightLight", "levels", "idle", "snip", "devices", "record", "notifications"]
@@ -4486,7 +4491,7 @@ Singleton {
                     property string sliders: "neutral" // "neutral" or "accent"
                 }
                 property JsonObject lock: JsonObject {
-                    property string preset: "iris"
+                    property string preset: "atoll"
                     property string material: "glass" // "glass", "tint" or "none": what the plates are made of
                     property JsonObject scene: JsonObject {
                         property string source: "desktop" // "desktop", "custom" or "colour"
@@ -4599,7 +4604,7 @@ Singleton {
                 }
             }
 
-            property JsonObject waffles: JsonObject {
+            property JsonObject slate: JsonObject {
                 property JsonObject settings: JsonObject {
                     property bool useMaterialStyle: false
                 }
@@ -4720,7 +4725,7 @@ Singleton {
                     property bool tintTrayIcons: false
                     property int iconSize: 26
                     property int searchIconSize: 24
-                    property list<string> screenList: [] // Waffle taskbar output filter. Empty = all screens.
+                    property list<string> screenList: [] // Slate taskbar output filter. Empty = all screens.
                     property JsonObject activationWatermark: JsonObject {
                         property bool enable: false
                     }
@@ -4743,7 +4748,7 @@ Singleton {
                     property string locale: ""
                 }
                 property JsonObject theming: JsonObject {
-                    property bool useMaterialColors: true // Use Material ii colors instead of W11 grey
+                    property bool useMaterialColors: true // Use Material drift colors instead of Slate grey
                     property JsonObject font: JsonObject {
                         property string family: "Noto Sans"
                         property real scale: 1.0 // Font size multiplier (0.8 - 1.5)

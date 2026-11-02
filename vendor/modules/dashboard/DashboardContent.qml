@@ -25,7 +25,7 @@ Item {
     property int screenWidth: 1920
     property int screenHeight: 1080
 
-    readonly property bool inirEverywhere: Appearance.inirEverywhere
+    readonly property bool lunanaEverywhere: Appearance.lunanaEverywhere
     readonly property bool angelEverywhere: Appearance.angelEverywhere
     readonly property bool auroraEverywhere: Appearance.auroraEverywhere
     readonly property bool zzzEverywhere: Appearance.zzzEverywhere
@@ -257,7 +257,7 @@ Item {
     }
 
     readonly property string wallpaperUrl: Wallpapers.effectiveWallpaperUrl
-    readonly property bool useWallpaperBackdrop: root.auroraEverywhere && !root.inirEverywhere && !Appearance.gameModeMinimal && root.wallpaperUrl.length > 0
+    readonly property bool useWallpaperBackdrop: root.auroraEverywhere && !root.lunanaEverywhere && !Appearance.gameModeMinimal && root.wallpaperUrl.length > 0
 
     ColorQuantizer {
         id: wallpaperColorQuantizer
@@ -274,7 +274,7 @@ Item {
     // Shadow
     StyledRectangularShadow {
         target: background
-        visible: (Appearance.angelEverywhere || (!root.inirEverywhere && !root.auroraEverywhere)) && !Appearance.gameModeMinimal
+        visible: (Appearance.angelEverywhere || (!root.lunanaEverywhere && !root.auroraEverywhere)) && !Appearance.gameModeMinimal
     }
 
     ZzzPlate {
@@ -291,19 +291,19 @@ Item {
         anchors.fill: parent
 
         color: Appearance.zzzEverywhere ? "transparent"
-             : root.inirEverywhere ? Appearance.inir.colLayer0
+             : root.lunanaEverywhere ? Appearance.lunana.colLayer0
              : root.auroraEverywhere ? ColorUtils.applyAlpha((root.blendedColors?.colLayer0 ?? Appearance.colors.colLayer0), 1)
              : Appearance.colors.colLayer0
 
         radius: Appearance.zzzEverywhere ? Appearance.zzz.panelRadius
             : root.angelEverywhere ? Appearance.angel.roundingLarge
-            : root.inirEverywhere ? Appearance.inir.roundingLarge
+            : root.lunanaEverywhere ? Appearance.lunana.roundingLarge
             : Appearance.rounding.large
 
         border.width: Appearance.zzzEverywhere ? 0 : 1
         border.color: Appearance.zzzEverywhere ? Appearance.zzz.hairlineStrong
                     : root.angelEverywhere ? Appearance.angel.colBorder
-                    : root.inirEverywhere ? Appearance.inir.colBorder
+                    : root.lunanaEverywhere ? Appearance.lunana.colBorder
                     : root.auroraEverywhere ? Appearance.aurora.colTooltipBorder
                     : Appearance.colors.colLayer0Border
 
@@ -350,7 +350,7 @@ Item {
             sourceSize.height: root.screenHeight
             asynchronous: true
 
-            layer.enabled: Appearance.effectsEnabled && root.auroraEverywhere && !root.inirEverywhere
+            layer.enabled: Appearance.effectsEnabled && root.auroraEverywhere && !root.lunanaEverywhere
             layer.effect: MultiEffect {
                 source: blurredWallpaper
                 anchors.fill: source
@@ -650,13 +650,13 @@ Item {
             visible: opacity > 0
             opacity: root.editMode ? 1 : 0
             implicitHeight: trayCol.implicitHeight + 20
-            radius: root.inirEverywhere ? Appearance.inir.roundingLarge : Appearance.rounding.large
-            color: root.inirEverywhere ? Appearance.inir.colLayer1 : Appearance.colors.colLayer1
+            radius: root.lunanaEverywhere ? Appearance.lunana.roundingLarge : Appearance.rounding.large
+            color: root.lunanaEverywhere ? Appearance.lunana.colLayer1 : Appearance.colors.colLayer1
             border.width: 1
             readonly property bool removeActive: root.dragging && root.dragInfo
                 && root.dragInfo.zone !== root.availableZone && root.dropZone === root.availableZone
             border.color: removeActive ? Appearance.colors.colError
-                : (root.inirEverywhere ? Appearance.inir.colBorder : Appearance.colors.colLayer0Border)
+                : (root.lunanaEverywhere ? Appearance.lunana.colBorder : Appearance.colors.colLayer0Border)
             // Grow from the bottom edge (origin) — organic morph.
             transform: Translate { y: root.editMode ? 0 : 20 }
             Behavior on opacity { enabled: Appearance.animationsEnabled; NumberAnimation { duration: Appearance.animation.elementMoveFast.duration } }

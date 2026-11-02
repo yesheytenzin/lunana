@@ -40,14 +40,14 @@ Item {
     readonly property QtObject effectiveColors: Appearance.editorialEverywhere && Appearance.colors
         ? Appearance.colors : root.blendedColors
 
-    readonly property color surfaceColor: Appearance.zzzEverywhere ? Appearance.zzz.paper : Appearance.inirEverywhere ? playerBase.inirLayer1 : (root.effectiveColors?.colPrimaryContainer ?? Appearance.colors.colPrimaryContainer)
-    readonly property color ink: Appearance.zzzEverywhere ? Appearance.zzz.ink : Appearance.inirEverywhere ? playerBase.inirText : (root.effectiveColors?.colOnPrimaryContainer ?? Appearance.colors.colOnPrimaryContainer)
-    readonly property color accent: Appearance.zzzEverywhere ? Appearance.zzz.accent : Appearance.inirEverywhere ? playerBase.inirPrimary : (root.effectiveColors?.colPrimary ?? Appearance.colors.colPrimary)
+    readonly property color surfaceColor: Appearance.zzzEverywhere ? Appearance.zzz.paper : Appearance.lunanaEverywhere ? playerBase.lunanaLayer1 : (root.effectiveColors?.colPrimaryContainer ?? Appearance.colors.colPrimaryContainer)
+    readonly property color ink: Appearance.zzzEverywhere ? Appearance.zzz.ink : Appearance.lunanaEverywhere ? playerBase.lunanaText : (root.effectiveColors?.colOnPrimaryContainer ?? Appearance.colors.colOnPrimaryContainer)
+    readonly property color accent: Appearance.zzzEverywhere ? Appearance.zzz.accent : Appearance.lunanaEverywhere ? playerBase.lunanaPrimary : (root.effectiveColors?.colPrimary ?? Appearance.colors.colPrimary)
     readonly property color onAccent: root.effectiveColors?.colOnPrimary ?? Appearance.colors.colOnPrimary
 
     StyledRectangularShadow {
         target: card
-        visible: !Appearance.zzzEverywhere && (Appearance.angelEverywhere || (!Appearance.inirEverywhere && !Appearance.auroraEverywhere))
+        visible: !Appearance.zzzEverywhere && (Appearance.angelEverywhere || (!Appearance.lunanaEverywhere && !Appearance.auroraEverywhere))
     }
 
     Rectangle {
@@ -55,7 +55,7 @@ Item {
         anchors.centerIn: parent
         width: parent.width - Appearance.sizes.elevationMargin
         height: parent.height - Appearance.sizes.elevationMargin
-        radius: Appearance.zzzEverywhere ? Appearance.zzz.panelRadius : Appearance.inirEverywhere ? Appearance.inir.roundingNormal : root.radius
+        radius: Appearance.zzzEverywhere ? Appearance.zzz.panelRadius : Appearance.lunanaEverywhere ? Appearance.lunana.roundingNormal : root.radius
         color: root.surfaceColor
         border.width: root.vizType === "organic" && root.vizPosition !== "none"
             ? 0 : (Appearance.zzzEverywhere ? Appearance.zzz.borderThick : 0)
@@ -104,7 +104,7 @@ Item {
 
                     Rectangle {
                         anchors.fill: parent
-                        color: Appearance.zzzEverywhere ? Appearance.zzz.paperAlt : Appearance.inirEverywhere ? playerBase.inirLayer2 : (root.effectiveColors?.colSurfaceContainerLow ?? Appearance.colors.colLayer1)
+                        color: Appearance.zzzEverywhere ? Appearance.zzz.paperAlt : Appearance.lunanaEverywhere ? playerBase.lunanaLayer2 : (root.effectiveColors?.colSurfaceContainerLow ?? Appearance.colors.colLayer1)
 
                         MaterialSymbol {
                             anchors.centerIn: parent
@@ -198,7 +198,7 @@ Item {
 
                             MaterialShapeWrappedMaterialSymbol {
                                 id: playShape
-                                shape: (Appearance.zzzEverywhere || Appearance.inirEverywhere)
+                                shape: (Appearance.zzzEverywhere || Appearance.lunanaEverywhere)
                                     ? MaterialShape.Shape.Square
                                     : MaterialShape.Shape.Cookie12Sided
                                 color: root.accent

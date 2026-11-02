@@ -18,10 +18,10 @@ ContentPage {
     settingsPageIndex: 14
     settingsPageName: Translation.tr("Widgets")
 
-    property bool isIiActive: ["ii", "iris"].includes(Config.options?.panelFamily ?? "ii")
-    readonly property bool irisActive: (Config.options?.panelFamily ?? "ii") === "iris"
+    property bool isDriftActive: ["drift", "atoll"].includes(Config.options?.panelFamily ?? "drift")
+    readonly property bool atollActive: (Config.options?.panelFamily ?? "drift") === "atoll"
     function openIrisWidgets(): void {
-        const page = SettingsPageRegistry.pages.findIndex(entry => entry.key === "iris")
+        const page = SettingsPageRegistry.pages.findIndex(entry => entry.key === "atoll")
         if (page >= 0) GlobalStates.openSettingsPage(page, "desktop/widgets")
     }
     property int _customMediaFolderCount: 0
@@ -181,10 +181,10 @@ ContentPage {
     readonly property string _japanesePath: "background.widgets.japaneseTypography"
     readonly property bool _widgetBlurAvailable: Appearance.effectsEnabled
         && (Appearance.angelEverywhere
-            || (Appearance.auroraEverywhere && !Appearance.inirEverywhere)
+            || (Appearance.auroraEverywhere && !Appearance.lunanaEverywhere)
             || (!Appearance.zzzEverywhere && !Appearance.cookieEverywhere
                 && !Appearance.angelEverywhere && !Appearance.auroraEverywhere
-                && !Appearance.inirEverywhere
+                && !Appearance.lunanaEverywhere
                 && (Config.options?.background?.widgets?.style ?? "panel") === "island"
                 && (Config.options?.appearance?.island?.glass ?? true)
                 && (Config.options?.appearance?.island?.opacity ?? 1) < 0.999))
@@ -1546,7 +1546,7 @@ ContentPage {
     }
 
     SettingsTaskLoader {
-        requested: root.isIiActive && root.activeSection === "manage"
+        requested: root.isDriftActive && root.activeSection === "manage"
         sourceComponent: Component {
     SettingsCardSection {
         settingsTaskSection: "manage"
@@ -1608,7 +1608,7 @@ ContentPage {
 
     // ── Edit Mode & Grid ─────────────────────────────────────
     SettingsTaskLoader {
-        requested: root.isIiActive && root.activeSection === "manage"
+        requested: root.isDriftActive && root.activeSection === "manage"
         sourceComponent: Component {
     SettingsCardSection {
         settingsTaskSection: "manage"
@@ -1662,7 +1662,7 @@ ContentPage {
 
     // ── Widget colors ─────────────────────────────────────────
     SettingsTaskLoader {
-        requested: root.isIiActive && root.activeSection === "manage"
+        requested: root.isDriftActive && root.activeSection === "manage"
         sourceComponent: Component {
     SettingsCardSection {
         settingsTaskSection: "manage"
@@ -1672,23 +1672,23 @@ ContentPage {
 
         SettingsGroup {
             StyledText {
-                visible: root.irisActive
+                visible: root.atollActive
                 Layout.fillWidth: true
-                text: Translation.tr("iRiS sets the design, material and colours of every widget in its own Settings. The options on each widget below apply while it wears the Material, iNstrument or Readout design.")
+                text: Translation.tr("Atoll sets the design, material and colours of every widget in its own Settings. The options on each widget below apply while it wears the Material, iNstrument or Readout design.")
                 color: Appearance.colors.colSubtext
                 font.pixelSize: Appearance.font.pixelSize.smaller
                 wrapMode: Text.WordWrap
             }
             SelectionGroupButton {
-                visible: root.irisActive
+                visible: root.atollActive
                 Layout.fillWidth: false
                 leftmost: true; rightmost: true
                 buttonIcon: "widgets"
-                buttonText: Translation.tr("Open iRiS widget settings")
+                buttonText: Translation.tr("Open Atoll widget settings")
                 onClicked: root.openIrisWidgets()
             }
             WidgetSettingRow {
-                visible: !root.irisActive
+                visible: !root.atollActive
                 label: Translation.tr("Global widget design")
                 icon: "widgets"
                 trailing: false
@@ -1701,7 +1701,7 @@ ContentPage {
                 }
             }
             StyledText {
-                visible: !root.irisActive
+                visible: !root.atollActive
                 Layout.fillWidth: true
                 text: Translation.tr("One look on every widget. Individual keeps each widget's own style.")
                 color: Appearance.colors.colSubtext
@@ -1709,7 +1709,7 @@ ContentPage {
                 wrapMode: Text.WordWrap
             }
             RowLayout {
-                visible: !root.irisActive && (DesktopWidgetDesign.exceptionCount > 0 || DesktopWidgetDesign.canUndo)
+                visible: !root.atollActive && (DesktopWidgetDesign.exceptionCount > 0 || DesktopWidgetDesign.canUndo)
                 spacing: 6
                 SelectionGroupButton {
                     visible: DesktopWidgetDesign.exceptionCount > 0
@@ -1729,7 +1729,7 @@ ContentPage {
                 }
             }
             StyledText {
-                visible: !root.irisActive
+                visible: !root.atollActive
                 Layout.fillWidth: true
                 text: Translation.tr("Apply one wallpaper-generated color preset to every built-in desktop widget. You can still tune any widget individually below.")
                 color: Appearance.colors.colSubtext
@@ -1738,7 +1738,7 @@ ContentPage {
             }
 
             SettingsSwitch {
-                visible: !root.irisActive
+                visible: !root.atollActive
                 Layout.fillWidth: true
                 buttonIcon: "wallpaper"
                 text: Translation.tr("Ink follows the wallpaper")
@@ -1753,7 +1753,7 @@ ContentPage {
             }
 
             WidgetPalettePresetPicker {
-                visible: !root.irisActive
+                visible: !root.atollActive
                 configPath: ""
                 applyGlobally: true
             }
@@ -1764,7 +1764,7 @@ ContentPage {
 
     // ── Power Saving ──────────────────────────────────────────
     SettingsTaskLoader {
-        requested: root.isIiActive && root.activeSection === "manage"
+        requested: root.isDriftActive && root.activeSection === "manage"
         sourceComponent: Component {
     SettingsCardSection {
         id: powerSavingSection
@@ -1861,7 +1861,7 @@ ContentPage {
 
     // ── Clock ────────────────────────────────────────────────
     LazySection {
-        requested: root.isIiActive && root.activeSection === "time"
+        requested: root.isDriftActive && root.activeSection === "time"
         sourceComponent: Component {
             SettingsCardSection {
                 id: clockSection
@@ -2494,7 +2494,7 @@ ContentPage {
 
     // ── Month Calendar ──────────────────────────────────────
     LazySection {
-        requested: root.isIiActive && root.activeSection === "time"
+        requested: root.isDriftActive && root.activeSection === "time"
         sourceComponent: Component {
             SettingsCardSection {
                 settingsTaskSection: "time"
@@ -2600,7 +2600,7 @@ ContentPage {
 
     // ── Timers ──────────────────────────────────────────────
     LazySection {
-        requested: root.isIiActive && root.activeSection === "time"
+        requested: root.isDriftActive && root.activeSection === "time"
         sourceComponent: Component {
             SettingsCardSection {
                 settingsTaskSection: "time"
@@ -2701,7 +2701,7 @@ ContentPage {
 
     // ── Todo ────────────────────────────────────────────────
     LazySection {
-        requested: root.isIiActive && root.activeSection === "personal"
+        requested: root.isDriftActive && root.activeSection === "personal"
         sourceComponent: Component {
             SettingsCardSection {
                 settingsTaskSection: "personal"
@@ -2794,7 +2794,7 @@ ContentPage {
 
     // ── Japanese Typography ─────────────────────────────────
     LazySection {
-        requested: root.isIiActive && root.activeSection === "personal"
+        requested: root.isDriftActive && root.activeSection === "personal"
         sourceComponent: Component {
             SettingsCardSection {
                 settingsTaskSection: "personal"
@@ -3250,7 +3250,7 @@ ContentPage {
 
     // ── Weather ──────────────────────────────────────────────
     LazySection {
-        requested: root.isIiActive && root.activeSection === "weather"
+        requested: root.isDriftActive && root.activeSection === "weather"
         sourceComponent: Component {
             SettingsCardSection {
                 settingsTaskSection: "weather"
@@ -3542,7 +3542,7 @@ ContentPage {
     }
 
     LazySection {
-        requested: root.isIiActive && root.activeSection === "media"
+        requested: root.isDriftActive && root.activeSection === "media"
         sourceComponent: Component {
             SettingsCardSection {
                 settingsTaskSection: "media"
@@ -3904,7 +3904,7 @@ ContentPage {
     }
 
     LazySection {
-        requested: root.isIiActive && root.activeSection === "media"
+        requested: root.isDriftActive && root.activeSection === "media"
         sourceComponent: Component {
             SettingsCardSection {
                 settingsTaskSection: "media"
@@ -3970,7 +3970,7 @@ ContentPage {
 
     // ── Media Controls ───────────────────────────────────────
     LazySection {
-        requested: root.isIiActive && root.activeSection === "media"
+        requested: root.isDriftActive && root.activeSection === "media"
         sourceComponent: Component {
             SettingsCardSection {
                 settingsTaskSection: "media"
@@ -4294,12 +4294,12 @@ ContentPage {
 
     // ── Visualizer ───────────────────────────────────────────
     LazySection {
-        requested: root.isIiActive && root.activeSection === "edges"
+        requested: root.isDriftActive && root.activeSection === "edges"
         sourceComponent: OrganicEdgeSettings {}
     }
 
     LazySection {
-        requested: root.isIiActive && root.activeSection === "media"
+        requested: root.isDriftActive && root.activeSection === "media"
         sourceComponent: Component {
             SettingsCardSection {
                 settingsTaskSection: "media"
@@ -4820,7 +4820,7 @@ ContentPage {
 
     // ── System Monitor ───────────────────────────────────────
     LazySection {
-        requested: root.isIiActive && root.activeSection === "system"
+        requested: root.isDriftActive && root.activeSection === "system"
         sourceComponent: Component {
             SettingsCardSection {
                 settingsTaskSection: "system"
@@ -5061,7 +5061,7 @@ ContentPage {
 
     // ── Battery ──────────────────────────────────────────────
     LazySection {
-        requested: root.isIiActive && root.activeSection === "system"
+        requested: root.isDriftActive && root.activeSection === "system"
         sourceComponent: Component {
             SettingsCardSection {
                 settingsTaskSection: "system"
@@ -5277,7 +5277,7 @@ ContentPage {
 
     // ── Notes ───────────────────────────────────────────────
     LazySection {
-        requested: root.isIiActive && root.activeSection === "personal"
+        requested: root.isDriftActive && root.activeSection === "personal"
         sourceComponent: Component {
             SettingsCardSection {
                 settingsTaskSection: "personal"
@@ -5401,7 +5401,7 @@ ContentPage {
 
     // ── Upcoming Events ─────────────────────────────────────
     LazySection {
-        requested: root.isIiActive && root.activeSection === "time"
+        requested: root.isDriftActive && root.activeSection === "time"
         sourceComponent: Component {
             SettingsCardSection {
                 settingsTaskSection: "time"
@@ -5521,7 +5521,7 @@ ContentPage {
     }
 
     LazySection {
-        requested: root.isIiActive && root.activeSection === "personal"
+        requested: root.isDriftActive && root.activeSection === "personal"
         sourceComponent: Component {
             SettingsCardSection {
                 settingsTaskSection: "personal"
@@ -5602,7 +5602,7 @@ ContentPage {
 
     // ── Date badge ────────────────────────────────────────
     LazySection {
-        requested: root.isIiActive && root.activeSection === "time"
+        requested: root.isDriftActive && root.activeSection === "time"
         sourceComponent: Component {
             SettingsCardSection {
                 settingsTaskSection: "time"
@@ -5707,7 +5707,7 @@ ContentPage {
 
     // ── Decorative shape ────────────────────────────────────────
     LazySection {
-        requested: root.isIiActive && root.activeSection === "personal"
+        requested: root.isDriftActive && root.activeSection === "personal"
         sourceComponent: Component {
             SettingsCardSection {
                 settingsTaskSection: "personal"
@@ -5795,7 +5795,7 @@ ContentPage {
 
     // ── Day progress ─────────────────────────────────────────
     LazySection {
-        requested: root.isIiActive && root.activeSection === "time"
+        requested: root.isDriftActive && root.activeSection === "time"
         sourceComponent: Component {
             SettingsCardSection {
                 settingsTaskSection: "time"
@@ -5913,7 +5913,7 @@ ContentPage {
 
     // ── System Uptime ────────────────────────────────────────
     LazySection {
-        requested: root.isIiActive && root.activeSection === "time"
+        requested: root.isDriftActive && root.activeSection === "time"
         sourceComponent: Component {
             SettingsCardSection {
                 settingsTaskSection: "time"
@@ -6012,7 +6012,7 @@ ContentPage {
     }
 
     LazySection {
-        requested: root.isIiActive && root.activeSection === "time"
+        requested: root.isDriftActive && root.activeSection === "time"
         sourceComponent: Component {
             SettingsCardSection {
                 settingsTaskSection: "time"
@@ -6218,7 +6218,7 @@ ContentPage {
     }
 
     LazySection {
-        requested: root.isIiActive && root.activeSection === "personal"
+        requested: root.isDriftActive && root.activeSection === "personal"
         sourceComponent: Component {
             SettingsCardSection {
                 settingsTaskSection: "personal"
@@ -6322,7 +6322,7 @@ ContentPage {
 
     // ── Mascot ───────────────────────────────────────────────
     LazySection {
-        requested: root.isIiActive && root.activeSection === "personal"
+        requested: root.isDriftActive && root.activeSection === "personal"
         sourceComponent: Component {
             SettingsCardSection {
                 settingsTaskSection: "personal"
@@ -6466,7 +6466,7 @@ ContentPage {
 
     // ── News Ticker ───────────────────────────────────────────
     LazySection {
-        requested: root.isIiActive && root.activeSection === "time"
+        requested: root.isDriftActive && root.activeSection === "time"
         sourceComponent: Component {
             SettingsCardSection {
                 settingsTaskSection: "time"
@@ -6552,7 +6552,7 @@ ContentPage {
 
     // ── Custom Widgets ──────────────────────────────────────
     LazySection {
-        requested: root.isIiActive && root.activeSection === "personal"
+        requested: root.isDriftActive && root.activeSection === "personal"
         sourceComponent: Component {
             SettingsCardSection {
                 settingsTaskSection: "personal"
@@ -6564,7 +6564,7 @@ ContentPage {
             // Description
             StyledText {
                 Layout.fillWidth: true
-                text: Translation.tr("QML widgets you create or install. Place widget folders in ~/.config/inir/widgets/ — each needs a widget.json manifest and a .qml file.")
+                text: Translation.tr("QML widgets you create or install. Place widget folders in ~/.config/lunana/widgets/ — each needs a widget.json manifest and a .qml file.")
                 color: Appearance.colors.colSubtext
                 font.pixelSize: Appearance.font.pixelSize.small
                 wrapMode: Text.WordWrap

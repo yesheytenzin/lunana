@@ -1,0 +1,4 @@
+SNotificationGroup 1.0 SNotificationGroup.qml
+SNotificationItem 1.0 SNotificationItem.qml
+SNotificationListView 1.0 SNotificationListView.qml
+SlateNotificationPopup 1.0 SlateNotificationPopup.qml

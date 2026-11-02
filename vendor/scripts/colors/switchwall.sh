@@ -10,7 +10,7 @@ SHELL_ROOT="$(cd "$SCRIPT_DIR/../.." 2>/dev/null && pwd)"
 
 # shellcheck source=scripts/lib/config-path.sh
 source "$SCRIPT_DIR/../lib/config-path.sh"
-SHELL_CONFIG_FILE="$(inir_config_file)"
+SHELL_CONFIG_FILE="$(lunana_config_file)"
 TEMPLATE_DIR="$XDG_CONFIG_HOME/matugen"
 terminalscheme="$SCRIPT_DIR/terminal/scheme-base.json"
 
@@ -249,15 +249,15 @@ get_focused_monitor_name() {
             else null end;
         def main_path: (monitor_entry.path // .background.wallpaperPath // "");
         def monitor_backdrop: (monitor_entry.backdropPath // "");
-        def waffle_main: (if (.waffles.background.useMainWallpaper // "true") == true then main_path else (.waffles.background.wallpaperPath // main_path) end);
+        def waffle_main: (if (.slate.background.useMainWallpaper // "true") == true then main_path else (.slate.background.wallpaperPath // main_path) end);
         if (.appearance.wallpaperTheming.useBackdropForColors // false) then
-            if (.panelFamily // "ii") == "waffle" then
-                (if (.waffles.background.backdrop.useMainWallpaper // "true") == true then waffle_main else (.waffles.background.backdrop.wallpaperPath // waffle_main) end)
+            if (.panelFamily // "drift") == "slate" then
+                (if (.slate.background.backdrop.useMainWallpaper // "true") == true then waffle_main else (.slate.background.backdrop.wallpaperPath // waffle_main) end)
             else
                 (if monitor_backdrop != "" then monitor_backdrop else (if (.background.backdrop.useMainWallpaper // "true") == true then main_path else (.background.backdrop.wallpaperPath // main_path) end) end)
             end
         else
-            if (.panelFamily // "ii") == "waffle" then waffle_main else main_path end
+            if (.panelFamily // "drift") == "slate" then waffle_main else main_path end
         end // ""
     ' "$SHELL_CONFIG_FILE" 2>/dev/null || echo ""
  }
@@ -490,8 +490,8 @@ switch() {
         fi
     fi
 
-    # iRiS: a scheme the person chose is the system's mode (Ink is a paper light), so the shell and the apps agree.
-    if [[ -z "$mode_flag" && "$cfg_panel_family" == "iris" ]]; then
+    # Atoll: a scheme the person chose is the system's mode (Ink is a paper light), so the shell and the apps agree.
+    if [[ -z "$mode_flag" && "$cfg_panel_family" == "atoll" ]]; then
         case "$cfg_iris_scheme" in
             dark) mode_flag="dark" ;;
             light|ink) mode_flag="light" ;;
@@ -501,13 +501,13 @@ switch() {
     # Shell/UI colors follow the requested real mode.
     # Terminal colors may optionally force dark mode, but that must not darken the shell palette.
     # If useBackdropForColors is enabled, override color source to use backdrop wallpaper
-    # Respects active panel family: ii reads from background.backdrop, waffle from waffles.background.backdrop
+    # Respects active panel family: drift reads from background.backdrop, slate from slate.background.backdrop
     if [[ "$color_flag" != "1" ]]; then
         if [[ "$cfg_use_backdrop" == "true" ]]; then
             local backdrop_use_main=""
             local backdrop_path=""
 
-            if [[ "$cfg_panel_family" == "waffle" ]]; then
+            if [[ "$cfg_panel_family" == "slate" ]]; then
                 backdrop_use_main="$cfg_waffle_backdrop_use_main"
                 backdrop_path="$cfg_waffle_backdrop_path"
             else
@@ -552,9 +552,9 @@ switch() {
     generate_colors_material_args+=(--mode "$mode_flag")
     [[ -n "$type_flag" ]] && generate_colors_material_args+=(--scheme "$type_flag")
     generate_colors_material_args+=(--termscheme "$terminalscheme" --blend_bg_fg)
-    # iRiS: the surfaces the shell wears (its material, tone included) anchor the apps' neutrals. The shell writes the file.
-    if [[ "$cfg_panel_family" == "iris" && "$cfg_theme" == "auto" ]]; then
-        iris_surface_file="$STATE_DIR/user/generated/iris-surface.json"
+    # Atoll: the surfaces the shell wears (its material, tone included) anchor the apps' neutrals. The shell writes the file.
+    if [[ "$cfg_panel_family" == "atoll" && "$cfg_theme" == "auto" ]]; then
+        iris_surface_file="$STATE_DIR/user/generated/atoll-surface.json"
         if [[ -s "$iris_surface_file" ]]; then
             if [[ "$cfg_iris_material_apps" == "true" ]]; then
                 iris_surface_seed=$(jq -r '.seed // empty' "$iris_surface_file" 2>/dev/null)
@@ -593,8 +593,8 @@ switch() {
     [[ "$cfg_color_invert" == "true" ]] && generate_colors_material_args+=(--invert-hue)
 
     # Generate colors and render templates in one unified Python pass
-    if [[ -n "${INIR_VENV:-}" ]]; then
-        _ii_venv="$(eval echo "$INIR_VENV")"
+    if [[ -n "${LUNANA_VENV:-}" ]]; then
+        _ii_venv="$(eval echo "$LUNANA_VENV")"
     elif [[ -n "${ILLOGICAL_IMPULSE_VIRTUAL_ENV:-}" ]]; then
         _ii_venv="$(eval echo "$ILLOGICAL_IMPULSE_VIRTUAL_ENV")"
     else
@@ -716,9 +716,9 @@ main() {
             (.background.clock.cookie.aiStyling | tostring),
             (.background.thumbnailPath // ""),
             (.appearance.wallpaperTheming.useBackdropForColors // false),
-            (.panelFamily // "ii"),
-            (.waffles.background.backdrop.useMainWallpaper // true),
-            (.waffles.background.backdrop.wallpaperPath // ""),
+            (.panelFamily // "drift"),
+            (.slate.background.backdrop.useMainWallpaper // true),
+            (.slate.background.backdrop.wallpaperPath // ""),
             (.background.backdrop.useMainWallpaper // true),
             (.background.backdrop.wallpaperPath // ""),
             (.appearance.wallpaperTheming.enableAppsAndShell // true),
@@ -737,8 +737,8 @@ main() {
             (if .appearance.customTheme.darkmode == null then true else .appearance.customTheme.darkmode end),
             (.appearance.wallpaperTheming.autoDarkLightMode // false),
             (.appearance.colorInvert // false),
-            (.iris.appearance.scheme // "auto"),
-            (.iris.appearance.materialForApps // true)
+            (.atoll.appearance.scheme // "auto"),
+            (.atoll.appearance.materialForApps // true)
         ] | .[]' "$SHELL_CONFIG_FILE" 2>/dev/null)
     fi
     cfg_palette_type="${_cfg[0]:-auto}"
@@ -747,7 +747,7 @@ main() {
     cfg_ai_styling="${_cfg[3]:-false}"
     cfg_thumbnail_path="${_cfg[4]:-}"
     cfg_use_backdrop="${_cfg[5]:-false}"
-    cfg_panel_family="${_cfg[6]:-ii}"
+    cfg_panel_family="${_cfg[6]:-drift}"
     cfg_waffle_backdrop_use_main="${_cfg[7]:-true}"
     cfg_waffle_backdrop_path="${_cfg[8]:-}"
     cfg_ii_backdrop_use_main="${_cfg[9]:-true}"
@@ -877,7 +877,7 @@ main() {
 
     # --noswitch should regenerate from the current effective theming source.
     # If no explicit image was passed, force resolution now so family-specific
-    # wallpapers (e.g. waffle.background.wallpaperPath) are honored.
+    # wallpapers (e.g. slate.background.wallpaperPath) are honored.
     if [[ -z "$imgpath" && -n "$noswitch_flag" && -z "$color_flag" ]]; then
         imgpath="$(resolve_effective_theming_wallpaper)"
     fi

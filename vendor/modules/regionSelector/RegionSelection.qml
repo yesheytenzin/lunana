@@ -3,9 +3,9 @@ import "../.."
 import "../common"
 import "../common/functions"
 import "../common/widgets"
-import "../waffle/regionSelector" as WaffleRegion
-import "../iris/regionSelector" as IrisRegion
-import "../iris/style"
+import "../slate/regionSelector" as SlateRegion
+import "../atoll/regionSelector" as AtollRegion
+import "../atoll/style"
 import "../../services"
 import QtQuick
 import QtQuick.Controls
@@ -54,44 +54,44 @@ PanelWindow {
         return configured
     }
 
-    readonly property bool useIris: Config.options?.panelFamily === "iris"
+    readonly property bool useAtoll: Config.options?.panelFamily === "atoll"
     // The toolbar rests against a screen edge the shell may already own.
     readonly property var shellInsets: ShellLayoutController.desktopInsets(root.screen?.name ?? "")
 
     // Tri-style color support
-    property color overlayColor: root.useIris ? IrisStyle.veilStrong
+    property color overlayColor: root.useAtoll ? AtollStyle.veilStrong
         : Appearance.angelEverywhere ? ColorUtils.applyAlpha(Appearance.colors.colScrim, 0.33)
-        : Appearance.inirEverywhere ? ColorUtils.applyAlpha(Appearance.colors.colScrim, 0.53)
+        : Appearance.lunanaEverywhere ? ColorUtils.applyAlpha(Appearance.colors.colScrim, 0.53)
         : Appearance.auroraEverywhere ? ColorUtils.applyAlpha(Appearance.colors.colScrim, 0.4) : ColorUtils.applyAlpha(Appearance.colors.colScrim, 0.53)
-    property color brightText: root.useIris ? IrisStyle.onMedia
-        : Appearance.inirEverywhere ? Appearance.inir.colText
+    property color brightText: root.useAtoll ? AtollStyle.onMedia
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colText
         : Appearance.auroraEverywhere ? Appearance.colors.colOnLayer0
         : (Appearance.m3colors.darkmode ? Appearance.colors.colOnLayer0 : Appearance.colors.colLayer0)
-    property color brightSecondary: root.useIris ? IrisStyle.onMediaSecondary
-        : Appearance.inirEverywhere ? Appearance.inir.colTextSecondary
+    property color brightSecondary: root.useAtoll ? AtollStyle.onMediaSecondary
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colTextSecondary
         : Appearance.auroraEverywhere ? Appearance.aurora.colTextSecondary
         : (Appearance.m3colors.darkmode ? Appearance.colors.colSecondary : Appearance.colors.colOnSecondary)
-    property color brightTertiary: root.useIris ? IrisStyle.accent
+    property color brightTertiary: root.useAtoll ? AtollStyle.accent
         : Appearance.zzzEverywhere ? Appearance.zzz.accent
-        : Appearance.inirEverywhere ? Appearance.inir.colPrimary
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colPrimary
         : Appearance.auroraEverywhere ? Appearance.colors.colPrimary
         : (Appearance.m3colors.darkmode ? Appearance.colors.colTertiary : Qt.lighter(Appearance.colors.colPrimary))
-    property color selectionBorderColor: root.useIris ? IrisStyle.onMedia
+    property color selectionBorderColor: root.useAtoll ? AtollStyle.onMedia
         : Appearance.zzzEverywhere ? Appearance.zzz.accent
-        : Appearance.inirEverywhere ? Appearance.inir.colBorder
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colBorder
         : Appearance.auroraEverywhere ? Appearance.aurora.colPopupBorder
         : ColorUtils.mix(brightText, brightSecondary, 0.5)
-    property color selectionFillColor: root.useIris ? IrisStyle.onMediaFill
+    property color selectionFillColor: root.useAtoll ? AtollStyle.onMediaFill
         : Appearance.zzzEverywhere ? ColorUtils.transparentize(Appearance.zzz.accent, 0.86)
-        : Appearance.inirEverywhere ? ColorUtils.transparentize(Appearance.inir.colPrimary, 0.8)
+        : Appearance.lunanaEverywhere ? ColorUtils.transparentize(Appearance.lunana.colPrimary, 0.8)
         : Appearance.auroraEverywhere ? ColorUtils.transparentize(Appearance.colors.colPrimary, 0.8)
         : ColorUtils.applyAlpha(Appearance.colors.colOnLayer0, 0.2)
     property color windowBorderColor: brightSecondary
     property color windowFillColor: ColorUtils.transparentize(windowBorderColor, 0.85)
     property color imageBorderColor: brightTertiary
     property color imageFillColor: ColorUtils.transparentize(imageBorderColor, 0.85)
-    property color onBorderColor: root.useIris ? IrisStyle.onMedia
-        : Appearance.inirEverywhere ? Appearance.inir.colText
+    property color onBorderColor: root.useAtoll ? AtollStyle.onMedia
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colText
         : Appearance.auroraEverywhere ? Appearance.colors.colOnLayer0 : Appearance.colors.colScrim
     readonly property var windows: useNiri
         ? (NiriService.windows || [])
@@ -470,13 +470,13 @@ PanelWindow {
         stderr: StdioCollector { id: japaneseOcrErr }
         onExited: (exitCode) => {
             if (exitCode === 0 && japaneseOcrProc.recognizedText.length > 0) {
-                Quickshell.execDetached(["notify-send", "Japanese OCR", "Text recognized; opening dictionary", "-a", "iNiR", "-t", "1800"]);
+                Quickshell.execDetached(["notify-send", "Japanese OCR", "Text recognized; opening dictionary", "-a", "Lunana", "-t", "1800"]);
             } else if (exitCode === 0) {
-                Quickshell.execDetached(["notify-send", "OCR", "No text was recognized in the selected region", "-a", "iNiR", "-t", "3500"]);
+                Quickshell.execDetached(["notify-send", "OCR", "No text was recognized in the selected region", "-a", "Lunana", "-t", "3500"]);
             } else {
                 const detail = (japaneseOcrErr.text ?? "").trim();
                 const message = detail.length > 0 ? detail : Translation.tr("Japanese text recognition failed");
-                Quickshell.execDetached(["notify-send", "OCR failed", message, "-a", "iNiR", "-t", "5000"]);
+                Quickshell.execDetached(["notify-send", "OCR failed", message, "-a", "Lunana", "-t", "5000"]);
             }
             root.dismiss();
         }
@@ -658,25 +658,25 @@ PanelWindow {
                 implicitHeight: controlsLoader.implicitHeight
                 opacity: 0
                 
-                readonly property bool useWaffle: Config.options?.panelFamily === "waffle"
+                readonly property bool useSlate: Config.options?.panelFamily === "slate"
 
-                // Position: waffle = top center, material and iRiS = bottom center
+                // Position: slate = top center, material and Atoll = bottom center
                 readonly property real restTopMargin: 16 + (root.shellInsets.top ?? 0)
                 readonly property real restBottomMargin: 8 + (root.shellInsets.bottom ?? 0)
 
                 anchors {
                     horizontalCenter: parent.horizontalCenter
-                    top: useWaffle ? parent.top : undefined
-                    bottom: useWaffle ? undefined : parent.bottom
-                    topMargin: useWaffle ? -height : 0
-                    bottomMargin: useWaffle ? 0 : -height
+                    top: useSlate ? parent.top : undefined
+                    bottom: useSlate ? undefined : parent.bottom
+                    topMargin: useSlate ? -height : 0
+                    bottomMargin: useSlate ? 0 : -height
                 }
 
                 Connections {
                     target: root
                     function onVisibleChanged() {
                         if (!visible) return;
-                        if (regionSelectionControls.useWaffle) {
+                        if (regionSelectionControls.useSlate) {
                             regionSelectionControls.anchors.topMargin = regionSelectionControls.restTopMargin;
                         } else {
                             regionSelectionControls.anchors.bottomMargin = regionSelectionControls.restBottomMargin;
@@ -685,11 +685,11 @@ PanelWindow {
                     }
                 }
                 onRestBottomMarginChanged: {
-                    if (root.visible && !regionSelectionControls.useWaffle)
+                    if (root.visible && !regionSelectionControls.useSlate)
                         regionSelectionControls.anchors.bottomMargin = regionSelectionControls.restBottomMargin;
                 }
                 onRestTopMarginChanged: {
-                    if (root.visible && regionSelectionControls.useWaffle)
+                    if (root.visible && regionSelectionControls.useSlate)
                         regionSelectionControls.anchors.topMargin = regionSelectionControls.restTopMargin;
                 }
                 Behavior on opacity {
@@ -704,13 +704,13 @@ PanelWindow {
 
                 Loader {
                     id: controlsLoader
-                    sourceComponent: regionSelectionControls.useWaffle ? waffleControls
-                        : root.useIris ? irisControls : materialControls
+                    sourceComponent: regionSelectionControls.useSlate ? slateControls
+                        : root.useAtoll ? atollControls : materialControls
                 }
 
                 Component {
-                    id: irisControls
-                    IrisRegion.IrisOptionsToolbar {
+                    id: atollControls
+                    AtollRegion.AtollOptionsToolbar {
                         action: root.action
                         selectionMode: root.selectionMode
                         onActionChanged: root.action = action
@@ -724,7 +724,7 @@ PanelWindow {
                     }
                 }
 
-                // Material ii controls
+                // Material drift controls
                 Component {
                     id: materialControls
                     Row {
@@ -768,10 +768,10 @@ PanelWindow {
                     }
                 }
 
-                // Waffle (Windows 11) controls
+                // Slate (Slate) controls
                 Component {
-                    id: waffleControls
-                    WaffleRegion.WOptionsToolbar {
+                    id: slateControls
+                    SlateRegion.SOptionsToolbar {
                         action: root.action
                         selectionMode: root.selectionMode
                         onActionChanged: root.action = action

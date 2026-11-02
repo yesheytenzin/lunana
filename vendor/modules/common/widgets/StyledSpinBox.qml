@@ -31,7 +31,7 @@ SpinBox {
     background: Rectangle {
         color: Appearance.regaliaEverywhere ? "transparent"
             : Appearance.angelEverywhere ? Appearance.angel.colGlassCard
-            : Appearance.inirEverywhere ? Appearance.inir.colLayer2 : Appearance.colors.colLayer2
+            : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2 : Appearance.colors.colLayer2
         radius: root.radius
         border.width: Appearance.editorialEverywhere ? (root.activeFocus ? 2 : 1) : 0
         border.color: Appearance.editorialEverywhere

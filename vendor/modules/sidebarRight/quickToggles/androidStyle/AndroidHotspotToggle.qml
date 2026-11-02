@@ -13,7 +13,7 @@ AndroidQuickToggleButton {
 
     name: Translation.tr("Hotspot")
     statusText: root.toggled
-        ? (Config.options?.hotspot?.ssid ?? "iNiR Hotspot")
+        ? (Config.options?.hotspot?.ssid ?? "Lunana Hotspot")
         : Translation.tr("Off")
 
     toggled: false
@@ -30,7 +30,7 @@ AndroidQuickToggleButton {
         if (root.toggled) {
             stopProc.running = true
         } else {
-            const ssid = Config.options?.hotspot?.ssid ?? "iNiR Hotspot"
+            const ssid = Config.options?.hotspot?.ssid ?? "Lunana Hotspot"
             const password = Config.options?.hotspot?.password ?? ""
             const band = Config.options?.hotspot?.band ?? "bg"
             startProc.exec(["/bin/sh", "-c",
@@ -80,7 +80,7 @@ AndroidQuickToggleButton {
                     errMsg.length > 0
                         ? errMsg
                         : Translation.tr("Failed to start hotspot. Ensure your Wi-Fi adapter supports AP mode."),
-                    "-a", "iNiR"
+                    "-a", "Lunana"
                 ])
             }
             root.refreshStatus()
@@ -105,7 +105,7 @@ AndroidQuickToggleButton {
                     errMsg.length > 0
                         ? errMsg
                         : Translation.tr("Failed to stop hotspot."),
-                    "-a", "iNiR"
+                    "-a", "Lunana"
                 ])
             }
             root.refreshStatus()

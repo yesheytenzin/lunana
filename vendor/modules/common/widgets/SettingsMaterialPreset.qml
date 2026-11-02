@@ -21,7 +21,7 @@ QtObject {
         : Appearance.angelEverywhere ? Appearance.angel.roundingNormal
         : Appearance.regaliaEverywhere ? Appearance.regalia.roundNormal
         : Appearance.zzzEverywhere ? Appearance.zzz.cornerRadius + 1
-        : Appearance.inirEverywhere ? Appearance.inir.roundingNormal
+        : Appearance.lunanaEverywhere ? Appearance.lunana.roundingNormal
         : Appearance.editorialEverywhere ? Appearance.editorial.radius : Appearance.rounding.normal
     readonly property int cardPadding: unified ? Math.round(14 * Appearance.fontSizeScale)
         : Math.round((Appearance.regaliaEverywhere ? Appearance.regalia.tilePadding
@@ -32,7 +32,7 @@ QtObject {
         : Appearance.angelEverywhere ? Appearance.angel.roundingSmall
         : Appearance.regaliaEverywhere ? Appearance.regalia.controlRadius
         : Appearance.zzzEverywhere ? Appearance.zzz.cornerRadius
-        : Appearance.inirEverywhere ? Appearance.inir.roundingSmall
+        : Appearance.lunanaEverywhere ? Appearance.lunana.roundingSmall
         : Appearance.editorialEverywhere ? Math.max(4, Math.round(Appearance.editorial.radius * 0.7)) : Appearance.rounding.small
     readonly property int headerPaddingX: Math.round((Appearance.regaliaEverywhere ? Appearance.regalia.controlPaddingHorizontal
         : Appearance.editorialEverywhere ? 14 * Appearance.editorial.spacing : 12) * Appearance.fontSizeScale)
@@ -44,7 +44,7 @@ QtObject {
         : Appearance.angelEverywhere ? Appearance.angel.roundingSmall
         : Appearance.regaliaEverywhere ? Appearance.regalia.roundSmall
         : Appearance.zzzEverywhere ? Appearance.zzz.cornerRadius
-        : Appearance.inirEverywhere ? Appearance.inir.roundingSmall
+        : Appearance.lunanaEverywhere ? Appearance.lunana.roundingSmall
         : Appearance.editorialEverywhere ? Math.max(4, Math.round(Appearance.editorial.radius * 0.7)) : Appearance.rounding.small
     readonly property int groupPadding: Math.round((Appearance.regaliaEverywhere ? Appearance.regalia.tilePadding
         : Appearance.editorialEverywhere ? 14 * Appearance.editorial.spacing : 12) * Appearance.fontSizeScale)
@@ -65,7 +65,7 @@ QtObject {
         : Appearance.regaliaEverywhere ? Appearance.regalia.surfacePlate
         : Appearance.editorialEverywhere ? Appearance.editorial.layer(1)
         : Appearance.zzzEverywhere ? "transparent"
-        : Appearance.inirEverywhere ? Appearance.inir.colLayer1
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer1
         : Appearance.auroraEverywhere ? ColorUtils.transparentize(Appearance.colors.colLayer1Base, 0.85)
         : Appearance.colors.colLayer1
     readonly property color cardBorderColor: unified ? "transparent"
@@ -74,7 +74,7 @@ QtObject {
         : Appearance.regaliaEverywhere ? "transparent"
         : Appearance.editorialEverywhere ? Appearance.editorial.rule
         : Appearance.zzzEverywhere ? Appearance.zzz.hairline
-        : Appearance.inirEverywhere ? Appearance.inir.colBorder
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colBorder
         : Appearance.auroraEverywhere ? Appearance.aurora.colPopupBorder
         : Appearance.colors.colLayer0Border
 
@@ -84,7 +84,7 @@ QtObject {
         : Appearance.regaliaEverywhere ? "transparent"
         : Appearance.editorialEverywhere ? Appearance.editorial.layer(2)
         : Appearance.zzzEverywhere ? "transparent"
-        : Appearance.inirEverywhere ? ColorUtils.transparentize(Appearance.inir.colLayer2, 0.45)
+        : Appearance.lunanaEverywhere ? ColorUtils.transparentize(Appearance.lunana.colLayer2, 0.45)
         : Appearance.auroraEverywhere ? ColorUtils.transparentize(Appearance.colors.colLayer2Base, 0.88)
         : ColorUtils.transparentize(Appearance.colors.colLayer2, 0.4)
     readonly property color groupBorderColor: unified ? Appearance.colors.colLayer0Border
@@ -93,7 +93,7 @@ QtObject {
         : Appearance.regaliaEverywhere ? "transparent"
         : Appearance.editorialEverywhere ? Appearance.editorial.rule
         : Appearance.zzzEverywhere ? Appearance.zzz.hairlineStrong
-        : Appearance.inirEverywhere ? Appearance.inir.colBorderSubtle
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colBorderSubtle
         : Appearance.auroraEverywhere ? Appearance.aurora.colPopupBorder
         : Appearance.colors.colLayer0Border
 
@@ -104,7 +104,7 @@ QtObject {
         : Appearance.regaliaEverywhere ? Appearance.regalia.surfacePlateHover
         : Appearance.editorialEverywhere ? Appearance.editorial.field
         : Appearance.zzzEverywhere ? Appearance.zzz.paperAlt
-        : Appearance.inirEverywhere ? Appearance.inir.colLayer1Hover
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer1Hover
         : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurfaceHover
         : Appearance.colors.colLayer1Hover
 
@@ -115,7 +115,7 @@ QtObject {
         : Appearance.regaliaEverywhere ? Appearance.regalia.onColor
         : Appearance.editorialEverywhere ? Appearance.editorial.accent
         : Appearance.zzzEverywhere ? Appearance.zzz.accent
-        : Appearance.inirEverywhere ? Appearance.inir.colAccent
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colAccent
         : Appearance.colors.colPrimary
 
     // ── Section title colors ──
@@ -125,7 +125,7 @@ QtObject {
         : Appearance.regaliaEverywhere ? Appearance.regalia.onColor
         : Appearance.editorialEverywhere ? Appearance.editorial.ink
         : Appearance.zzzEverywhere ? Appearance.zzz.onColor
-        : Appearance.inirEverywhere ? Appearance.inir.colText
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colText
         : Appearance.colors.colOnSecondaryContainer
     readonly property color titleCollapsedColor: unified ? Appearance.colors.colOnSurface
         : Appearance.angelEverywhere
@@ -133,7 +133,7 @@ QtObject {
         : Appearance.regaliaEverywhere ? Appearance.regalia.onColor
         : Appearance.editorialEverywhere ? Appearance.editorial.ink
         : Appearance.zzzEverywhere ? Appearance.colors.colOnLayer1
-        : Appearance.inirEverywhere ? Appearance.inir.colText
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colText
         : Appearance.colors.colOnSurface
 
     // ── Icon colors ──
@@ -147,7 +147,7 @@ QtObject {
         : Appearance.regaliaEverywhere ? Appearance.regalia.hardwarePrimary
         : Appearance.editorialEverywhere ? Appearance.editorial.accent
         : Appearance.zzzEverywhere ? Appearance.zzz.onSticker
-        : Appearance.inirEverywhere ? Appearance.inir.colAccent
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colAccent
         : Appearance.colors.colPrimary
     readonly property color iconCollapsedColor: unified ? Appearance.colors.colOnSurfaceVariant
         : Appearance.angelEverywhere
@@ -155,7 +155,7 @@ QtObject {
         : Appearance.regaliaEverywhere ? Appearance.regalia.hardwareSecondary
         : Appearance.editorialEverywhere ? Appearance.editorial.muted
         : Appearance.zzzEverywhere ? Appearance.zzz.onSecondary
-        : Appearance.inirEverywhere ? Appearance.inir.colTextSecondary
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colTextSecondary
         : Appearance.colors.colOnSurfaceVariant
 
     // ── Navigation rail ──

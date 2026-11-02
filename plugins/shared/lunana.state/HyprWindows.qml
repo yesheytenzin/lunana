@@ -5,7 +5,7 @@ import "../../lunana-vendor/services" as LnServ
 
 // HyprWindows — Hyprland window-model mirror for Niri-shaped consumers.
 //
-// Inir's NiriService publishes `windows` / `allWorkspaces` / `mruWindowIds`
+// Lunana's NiriService publishes `windows` / `allWorkspaces` / `mruWindowIds`
 // from the Niri socket; on Hyprland those stay empty and Niri-shaped
 // consumers (orbit, and anything else reading the Niri model) see nothing.
 // This mirror translates Hyprland's toplevel/workspace models into the exact

@@ -25,7 +25,7 @@ Item {
             Layout.fillWidth: true
             Layout.topMargin: 2
             height: 1
-            color: Appearance.inirEverywhere ? Appearance.inir.colBorder
+            color: Appearance.lunanaEverywhere ? Appearance.lunana.colBorder
                 : Appearance.angelEverywhere ? Appearance.angel.colBorderSubtle
                 : Appearance.colors.colOutlineVariant
             opacity: 0.35

@@ -1,0 +1,17 @@
+# vendor-patches/modules/settings/ModulesConfig.qml.patch
+#
+# Lunana family switching through the Omarchy shell (see the IrisOptions
+# patch for the full rationale): the three family cards call
+# `omarchy-shell lunana.family set` instead of the unvendored upstream script.
+
+--- a/modules/settings/ModulesConfig.qml
++++ b/modules/settings/ModulesConfig.qml
+@@ -223,1 +223,1 @@
+-                    onClicked: Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")), "panelFamily", "set", "ii"])
++                    onClicked: Quickshell.execDetached(["omarchy-shell", "lunana.family", "set", "drift"])
+@@ -251,1 +251,1 @@
+-                    onClicked: Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")), "panelFamily", "set", "waffle"])
++                    onClicked: Quickshell.execDetached(["omarchy-shell", "lunana.family", "set", "slate"])
+@@ -279,1 +279,1 @@
+-                    onClicked: Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")), "panelFamily", "set", "iris"])
++                    onClicked: Quickshell.execDetached(["omarchy-shell", "lunana.family", "set", "atoll"])

@@ -45,7 +45,7 @@ Item {
     readonly property bool _zzz: root._dialect === "zzz"
     readonly property bool _angel: root._dialect === "angel"
     readonly property bool _regalia: root._dialect === "regalia"
-    readonly property bool _inir: root._dialect === "inir"
+    readonly property bool _lunana: root._dialect === "lunana"
     readonly property bool _aurora: root._dialect === "aurora" || root._angel
     readonly property bool _pureAurora: root._dialect === "aurora"
     readonly property bool _cookie: root._dialect === "cookie"
@@ -54,7 +54,7 @@ Item {
 
     readonly property color _colText: root._zzz ? Appearance.zzz.ink
         : root._angel ? Appearance.angel.colText
-        : root._inir ? Appearance.inir.colText
+        : root._lunana ? Appearance.lunana.colText
         : root._editorial ? Appearance.editorial.ink
         : root._aurora ? Appearance.colors.colOnSurface
         : Appearance.colors.colOnLayer1
@@ -64,7 +64,7 @@ Item {
         : root._regalia ? Appearance.regalia.onMuted
         : root._cookie ? Appearance.cookie.inkMuted
         : root._angel ? Appearance.angel.colTextSecondary
-        : root._inir ? Appearance.inir.colTextSecondary
+        : root._lunana ? Appearance.lunana.colTextSecondary
         : root._editorial ? Appearance.editorial.muted
         : root._pureAurora ? Appearance.colors.colSecondary
         : Appearance.colors.colSubtext
@@ -73,23 +73,23 @@ Item {
         : root._regalia ? Appearance.regalia.hardwareSecondary
         : root._cookie ? Appearance.colors.colSecondary
         : root._angel ? Appearance.angel.colSecondary
-        : root._inir ? Appearance.inir.colSecondary
+        : root._lunana ? Appearance.lunana.colSecondary
         : root._editorial ? Appearance.editorial.accent
         : Appearance.colors.colSecondary
     readonly property color _colAccent: root._zzz ? Appearance.zzz.accent
         : root._angel ? Appearance.angel.colPrimary
-        : root._inir ? Appearance.inir.colPrimary
+        : root._lunana ? Appearance.lunana.colPrimary
         : root._editorial ? Appearance.editorial.accent
         : Appearance.colors.colPrimary
     readonly property color _colBannerBase: root._zzz ? Appearance.zzz.tile
         : root._angel ? Qt.alpha(Appearance.angel.colGlassCard, 1)
-        : root._inir ? Qt.alpha(Appearance.inir.colLayer1, 1)
+        : root._lunana ? Qt.alpha(Appearance.lunana.colLayer1, 1)
         : root._editorial ? Appearance.editorial.layer(1)
         : root._island ? Qt.alpha(Appearance.colors.colLayer1, 1)
         : Qt.alpha(Appearance.colors.colLayer0Base, 1)
     readonly property color _avatarPlate: root._zzz ? Appearance.zzz.chrome
         : root._angel ? Qt.alpha(Appearance.angel.colGlassCard, 1)
-        : root._inir ? Qt.alpha(Appearance.inir.colLayer1, 1)
+        : root._lunana ? Qt.alpha(Appearance.lunana.colLayer1, 1)
         : root._editorial ? Appearance.editorial.layer(2)
         : root._island ? Appearance.colors.colLayer1
         : Qt.alpha(Appearance.colors.colLayer1, 1)
@@ -154,7 +154,7 @@ Item {
         : root._cookie ? Appearance.rounding.normal
         : root._island ? (Config.options?.appearance?.island?.radius ?? 18)
         : root._angel ? Appearance.angel.roundingLarge
-        : root._inir ? Appearance.inir.roundingLarge
+        : root._lunana ? Appearance.lunana.roundingLarge
         : root._editorial ? Appearance.editorial.radius
         : Appearance.rounding.large
     readonly property real _panelConcentricRadius: (root.atPanelTop && root.panelRadius > root.panelInset)
@@ -553,12 +553,12 @@ Item {
         property string tooltipText
         readonly property bool _zzz: headerButton.dialect === "zzz"
         readonly property bool _angel: headerButton.dialect === "angel"
-        readonly property bool _inir: headerButton.dialect === "inir"
+        readonly property bool _lunana: headerButton.dialect === "lunana"
         readonly property bool _aurora: headerButton.dialect === "aurora" || headerButton._angel
         property color iconColor: headerButton.toggled
             ? (headerButton._zzz ? Appearance.zzz.accent
                 : headerButton._angel ? Appearance.angel.colOnPrimary
-                : headerButton._inir ? Appearance.inir.colOnPrimaryContainer
+                : headerButton._lunana ? Appearance.lunana.colOnPrimaryContainer
                 : Appearance.colors.colOnPrimaryContainer)
             : Appearance.colActionIcon
 
@@ -566,14 +566,14 @@ Item {
         implicitHeight: 34
         buttonRadius: headerButton._zzz ? Appearance.zzz.controlRadius
             : headerButton._angel ? Appearance.angel.roundingSmall
-            : headerButton._inir ? Appearance.inir.roundingSmall
+            : headerButton._lunana ? Appearance.lunana.roundingSmall
             : root._editorial ? Appearance.rounding.small
             : Appearance.rounding.full
         colBackground: "transparent"
         colBackgroundHover: Appearance.colLayer2Hover
         colBackgroundToggled: headerButton._zzz ? Appearance.zzz.chrome
             : headerButton._angel ? Appearance.angel.colPrimary
-            : headerButton._inir ? Appearance.inir.colPrimaryContainer
+            : headerButton._lunana ? Appearance.lunana.colPrimaryContainer
             : Appearance.colors.colPrimaryContainer
 
         contentItem: MaterialSymbol {

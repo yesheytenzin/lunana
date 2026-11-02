@@ -174,7 +174,7 @@ Singleton {
         (GameMode?.active ?? false) && (GameMode?.suppressNotifications ?? false)
     readonly property bool notificationSurfaceOpen:
         (GlobalStates?.sidebarRightOpen ?? false)
-        || (GlobalStates?.waffleNotificationCenterOpen ?? false)
+        || (GlobalStates?.slateNotificationCenterOpen ?? false)
     readonly property bool notificationPolicyActive:
         manualDndActive || quietHoursActive || gameModeSuppressionActive
     readonly property string notificationPolicyReason: manualDndActive ? "dnd"
@@ -359,7 +359,7 @@ Singleton {
     // `notify` announces a notification that arrived; it shows nothing. Post one with `send`.
     signal notify(notification: var);
     function send(summary: string, body: string, urgency: string, timeoutMs: int): void {
-        Quickshell.execDetached(["/usr/bin/notify-send", "-a", "iNiR", "-u", urgency.length > 0 ? urgency : "normal",
+        Quickshell.execDetached(["/usr/bin/notify-send", "-a", "Lunana", "-u", urgency.length > 0 ? urgency : "normal",
             "-t", String(timeoutMs > 0 ? timeoutMs : 10000), "--", summary, body])
     }
     signal discard(id: int);
@@ -401,9 +401,9 @@ Singleton {
         }
 
         // 3) Defaults by urgency (use enum comparison, not fragile toString).
-        // iRiS banners have their own, shorter, duration for low and normal.
-        if (Config.options?.panelFamily === "iris" && notification.urgency !== NotificationUrgency.Critical)
-            return Math.max(1000, Number(Config.options?.iris?.notifications?.duration ?? 4000));
+        // Atoll banners have their own, shorter, duration for low and normal.
+        if (Config.options?.panelFamily === "atoll" && notification.urgency !== NotificationUrgency.Critical)
+            return Math.max(1000, Number(Config.options?.atoll?.notifications?.duration ?? 4000));
         if (notification.urgency === NotificationUrgency.Low) {
             return Config.options?.notifications?.timeoutLow ?? 5000;
         } else if (notification.urgency === NotificationUrgency.Critical) {
@@ -429,7 +429,7 @@ Singleton {
 
         onNotification: (notification) => {
             // Niri's screenshot-window IPC always emits a desktop notification, even
-            // when iNiR only asked it for an internal preview cache frame. Match the
+            // when Lunana only asked it for an internal preview cache frame. Match the
             // stable message signature rather than appName (which differs across
             // packaging/desktop integration), and suppress it only during an internal
             // preview capture so real user screenshots keep their notification.
@@ -673,7 +673,7 @@ Singleton {
 
             if (action) {
                 action.invoke()
-                if (notifServerNotif.appName !== "iNiR" && root._isViewLikeAction(action.text)) {
+                if (notifServerNotif.appName !== "Lunana" && root._isViewLikeAction(action.text)) {
                     root._focusOrLaunchFromNotifServerNotif(notifServerNotif)
                 }
             } else {
@@ -707,17 +707,17 @@ Singleton {
         const tests = [
             {
                 summary: "Notification Position Test",
-                body: "ii test notification 1 of 3 ~ Hi there!",
+                body: "drift test notification 1 of 3 ~ Hi there!",
                 icon: "preferences-system"
             },
             {
                 summary: "Second Test",
-                body: "ii notification 2 of 3 ~ Check it out!",
+                body: "drift notification 2 of 3 ~ Check it out!",
                 icon: "applications-graphics"
             },
             {
                 summary: "Third Test",
-                body: "ii notification 3 of 3 ~ Enjoy!",
+                body: "drift notification 3 of 3 ~ Enjoy!",
                 icon: "face-smile"
             }
         ];
@@ -727,7 +727,7 @@ Singleton {
             Quickshell.execDetached([
                 "/usr/bin/notify-send",
                 "-h", "int:transient:1",
-                "-a", "Quickshell ii",
+                "-a", "Quickshell drift",
                 "-i", t.icon,
                 t.summary,
                 t.body,

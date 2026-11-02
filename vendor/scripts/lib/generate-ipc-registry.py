@@ -22,25 +22,25 @@ QML_DIRS = [
     REPO_ROOT / "services",
     REPO_ROOT / "GlobalStates.qml",
     REPO_ROOT / "shell.qml",
-    REPO_ROOT / "ShellIiPanels.qml",
-    REPO_ROOT / "ShellWafflePanels.qml",
+    REPO_ROOT / "ShellDriftPanels.qml",
+    REPO_ROOT / "ShellSlatePanels.qml",
     REPO_ROOT / "ShellIrisPanels.qml",
 ]
 IPC_MD = REPO_ROOT / "docs" / "IPC.md"
 OUTPUT = REPO_ROOT / "scripts" / "lib" / "ipc-registry.sh"
-FISH_COMPLETIONS = REPO_ROOT / "scripts" / "completions" / "inir.fish"
+FISH_COMPLETIONS = REPO_ROOT / "scripts" / "completions" / "lunana.fish"
 FISH_BEGIN = "# >>> generated from the IPC registry: python3 scripts/lib/generate-ipc-registry.py >>>"
 FISH_END = "# <<< generated from the IPC registry <<<"
 
-# Targets under this IPC.md heading are waffle-only.
-WAFFLE_SECTION_HEADING = "## Waffle-Specific Targets"
+# Targets under this IPC.md heading are slate-only.
+WAFFLE_SECTION_HEADING = "## Slate-Specific Targets"
 
-# Headings under this section are top-level `inir` CLI commands, NOT IPC targets,
+# Headings under this section are top-level `lunana` CLI commands, NOT IPC targets,
 # so they must not be parsed as IpcHandler targets (avoids spurious warnings).
 STANDALONE_SECTION_HEADING = "## Standalone Commands"
 
-# Known waffle-only QML paths (for family detection from QML when IPC.md has no entry).
-WAFFLE_PATH_MARKERS = ("modules/waffle/",)
+# Known slate-only QML paths (for family detection from QML when IPC.md has no entry).
+WAFFLE_PATH_MARKERS = ("modules/slate/",)
 
 # Known duplicate targets (both families register the same target name).
 # LazyLoader prevents both from loading at runtime.
@@ -52,7 +52,7 @@ KNOWN_DUPLICATES = {
 }
 # Targets implemented outside either family subtree and loaded by both shells.
 # Some of their docs predate the family sections and may physically appear below
-# the waffle heading, so source location is the authoritative scope.
+# the slate heading, so source location is the authoritative scope.
 KNOWN_SHARED_TARGETS = {"background"}
 
 
@@ -68,7 +68,7 @@ class IpcTarget:
     name: str
     functions: list[IpcFunction] = field(default_factory=list)
     description: str = ""
-    family: str = "shared"  # shared | ii | waffle
+    family: str = "shared"  # shared | drift | slate
     keybind_example: str = ""
     qml_file: str = ""
 
@@ -221,7 +221,7 @@ def parse_ipc_md() -> dict[str, IpcMdEntry]:
     for line in lines:
         stripped = line.strip()
 
-        # Track waffle section
+        # Track slate section
         if stripped == WAFFLE_SECTION_HEADING:
             in_waffle_section = True
             continue
@@ -332,9 +332,9 @@ def parse_ipc_md() -> dict[str, IpcMdEntry]:
 def _infer_family_from_path(qml_file: str) -> str:
     """Infer family from QML file path."""
     if any(marker in qml_file for marker in WAFFLE_PATH_MARKERS):
-        return "waffle"
-    if "modules/ii/" in qml_file:
-        return "ii"
+        return "slate"
+    if "modules/drift/" in qml_file:
+        return "drift"
     # Services and shared modules
     return "shared"
 
@@ -362,7 +362,7 @@ def merge(
             if name in KNOWN_SHARED_TARGETS or name in KNOWN_DUPLICATES:
                 target.family = "shared"
             elif md.is_waffle:
-                target.family = "waffle"
+                target.family = "slate"
             else:
                 target.family = _infer_family_from_path(target.qml_file)
         else:
@@ -519,13 +519,13 @@ def generate_bash(targets: list[IpcTarget], aliases: dict[str, str]) -> str:
     # Flat target lists
     all_names = [t.name for t in targets]
     shared = [t.name for t in targets if t.family == "shared"]
-    ii = [t.name for t in targets if t.family == "ii"]
-    waffle = [t.name for t in targets if t.family == "waffle"]
+    drift = [t.name for t in targets if t.family == "drift"]
+    slate = [t.name for t in targets if t.family == "slate"]
 
     lines.append(f"IPC_ALL_TARGETS=({' '.join(all_names)})")
     lines.append(f"IPC_SHARED_TARGETS=({' '.join(shared)})")
-    lines.append(f"IPC_II_TARGETS=({' '.join(ii)})")
-    lines.append(f"IPC_WAFFLE_TARGETS=({' '.join(waffle)})")
+    lines.append(f"IPC_II_TARGETS=({' '.join(drift)})")
+    lines.append(f"IPC_WAFFLE_TARGETS=({' '.join(slate)})")
     lines.append("")
 
     # Kebab-case aliases
@@ -557,7 +557,7 @@ def function_values(fn: IpcFunction) -> list[str]:
     described = re.sub(r"e\.g\.,?\s*`[^`]+`", "", fn.description)
     for raw in _RE_BACKTICK.findall(described):
         token = re.sub(r"<[^>]*>.*$", "", raw.strip())
-        if " " in token or token.startswith(("~", "/", "-")) or (token.startswith("inir") and token != "inir") or not _RE_VALUE.match(token):
+        if " " in token or token.startswith(("~", "/", "-")) or (token.startswith("lunana") and token != "lunana") or not _RE_VALUE.match(token):
             continue
         if token.endswith(".json") or token.endswith(".qml") or "|" in token:
             continue
@@ -580,7 +580,7 @@ def _fish_quote(s: str) -> str:
 
 
 def generate_fish(targets: list[IpcTarget], aliases: dict[str, str]) -> str:
-    """The generated block of scripts/completions/inir.fish: targets, functions and their values."""
+    """The generated block of scripts/completions/lunana.fish: targets, functions and their values."""
     by_target: dict[str, list[str]] = {}
     for kebab, camel in aliases.items():
         by_target.setdefault(camel, []).append(kebab)
@@ -589,15 +589,15 @@ def generate_fish(targets: list[IpcTarget], aliases: dict[str, str]) -> str:
         names = [t.name] + sorted(by_target.get(t.name, []))
         desc = _fish_quote(short_desc(t.description) or t.name)
         for name in names:
-            lines.append(f"complete -c inir -n '__inir_at_target' -a {name} -d {desc}")
+            lines.append(f"complete -c lunana -n '__lunana_at_target' -a {name} -d {desc}")
         cond = " ".join(names)
         for fn in t.functions:
             fdesc = _fish_quote(short_desc(fn.description) or fn.name)
-            lines.append(f"complete -c inir -n '__inir_at_function {cond}' -a {fn.name} -d {fdesc}")
+            lines.append(f"complete -c lunana -n '__lunana_at_function {cond}' -a {fn.name} -d {fdesc}")
             values = function_values(fn)
             if values:
                 lines.append(
-                    f"complete -c inir -n '__inir_at_value {len(fn.args)} {fn.name} {cond}' -a {_fish_quote(' '.join(values))}"
+                    f"complete -c lunana -n '__lunana_at_value {len(fn.args)} {fn.name} {cond}' -a {_fish_quote(' '.join(values))}"
                 )
     lines.append(FISH_END)
     return "\n".join(lines) + "\n"

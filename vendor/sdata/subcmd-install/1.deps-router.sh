@@ -1,4 +1,4 @@
-# Dependency installation router for iNiR
+# Dependency installation router for Lunana
 # This script is meant to be sourced.
 
 # shellcheck shell=bash
@@ -35,12 +35,12 @@ case "$OS_GROUP_ID" in
     printf "${STY_GREEN}Using Void Linux installer${STY_RST}\n"
     if ! bash ./scripts/check-void-release-profile.sh; then
       printf "${STY_RED}Void release-profile preflight failed.${STY_RST}\n" >&2
-      printf "${STY_YELLOW}The supported target is Void Linux x86_64 glibc. Set INIR_SKIP_VOID_PROFILE_PREFLIGHT=1 only for unsupported development experiments.${STY_RST}\n" >&2
+      printf "${STY_YELLOW}The supported target is Void Linux x86_64 glibc. Set LUNANA_SKIP_VOID_PROFILE_PREFLIGHT=1 only for unsupported development experiments.${STY_RST}\n" >&2
       return 1
     fi
     if ! bash ./scripts/check-void-graphics.sh; then
       printf "${STY_RED}Void graphics preflight failed.${STY_RST}\n" >&2
-      printf "${STY_YELLOW}Fix the base Void graphics stack before installing iNiR, or set INIR_SKIP_GRAPHICS_PREFLIGHT=1 to bypass this check deliberately.${STY_RST}\n" >&2
+      printf "${STY_YELLOW}Fix the base Void graphics stack before installing Lunana, or set LUNANA_SKIP_GRAPHICS_PREFLIGHT=1 to bypass this check deliberately.${STY_RST}\n" >&2
       return 1
     fi
     source ./sdata/dist-void/install-deps.sh
@@ -55,12 +55,12 @@ case "$OS_GROUP_ID" in
   nixos)
     printf "${STY_YELLOW}NixOS requires declarative configuration${STY_RST}\n"
     echo ""
-    echo "For NixOS, add iNiR to your configuration.nix or home-manager."
+    echo "For NixOS, add Lunana to your configuration.nix or home-manager."
     echo "See: https://github.com/snowarch/inir/wiki/NixOS"
     echo ""
     echo "Basic steps:"
     echo "  1. Add quickshell and niri to your system packages"
-    echo "  2. Clone this repo to ~/.config/quickshell/inir"
+    echo "  2. Clone this repo to ~/.config/quickshell/lunana"
     echo "  3. Run: ./setup install --skip-deps"
     echo ""
     

@@ -35,9 +35,9 @@ fi
 # first use without sudo. Distro packages remain the preferred install path;
 # system models are symlinked into this cache and only missing models download.
 data_home=${XDG_DATA_HOME:-$HOME/.local/share}
-tessdata_dir=${INIR_TESSDATA_DIR:-$data_home/inir/tessdata}
+tessdata_dir=${LUNANA_TESSDATA_DIR:-$data_home/lunana/tessdata}
 mkdir -p "$tessdata_dir" || {
-  printf 'Could not create iNiR OCR data directory: %s\n' "$tessdata_dir" >&2
+  printf 'Could not create Lunana OCR data directory: %s\n' "$tessdata_dir" >&2
   exit 5
 }
 
@@ -123,7 +123,7 @@ esac
 work_image="$image"
 tmp_image=""
 if command -v magick >/dev/null 2>&1 && (( img_h > 0 && img_h < 140 )); then
-  tmp_image="${TMPDIR:-/tmp}/inir-ocr-${BASHPID:-$$}.png"
+  tmp_image="${TMPDIR:-/tmp}/lunana-ocr-${BASHPID:-$$}.png"
   if magick "$image" -filter Lanczos -resize 200% -colorspace Gray -contrast-stretch 0x4% -sharpen 0x0.55 "$tmp_image" 2>/dev/null; then
     work_image="$tmp_image"
   else

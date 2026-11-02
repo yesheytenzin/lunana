@@ -93,7 +93,7 @@ Singleton {
                 [ -n "$_value" ] && export "$_name=$_value"
             }
 
-            # apply_shell_scale()/apply_qt_runtime_env() own these for iNiR's
+            # apply_shell_scale()/apply_qt_runtime_env() own these for Lunana's
             # process only. Never leak them into launched applications.
             for _var in \
                 QT_SCALE_FACTOR QT_SCALE_FACTOR_ROUNDING_POLICY \
@@ -105,7 +105,7 @@ Singleton {
             done
 
             # These are application/session policy, not Quickshell-private
-            # tuning. The iNiR launcher mirrors the effective Niri config into
+            # tuning. The Lunana launcher mirrors the effective Niri config into
             # Quickshell before startup; only fill a missing value from the
             # manager and never override Niri's authoritative app policy.
             for _var in QT_QPA_PLATFORM QT_QPA_PLATFORMTHEME QT_STYLE_OVERRIDE \
@@ -113,12 +113,12 @@ Singleton {
                 import_if_missing "$_var"
             done
 
-            # The launcher marks exactly which GPU variables iNiR injected for
+            # The launcher marks exactly which GPU variables Lunana injected for
             # the shell. Restore user values (or unset them) before games/apps.
-            for _var in $INIR_SHELL_GPU_POLICY_VARS; do
+            for _var in $LUNANA_SHELL_GPU_POLICY_VARS; do
                 restore_from_manager "$_var"
             done
-            unset INIR_SHELL_GPU_POLICY_VARS INIR_DISABLE_HOT_RELOAD
+            unset LUNANA_SHELL_GPU_POLICY_VARS LUNANA_DISABLE_HOT_RELOAD
 
             # Fill missing user/session values from the live user manager rather
             # than trusting Quickshell's process snapshot.
@@ -176,7 +176,7 @@ Singleton {
             fi
             exec "$@"
         `
-        Quickshell.execDetached([root.bashPath, "-lc", script, "inir-scope", root.systemdRunPath, desc, workDir, ...argv])
+        Quickshell.execDetached([root.bashPath, "-lc", script, "lunana-scope", root.systemdRunPath, desc, workDir, ...argv])
     }
 
     function openDirectory(path: string, description: string): void {
@@ -204,7 +204,7 @@ Singleton {
             fi
             exec xdg-open "$target"
         `
-        root.execDetachedArgs([root.bashPath, "-lc", script, "inir-open-directory", target], description)
+        root.execDetachedArgs([root.bashPath, "-lc", script, "lunana-open-directory", target], description)
     }
 
     function execCmd(cmd: string, workingDirectory = ""): void {

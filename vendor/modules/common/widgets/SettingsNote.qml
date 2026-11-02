@@ -17,10 +17,10 @@ RowLayout {
 
     readonly property color noteColor: {
         if (root.warning) {
-            return Appearance.inirEverywhere ? Appearance.inir.colWarning
+            return Appearance.lunanaEverywhere ? Appearance.lunana.colWarning
                  : Appearance.colors.colTertiary
         }
-        return Appearance.inirEverywhere ? Appearance.inir.colTextSecondary
+        return Appearance.lunanaEverywhere ? Appearance.lunana.colTextSecondary
              : Appearance.colors.colSubtext
     }
 

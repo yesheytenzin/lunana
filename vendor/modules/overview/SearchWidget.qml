@@ -463,7 +463,7 @@ Item { // Wrapper
         // still needs the paper fill (its backdrop is decoration only).
         fallbackColor: root.islandStyle || Appearance.regaliaEverywhere ? "transparent"
             : root.zzzEverywhere ? (root.showResults ? Appearance.zzz.paper : "transparent") : Appearance.colors.colBackgroundSurfaceContainer
-        inirColor: root.islandStyle ? "transparent" : Appearance.inir.colLayer1
+        lunanaColor: root.islandStyle ? "transparent" : Appearance.lunana.colLayer1
         auroraTransparency: Appearance.aurora.popupTransparentize
         wallpaperBackdropEnabled: root.panelVisible && !root.zzzEverywhere
             && !Appearance.regaliaEverywhere && !root.islandStyle
@@ -472,10 +472,10 @@ Item { // Wrapper
         border.width: root.islandStyle || Appearance.regaliaEverywhere ? 0
             : root.zzzEverywhere
             ? (root.showResults ? Appearance.zzz.borderThick : 0)
-            : auroraEverywhere || inirEverywhere ? 1 : 0
+            : auroraEverywhere || lunanaEverywhere ? 1 : 0
         border.color: root.zzzEverywhere ? Appearance.zzz.hairline
             : Appearance.angelEverywhere ? Appearance.angel.colCardBorder
-            : inirEverywhere ? Appearance.inir.colBorder : Appearance.colors.colLayer0Border
+            : lunanaEverywhere ? Appearance.lunana.colBorder : Appearance.colors.colLayer0Border
         Behavior on radius {
             enabled: Appearance.animationsEnabled
             NumberAnimation { duration: Appearance.animation.elementMoveFast.duration; easing.type: Appearance.animation.elementMoveFast.type; easing.bezierCurve: Appearance.animation.elementMoveFast.bezierCurve }

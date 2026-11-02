@@ -64,7 +64,7 @@ migration_apply() {
       }
     fi
   elif command -v apt &>/dev/null; then
-    if ! dpkg -l plasma-integration 2>/dev/null | grep -q '^ii'; then
+    if ! dpkg -l plasma-integration 2>/dev/null | grep -q '^drift'; then
       echo "Installing plasma-integration..."
       pkg_sudo apt install -y plasma-integration 2>/dev/null || {
         echo -e "${STY_YELLOW}Could not auto-install plasma-integration.${STY_RST}"

@@ -1,0 +1,6 @@
+AtollLockInspector 1.0 AtollLockInspector.qml
+singleton AtollLockOptions 1.0 AtollLockOptions.qml
+AtollLockRehearsal 1.0 AtollLockRehearsal.qml
+AtollLockStage 1.0 AtollLockStage.qml
+AtollLockSurface 1.0 AtollLockSurface.qml
+AtollLockWidgets 1.0 AtollLockWidgets.qml

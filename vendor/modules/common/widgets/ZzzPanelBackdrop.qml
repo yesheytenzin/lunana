@@ -6,7 +6,7 @@ import ".."
 import "../functions"
 import "../../../services"
 
-// Shared panel-level ZZZ statement. Use this behind content on major ii
+// Shared panel-level ZZZ statement. Use this behind content on major drift
 // surfaces so the strong identity lives at the container level, not repeated
 // inside every child card.
 Item {

@@ -274,7 +274,7 @@ ColumnLayout {
 
         StyledText {
             Layout.fillWidth: true
-            text: Translation.tr("These switches change only the surface dialect. They do not alter the content or behavior of each iNiR panel.")
+            text: Translation.tr("These switches change only the surface dialect. They do not alter the content or behavior of each Lunana panel.")
             color: Appearance.colors.colSubtext
             font.pixelSize: Appearance.font.pixelSize.smallest
             wrapMode: Text.WordWrap

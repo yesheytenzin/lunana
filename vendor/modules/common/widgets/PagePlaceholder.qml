@@ -31,7 +31,7 @@ Item {
     ColumnLayout {
         anchors.centerIn: parent
         width: Appearance.editorialEverywhere ? Math.max(0, Math.min(340, root.width - 24)) : implicitWidth
-        spacing: Appearance.editorialEverywhere ? Math.round(12 * Appearance.editorial.spacing) : Appearance.inirEverywhere ? 8 : 5
+        spacing: Appearance.editorialEverywhere ? Math.round(12 * Appearance.editorial.spacing) : Appearance.lunanaEverywhere ? 8 : 5
 
         MascotImage {
             id: placeholderMascot
@@ -43,32 +43,32 @@ Item {
             surface: "emptyStates"
         }
 
-        // Inir: simple rectangle with centered icon
+        // Lunana: simple rectangle with centered icon
         Item {
-            visible: (Appearance.inirEverywhere || (Appearance.editorialEverywhere && !Appearance.editorial.ornaments)) && !placeholderMascot.visible
+            visible: (Appearance.lunanaEverywhere || (Appearance.editorialEverywhere && !Appearance.editorial.ornaments)) && !placeholderMascot.visible
             Layout.alignment: Qt.AlignHCenter
             width: 72
             height: 72
             
             Rectangle {
                 anchors.fill: parent
-                radius: Appearance.editorialEverywhere ? Appearance.editorial.radius : Appearance.inir.roundingNormal
-                color: Appearance.editorialEverywhere ? Appearance.editorial.secondaryField : Appearance.inir.colLayer2
+                radius: Appearance.editorialEverywhere ? Appearance.editorial.radius : Appearance.lunana.roundingNormal
+                color: Appearance.editorialEverywhere ? Appearance.editorial.secondaryField : Appearance.lunana.colLayer2
                 border.width: Appearance.editorialEverywhere ? 0 : 1
-                border.color: Appearance.inir.colBorder
+                border.color: Appearance.lunana.colBorder
             }
             
             MaterialSymbol {
                 anchors.centerIn: parent
                 text: root.icon
                 iconSize: 32
-                color: Appearance.editorialEverywhere ? Appearance.editorial.secondaryFieldInk : Appearance.inir.colTextSecondary
+                color: Appearance.editorialEverywhere ? Appearance.editorial.secondaryFieldInk : Appearance.lunana.colTextSecondary
             }
         }
 
         // Material/Aurora: decorative shape wrapper
         MaterialShapeWrappedMaterialSymbol {
-            visible: !Appearance.inirEverywhere && (!Appearance.editorialEverywhere || Appearance.editorial.ornaments) && !placeholderMascot.visible
+            visible: !Appearance.lunanaEverywhere && (!Appearance.editorialEverywhere || Appearance.editorial.ornaments) && !placeholderMascot.visible
             Layout.alignment: Qt.AlignHCenter
             text: root.icon
             shape: root.shape
@@ -90,7 +90,7 @@ Item {
                 letterSpacing: Appearance.editorialEverywhere ? Appearance.editorial.titleTracking : 0
                 variableAxes: Appearance.font.variableAxes.title
             }
-            color: Appearance.editorialEverywhere ? Appearance.editorial.ink : Appearance.inirEverywhere ? Appearance.inir.colTextSecondary : Appearance.colors.colOutline
+            color: Appearance.editorialEverywhere ? Appearance.editorial.ink : Appearance.lunanaEverywhere ? Appearance.lunana.colTextSecondary : Appearance.colors.colOutline
             horizontalAlignment: Text.AlignHCenter
         }
         StyledText {
@@ -98,7 +98,7 @@ Item {
             Layout.fillWidth: true
             text: root.description
             font.pixelSize: Appearance.font.pixelSize.small
-            color: Appearance.editorialEverywhere ? Appearance.editorial.muted : Appearance.inirEverywhere ? Appearance.inir.colTextSecondary : Appearance.colors.colOutline
+            color: Appearance.editorialEverywhere ? Appearance.editorial.muted : Appearance.lunanaEverywhere ? Appearance.lunana.colTextSecondary : Appearance.colors.colOutline
             horizontalAlignment: root.descriptionHorizontalAlignment
             wrapMode: Text.Wrap
         }

@@ -8,7 +8,7 @@ import "../../modules/common/functions"
 import ".."
 
 /**
- * Keybinds for Niri compositor with iNiR shell.
+ * Keybinds for Niri compositor with Lunana shell.
  * Dynamically parses user's ~/.config/niri/config.kdl
  * Falls back to defaults if parsing fails.
  *
@@ -81,7 +81,7 @@ Singleton {
         if (!altTabReader.running) altTabReader.running = true
     }
     function setAltTabSource(source: string): void {
-        if (source !== "inir" && source !== "niri") return
+        if (source !== "lunana" && source !== "niri") return
         if (altTabWriter.running) return
         root.altTabSource = source
         altTabWriter.command = ["/usr/bin/python3", root.niriConfigScript, "set-alt-tab", source]
@@ -314,10 +314,10 @@ Singleton {
             ]}]
         },
         {
-            name: "iNiR Shell",
+            name: "Lunana Shell",
             children: [{ keybinds: [
-                { mods: ["Super"], key: "Space", comment: "iNiR Overview" },
-                { mods: ["Super"], key: "G", comment: "iNiR Overlay" },
+                { mods: ["Super"], key: "Space", comment: "Lunana Overview" },
+                { mods: ["Super"], key: "G", comment: "Lunana Overlay" },
                 { mods: ["Super"], key: "V", comment: "Clipboard" },
                 { mods: ["Super"], key: "Comma", comment: "Settings" },
                 { mods: ["Super"], key: "Slash", comment: "Cheatsheet" },

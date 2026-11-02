@@ -315,25 +315,25 @@ Item {
     // ═══════════════════════════════════════════════════
     readonly property color surfaceColor: root.editorial ? Appearance.editorial.layer(1)
         : Appearance.angelEverywhere ? Appearance.angel.colGlassCard
-        : Appearance.inirEverywhere ? Appearance.inir.colLayer1
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer1
         : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurface
         : Appearance.colors.colLayer1
     readonly property color baseColor: root.editorial ? Appearance.editorial.paper
         : Appearance.angelEverywhere ? Appearance.angel.colGlassPanel
-        : Appearance.inirEverywhere ? Appearance.inir.colLayer0
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer0
         : Appearance.auroraEverywhere ? Appearance.aurora.colOverlay
         : Appearance.colors.colLayer0
     readonly property color textColor: root.editorial ? Appearance.editorial.ink
         : Appearance.angelEverywhere ? Appearance.angel.colText
-        : Appearance.inirEverywhere ? Appearance.inir.colText
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colText
         : Appearance.colors.colOnLayer1
     readonly property color borderColor: root.editorial ? Appearance.editorial.rule
         : Appearance.angelEverywhere ? Appearance.angel.colBorderSubtle
-        : Appearance.inirEverywhere ? Appearance.inir.colBorderSubtle
+        : Appearance.lunanaEverywhere ? Appearance.lunana.colBorderSubtle
         : ColorUtils.applyAlpha(Appearance.colors.colOutlineVariant, 0.45)
     readonly property real cardRadius: root.editorial ? Appearance.editorial.radius
         : Appearance.angelEverywhere ? Appearance.angel.roundingNormal
-        : Appearance.inirEverywhere ? Appearance.inir.roundingNormal
+        : Appearance.lunanaEverywhere ? Appearance.lunana.roundingNormal
         : Appearance.rounding.small
     readonly property bool isVerticalBar: Config.options?.bar?.vertical ?? false
     readonly property bool isTopBar: !isVerticalBar && !(Config.options?.bar?.bottom ?? false)
@@ -1698,7 +1698,7 @@ Item {
 
         // Shadow (matching Toolbar)
         Loader {
-            active: !root.editorial && (Appearance.angelEverywhere || (!Appearance.inirEverywhere && !Appearance.auroraEverywhere))
+            active: !root.editorial && (Appearance.angelEverywhere || (!Appearance.lunanaEverywhere && !Appearance.auroraEverywhere))
             anchors.fill: filterBarGlass
             sourceComponent: StyledRectangularShadow {
                 target: filterBarGlass
@@ -1710,17 +1710,17 @@ Item {
             id: filterBarGlass
             anchors.fill: parent
             fallbackColor: root.editorial ? Appearance.editorial.layer(1) : Appearance.colors.colSurfaceContainer
-            inirColor: Appearance.inir.colLayer2
+            lunanaColor: Appearance.lunana.colLayer2
             auroraTransparency: Appearance.aurora.overlayTransparentize
             wallpaperBackdropEnabled: !root.editorial
             screenX: { const p = filterBar.mapToGlobal(0, 0); return p.x }
             screenY: { const p = filterBar.mapToGlobal(0, 0); return p.y }
             screenWidth: Quickshell.screens[0]?.width ?? 1920
             screenHeight: Quickshell.screens[0]?.height ?? 1080
-            border.width: (root.editorial || Appearance.angelEverywhere || Appearance.inirEverywhere || Appearance.auroraEverywhere) ? 1 : 0
+            border.width: (root.editorial || Appearance.angelEverywhere || Appearance.lunanaEverywhere || Appearance.auroraEverywhere) ? 1 : 0
             border.color: Appearance.angelEverywhere ? Appearance.angel.colBorder
                 : root.editorial ? Appearance.editorial.rule
-                : Appearance.inirEverywhere ? Appearance.inir.colBorder
+                : Appearance.lunanaEverywhere ? Appearance.lunana.colBorder
                 : Appearance.auroraEverywhere ? Appearance.aurora.colTooltipBorder : "transparent"
             implicitHeight: 40
             implicitWidth: filterBarRow.implicitWidth + 20
@@ -2034,7 +2034,7 @@ Item {
                     radius: root.cardRadius
                     color: root.editorial ? Appearance.editorial.layer(1)
                         : Appearance.angelEverywhere ? Appearance.angel.colGlassPanel
-                        : Appearance.inirEverywhere ? Appearance.inir.colLayer1
+                        : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer1
                         : Appearance.auroraEverywhere ? Appearance.aurora.colOverlay
                         : Appearance.colors.colSurfaceContainer
                     border.width: 1
@@ -2145,7 +2145,7 @@ Item {
         Rectangle {
             implicitWidth: 1; implicitHeight: 16
             color: Appearance.angelEverywhere ? Appearance.angel.colBorderSubtle
-                 : Appearance.inirEverywhere ? Appearance.inir.colBorderSubtle
+                 : Appearance.lunanaEverywhere ? Appearance.lunana.colBorderSubtle
                  : Appearance.colors.colOnSurfaceVariant
             opacity: 0.2
         }
@@ -2210,7 +2210,7 @@ Item {
         Rectangle {
             implicitWidth: 1; implicitHeight: 16
             color: Appearance.angelEverywhere ? Appearance.angel.colBorderSubtle
-                 : Appearance.inirEverywhere ? Appearance.inir.colBorderSubtle
+                 : Appearance.lunanaEverywhere ? Appearance.lunana.colBorderSubtle
                  : Appearance.colors.colOnSurfaceVariant
             opacity: 0.2
         }
@@ -2241,7 +2241,7 @@ Item {
         Rectangle {
             implicitWidth: 1; implicitHeight: 16
             color: Appearance.angelEverywhere ? Appearance.angel.colBorderSubtle
-                 : Appearance.inirEverywhere ? Appearance.inir.colBorderSubtle
+                 : Appearance.lunanaEverywhere ? Appearance.lunana.colBorderSubtle
                  : Appearance.colors.colOnSurfaceVariant
             opacity: 0.2
         }

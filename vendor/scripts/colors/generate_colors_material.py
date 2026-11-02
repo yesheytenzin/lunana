@@ -1,4 +1,4 @@
-#!/usr/bin/env -S\_/bin/sh\_-c\_"source\_\$(eval\_echo\_\${INIR_VENV:-\$ILLOGICAL_IMPULSE_VIRTUAL_ENV})/bin/activate&&exec\_python\_-E\_"\$0"\_"\$@""
+#!/usr/bin/env -S\_/bin/sh\_-c\_"source\_\$(eval\_echo\_\${LUNANA_VENV:-\$ILLOGICAL_IMPULSE_VIRTUAL_ENV})/bin/activate&&exec\_python\_-E\_"\$0"\_"\$@""
 import argparse
 import math
 import json
@@ -153,7 +153,7 @@ parser.add_argument(
     "--washi-roles",
     type=str,
     default=None,
-    help="iris-surface.json whose 'roles' are iRiS's solved palette in Material role names: the apps wear them as they are",
+    help="atoll-surface.json whose 'roles' are Atoll's solved palette in Material role names: the apps wear them as they are",
 )
 parser.add_argument(
     "--render-templates",
@@ -812,7 +812,7 @@ SURFACE_RAMP = [
     "surfaceContainerLowest", "surfaceContainerLow", "surfaceContainer",
     "surfaceContainerHigh", "surfaceContainerHighest",
 ]
-# The scheme's own background before the shell's surface moves it: iRiS's "Theme" material is read from this, never
+# The scheme's own background before the shell's surface moves it: Atoll's "Theme" material is read from this, never
 # from the paper it handed over (each pass would carry the person's tone again).
 seed_background = material_colors.get("background", "")
 if args.surface_seed and re.fullmatch(r"#?[0-9A-Fa-f]{6}", args.surface_seed.strip()):
@@ -822,7 +822,7 @@ if args.surface_seed and re.fullmatch(r"#?[0-9A-Fa-f]{6}", args.surface_seed.str
         base_tone = Hct.from_int(hex_to_argb(material_colors["background"])).tone
         # A paper stays a paper and a night a night: past these tones no role can be solved against the ramp.
         seed_tone = max(64.0, seed_hct.tone) if not darkmode else min(30.0, seed_hct.tone)
-        # The body's hue at a neutral's strength. The seed is iRiS's frost over the wallpaper's average, and copying its
+        # The body's hue at a neutral's strength. The seed is Atoll's frost over the wallpaper's average, and copying its
         # chroma (26 on a red wallpaper) painted every app's window, sidebar and dialog the wallpaper's colour; Material
         # keeps neutrals under ~10 (Vibrant 10, TonalSpot 6), dark and light alike.
         seed_chroma = min(seed_hct.chroma, 10.0 if darkmode else 8.0)
@@ -858,13 +858,13 @@ if args.surface_seed and re.fullmatch(r"#?[0-9A-Fa-f]{6}", args.surface_seed.str
                 argb = ensure_contrast(argb, background, 4.5, bool(darkmode), 94.0 if darkmode else 8.0)
                 material_colors[key] = argb_to_hex(argb)
 
-# iRiS: the shell's palette (scripts/colors/washi) already solved every role against every surface of its ramp. The apps
+# Atoll: the shell's palette (scripts/colors/washi) already solved every role against every surface of its ramp. The apps
 # wear it as it is, so window, sidebar, text and accent are the shell's own colours, not a second reading of the seed.
 if args.washi_roles:
     # The shell's "theme" and "wallpaper" colours are read from these, never from the roles it handed over (a loop
     # that kept whatever accent once passed through).
     try:
-        seeds_path = os.path.join(os.path.dirname(args.washi_roles), "iris-seeds.json")
+        seeds_path = os.path.join(os.path.dirname(args.washi_roles), "atoll-seeds.json")
         seeds = {k: material_colors.get(k, "") for k in ("primary", "secondary", "tertiary")}
         seeds["background"] = seed_background
         seeds_text = json.dumps(seeds)
@@ -1177,7 +1177,7 @@ def build_palette_json():
         "success_container": material_colors.get("successContainer", ""),
         "on_success_container": material_colors.get("onSuccessContainer", ""),
     }
-    # iRiS's filled alert (badges): a pigment that is a shape, not text. Absent outside iRiS; readers fall back to error.
+    # Atoll's filled alert (badges): a pigment that is a shape, not text. Absent outside Atoll; readers fall back to error.
     if material_colors.get("errorFill"):
         palette["error_fill"] = material_colors["errorFill"]
         palette["on_error_fill"] = material_colors.get("onErrorFill", "")
@@ -1240,7 +1240,7 @@ if args.meta_output:
         json.dump(theme_meta, f, indent=2)
 
 # ---------------------------------------------------------------------------
-# Template rendering for iNiR's unified theming pipeline
+# Template rendering for Lunana's unified theming pipeline
 # ---------------------------------------------------------------------------
 if args.render_templates:
     template_dir = args.render_templates

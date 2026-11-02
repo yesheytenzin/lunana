@@ -33,11 +33,11 @@ Button {
     }
 
     background: Rectangle {
-        radius: Appearance.inirEverywhere ? (Appearance.inir?.roundingSmall ?? 8) : Appearance.rounding.small
+        radius: Appearance.lunanaEverywhere ? (Appearance.lunana?.roundingSmall ?? 8) : Appearance.rounding.small
         color: root.down
-            ? ColorUtils.transparentize(Appearance.inirEverywhere ? Appearance.inir?.colPrimary ?? Appearance.colors.colPrimary : Appearance.colors.colPrimary, 0.7)
+            ? ColorUtils.transparentize(Appearance.lunanaEverywhere ? Appearance.lunana?.colPrimary ?? Appearance.colors.colPrimary : Appearance.colors.colPrimary, 0.7)
             : (root.hovered
-                ? ColorUtils.transparentize(Appearance.inirEverywhere ? Appearance.inir?.colLayer2Hover ?? Appearance.colors.colSurfaceContainerHigh : Appearance.colors.colSurfaceContainerHigh, 0.5)
+                ? ColorUtils.transparentize(Appearance.lunanaEverywhere ? Appearance.lunana?.colLayer2Hover ?? Appearance.colors.colSurfaceContainerHigh : Appearance.colors.colSurfaceContainerHigh, 0.5)
                 : "transparent")
 
         Behavior on color {
@@ -84,8 +84,8 @@ Button {
                         ?? ""
                     elide: Text.ElideRight
                     font.pixelSize: Appearance.font.pixelSize.small
-                    color: Appearance.inirEverywhere
-                        ? (Appearance.inir?.colText ?? Appearance.colors.colOnLayer0)
+                    color: Appearance.lunanaEverywhere
+                        ? (Appearance.lunana?.colText ?? Appearance.colors.colOnLayer0)
                         : Appearance.colors.colOnLayer0
                     verticalAlignment: Text.AlignVCenter
                 }
@@ -113,7 +113,7 @@ Button {
                     iconSize: 14
                     color: root.hovered
                         ? Appearance.colors.colError
-                        : (Appearance.inirEverywhere ? Appearance.inir?.colTextSecondary ?? Appearance.colors.colSubtext : Appearance.colors.colSubtext)
+                        : (Appearance.lunanaEverywhere ? Appearance.lunana?.colTextSecondary ?? Appearance.colors.colSubtext : Appearance.colors.colSubtext)
                 }
             }
         }
@@ -136,8 +136,8 @@ Button {
                 id: shimmerBg
                 anchors.fill: parent
                 radius: Appearance.rounding.small
-                color: Appearance.inirEverywhere
-                    ? (Appearance.inir?.colLayer1 ?? Appearance.colors.colSurfaceContainerLow)
+                color: Appearance.lunanaEverywhere
+                    ? (Appearance.lunana?.colLayer1 ?? Appearance.colors.colSurfaceContainerLow)
                     : Appearance.colors.colSurfaceContainerLow
                 visible: windowPreview.status !== Image.Ready
 

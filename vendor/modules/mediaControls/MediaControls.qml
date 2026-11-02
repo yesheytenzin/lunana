@@ -38,7 +38,7 @@ Scope {
     readonly property real dockHeight: Config.options?.dock?.height ?? 60
     readonly property real dockMargin: Appearance.sizes.elevationMargin + Appearance.sizes.hyprlandGapsOut
     property real popupRounding: Appearance.zzzEverywhere ? Appearance.zzz.panelRadius
-        : Appearance.inirEverywhere ? Appearance.inir.roundingLarge : Appearance.rounding.large
+        : Appearance.lunanaEverywhere ? Appearance.lunana.roundingLarge : Appearance.rounding.large
     readonly property bool visualizerActive: mediaControlsLoader.active && MprisController.isPlaying
     property var focusedScreen: GlobalStates.focusedScreen ?? (CompositorService.isNiri
         ? Quickshell.screens.find(s => s.name === NiriService.currentOutput) ?? GlobalStates.primaryScreen
@@ -232,26 +232,26 @@ Scope {
 
                             StyledRectangularShadow {
                                 target: placeholderBackground
-                                visible: Appearance.angelEverywhere || (!Appearance.inirEverywhere && !Appearance.auroraEverywhere)
+                                visible: Appearance.angelEverywhere || (!Appearance.lunanaEverywhere && !Appearance.auroraEverywhere)
                             }
 
                             Rectangle {
                                 id: placeholderBackground
                                 anchors.centerIn: parent
                                 color: Appearance.zzzEverywhere ? Appearance.zzz.paper
-                                     : Appearance.inirEverywhere ? Appearance.inir.colLayer1
+                                     : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer1
                                      : Appearance.auroraEverywhere ? Appearance.aurora.colPopupSurface
                                      : Appearance.colors.colLayer0
                                 Behavior on color { enabled: Appearance.animationsEnabled; ColorAnimation { duration: Appearance.animation.elementMoveFast.duration; easing.type: Appearance.animation.elementMoveFast.type; easing.bezierCurve: Appearance.animation.elementMoveFast.bezierCurve } }
                                 radius: root.popupRounding
                                 border.width: Appearance.zzzEverywhere ? Appearance.zzz.borderThick
-                                    : Appearance.inirEverywhere || Appearance.auroraEverywhere ? 1 : 0
+                                    : Appearance.lunanaEverywhere || Appearance.auroraEverywhere ? 1 : 0
                                 Behavior on border.width {
                                     enabled: Appearance.animationsEnabled
                                     NumberAnimation { duration: Appearance.animation.elementMoveFast.duration; easing.type: Appearance.animation.elementMoveFast.type; easing.bezierCurve: Appearance.animation.elementMoveFast.bezierCurve }
                                 }
                                 border.color: Appearance.zzzEverywhere ? Appearance.zzz.hairlineStrong
-                                            : Appearance.inirEverywhere ? Appearance.inir.colBorder
+                                            : Appearance.lunanaEverywhere ? Appearance.lunana.colBorder
                                             : Appearance.auroraEverywhere ? Appearance.aurora.colTooltipBorder
                                             : "transparent"
                                 Behavior on border.color {
@@ -285,7 +285,7 @@ Scope {
                                         font.pixelSize: Appearance.font.pixelSize.large
                                         font.weight: Appearance.zzzEverywhere ? Font.Black : Font.Normal
                                         color: Appearance.zzzEverywhere ? Appearance.zzz.ink
-                                            : Appearance.inirEverywhere ? Appearance.inir.colText : Appearance.colors.colOnLayer0
+                                            : Appearance.lunanaEverywhere ? Appearance.lunana.colText : Appearance.colors.colOnLayer0
                                         Behavior on color {
                                             enabled: Appearance.animationsEnabled
                                             ColorAnimation { duration: Appearance.animation.elementMoveFast.duration; easing.type: Appearance.animation.elementMoveFast.type; easing.bezierCurve: Appearance.animation.elementMoveFast.bezierCurve }
@@ -293,7 +293,7 @@ Scope {
                                     }
                                     StyledText {
                                         color: Appearance.zzzEverywhere ? Appearance.zzz.inkMuted
-                                            : Appearance.inirEverywhere ? Appearance.inir.colTextSecondary : Appearance.colors.colSubtext
+                                            : Appearance.lunanaEverywhere ? Appearance.lunana.colTextSecondary : Appearance.colors.colSubtext
                                         Behavior on color {
                                             enabled: Appearance.animationsEnabled
                                             ColorAnimation { duration: Appearance.animation.elementMoveFast.duration; easing.type: Appearance.animation.elementMoveFast.type; easing.bezierCurve: Appearance.animation.elementMoveFast.bezierCurve }

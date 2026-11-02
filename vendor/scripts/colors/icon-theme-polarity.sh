@@ -27,7 +27,7 @@ light_text="$(text_colour "$light_dir")"
 dark_text="$(text_colour "$dark_dir")"
 [[ -n "$light_text" && -n "$dark_text" && "${light_text,,}" != "${dark_text,,}" ]] || exit 0
 
-stamp="$overlay/.inir-polarity"
+stamp="$overlay/.lunana-polarity"
 signature="$light_text $dark_text $(stat -c %Y "$dark_dir" "$light_dir" | tr '\n' ' ')"
 [[ -f "$stamp" && "$(cat "$stamp")" == "$signature" ]] && exit 0
 

@@ -13,7 +13,7 @@ import "../common"
 import "../common/functions"
 import "../common/widgets"
 import "../pill"
-import "../waffle/looks"
+import "../slate/looks"
 
 // Edge-hover workspace navigator with window thumbnails and a now-playing
 // media flyout.
@@ -103,17 +103,17 @@ Scope {
                 return !configuredOutputs.some(name => currentNames.includes(name))
             }
 
-            readonly property bool waffleBarShown:
-                (Config.options?.panelFamily ?? "ii") === "waffle"
-                && (Config.options?.enabledPanels ?? []).includes("wBar")
+            readonly property bool slateBarShown:
+                (Config.options?.panelFamily ?? "drift") === "slate"
+                && (Config.options?.enabledPanels ?? []).includes("slateBar")
                 && (GlobalStates.barOpen ?? true)
-                && outputEnabled(Config.options?.waffles?.bar?.screenList ?? [])
+                && outputEnabled(Config.options?.slate?.bar?.screenList ?? [])
             readonly property var panelInsets: {
-                if ((Config.options?.panelFamily ?? "ii") === "ii")
+                if ((Config.options?.panelFamily ?? "drift") === "drift")
                     return ShellLayoutController.desktopInsets(screenName)
                 const insets = ({ left: 0, top: 0, right: 0, bottom: 0 })
-                if (waffleBarShown) {
-                    const edge = (Config.options?.waffles?.bar?.bottom ?? true)
+                if (slateBarShown) {
+                    const edge = (Config.options?.slate?.bar?.bottom ?? true)
                         ? "bottom" : "top"
                     insets[edge] = Looks.scaledBar(48, modelData)
                 }
@@ -124,7 +124,7 @@ Scope {
             readonly property int rawSidePanelInset: Math.max(0,
                 isRight ? (panelInsets?.right ?? 0) : (panelInsets?.left ?? 0))
             readonly property bool edgeSidebarOpen:
-                (Config.options?.panelFamily ?? "ii") === "ii"
+                (Config.options?.panelFamily ?? "drift") === "drift"
                 && ShellLayoutController.sidebarOpenAtSlot(edgeSlot)
             readonly property string notificationPosition:
                 Config.options?.notifications?.position ?? "topRight"
@@ -152,12 +152,12 @@ Scope {
                 || GlobalStates.oskOpen
                 || GlobalStates.tilingOverlayPickerOpen
                 || GlobalStates.searchOpen
-                || GlobalStates.waffleActionCenterOpen
-                || GlobalStates.waffleNotificationCenterOpen
-                || GlobalStates.waffleWidgetsOpen
-                || GlobalStates.waffleAltSwitcherOpen
-                || GlobalStates.waffleClipboardOpen
-                || GlobalStates.waffleTaskViewOpen
+                || GlobalStates.slateActionCenterOpen
+                || GlobalStates.slateNotificationCenterOpen
+                || GlobalStates.slateWidgetsOpen
+                || GlobalStates.slateAltSwitcherOpen
+                || GlobalStates.slateClipboardOpen
+                || GlobalStates.slateTaskViewOpen
                 || GlobalStates.widgetEditMode
                 || GlobalStates.shellLayoutEditMode
             readonly property bool suppressed: edgeSidebarOpen

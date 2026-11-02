@@ -1,5 +1,5 @@
 #!/bin/bash
-# TUI functions for iNiR setup
+# TUI functions for Lunana setup
 # Ink design: whitespace over borders, color over chrome.
 # This script is meant to be sourced.
 
@@ -454,12 +454,12 @@ tui_banner() {
             "██║██║╚██╗██║██║██╔══██╗" \
             "██║██║ ╚████║██║██║  ██║" \
             "╚═╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝"
-        echo "iNiR · your niri shell" | gum style \
+        echo "Lunana · your niri shell" | gum style \
             --foreground "$(_tui_color_value muted)" \
             --align center \
             --width 50
     else
-        local tagline="iNiR · your niri shell"
+        local tagline="Lunana · your niri shell"
         local art_width=27
         local tag_pad=$(( (art_width - ${#tagline}) / 2 ))
         (( tag_pad < 0 )) && tag_pad=0

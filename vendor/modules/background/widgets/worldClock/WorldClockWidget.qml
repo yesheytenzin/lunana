@@ -8,7 +8,7 @@ import "../../../common/functions"
 import "../../../common/widgets"
 import ".."
 import "../instrument"
-import "../../../iris/widgets"
+import "../../../atoll/widgets"
 
 AbstractBackgroundWidget {
     id: root
@@ -43,14 +43,14 @@ AbstractBackgroundWidget {
 
     readonly property int listWidth: Math.round(Number(root._readConfigKey("contentWidth") ?? 300) * scaleFactor)
     readonly property int listHeight: Math.round(Number(root._readConfigKey("contentHeight") ?? 210) * scaleFactor)
-    implicitWidth: root.irisFaced ? root.irisFaceWidth : root.listWidth
-    implicitHeight: root.irisFaced ? root.irisFaceHeight : root.instrument
+    implicitWidth: root.atollFaced ? root.atollFaceWidth : root.listWidth
+    implicitHeight: root.atollFaced ? root.atollFaceHeight : root.instrument
         ? Math.max(root.listHeight, root.instrumentHeightTarget)
         : root.listHeight
-    irisFace: Component { IrisWorldClockFace { widget: root } }
-    irisSizes: ["small", "medium", "large"]
-    irisDefaultSize: "medium"
-    irisOptions: [
+    atollFace: Component { AtollWorldClockFace { widget: root } }
+    atollSizes: ["small", "medium", "large"]
+    atollDefaultSize: "medium"
+    atollOptions: [
         { key: "showNames", raw: true, label: Translation.tr("City names"), icon: "label", fallback: true },
         { key: "showOffsets", raw: true, label: Translation.tr("Time difference"), icon: "schedule", fallback: true }
     ]
@@ -202,7 +202,7 @@ AbstractBackgroundWidget {
     }
 
     WidgetSurface {
-        irisPresentation: root.widgetIris
+        atollPresentation: root.widgetAtoll
         regionBrightness: root.regionBrightness
         anchors.fill: parent
         surfaceRadius: root.cornerRadiusOverride >= 0 ? root.cornerRadiusOverride : root.widgetCardRadius
@@ -218,7 +218,7 @@ AbstractBackgroundWidget {
         screenY: root.y
         screenWidth: root.scaledScreenWidth
         screenHeight: root.scaledScreenHeight
-        shown: !root.irisFaced && !root.instrument
+        shown: !root.atollFaced && !root.instrument
             && (root.backgroundOpacity > 0 || root.borderWidth > 0 || root.effectiveBlur)
     }
 
@@ -228,7 +228,7 @@ AbstractBackgroundWidget {
     ColumnLayout {
         anchors.fill: parent
         opacity: root.instrument ? 1 : 0
-        visible: !root.irisFaced && opacity > 0
+        visible: !root.atollFaced && opacity > 0
         enabled: root.instrument
         spacing: Math.round(5 * root.scaleFactor)
 
@@ -392,7 +392,7 @@ AbstractBackgroundWidget {
                                     font.pixelSize: Math.max(11, Math.round(11 * root.scaleFactor))
                                     font.weight: root.widgetLabelWeight
                                     font.letterSpacing: root.widgetMetadataTracking
-                                    font.capitalization: root.widgetIris ? Font.MixedCase : Font.AllUppercase
+                                    font.capitalization: root.widgetAtoll ? Font.MixedCase : Font.AllUppercase
                                 }
                                 RowLayout {
                                     Layout.fillWidth: true
@@ -416,7 +416,7 @@ AbstractBackgroundWidget {
                                         font.pixelSize: Math.max(10, Math.round(10 * root.scaleFactor))
                                         font.weight: Font.Medium
                                         font.letterSpacing: root.widgetMetadataTracking
-                                        font.capitalization: root.widgetIris ? Font.MixedCase : Font.AllUppercase
+                                        font.capitalization: root.widgetAtoll ? Font.MixedCase : Font.AllUppercase
                                     }
                                     StyledText {
                                         visible: root.showOffsets
@@ -498,7 +498,7 @@ AbstractBackgroundWidget {
                                 font.pixelSize: Math.max(8, Math.round(9 * root.scaleFactor))
                                 font.weight: index === 0 ? root.widgetLabelWeight : Font.Medium
                                 font.letterSpacing: root.widgetMetadataTracking
-                                font.capitalization: root.widgetIris ? Font.MixedCase : Font.AllUppercase
+                                font.capitalization: root.widgetAtoll ? Font.MixedCase : Font.AllUppercase
                             }
                             RowLayout {
                                 Layout.fillWidth: true
@@ -522,7 +522,7 @@ AbstractBackgroundWidget {
                                     font.pixelSize: Math.max(7, Math.round(8 * root.scaleFactor))
                                     font.weight: Font.Medium
                                     font.letterSpacing: root.widgetMetadataTracking
-                                    font.capitalization: root.widgetIris ? Font.MixedCase : Font.AllUppercase
+                                    font.capitalization: root.widgetAtoll ? Font.MixedCase : Font.AllUppercase
                                 }
                                 StyledText {
                                     visible: root.showOffsets
@@ -559,7 +559,7 @@ AbstractBackgroundWidget {
     }
     ColumnLayout {
         opacity: root.instrument ? 0 : 1
-        visible: !root.irisFaced && opacity > 0
+        visible: !root.atollFaced && opacity > 0
         enabled: !root.instrument
         Behavior on opacity {
             enabled: root.animationsActive

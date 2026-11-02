@@ -18,12 +18,12 @@ Item {
     
     // Optional properties
     property color highlightColor: Appearance.zzzEverywhere ? Appearance.zzz.metricFill
-        : Appearance.inirEverywhere
-        ? Appearance.inir.colPrimary 
+        : Appearance.lunanaEverywhere
+        ? Appearance.lunana.colPrimary 
         : Appearance.colors.colPrimary
     property color trackColor: Appearance.zzzEverywhere ? Appearance.zzz.metricTrack
-        : Appearance.inirEverywhere
-        ? Appearance.inir.colLayer2 
+        : Appearance.lunanaEverywhere
+        ? Appearance.lunana.colLayer2 
         : Appearance.colors.colSecondaryContainer
     property bool enableWavy: true
     property bool scrollable: true

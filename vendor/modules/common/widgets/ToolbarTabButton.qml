@@ -14,14 +14,14 @@ RippleButton {
     horizontalPadding: 10
 
     implicitHeight: Appearance.regaliaEverywhere ? Appearance.regalia.compactControlHeight
-        : Appearance.zzzEverywhere ? 32 : (Appearance.inirEverywhere || Appearance.angelEverywhere) ? 32 : 40
+        : Appearance.zzzEverywhere ? 32 : (Appearance.lunanaEverywhere || Appearance.angelEverywhere) ? 32 : 40
     readonly property real _iconOnlyImplicitWidth: icon.implicitWidth + horizontalPadding * 2
     implicitWidth: root.showLabel ? (implicitContentWidth + horizontalPadding * 2) : root._iconOnlyImplicitWidth
     buttonRadius: Appearance.regaliaEverywhere ? Appearance.regalia.roundSmall
         : Appearance.zzzEverywhere ? Appearance.zzz.controlRadius
         : Appearance.editorialEverywhere ? Appearance.rounding.small
         : Appearance.angelEverywhere ? Appearance.angel.roundingSmall
-        : Appearance.inirEverywhere ? Appearance.inir.roundingSmall : height / 2
+        : Appearance.lunanaEverywhere ? Appearance.lunana.roundingSmall : height / 2
 
     // The selected tab used to get a cookie badge behind the GLYPH only, so the
     // label sat outside the face and the tab read as two disconnected pieces.
@@ -63,7 +63,7 @@ RippleButton {
                     : Appearance.cookieEverywhere ? Appearance.colors.colOnPrimaryContainer
                     : Appearance.editorialEverywhere ? Appearance.editorial.accent
                     : Appearance.angelEverywhere ? Appearance.angel.colOnPrimary
-                    : Appearance.inirEverywhere ? Appearance.inir.colOnPrimary
+                    : Appearance.lunanaEverywhere ? Appearance.lunana.colOnPrimary
                     : Appearance.colors.colOnSurface)
                 : Appearance.colSecondaryActionIcon
         }
@@ -106,8 +106,8 @@ RippleButton {
                     ? (root.current ? Appearance.editorial.accent : Appearance.editorial.ink)
                     : Appearance.angelEverywhere
                     ? (root.current ? Appearance.angel.colOnPrimary : Appearance.angel.colText)
-                    : Appearance.inirEverywhere
-                    ? (root.current ? Appearance.inir.colOnPrimary : Appearance.inir.colText)
+                    : Appearance.lunanaEverywhere
+                    ? (root.current ? Appearance.lunana.colOnPrimary : Appearance.lunana.colText)
                     : Appearance.colors.colOnSurface
             }
         }

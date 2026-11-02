@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "lunana.atoll-stage",
+  "name": "Lunana Atoll Stage",
+  "version": "0.4.0",
+  "author": "lunana",
+  "license": "GPL-3.0",
+  "description": "Lunana AtollStage host.",
+  "kinds": [
+    "overlay"
+  ],
+  "entryPoints": {
+    "overlay": "AtollStage.qml"
+  },
+  "x-lunana": {
+    "suiteId": "lunana",
+    "role": "atoll-stage",
+    "milestone": "parity",
+    "requires": [],
+    "recommends": []
+  }
+}

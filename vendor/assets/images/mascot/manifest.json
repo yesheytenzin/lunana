@@ -769,8 +769,8 @@
       "Serenity. Limited time offer.",
       "No roast today. Rain check."
     ],
-    "waffle-snack": [
-      "Waffles. Objectively the best family.",
+    "slate-snack": [
+      "Slates. Objectively the best family.",
       "Snack break. Judging continues after.",
       "I only eat artisanal pixels.",
       "Crunchy. Like a good secret."
@@ -1835,7 +1835,7 @@
     "vertical-bar-climber",
     "visualizer-surf",
     "volume-wave-rider",
-    "waffle-snack",
+    "slate-snack",
     "wallpaper-color-sweep-loop",
     "warning-concerned",
     "wave-loop",
@@ -2629,7 +2629,7 @@
     "vertical-bar-climber",
     "visualizer-surf",
     "volume-wave-rider",
-    "waffle-snack",
+    "slate-snack",
     "wallpaper-color-sweep-loop",
     "warning-concerned",
     "wave-loop",
@@ -3493,7 +3493,7 @@
       "Your desktop had it coming.",
       "Redecoration complete. No refunds.",
       "I take payment in pats.",
-      "inir mascot tidy — if you're boring.",
+      "lunana mascot tidy — if you're boring.",
       "Chaos delivered. Signature not required.",
       "Everything is fine. Define everything."
     ],
@@ -4130,7 +4130,7 @@
     "tea-break": 1.08,
     "terminal-demo": 0.95,
     "todo-done": 0.95,
-    "waffle-snack": 0.95,
+    "slate-snack": 0.95,
     "weather-umbrella": 0.95,
     "wizard-complete": 0.95,
     "street-pocky-grump": 0.88,

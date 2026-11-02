@@ -19,11 +19,11 @@ Item {
     id: root
 
     readonly property bool angelStyle: Appearance.angelEverywhere
-    readonly property bool inirStyle: Appearance.inirEverywhere
+    readonly property bool lunanaStyle: Appearance.lunanaEverywhere
     readonly property bool auroraStyle: Appearance.auroraEverywhere
     readonly property bool zzzStyle: Appearance.zzzEverywhere
     property bool panelVisible: true
-    readonly property bool useWallpaperBackdrop: root.panelVisible && (root.angelStyle || root.auroraStyle) && !root.inirStyle && root.wallpaperUrl.length > 0
+    readonly property bool useWallpaperBackdrop: root.panelVisible && (root.angelStyle || root.auroraStyle) && !root.lunanaStyle && root.wallpaperUrl.length > 0
 
     // ── Screen & wallpaper for blur (angel/aurora) ──
     property int screenWidth: root.QsWindow?.window?.screen?.width ?? 1920
@@ -88,11 +88,11 @@ Item {
     property QtObject blendedColors: AdaptedMaterialScheme { color: root.artDominantColor }
 
     // ── Style tokens ──
-    readonly property color colText: angelStyle ? Appearance.angel.colText : inirStyle ? Appearance.inir.colText : Appearance.colors.colOnLayer1
-    readonly property color colSubtext: angelStyle ? Appearance.angel.colTextSecondary : inirStyle ? Appearance.inir.colTextSecondary : Appearance.colors.colSubtext
+    readonly property color colText: angelStyle ? Appearance.angel.colText : lunanaStyle ? Appearance.lunana.colText : Appearance.colors.colOnLayer1
+    readonly property color colSubtext: angelStyle ? Appearance.angel.colTextSecondary : lunanaStyle ? Appearance.lunana.colTextSecondary : Appearance.colors.colSubtext
     readonly property color colCardBg: angelStyle
         ? ColorUtils.transparentize(Appearance.colors.colLayer0Base, Appearance.angel.overlayOpacity)
-        : inirStyle ? Appearance.inir.colLayer0
+        : lunanaStyle ? Appearance.lunana.colLayer0
         : auroraStyle ? ColorUtils.transparentize(
             Appearance.colors.colLayer0Base,
             Math.max(0.10, Appearance.aurora.overlayTransparentize - 0.12)
@@ -100,30 +100,30 @@ Item {
         : Appearance.colors.colBackgroundSurfaceContainer
     readonly property color colCard: angelStyle
         ? ColorUtils.transparentize(Appearance.colors.colLayer1Base, Appearance.angel.overlayOpacity)
-        : inirStyle ? Appearance.inir.colLayer1
+        : lunanaStyle ? Appearance.lunana.colLayer1
         : auroraStyle ? ColorUtils.transparentize(
             Appearance.colors.colLayer1Base,
             Math.max(0.18, Appearance.aurora.subSurfaceTransparentize - 0.14)
         )
         : Appearance.colors.colLayer1
     readonly property color colBorder: angelStyle ? Appearance.angel.colBorder
-        : inirStyle ? Appearance.inir.colBorder
+        : lunanaStyle ? Appearance.lunana.colBorder
         : auroraStyle ? ColorUtils.transparentize(Appearance.colors.colOutlineVariant, 0.72)
         : Appearance.colors.colLayer0Border
-    readonly property color colPrimary: angelStyle ? Appearance.angel.colPrimary : inirStyle ? Appearance.inir.colPrimary : Appearance.colors.colPrimary
-    readonly property color colOnPrimary: angelStyle ? Appearance.angel.colOnPrimary : inirStyle ? Appearance.inir.colOnPrimary : Appearance.colors.colOnPrimary
-    readonly property color colCardHover: angelStyle ? Appearance.angel.colGlassCardHover : inirStyle ? Appearance.inir.colLayer2Hover
+    readonly property color colPrimary: angelStyle ? Appearance.angel.colPrimary : lunanaStyle ? Appearance.lunana.colPrimary : Appearance.colors.colPrimary
+    readonly property color colOnPrimary: angelStyle ? Appearance.angel.colOnPrimary : lunanaStyle ? Appearance.lunana.colOnPrimary : Appearance.colors.colOnPrimary
+    readonly property color colCardHover: angelStyle ? Appearance.angel.colGlassCardHover : lunanaStyle ? Appearance.lunana.colLayer2Hover
         : auroraStyle ? (Appearance.aurora?.colSubSurfaceHover ?? Appearance.colors.colLayer2Hover) : Appearance.colors.colLayer2Hover
-    readonly property color colLayer2: angelStyle ? Appearance.angel.colGlassCard : inirStyle ? Appearance.inir.colLayer2
+    readonly property color colLayer2: angelStyle ? Appearance.angel.colGlassCard : lunanaStyle ? Appearance.lunana.colLayer2
         : auroraStyle ? (Appearance.aurora?.colSubSurface ?? Appearance.colors.colLayer2) : Appearance.colors.colLayer2
     readonly property color panelGlassTint: angelStyle
         ? ColorUtils.transparentize(Appearance.angel.colGlassCard, 0.80)
-        : inirStyle ? root.colCard
+        : lunanaStyle ? root.colCard
         : auroraStyle ? ColorUtils.transparentize(root.colCard, 0.36)
         : ColorUtils.transparentize(root.colCard, 0.32)
-    readonly property real cardRadius: angelStyle ? Appearance.angel.roundingSmall : inirStyle ? Appearance.inir.roundingSmall : Appearance.rounding.normal
-    readonly property real containerRadius: angelStyle ? Appearance.angel.roundingNormal : inirStyle ? Appearance.inir.roundingNormal : Appearance.rounding.large
-    readonly property int bw: (angelStyle || inirStyle || auroraStyle) ? 1 : 1
+    readonly property real cardRadius: angelStyle ? Appearance.angel.roundingSmall : lunanaStyle ? Appearance.lunana.roundingSmall : Appearance.rounding.normal
+    readonly property real containerRadius: angelStyle ? Appearance.angel.roundingNormal : lunanaStyle ? Appearance.lunana.roundingNormal : Appearance.rounding.large
+    readonly property int bw: (angelStyle || lunanaStyle || auroraStyle) ? 1 : 1
     readonly property int dashboardMaxWidth: 560
     readonly property int dashboardHorizontalPadding: 12
     readonly property int dashboardVerticalPadding: 12
@@ -133,7 +133,7 @@ Item {
     readonly property color mediaBg: {
         if (!hasPlayer) return colCard
         if (angelStyle) return Appearance.angel.colGlassCard
-        if (inirStyle) return Appearance.inir.colLayer1
+        if (lunanaStyle) return Appearance.lunana.colLayer1
         if (auroraStyle) return ColorUtils.mix(
             Appearance.aurora.colSubSurface,
             blendedColors?.colLayer1 ?? Appearance.colors.colLayer1,
@@ -141,16 +141,16 @@ Item {
         )
         return blendedColors?.colLayer0 ?? Appearance.colors.colLayer0
     }
-    readonly property color mediaText: hasPlayer ? (angelStyle ? Appearance.angel.colText : inirStyle ? Appearance.inir.colText
+    readonly property color mediaText: hasPlayer ? (angelStyle ? Appearance.angel.colText : lunanaStyle ? Appearance.lunana.colText
         : (blendedColors?.colOnLayer0 ?? Appearance.colors.colOnLayer0)) : colText
-    readonly property color mediaSub: hasPlayer ? (angelStyle ? Appearance.angel.colTextSecondary : inirStyle ? Appearance.inir.colTextSecondary
+    readonly property color mediaSub: hasPlayer ? (angelStyle ? Appearance.angel.colTextSecondary : lunanaStyle ? Appearance.lunana.colTextSecondary
         : (blendedColors?.colSubtext ?? Appearance.colors.colSubtext)) : colSubtext
-    readonly property color mediaAccent: hasPlayer ? (angelStyle ? Appearance.angel.colPrimary : inirStyle ? Appearance.inir.colPrimary
+    readonly property color mediaAccent: hasPlayer ? (angelStyle ? Appearance.angel.colPrimary : lunanaStyle ? Appearance.lunana.colPrimary
         : (blendedColors?.colPrimary ?? Appearance.colors.colPrimary)) : colPrimary
-    readonly property color mediaTrack: angelStyle ? Appearance.angel.colGlassCard : inirStyle ? Appearance.inir.colLayer2
+    readonly property color mediaTrack: angelStyle ? Appearance.angel.colGlassCard : lunanaStyle ? Appearance.lunana.colLayer2
         : zzzStyle ? Appearance.colors.colLayer2
         : (blendedColors?.colSecondaryContainer ?? Appearance.colors.colSecondaryContainer)
-    readonly property color mediaHover: angelStyle ? Appearance.angel.colGlassCardHover : inirStyle ? Appearance.inir.colLayer2Hover
+    readonly property color mediaHover: angelStyle ? Appearance.angel.colGlassCardHover : lunanaStyle ? Appearance.lunana.colLayer2Hover
         : ColorUtils.transparentize(blendedColors?.colLayer1 ?? Appearance.colors.colLayer1, 0.5)
     readonly property int weatherSystemMinHeight: 190
     readonly property int weatherCardMinHeight: 132
@@ -168,7 +168,7 @@ Item {
 
     StyledRectangularShadow {
         target: dashContainer
-        visible: !root.inirStyle && !root.auroraStyle
+        visible: !root.lunanaStyle && !root.auroraStyle
         blur: 0.32 * Appearance.sizes.elevationMargin
     }
 
@@ -242,13 +242,13 @@ Item {
         height: implicitHeight
         radius: root.containerRadius
         fallbackColor: Appearance.zzzEverywhere ? "transparent" : Appearance.colors.colBackgroundSurfaceContainer
-        inirColor: root.inirStyle ? Appearance.inir.colLayer1 : root.colCardBg
+        lunanaColor: root.lunanaStyle ? Appearance.lunana.colLayer1 : root.colCardBg
         auroraTransparency: Math.max(0.16, Appearance.aurora.popupTransparentize - 0.12)
         wallpaperBackdropEnabled: root.panelVisible
         border.width: Appearance.zzzEverywhere ? 0
-            : root.angelStyle || root.inirStyle || root.auroraStyle ? 1 : 0
+            : root.angelStyle || root.lunanaStyle || root.auroraStyle ? 1 : 0
         border.color: root.angelStyle ? Appearance.angel.colCardBorder
-            : root.inirStyle ? Appearance.inir.colBorder
+            : root.lunanaStyle ? Appearance.lunana.colBorder
             : root.auroraStyle ? ColorUtils.transparentize(Appearance.colors.colOutlineVariant, 0.70)
             : root.colBorder
         Behavior on border.width {
@@ -303,7 +303,7 @@ Item {
                 Layout.fillWidth: true
                 implicitHeight: headerRow.implicitHeight + 16
                 radius: root.cardRadius
-                color: root.inirStyle ? root.colCard : "transparent"
+                color: root.lunanaStyle ? root.colCard : "transparent"
                 border.width: root.bw
                 border.color: root.colBorder
                 clip: true
@@ -351,7 +351,7 @@ Item {
                     }
                 }
 
-                // Solid background for material/inir
+                // Solid background for material/lunana
                 Rectangle {
                     anchors.fill: parent
                     radius: headerCard.radius
@@ -410,7 +410,7 @@ Item {
                                 Layout.preferredWidth: 30
                                 Layout.preferredHeight: 26
                                 radius: Appearance.rounding.small
-                                color: root.inirStyle ? Appearance.inir.colPrimary
+                                color: root.lunanaStyle ? Appearance.lunana.colPrimary
                                     : root.angelStyle ? ColorUtils.applyAlpha(root.colPrimary, 0.18)
                                     : Appearance.colors.colPrimaryContainer
 
@@ -422,7 +422,7 @@ Item {
                                         pixelSize: Appearance.font.pixelSize.normal
                                         weight: Font.DemiBold
                                     }
-                                    color: root.inirStyle ? Appearance.inir.colOnPrimary
+                                    color: root.lunanaStyle ? Appearance.lunana.colOnPrimary
                                         : root.angelStyle ? root.colPrimary
                                         : Appearance.colors.colOnPrimaryContainer
                                 }
@@ -476,7 +476,7 @@ Item {
                         buttonRadius: root.angelStyle ? Appearance.angel.roundingSmall : 16
                         colBackground: "transparent"
                         colBackgroundHover: Appearance.editorialEverywhere ? ColorUtils.applyAlpha(Appearance.editorial.paperOnInk, 0.12) : root.colCardHover
-                        onClicked: Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")), "settings"])
+                        onClicked: Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/lunana")), "settings"])
                         contentItem: MaterialSymbol {
                             anchors.centerIn: parent
                             text: "settings"
@@ -497,12 +497,12 @@ Item {
                   visible: root.cfgToggles
                   implicitHeight: togglesGrid.implicitHeight + 20
                   radius: root.cardRadius
-                  color: root.inirStyle ? root.colCard : "transparent"
+                  color: root.lunanaStyle ? root.colCard : "transparent"
                   border.width: root.bw
                   border.color: root.colBorder
                   clip: true
 
-                  layer.enabled: (root.angelStyle || root.auroraStyle) && !root.inirStyle
+                  layer.enabled: (root.angelStyle || root.auroraStyle) && !root.lunanaStyle
                   layer.effect: GE.OpacityMask {
                       maskSource: Rectangle { width: togglesCard.width; height: togglesCard.height; radius: togglesCard.radius }
                   }
@@ -580,12 +580,12 @@ Item {
                 visible: root.cfgVolume
                 implicitHeight: slidersRow.implicitHeight + 12
                 radius: root.cardRadius
-                color: root.inirStyle ? root.colCard : "transparent"
+                color: root.lunanaStyle ? root.colCard : "transparent"
                 border.width: root.bw
                 border.color: root.colBorder
                 clip: true
 
-                layer.enabled: (root.angelStyle || root.auroraStyle) && !root.inirStyle
+                layer.enabled: (root.angelStyle || root.auroraStyle) && !root.lunanaStyle
                 layer.effect: GE.OpacityMask {
                     maskSource: Rectangle { width: slidersCard.width; height: slidersCard.height; radius: slidersCard.radius }
                 }
@@ -640,7 +640,7 @@ Item {
                 implicitHeight: (root.cfgMedia && root.hasPlayer) ? (mediaContent.implicitHeight + 24) : 0
                 Behavior on implicitHeight { enabled: Appearance.animationsEnabled; NumberAnimation { duration: Appearance.animation.elementMoveEnter.duration; easing.type: Appearance.animation.elementMoveEnter.type; easing.bezierCurve: Appearance.animation.elementMoveEnter.bezierCurve } }
                 radius: root.cardRadius
-                color: root.inirStyle ? root.colCard : "transparent"
+                color: root.lunanaStyle ? root.colCard : "transparent"
                 border.width: root.bw
                 border.color: root.colBorder
                 clip: true
@@ -653,7 +653,7 @@ Item {
                 // Blurred wallpaper background (angel/aurora)
                 BlurredCardBg { targetCard: mediaCard }
 
-                // Solid background for material/inir
+                // Solid background for material/lunana
                 Rectangle { anchors.fill: parent; radius: mediaCard.radius; visible: !root.angelStyle && !root.auroraStyle; color: root.colCard }
 
                 // Blurred album art overlay
@@ -664,7 +664,7 @@ Item {
                     asynchronous: true
                     cache: false
                     visible: root.displayedArtFilePath !== "" && status === Image.Ready
-                    opacity: root.inirStyle ? 0.15 : (root.auroraStyle ? 0.25 : 0.4)
+                    opacity: root.lunanaStyle ? 0.15 : (root.auroraStyle ? 0.25 : 0.4)
                     layer.enabled: Appearance.effectsEnabled
                     layer.effect: MultiEffect { blurEnabled: true; blur: 0.4; blurMax: 40; saturation: 0.3 }
                 }
@@ -720,7 +720,7 @@ Item {
                                 anchors.fill: parent
                                 visible: !root.downloaded
                                 color: root.angelStyle ? Appearance.angel.colGlassCard
-                                    : root.inirStyle ? Appearance.inir.colLayer2
+                                    : root.lunanaStyle ? Appearance.lunana.colLayer2
                                     : (root.blendedColors?.colLayer1 ?? Appearance.colors.colLayer1)
                                 MaterialSymbol {
                                     anchors.centerIn: parent
@@ -885,12 +885,12 @@ Item {
                 implicitHeight: (root.cfgWeather && Weather.enabled && (Weather.data?.temp ?? "") !== "" && !(Weather.data?.temp ?? "").startsWith("--")) ? Math.max(weatherContent.implicitHeight + 24, root.weatherCardMinHeight) : 0
                 Behavior on implicitHeight { enabled: Appearance.animationsEnabled; NumberAnimation { duration: Appearance.animation.elementMoveEnter.duration; easing.type: Appearance.animation.elementMoveEnter.type; easing.bezierCurve: Appearance.animation.elementMoveEnter.bezierCurve } }
                 radius: root.cardRadius
-                color: root.inirStyle ? root.colCard : "transparent"
+                color: root.lunanaStyle ? root.colCard : "transparent"
                 border.width: root.bw
                 border.color: root.colBorder
                 clip: true
 
-                layer.enabled: (root.angelStyle || root.auroraStyle) && !root.inirStyle
+                layer.enabled: (root.angelStyle || root.auroraStyle) && !root.lunanaStyle
                 layer.effect: GE.OpacityMask {
                     maskSource: Rectangle { width: weatherCard.width; height: weatherCard.height; radius: weatherCard.radius }
                 }
@@ -972,9 +972,9 @@ Item {
                             implicitWidth: 36
                             implicitHeight: 36
                             buttonRadius: root.angelStyle ? Appearance.angel.roundingSmall
-                                : root.inirStyle ? Appearance.inir.roundingSmall : Appearance.rounding.full
+                                : root.lunanaStyle ? Appearance.lunana.roundingSmall : Appearance.rounding.full
                             colBackground: root.angelStyle ? ColorUtils.transparentize(root.colPrimary, 0.82)
-                                : root.inirStyle ? Appearance.inir.colLayer2
+                                : root.lunanaStyle ? Appearance.lunana.colLayer2
                                 : ColorUtils.transparentize(Appearance.colors.colPrimaryContainer, 0.35)
                             colBackgroundHover: root.colCardHover
                             onClicked: Weather.forceRefresh()
@@ -1019,12 +1019,12 @@ Item {
                 visible: root.cfgSystem
                 implicitHeight: Math.max(sysContent.implicitHeight + 16, root.weatherSystemMinHeight)
                 radius: root.cardRadius
-                color: root.inirStyle ? root.colCard : "transparent"
+                color: root.lunanaStyle ? root.colCard : "transparent"
                 border.width: root.bw
                 border.color: root.colBorder
                 clip: true
 
-                layer.enabled: (root.angelStyle || root.auroraStyle) && !root.inirStyle
+                layer.enabled: (root.angelStyle || root.auroraStyle) && !root.lunanaStyle
                 layer.effect: GE.OpacityMask {
                     maskSource: Rectangle { width: sysCard.width; height: sysCard.height; radius: sysCard.radius }
                 }
@@ -1057,7 +1057,7 @@ Item {
                                     value: ResourceUsage.cpuUsage
                                     colPrimary: ResourceUsage.cpuUsage > 0.8 ? Appearance.colors.colError : root.colPrimary
                                     colSecondary: root.angelStyle ? Appearance.angel.colGlassCard
-                                        : root.inirStyle ? Appearance.inir.colLayer2
+                                        : root.lunanaStyle ? Appearance.lunana.colLayer2
                                         : root.zzzStyle ? Appearance.colors.colLayer2
                                         : Appearance.colors.colSecondaryContainer
                                     enableAnimation: Appearance.animationsEnabled
@@ -1130,7 +1130,7 @@ Item {
                                     value: ResourceUsage.memoryUsedPercentage
                                     colPrimary: ResourceUsage.memoryUsedPercentage > 0.85 ? Appearance.colors.colError : Appearance.colors.colSecondary
                                     colSecondary: root.angelStyle ? Appearance.angel.colGlassCard
-                                        : root.inirStyle ? Appearance.inir.colLayer2
+                                        : root.lunanaStyle ? Appearance.lunana.colLayer2
                                         : root.zzzStyle ? Appearance.colors.colLayer2
                                         : Appearance.colors.colSecondaryContainer
                                     enableAnimation: Appearance.animationsEnabled
@@ -1315,7 +1315,7 @@ Item {
 
         Layout.fillWidth: true
         implicitHeight: toggleCol.implicitHeight + 16
-        radius: root.angelStyle ? Appearance.angel.roundingSmall : root.inirStyle ? Appearance.inir.roundingSmall : Appearance.rounding.normal
+        radius: root.angelStyle ? Appearance.angel.roundingSmall : root.lunanaStyle ? Appearance.lunana.roundingSmall : Appearance.rounding.normal
 
         color: toggleArea.containsMouse
             ? (active ? ColorUtils.transparentize(root.colPrimary, 0.25) : root.colCardHover)
@@ -1323,7 +1323,7 @@ Item {
 
         border.width: root.bw
         border.color: root.angelStyle ? "transparent"
-            : root.inirStyle ? (active ? Appearance.inir.colPrimary : Appearance.inir.colBorderSubtle)
+            : root.lunanaStyle ? (active ? Appearance.lunana.colPrimary : Appearance.lunana.colBorderSubtle)
             : "transparent"
 
         Behavior on color {
@@ -1344,7 +1344,7 @@ Item {
                 animateFill: true
                 color: toggle.active ? root.colOnPrimary
                     : (root.angelStyle ? Appearance.angel.colText
-                        : root.inirStyle ? Appearance.inir.colText
+                        : root.lunanaStyle ? Appearance.lunana.colText
                         : Appearance.colors.colOnLayer1)
                 Behavior on color {
                     enabled: Appearance.animationsEnabled
@@ -1358,7 +1358,7 @@ Item {
                 font.pixelSize: Appearance.font.pixelSize.smallest
                 color: toggle.active ? root.colOnPrimary
                     : (root.angelStyle ? Appearance.angel.colTextSecondary
-                        : root.inirStyle ? Appearance.inir.colTextSecondary
+                        : root.lunanaStyle ? Appearance.lunana.colTextSecondary
                         : Appearance.colors.colSubtext)
 
                 Behavior on color {
@@ -1390,10 +1390,10 @@ Item {
             implicitWidth: 28
             implicitHeight: 28
             buttonRadius: root.angelStyle ? Appearance.angel.roundingSmall
-                : root.inirStyle ? Appearance.inir.roundingSmall : Appearance.rounding.full
+                : root.lunanaStyle ? Appearance.lunana.roundingSmall : Appearance.rounding.full
             colBackground: "transparent"
             colBackgroundHover: root.angelStyle ? Appearance.angel.colGlassCardHover
-                : root.inirStyle ? Appearance.inir.colLayer2Hover
+                : root.lunanaStyle ? Appearance.lunana.colLayer2Hover
                 : root.auroraStyle ? (Appearance.aurora?.colSubSurfaceHover ?? Appearance.colors.colLayer2Hover)
                 : Appearance.colors.colLayer2Hover
             onClicked: miniSlider.iconClicked()
@@ -1402,7 +1402,7 @@ Item {
                 text: miniSlider.icon
                 iconSize: 16
                 color: root.angelStyle ? Appearance.angel.colText
-                    : root.inirStyle ? Appearance.inir.colText
+                    : root.lunanaStyle ? Appearance.lunana.colText
                     : root.auroraStyle ? Appearance.colors.colOnLayer1
                     : Appearance.colors.colOnLayer1
             }
@@ -1436,12 +1436,12 @@ Item {
         implicitWidth: chipRow.implicitWidth + 20
         radius: Appearance.editorialEverywhere ? Appearance.rounding.small : Appearance.rounding.full
         color: root.angelStyle ? ColorUtils.transparentize(root.colPrimary, 0.78)
-            : root.inirStyle ? Appearance.inir.colLayer2
+            : root.lunanaStyle ? Appearance.lunana.colLayer2
             : root.auroraStyle ? ColorUtils.transparentize(Appearance.colors.colSecondaryContainer, 0.45)
             : root.zzzStyle ? Appearance.colors.colLayer2
             : Appearance.colors.colSecondaryContainer
-        border.width: root.inirStyle ? 1 : 0
-        border.color: root.inirStyle ? Appearance.inir.colBorderSubtle : "transparent"
+        border.width: root.lunanaStyle ? 1 : 0
+        border.color: root.lunanaStyle ? Appearance.lunana.colBorderSubtle : "transparent"
 
         Row {
             id: chipRow

@@ -77,7 +77,7 @@ Item { // Bar content region
     }
     readonly property bool cardStyleEverywhere: (Config.options?.dock?.cardStyle ?? false) && (Config.options?.sidebar?.cardStyle ?? false) && (Config.options?.bar?.cornerStyle === 3)
     readonly property color separatorColor: Appearance.zzzEverywhere ? Appearance.zzz.hairlineStrong : Appearance.colors.colOutlineVariant
-    readonly property bool inirEverywhere: Appearance.inirEverywhere
+    readonly property bool lunanaEverywhere: Appearance.lunanaEverywhere
     readonly property bool auroraEverywhere: Appearance.auroraEverywhere
     readonly property bool zzzEverywhere: Appearance.zzzEverywhere
     readonly property bool gameModeMinimal: Appearance.gameModeMinimal
@@ -127,7 +127,7 @@ Item { // Bar content region
     readonly property real barSpectrumOrganicBaseRadius: Math.max(0, Math.min(1,
         (Config.options?.bar?.visualizer?.organicBaseRadius ?? 36) / 100))
     readonly property bool barSpectrumOrganicEdgeAura: barSpectrumOrganicFit === "aura"
-    readonly property color barSpectrumColor: root.inirEverywhere ? Appearance.inir.colPrimary
+    readonly property color barSpectrumColor: root.lunanaEverywhere ? Appearance.lunana.colPrimary
         : root.zzzEverywhere ? Appearance.zzz.accent
         : Appearance.colors.colPrimary
 
@@ -190,7 +190,7 @@ Item { // Bar content region
                     return ColorUtils.transparentize(base, Appearance.angel.compositorPanelTransparentize)
                 return ColorUtils.applyAlpha(base, 1)
             }
-            if (root.inirEverywhere) return Appearance.inir.colLayer0
+            if (root.lunanaEverywhere) return Appearance.lunana.colLayer0
             if (root.auroraEverywhere) {
                 const base = root.blendedColors?.colLayer0 ?? Appearance.colors.colLayer0
                 if (root.nativeBlurActive)
@@ -201,7 +201,7 @@ Item { // Bar content region
         }
         radius: root.zzzEverywhere ? 0
             : Appearance.angelEverywhere ? Appearance.angel.roundingNormal
-            : root.inirEverywhere ? Appearance.inir.roundingNormal
+            : root.lunanaEverywhere ? Appearance.lunana.roundingNormal
             : floatingStyle ? ((Config.options?.bar?.cornerStyle ?? 0) === 3 ? Appearance.rounding.normal : Appearance.rounding.windowRounding) : 0
         // No Behavior on the base radius — the per-corner radii below own the
         // corners, and a second interceptor on radius is unsupported (Qt warn).
@@ -224,14 +224,14 @@ Item { // Bar content region
             enabled: Appearance.animationsEnabled
             NumberAnimation { duration: Appearance.animation.elementMoveFast.duration; easing.type: Appearance.animation.elementMoveFast.type; easing.bezierCurve: Appearance.animation.elementMoveFast.bezierCurve }
         }
-        border.width: root.zzzEverywhere ? 1 : (Appearance.angelEverywhere ? 0 : (root.inirEverywhere ? 1 : (floatingStyle ? 1 : 0)))
+        border.width: root.zzzEverywhere ? 1 : (Appearance.angelEverywhere ? 0 : (root.lunanaEverywhere ? 1 : (floatingStyle ? 1 : 0)))
         Behavior on border.width {
             enabled: Appearance.animationsEnabled
             NumberAnimation { duration: Appearance.animation.elementMoveFast.duration; easing.type: Appearance.animation.elementMoveFast.type; easing.bezierCurve: Appearance.animation.elementMoveFast.bezierCurve }
         }
         border.color: root.zzzEverywhere ? Appearance.zzz.borderColor
             : Appearance.angelEverywhere ? "transparent"
-            : root.inirEverywhere ? Appearance.inir.colBorder
+            : root.lunanaEverywhere ? Appearance.lunana.colBorder
             : Appearance.colors.colLayer0Border
         Behavior on border.color {
             enabled: Appearance.animationsEnabled
@@ -311,7 +311,7 @@ Item { // Bar content region
     Item {
         id: auroraBlurLayer
         anchors.fill: barBackground
-        visible: root.auroraEverywhere && !root.inirEverywhere && !root.gameModeMinimal
+        visible: root.auroraEverywhere && !root.lunanaEverywhere && !root.gameModeMinimal
             && (Config.options?.bar?.showBackground ?? true) && !root.nativeBlurActive
             && !root.isIslands
 
@@ -344,7 +344,7 @@ Item { // Bar content region
             sourceSize.height: root.screen?.height ?? 1080
             asynchronous: true
 
-            layer.enabled: Appearance.effectsEnabled && root.auroraEverywhere && !root.inirEverywhere && !root.nativeBlurActive
+            layer.enabled: Appearance.effectsEnabled && root.auroraEverywhere && !root.lunanaEverywhere && !root.nativeBlurActive
             layer.effect: MultiEffect {
                 source: blurredWallpaper
                 anchors.fill: source

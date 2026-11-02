@@ -1,4 +1,4 @@
-# Determine distribution for iNiR installer
+# Determine distribution for Lunana installer
 # This is NOT a script for execution, but for loading functions
 
 # shellcheck shell=bash

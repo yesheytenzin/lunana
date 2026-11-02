@@ -69,23 +69,23 @@ Item {
                 toggled: root.currentTab === 0
                 bounce: true
                 colBackground: Appearance.angelEverywhere ? Appearance.angel.colGlassCard
-                    : Appearance.inirEverywhere ? Appearance.inir.colLayer2
+                    : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2
                     : Appearance.auroraEverywhere ? "transparent"
                     : Appearance.editorialEverywhere ? Appearance.editorial.layer(1)
                     : Appearance.colors.colLayer1
                 colBackgroundHover: Appearance.angelEverywhere ? Appearance.angel.colGlassCardHover
-                    : Appearance.inirEverywhere ? Appearance.inir.colLayer2Hover
+                    : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2Hover
                     : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurface
                     : Appearance.editorialEverywhere ? Appearance.editorial.layer(2)
                     : Appearance.colLayer1Hover
                 colBackgroundToggled: Appearance.angelEverywhere ? Appearance.angel.colGlassElevated
-                    : Appearance.inirEverywhere ? Appearance.inir.colSecondaryContainer
+                    : Appearance.lunanaEverywhere ? Appearance.lunana.colSecondaryContainer
                     : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurface
                     : Appearance.zzzEverywhere ? Appearance.zzz.sticker
                     : Appearance.editorialEverywhere ? Appearance.editorial.accent
                     : Appearance.colors.colSecondaryContainer
                 colBackgroundToggledHover: Appearance.angelEverywhere ? Appearance.angel.colGlassCardHover
-                    : Appearance.inirEverywhere ? Appearance.inir.colPrimaryContainerHover
+                    : Appearance.lunanaEverywhere ? Appearance.lunana.colPrimaryContainerHover
                     : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurfaceHover
                     : Appearance.zzzEverywhere ? Appearance.colors.colPrimaryHover
                     : Appearance.editorialEverywhere ? Appearance.colors.colPrimaryHover
@@ -103,23 +103,23 @@ Item {
                 toggled: root.currentTab === 1
                 bounce: true
                 colBackground: Appearance.angelEverywhere ? Appearance.angel.colGlassCard
-                    : Appearance.inirEverywhere ? Appearance.inir.colLayer2
+                    : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2
                     : Appearance.auroraEverywhere ? "transparent"
                     : Appearance.editorialEverywhere ? Appearance.editorial.layer(1)
                     : Appearance.colors.colLayer1
                 colBackgroundHover: Appearance.angelEverywhere ? Appearance.angel.colGlassCardHover
-                    : Appearance.inirEverywhere ? Appearance.inir.colLayer2Hover
+                    : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2Hover
                     : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurface
                     : Appearance.editorialEverywhere ? Appearance.editorial.layer(2)
                     : Appearance.colLayer1Hover
                 colBackgroundToggled: Appearance.angelEverywhere ? Appearance.angel.colGlassElevated
-                    : Appearance.inirEverywhere ? Appearance.inir.colSecondaryContainer
+                    : Appearance.lunanaEverywhere ? Appearance.lunana.colSecondaryContainer
                     : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurface
                     : Appearance.zzzEverywhere ? Appearance.zzz.sticker
                     : Appearance.editorialEverywhere ? Appearance.editorial.accent
                     : Appearance.colors.colSecondaryContainer
                 colBackgroundToggledHover: Appearance.angelEverywhere ? Appearance.angel.colGlassCardHover
-                    : Appearance.inirEverywhere ? Appearance.inir.colPrimaryContainerHover
+                    : Appearance.lunanaEverywhere ? Appearance.lunana.colPrimaryContainerHover
                     : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurfaceHover
                     : Appearance.zzzEverywhere ? Appearance.colors.colPrimaryHover
                     : Appearance.editorialEverywhere ? Appearance.colors.colPrimaryHover
@@ -137,23 +137,23 @@ Item {
                 toggled: root.currentTab === 2
                 bounce: true
                 colBackground: Appearance.angelEverywhere ? Appearance.angel.colGlassCard
-                    : Appearance.inirEverywhere ? Appearance.inir.colLayer2
+                    : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2
                     : Appearance.auroraEverywhere ? "transparent"
                     : Appearance.editorialEverywhere ? Appearance.editorial.layer(1)
                     : Appearance.colors.colLayer1
                 colBackgroundHover: Appearance.angelEverywhere ? Appearance.angel.colGlassCardHover
-                    : Appearance.inirEverywhere ? Appearance.inir.colLayer2Hover
+                    : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2Hover
                     : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurface
                     : Appearance.editorialEverywhere ? Appearance.editorial.layer(2)
                     : Appearance.colLayer1Hover
                 colBackgroundToggled: Appearance.angelEverywhere ? Appearance.angel.colGlassElevated
-                    : Appearance.inirEverywhere ? Appearance.inir.colSecondaryContainer
+                    : Appearance.lunanaEverywhere ? Appearance.lunana.colSecondaryContainer
                     : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurface
                     : Appearance.zzzEverywhere ? Appearance.zzz.sticker
                     : Appearance.editorialEverywhere ? Appearance.editorial.accent
                     : Appearance.colors.colSecondaryContainer
                 colBackgroundToggledHover: Appearance.angelEverywhere ? Appearance.angel.colGlassCardHover
-                    : Appearance.inirEverywhere ? Appearance.inir.colPrimaryContainerHover
+                    : Appearance.lunanaEverywhere ? Appearance.lunana.colPrimaryContainerHover
                     : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurfaceHover
                     : Appearance.zzzEverywhere ? Appearance.colors.colPrimaryHover
                     : Appearance.editorialEverywhere ? Appearance.colors.colPrimaryHover
@@ -200,20 +200,20 @@ Item {
                         bounce: true
                         
                         // Same theming as tabs above
-                        colBackground: Appearance.inirEverywhere ? Appearance.inir.colLayer2
+                        colBackground: Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2
                             : Appearance.auroraEverywhere ? "transparent"
                             : Appearance.editorialEverywhere ? Appearance.editorial.layer(1)
                             : Appearance.colors.colLayer1
-                        colBackgroundHover: Appearance.inirEverywhere ? Appearance.inir.colLayer2Hover
+                        colBackgroundHover: Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2Hover
                             : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurface
                             : Appearance.editorialEverywhere ? Appearance.editorial.layer(2)
                             : Appearance.colLayer1Hover
-                        colBackgroundToggled: Appearance.inirEverywhere ? Appearance.inir.colSecondaryContainer
+                        colBackgroundToggled: Appearance.lunanaEverywhere ? Appearance.lunana.colSecondaryContainer
                             : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurface
                             : Appearance.zzzEverywhere ? Appearance.zzz.sticker
                             : Appearance.editorialEverywhere ? Appearance.editorial.accent
                             : Appearance.colors.colSecondaryContainer
-                        colBackgroundToggledHover: Appearance.inirEverywhere ? Appearance.inir.colPrimaryContainerHover
+                        colBackgroundToggledHover: Appearance.lunanaEverywhere ? Appearance.lunana.colPrimaryContainerHover
                             : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurfaceHover
                             : Appearance.zzzEverywhere ? Appearance.colors.colPrimaryHover
                             : Appearance.editorialEverywhere ? Appearance.colors.colPrimaryHover
@@ -254,7 +254,7 @@ Item {
                     enabled: !AnimeService.loading
                     
                     colBackgroundHover: Appearance.angelEverywhere ? Appearance.angel.colGlassCardHover
-                        : Appearance.inirEverywhere ? Appearance.inir.colLayer2Hover
+                        : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2Hover
                         : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurface
                         : Appearance.colLayer2Hover
                     
@@ -272,9 +272,9 @@ Item {
                 Rectangle {
                     implicitWidth: seasonLabel.implicitWidth + 24
                     implicitHeight: 32
-                    radius: Appearance.inirEverywhere ? Appearance.inir.roundingSmall : Appearance.rounding.small
+                    radius: Appearance.lunanaEverywhere ? Appearance.lunana.roundingSmall : Appearance.rounding.small
                     color: Appearance.angelEverywhere ? Appearance.angel.colGlassCard
-                        : Appearance.inirEverywhere ? Appearance.inir.colSecondaryContainer
+                        : Appearance.lunanaEverywhere ? Appearance.lunana.colSecondaryContainer
                         : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurface
                         : Appearance.colors.colSecondaryContainer
                     
@@ -296,7 +296,7 @@ Item {
                     enabled: !AnimeService.loading
                     
                     colBackgroundHover: Appearance.angelEverywhere ? Appearance.angel.colGlassCardHover
-                        : Appearance.inirEverywhere ? Appearance.inir.colLayer2Hover
+                        : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2Hover
                         : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurface
                         : Appearance.colLayer2Hover
                     
@@ -318,15 +318,15 @@ Item {
             Layout.fillWidth: true
             Layout.fillHeight: true
             radius: Appearance.angelEverywhere ? Appearance.angel.roundingNormal
-                : Appearance.inirEverywhere ? Appearance.inir.roundingNormal : Appearance.rounding.normal
+                : Appearance.lunanaEverywhere ? Appearance.lunana.roundingNormal : Appearance.rounding.normal
             color: Appearance.angelEverywhere ? Appearance.angel.colGlassCard
-                : Appearance.inirEverywhere ? Appearance.inir.colLayer1
+                : Appearance.lunanaEverywhere ? Appearance.lunana.colLayer1
                 : Appearance.auroraEverywhere ? "transparent"
                 : Appearance.colors.colLayer1
             border.width: Appearance.angelEverywhere ? Appearance.angel.cardBorderWidth
                 : Appearance.auroraEverywhere ? 0 : 1
             border.color: Appearance.angelEverywhere ? Appearance.angel.colCardBorder
-                : Appearance.inirEverywhere ? Appearance.inir.colBorderSubtle
+                : Appearance.lunanaEverywhere ? Appearance.lunana.colBorderSubtle
                 : Appearance.colors.colLayer0Border
             clip: true
             
@@ -470,7 +470,7 @@ Item {
                 buttonRadius: Appearance.editorialEverywhere ? Appearance.rounding.small : Appearance.rounding.full
                 enabled: !AnimeService.loading && Network.online
                 
-                colBackgroundHover: Appearance.inirEverywhere ? Appearance.inir.colLayer2Hover
+                colBackgroundHover: Appearance.lunanaEverywhere ? Appearance.lunana.colLayer2Hover
                     : Appearance.auroraEverywhere ? Appearance.aurora.colSubSurface
                     : Appearance.colLayer2Hover
                 

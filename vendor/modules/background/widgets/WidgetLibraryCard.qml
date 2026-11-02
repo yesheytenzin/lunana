@@ -7,7 +7,7 @@ import "../../../services"
 import "../../common"
 import "../../common/widgets"
 import "../../common/functions"
-import "../../iris/style"
+import "../../atoll/style"
 
 Rectangle {
     id: root
@@ -17,29 +17,29 @@ Rectangle {
     required property string symbol
     property bool active: false
     property bool selected: false
-    readonly property bool iris: (Config.options?.panelFamily ?? "ii") === "iris"
+    readonly property bool atoll: (Config.options?.panelFamily ?? "drift") === "atoll"
 
     signal addRequested()
     signal editRequested()
 
-    readonly property real cardRadius: root.iris ? Math.round(14 * IrisStyle.density)
+    readonly property real cardRadius: root.atoll ? Math.round(14 * AtollStyle.density)
         : Appearance.regaliaEverywhere ? Appearance.regalia.controlRadius
         : Appearance.zzzEverywhere ? Appearance.zzz.controlRadius
         : Appearance.angelEverywhere ? Appearance.angel.roundingSmall
-        : Appearance.inirEverywhere ? Appearance.inir.roundingSmall
+        : Appearance.lunanaEverywhere ? Appearance.lunana.roundingSmall
         : Appearance.editorialEverywhere ? Appearance.rounding.small
         : Appearance.rounding.small
 
     Layout.fillWidth: true
     implicitHeight: content.implicitHeight + 20
     radius: cardRadius
-    color: root.iris
-        ? (root.selected ? ColorUtils.applyAlpha(IrisStyle.accent, 0.16)
-            : root.active ? ColorUtils.applyAlpha(IrisStyle.text, 0.055) : "transparent")
+    color: root.atoll
+        ? (root.selected ? ColorUtils.applyAlpha(AtollStyle.accent, 0.16)
+            : root.active ? ColorUtils.applyAlpha(AtollStyle.text, 0.055) : "transparent")
         : root.selected ? ColorUtils.applyAlpha(Appearance.colors.colPrimary, 0.10)
             : ColorUtils.applyAlpha(Appearance.colors.colOnLayer1, 0.035)
-    border.width: root.iris ? 0 : root.selected ? 1 : 0
-    border.color: root.iris ? "transparent" : ColorUtils.applyAlpha(Appearance.colors.colPrimary, 0.58)
+    border.width: root.atoll ? 0 : root.selected ? 1 : 0
+    border.color: root.atoll ? "transparent" : ColorUtils.applyAlpha(Appearance.colors.colPrimary, 0.58)
 
     ColumnLayout {
         id: content
@@ -55,8 +55,8 @@ Rectangle {
             Layout.fillWidth: true
             Layout.preferredHeight: 88
             radius: root.cardRadius
-            color: root.iris
-                ? (root.active ? ColorUtils.applyAlpha(IrisStyle.accent, 0.12) : IrisStyle.surfaceHigh)
+            color: root.atoll
+                ? (root.active ? ColorUtils.applyAlpha(AtollStyle.accent, 0.12) : AtollStyle.surfaceHigh)
                 : ColorUtils.applyAlpha(
                     root.active ? Appearance.colors.colPrimary : Appearance.colors.colOnLayer1,
                     root.active ? 0.075 : 0.035)
@@ -66,7 +66,7 @@ Rectangle {
                 visible: !["clock", "dateBadge", "editorial", "shape", "visualizer"].includes(root.widgetKey)
                 text: root.symbol
                 iconSize: 38
-                color: root.iris ? (root.active ? IrisStyle.accent : IrisStyle.subtext)
+                color: root.atoll ? (root.active ? AtollStyle.accent : AtollStyle.subtext)
                     : root.active ? Appearance.colors.colPrimary : Appearance.colors.colOnLayer1
                 opacity: root.active ? 1 : 0.62
             }
@@ -79,7 +79,7 @@ Rectangle {
                 font.pixelSize: root.widgetKey === "editorial" ? 40 : 27
                 font.family: Appearance.font.family.main
                 font.weight: Font.DemiBold
-                color: root.iris ? (root.active ? IrisStyle.accent : IrisStyle.text)
+                color: root.atoll ? (root.active ? AtollStyle.accent : AtollStyle.text)
                     : root.active ? Appearance.colors.colPrimary : Appearance.colors.colOnLayer1
                 opacity: root.active ? 1 : 0.72
             }
@@ -89,7 +89,7 @@ Rectangle {
                 visible: root.widgetKey === "shape"
                 implicitSize: 54
                 shape: MaterialShape.Shape.Flower
-                color: root.iris ? (root.active ? IrisStyle.accent : IrisStyle.subtext)
+                color: root.atoll ? (root.active ? AtollStyle.accent : AtollStyle.subtext)
                     : root.active ? Appearance.colors.colPrimary : Appearance.colors.colOnLayer1
                 opacity: root.active ? 1 : 0.68
             }
@@ -106,7 +106,7 @@ Rectangle {
                         height: modelData
                         y: (52 - height) / 2
                         radius: Math.min(2, width / 2)
-                        color: root.iris ? (root.active ? IrisStyle.accent : IrisStyle.subtext)
+                        color: root.atoll ? (root.active ? AtollStyle.accent : AtollStyle.subtext)
                             : root.active ? Appearance.colors.colPrimary : Appearance.colors.colOnLayer1
                         opacity: root.active ? 1 : 0.68
                     }
@@ -127,7 +127,7 @@ Rectangle {
                     text: root.title
                     font.pixelSize: Appearance.font.pixelSize.small
                     font.weight: Font.DemiBold
-                    color: root.iris ? IrisStyle.text : Appearance.colors.colOnLayer1
+                    color: root.atoll ? AtollStyle.text : Appearance.colors.colOnLayer1
                     elide: Text.ElideRight
                 }
 
@@ -135,7 +135,7 @@ Rectangle {
                     Layout.fillWidth: true
                     text: root.active ? Translation.tr("On desktop") : Translation.tr("Ready to add")
                     font.pixelSize: Appearance.font.pixelSize.smaller
-                    color: root.iris ? (root.active ? IrisStyle.accent : IrisStyle.muted)
+                    color: root.atoll ? (root.active ? AtollStyle.accent : AtollStyle.muted)
                         : root.active ? Appearance.colors.colPrimary : Appearance.colors.colSubtext
                     elide: Text.ElideRight
                 }

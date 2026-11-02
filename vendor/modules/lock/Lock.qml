@@ -5,9 +5,9 @@ import "../../services/deferred"
 import "../common"
 import "../common/functions"
 import "."
-import "../waffle/lock"
-import "../iris/lock"
-import "../iris/style"
+import "../slate/lock"
+import "../atoll/lock"
+import "../atoll/style"
 import QtQuick
 import Quickshell
 import Quickshell.Io
@@ -21,7 +21,7 @@ Scope {
     readonly property string _niriSocket: Quickshell.env("NIRI_SOCKET")
     readonly property string _lockRecoveryPath: {
         const runtimeDir = Quickshell.env("XDG_RUNTIME_DIR")
-        return runtimeDir.length > 0 ? runtimeDir + "/inir-session-lock.state" : ""
+        return runtimeDir.length > 0 ? runtimeDir + "/lunana-session-lock.state" : ""
     }
     property bool _recoveryStateLoaded: false
 
@@ -163,27 +163,27 @@ Scope {
             // Unlock the keyring if configured to do so
             if (Config.options?.lock?.security?.unlockKeyring ?? true) root.unlockKeyring(); // Async
 
-            if (root._cachedUseIrisLock && IrisStyle.recedeDuration > 0) {
-                root.irisUnlocking = true
-                irisRelease.restart()
+            if (root._cachedUseIrisLock && AtollStyle.recedeDuration > 0) {
+                root.atollUnlocking = true
+                atollRelease.restart()
                 return
             }
             root.finishUnlock()
         }
     }
 
-    property bool irisUnlocking: false
+    property bool atollUnlocking: false
     Timer {
-        id: irisRelease
-        interval: IrisStyle.recedeDuration + 40
+        id: atollRelease
+        interval: AtollStyle.recedeDuration + 40
         onTriggered: root.finishUnlock()
     }
     Connections {
         target: GlobalStates
         function onScreenLockedChanged(): void {
             if (GlobalStates.screenLocked) return
-            irisRelease.stop()
-            root.irisUnlocking = false
+            atollRelease.stop()
+            root.atollUnlocking = false
         }
     }
 
@@ -207,22 +207,22 @@ Scope {
         }
     }
 
-    // Lock surface component - switches between Material (ii) and Windows 11 (waffle) styles
+    // Lock surface component - switches between Material (drift) and Slate (slate) styles
     // Reactive binding - updates automatically when panelFamily changes (but only when unlocked)
-    readonly property bool useWaffleLock: Config.ready && !GlobalStates.screenLocked 
-        ? (Config.options?.panelFamily === "waffle")
-        : root._cachedUseWaffleLock
+    readonly property bool useSlateLock: Config.ready && !GlobalStates.screenLocked 
+        ? (Config.options?.panelFamily === "slate")
+        : root._cachedUseSlateLock
     readonly property bool useIrisLock: Config.ready && !GlobalStates.screenLocked
-        ? (Config.options?.panelFamily === "iris")
+        ? (Config.options?.panelFamily === "atoll")
         : root._cachedUseIrisLock
     
     // Cache the last known value to prevent switching during lock
-    property bool _cachedUseWaffleLock: false
+    property bool _cachedUseSlateLock: false
     property bool _cachedUseIrisLock: false
     
-    onUseWaffleLockChanged: {
+    onUseSlateLockChanged: {
         if (!GlobalStates.screenLocked) {
-            root._cachedUseWaffleLock = root.useWaffleLock
+            root._cachedUseSlateLock = root.useSlateLock
         }
     }
     onUseIrisLockChanged: {
@@ -233,36 +233,36 @@ Scope {
     Component.onCompleted: {
         // Initialize cache.
         if (Config.ready) {
-            root._cachedUseWaffleLock = Config.options?.panelFamily === "waffle"
-            root._cachedUseIrisLock = Config.options?.panelFamily === "iris"
+            root._cachedUseSlateLock = Config.options?.panelFamily === "slate"
+            root._cachedUseIrisLock = Config.options?.panelFamily === "atoll"
         }
         root.initIfReady()
     }
     
     Component {
-        id: iiLockComponent
+        id: driftLockComponent
         LockSurface {
             context: lockContext
         }
     }
     
     Component {
-        id: waffleLockComponent
-        WaffleLockSurface {
+        id: slateLockComponent
+        SlateLockSurface {
             context: lockContext
         }
     }
     
     Component {
-        id: waffleLockSafeComponent
-        WaffleLockSurfaceSafe {
+        id: slateLockSafeComponent
+        SlateLockSurfaceSafe {
             context: lockContext
         }
     }
 
     Component {
-        id: irisLockComponent
-        IrisLockSurface {
+        id: atollLockComponent
+        AtollLockSurface {
             context: lockContext
         }
     }
@@ -283,14 +283,14 @@ Scope {
             Loader {
                 id: lockSurfaceLoader
                 active: GlobalStates.screenLocked && Config.ready
-                // The iRiS lock arrives from the wallpaper; an async first frame is a bare colour flash.
+                // The Atoll lock arrives from the wallpaper; an async first frame is a bare colour flash.
                 asynchronous: !root._cachedUseIrisLock
                 anchors.fill: parent
                 // Don't animate opacity - causes issues during hot-reload
                 opacity: active ? 1 : 0
-                sourceComponent: root._cachedUseWaffleLock
-                    ? (CompositorService.isNiri ? waffleLockSafeComponent : waffleLockComponent)
-                    : root._cachedUseIrisLock ? irisLockComponent : iiLockComponent
+                sourceComponent: root._cachedUseSlateLock
+                    ? (CompositorService.isNiri ? slateLockSafeComponent : slateLockComponent)
+                    : root._cachedUseIrisLock ? atollLockComponent : driftLockComponent
                 
                 // Detect load errors
                 onStatusChanged: {
@@ -314,7 +314,7 @@ Scope {
                     target: lockSurfaceLoader.item
                     when: root._cachedUseIrisLock && lockSurfaceLoader.item !== null
                     property: "leaving"
-                    value: root.irisUnlocking
+                    value: root.atollUnlocking
                 }
 
                 // Force focus to loaded item
@@ -342,8 +342,8 @@ Scope {
                 onTriggered: {
                     console.warn("[Lock] Lock surface failed to load after 2s — status:",
                                  lockSurfaceLoader.status, "active:", lockSurfaceLoader.active,
-                                 "Config.ready:", Config.ready, "waffle:", root._cachedUseWaffleLock,
-                                 "iris:", root._cachedUseIrisLock,
+                                 "Config.ready:", Config.ready, "slate:", root._cachedUseSlateLock,
+                                 "atoll:", root._cachedUseIrisLock,
                                  "isNiri:", CompositorService.isNiri)
                     root.useFallbackLock()
                 }

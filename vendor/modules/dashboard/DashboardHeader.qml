@@ -14,15 +14,15 @@ RowLayout {
     id: root
     spacing: 8
 
-    readonly property bool inirEverywhere: Appearance.inirEverywhere
+    readonly property bool lunanaEverywhere: Appearance.lunanaEverywhere
     readonly property bool auroraEverywhere: Appearance.auroraEverywhere
     readonly property bool showPowerButtons: Config.options?.dashboard?.showPowerButtons ?? true
     readonly property color colText: Appearance.angelEverywhere ? Appearance.angel.colText
-        : inirEverywhere ? Appearance.inir.colText
+        : lunanaEverywhere ? Appearance.lunana.colText
         : Appearance.editorialEverywhere ? Appearance.editorial.ink
         : Appearance.colors.colOnLayer0
     readonly property color colSubtext: Appearance.angelEverywhere ? Appearance.angel.colTextSecondary
-        : inirEverywhere ? Appearance.inir.colTextSecondary
+        : lunanaEverywhere ? Appearance.lunana.colTextSecondary
         : Appearance.editorialEverywhere ? Appearance.editorial.muted
         : Appearance.colors.colSubtext
 
@@ -36,12 +36,12 @@ RowLayout {
             ? Appearance.rounding.small
             : (toggled ? Appearance.rounding.normal : Appearance.rounding.full)
         colBackground: Appearance.angelEverywhere ? Appearance.angel.colGlassCard
-            : root.inirEverywhere ? Appearance.inir.colLayer1
+            : root.lunanaEverywhere ? Appearance.lunana.colLayer1
             : root.auroraEverywhere ? Appearance.aurora.colSubSurface
             : Appearance.editorialEverywhere ? Appearance.editorial.layer(1)
             : Appearance.colors.colLayer1
         colBackgroundHover: Appearance.angelEverywhere ? Appearance.angel.colGlassCardHover
-            : root.inirEverywhere ? Appearance.inir.colLayer1Hover
+            : root.lunanaEverywhere ? Appearance.lunana.colLayer1Hover
             : root.auroraEverywhere ? Appearance.aurora.colSubSurfaceHover
             : Appearance.editorialEverywhere ? Appearance.editorial.field
             : Appearance.colors.colLayer1Hover
@@ -133,7 +133,7 @@ RowLayout {
         tooltip: Translation.tr("Settings")
         onClicked: {
             GlobalStates.dashboardOpen = false
-            Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/inir")), "settings"])
+            Quickshell.execDetached([((Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/omarchy/lunana-vendor/" + ("scripts/lunana")), "settings"])
         }
     }
     HeaderButton {

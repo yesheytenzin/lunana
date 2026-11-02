@@ -5,8 +5,8 @@ import QtQuick.Layouts
 import "../../.."
 import "../../common"
 import "../../common/widgets"
-import "../../iris/style"
-import "../../iris/components"
+import "../../atoll/style"
+import "../../atoll/components"
 
 // A value in a widget's quick controls: its name and figure on one line, the slider under it.
 // `moved` fires while dragging (preview), `committed` once on release.
@@ -23,8 +23,8 @@ ColumnLayout {
     signal moved(real value)
     signal committed(real value)
 
-    readonly property bool iris: (Config.options?.panelFamily ?? "ii") === "iris"
-    readonly property real d: root.iris ? IrisStyle.density : 1
+    readonly property bool atoll: (Config.options?.panelFamily ?? "drift") === "atoll"
+    readonly property real d: root.atoll ? AtollStyle.density : 1
     readonly property real span: Math.max(0.0001, root.to - root.from)
     property real live: NaN
     readonly property real shown: Number.isNaN(root.live) ? root.value : root.live
@@ -46,27 +46,27 @@ ColumnLayout {
             Layout.fillWidth: true
             text: root.title
             elide: Text.ElideRight
-            color: root.iris ? IrisStyle.textSecondary : Appearance.colors.colSubtext
-            font.family: root.iris ? IrisStyle.fontMain : Appearance.font.family.main
-            font.pixelSize: root.iris ? IrisStyle.typeMeta : Appearance.font.pixelSize.smallest
+            color: root.atoll ? AtollStyle.textSecondary : Appearance.colors.colSubtext
+            font.family: root.atoll ? AtollStyle.fontMain : Appearance.font.family.main
+            font.pixelSize: root.atoll ? AtollStyle.typeMeta : Appearance.font.pixelSize.smallest
             font.weight: Font.DemiBold
-            font.capitalization: root.iris || Appearance.editorialEverywhere ? Font.MixedCase : Font.AllUppercase
-            font.letterSpacing: root.iris ? 0 : 1
+            font.capitalization: root.atoll || Appearance.editorialEverywhere ? Font.MixedCase : Font.AllUppercase
+            font.letterSpacing: root.atoll ? 0 : 1
         }
         StyledText {
             text: root.label(root.shown)
-            color: root.iris ? IrisStyle.textSecondary : Appearance.colors.colOnLayer2
-            font.family: root.iris ? IrisStyle.fontNumbers : Appearance.font.family.numbers
+            color: root.atoll ? AtollStyle.textSecondary : Appearance.colors.colOnLayer2
+            font.family: root.atoll ? AtollStyle.fontNumbers : Appearance.font.family.numbers
             font.features: ({ "tnum": 1 })
-            font.pixelSize: root.iris ? IrisStyle.typeMeta : Appearance.font.pixelSize.smaller
+            font.pixelSize: root.atoll ? AtollStyle.typeMeta : Appearance.font.pixelSize.smaller
         }
     }
 
-    IrisScrubber {
-        visible: root.iris
+    AtollScrubber {
+        visible: root.atoll
         Layout.fillWidth: true
         knob: true
-        fillColor: IrisStyle.accent
+        fillColor: AtollStyle.accent
         stepSize: root.stepSize / root.span
         value: (root.value - root.from) / root.span
         onMoved: v => {
@@ -82,7 +82,7 @@ ColumnLayout {
 
     StyledSlider {
         id: materialSlider
-        visible: !root.iris
+        visible: !root.atoll
         Layout.fillWidth: true
         enableSettingsSearch: false
         configuration: StyledSlider.Configuration.XS

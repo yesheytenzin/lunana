@@ -24,7 +24,7 @@ Rectangle {
     readonly property bool showTitle: Config.options?.dashboard?.appearance?.showCardTitles ?? true
     readonly property real pad: editorialEverywhere ? Math.round(14 * Appearance.editorial.spacing) : (compact ? 8 : 12)
 
-    readonly property bool inirEverywhere: Appearance.inirEverywhere
+    readonly property bool lunanaEverywhere: Appearance.lunanaEverywhere
     readonly property bool auroraEverywhere: Appearance.auroraEverywhere
     readonly property bool zzzEverywhere: Appearance.zzzEverywhere
     readonly property bool editorialEverywhere: Appearance.editorialEverywhere
@@ -35,19 +35,19 @@ Rectangle {
     readonly property color colText: _inkActive ? Appearance.editorial.paperOnInk
         : zzzEverywhere ? Appearance.zzz.ink
         : Appearance.angelEverywhere ? Appearance.angel.colText
-        : inirEverywhere ? Appearance.inir.colText
+        : lunanaEverywhere ? Appearance.lunana.colText
         : auroraEverywhere ? Appearance.colors.colOnSurface
         : Appearance.colors.colOnLayer1
     readonly property color colSubtext: _inkActive ? ColorUtils.applyAlpha(Appearance.editorial.paperOnInk, 0.72)
         : zzzEverywhere ? Appearance.zzz.inkMuted
         : Appearance.angelEverywhere ? Appearance.angel.colTextSecondary
-        : inirEverywhere ? Appearance.inir.colTextSecondary
+        : lunanaEverywhere ? Appearance.lunana.colTextSecondary
         : Appearance.colors.colSubtext
     readonly property color colAccent: _inkActive
         ? ColorUtils.ensureReadable(Appearance.editorial.accent, Appearance.editorial.ink, 4.5)
         : zzzEverywhere ? Appearance.zzz.accent
         : Appearance.angelEverywhere ? Appearance.angel.colPrimary
-        : inirEverywhere ? Appearance.inir.colPrimary
+        : lunanaEverywhere ? Appearance.lunana.colPrimary
         : auroraEverywhere ? Appearance.colors.colPrimary
         : Appearance.colors.colPrimary
 
@@ -56,13 +56,13 @@ Rectangle {
 
     radius: zzzEverywhere ? Appearance.zzz.panelRadius
         : Appearance.angelEverywhere ? Appearance.angel.roundingNormal
-        : inirEverywhere ? Appearance.inir.roundingNormal : Appearance.rounding.normal
+        : lunanaEverywhere ? Appearance.lunana.roundingNormal : Appearance.rounding.normal
     color: {
         if (_inkActive)
             return Appearance.editorial.ink
         const base = zzzEverywhere ? Appearance.zzz.paper
             : Appearance.angelEverywhere ? Appearance.angel.colGlassCard
-            : inirEverywhere ? Appearance.inir.colLayer1
+            : lunanaEverywhere ? Appearance.lunana.colLayer1
             : auroraEverywhere ? Appearance.aurora.colSubSurface
             : Appearance.colors.colLayer1
         return zzzEverywhere || root.cardOpacity >= 1 ? base : ColorUtils.applyAlpha(base, root.cardOpacity * base.a)
@@ -81,7 +81,7 @@ Rectangle {
         : editorialEverywhere ? Appearance.editorial.rule
         : Appearance.angelEverywhere ? "transparent"
         : zzzEverywhere ? Appearance.zzz.hairline
-        : inirEverywhere ? Appearance.inir.colBorder
+        : lunanaEverywhere ? Appearance.lunana.colBorder
         : ColorUtils.applyAlpha(Appearance.colors.colOnLayer1, 0.06)
     Behavior on border.color {
         enabled: Appearance.animationsEnabled

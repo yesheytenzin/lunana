@@ -280,7 +280,7 @@ ColumnLayout {
             currentValue: Config.options?.bar?.pill?.superSpaceLauncher ?? "overview"
             onSelected: (newValue) => Config.setNestedValue("bar.pill.superSpaceLauncher", newValue)
             options: [
-                { displayName: Translation.tr("iNiR Overview"), icon: "overview_key", value: "overview" },
+                { displayName: Translation.tr("Lunana Overview"), icon: "overview_key", value: "overview" },
                 { displayName: Translation.tr("Pill launcher"), icon: "search", value: "pill" }
             ]
         }

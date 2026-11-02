@@ -1,25 +1,25 @@
 #!/usr/bin/env bash
-# Migration 039: stop ii-pixel from overriding SDDM's distro-owned greeter backend.
+# Migration 039: stop drift-pixel from overriding SDDM's distro-owned greeter backend.
 
 MIGRATION_ID="039-sddm-preserve-greeter-backend"
 MIGRATION_TITLE="Preserve the distro SDDM greeter backend"
-MIGRATION_DESCRIPTION="Older iNiR versions forced DisplayServer=x11 and an empty InputMethod from the ii-pixel theme drop-in. On Fedora/Nobara this can override the installed Wayland greeter provider and make SDDM fail before the theme appears when Xorg is not installed. Remove only iNiR's historical backend/input overrides and leave the distro or user's SDDM provider configuration in control."
-MIGRATION_TARGET_FILE="/etc/sddm.conf.d/99-inir-theme.conf"
+MIGRATION_DESCRIPTION="Older Lunana versions forced DisplayServer=x11 and an empty InputMethod from the drift-pixel theme drop-in. On Fedora/Nobara this can override the installed Wayland greeter provider and make SDDM fail before the theme appears when Xorg is not installed. Remove only Lunana's historical backend/input overrides and leave the distro or user's SDDM provider configuration in control."
+MIGRATION_TARGET_FILE="/etc/sddm.conf.d/99-lunana-theme.conf"
 MIGRATION_REQUIRED=true
 
-_sddm_conf="/etc/sddm.conf.d/99-inir-theme.conf"
+_sddm_conf="/etc/sddm.conf.d/99-lunana-theme.conf"
 
 migration_check() {
   command -v sddm >/dev/null 2>&1 || return 1
   [[ -f "$_sddm_conf" ]] || return 1
-  grep -qE '^[[:space:]]*Current[[:space:]]*=[[:space:]]*ii-pixel[[:space:]]*$' "$_sddm_conf" 2>/dev/null || return 1
+  grep -qE '^[[:space:]]*Current[[:space:]]*=[[:space:]]*drift-pixel[[:space:]]*$' "$_sddm_conf" 2>/dev/null || return 1
   grep -qE '^[[:space:]]*(DisplayServer[[:space:]]*=[[:space:]]*x11|InputMethod[[:space:]]*=[[:space:]]*)$' "$_sddm_conf" 2>/dev/null
 }
 
 migration_preview() {
   echo -e "${STY_RED}- DisplayServer=x11${STY_RST}"
   echo -e "${STY_RED}- InputMethod=${STY_RST}"
-  echo -e "${STY_GREEN}  Keep [Theme] Current=ii-pixel${STY_RST}"
+  echo -e "${STY_GREEN}  Keep [Theme] Current=drift-pixel${STY_RST}"
   echo ""
   echo "SDDM's installed distro/provider drop-ins will choose X11 or Wayland."
 }

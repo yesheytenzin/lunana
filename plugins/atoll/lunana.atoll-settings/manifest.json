@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "lunana.atoll-settings",
+  "name": "Lunana Atoll Settings",
+  "version": "0.4.0",
+  "author": "lunana",
+  "license": "GPL-3.0",
+  "description": "Lunana Atoll settings host (Compositor page shows Hyprland options).",
+  "kinds": [
+    "overlay"
+  ],
+  "entryPoints": {
+    "overlay": "AtollSettings.qml"
+  },
+  "x-lunana": {
+    "suiteId": "lunana",
+    "role": "atoll-settings",
+    "milestone": "parity",
+    "requires": [],
+    "recommends": []
+  }
+}
